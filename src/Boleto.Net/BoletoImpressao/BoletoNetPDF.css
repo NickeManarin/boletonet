@@ -35,7 +35,8 @@ img {
 }
 
 .ct {
-	font: 9px "arial narrow";
+	font: 10px helvetica; /*"arial narrow"*/
+    word-spacing: 1px;
 	color: #000033;
 }
 
@@ -86,7 +87,8 @@ img {
 }
 
 .ctN {
-	font: 9px "arial narrow";
+	font: 10px helvetica; /*narrow*/
+    word-spacing: 1px;
 	color: #000033;
 }
 
@@ -338,9 +340,10 @@ img {
 }
 
 .rc6 .t {
-	font: 9px "arial narrow";
+	font: 10px helvetica; /*"arial narrow"*/
 	color: #000033;
 	height: 13px;
+    word-spacing: 1px;
 }
 
 .rc6 .c {

@@ -35,7 +35,7 @@ img {
 }
 
 .ct {
-	font: 9px "arial narrow";
+	font: 8.9px "arial"; /*narrow*/
 	color: #000033;
 }
 
@@ -86,7 +86,7 @@ img {
 }
 
 .ctN {
-	font: 9px "arial narrow";
+	font: 9px "arial"; /*narrow*/
 	color: #000033;
 }
 
@@ -338,7 +338,7 @@ img {
 }
 
 .rc6 .t {
-	font: 9px "arial narrow";
+	font: 9px "arial"; /*narrow*/
 	color: #000033;
 	height: 13px;
 }

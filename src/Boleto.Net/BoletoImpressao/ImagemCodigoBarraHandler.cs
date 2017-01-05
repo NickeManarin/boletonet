@@ -7,7 +7,6 @@ namespace BoletoNet
 {
     internal class ImagemCodigoBarraHandler : IHttpHandler
     {
-
         #region IHttpHandler Members
 
         public bool IsReusable
