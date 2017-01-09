@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Text;
 
 namespace BoletoNet
 {
@@ -21,14 +19,13 @@ namespace BoletoNet
 
     public class Instrucao_Banrisul : AbstractInstrucao, IInstrucao
     {
-
         #region Construtores
 
         public Instrucao_Banrisul()
         {
             try
             {
-                this.Banco = new Banco(41);
+                Banco = new Banco(41);
             }
             catch (Exception ex)
             {
@@ -38,22 +35,22 @@ namespace BoletoNet
 
         public Instrucao_Banrisul(int codigo)
         {
-            this.carregar(codigo, 0, 0);
+            carregar(codigo, 0, 0);
         }
 
         public Instrucao_Banrisul(int codigo, int nrDias)
         {
-            this.carregar(codigo, nrDias, (double)0.0);
+            carregar(codigo, nrDias, (double)0.0);
         }
 
         public Instrucao_Banrisul(int codigo, double percentualMultaDia)
         {
-            this.carregar(codigo, 0, percentualMultaDia);
+            carregar(codigo, 0, percentualMultaDia);
         }
 
         public Instrucao_Banrisul(int codigo, int nrDias, double percentualMultaDia)
         {
-            this.carregar(codigo, nrDias, percentualMultaDia);
+            carregar(codigo, nrDias, percentualMultaDia);
         }
 
         #endregion
@@ -64,46 +61,46 @@ namespace BoletoNet
         {
             try
             {
-                this.Banco = new Banco_Banrisul();
-                this.Valida();
+                Banco = new Banco_Banrisul();
+                Valida();
 
                 switch ((EnumInstrucoes_Banrisul)idInstrucao)
                 {
                     case EnumInstrucoes_Banrisul.NaoDispensarComissaoPermanencia:
-                        this.Codigo = (int)EnumInstrucoes_Banrisul.NaoDispensarComissaoPermanencia;
-                        this.Descricao = "Não dispensar comissão de permanência"; //01
+                        Codigo = (int)EnumInstrucoes_Banrisul.NaoDispensarComissaoPermanencia;
+                        Descricao = "Não dispensar comissão de permanência"; //01
                         break;
                     case EnumInstrucoes_Banrisul.NaoCobrarComissaoPermanencia:
-                        this.Codigo = (int)EnumInstrucoes_Banrisul.NaoCobrarComissaoPermanencia;
-                        this.Descricao = "Não cobrar comissão de permanência"; //08
+                        Codigo = (int)EnumInstrucoes_Banrisul.NaoCobrarComissaoPermanencia;
+                        Descricao = "Não cobrar comissão de permanência"; //08
                         break;
                     case EnumInstrucoes_Banrisul.Protestar:
-                        this.Codigo = (int)EnumInstrucoes_Banrisul.Protestar;
-                        this.Descricao = "Protestar caso impago " + nrDias + " dias após vencimento"; //09
+                        Codigo = (int)EnumInstrucoes_Banrisul.Protestar;
+                        Descricao = "Protestar caso impago " + nrDias + " dias após vencimento"; //09
                         break;
                     case EnumInstrucoes_Banrisul.DevolverAposNDias:
-                        this.Codigo = (int)EnumInstrucoes_Banrisul.DevolverAposNDias;
-                        this.Descricao = "Devolver se impago após " + nrDias + " dias do vencimento"; //15
+                        Codigo = (int)EnumInstrucoes_Banrisul.DevolverAposNDias;
+                        Descricao = "Devolver se impago após " + nrDias + " dias do vencimento"; //15
                         break;
                     case EnumInstrucoes_Banrisul.CobrarMultaAposNDias:
-                        this.Codigo = (int)EnumInstrucoes_Banrisul.CobrarMultaAposNDias;
-                        this.Descricao = "Após " + nrDias + " dias do vencimento, cobrar " + percentualMultaDia + "% de multa"; //18
+                        Codigo = (int)EnumInstrucoes_Banrisul.CobrarMultaAposNDias;
+                        Descricao = "Após " + nrDias + " dias do vencimento, cobrar " + percentualMultaDia + "% de multa"; //18
                         break;
                     case EnumInstrucoes_Banrisul.CobrarMultaOuFracaoAposNDias:
-                        this.Codigo = (int)EnumInstrucoes_Banrisul.CobrarMultaOuFracaoAposNDias;
-                        this.Descricao = "Após " + nrDias + " dias do vencimento, cobrar " + percentualMultaDia + "% de multa ao mês ou fração"; //20
+                        Codigo = (int)EnumInstrucoes_Banrisul.CobrarMultaOuFracaoAposNDias;
+                        Descricao = "Após " + nrDias + " dias do vencimento, cobrar " + percentualMultaDia + "% de multa ao mês ou fração"; //20
                         break;
                     case EnumInstrucoes_Banrisul.NaoProtestar:
-                        this.Codigo = (int)EnumInstrucoes_Banrisul.NaoProtestar;
-                        this.Descricao = "Não protestar"; //23
+                        Codigo = (int)EnumInstrucoes_Banrisul.NaoProtestar;
+                        Descricao = "Não protestar"; //23
                         break;
                     default:
-                        this.Codigo = 0;
-                        this.Descricao = "( Selecione )";
+                        Codigo = 0;
+                        Descricao = "( Selecione )";
                         break;
                 }
 
-                this.QuantidadeDias = nrDias;
+                QuantidadeDias = nrDias;
             }
             catch (Exception ex)
             {
@@ -117,6 +114,5 @@ namespace BoletoNet
         }
 
         #endregion
-
     }
 }

@@ -290,7 +290,7 @@ namespace BoletoNet
 		}
 
 		/// <summary> 
-		/// Recupara o número do documento
+		/// Recupera o número do documento
 		/// </summary>        
 		public string NumeroDocumento
 		{
@@ -299,7 +299,7 @@ namespace BoletoNet
 		}
 
 		/// <summary> 
-		/// Recupara o digito nosso número 
+		/// Recupera o digito nosso número 
 		/// </summary>        
 		public string DigitoNossoNumero
 		{

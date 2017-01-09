@@ -1,7 +1,5 @@
-using System;
 using System.Web;
 using System.Drawing.Imaging;
-using System.IO;
 
 namespace BoletoNet
 {
@@ -16,16 +14,16 @@ namespace BoletoNet
 
         public void ProcessRequest(HttpContext context)
         {
-            string code = context.Request.QueryString[0];
+            var code = context.Request.QueryString[0];
             context.Response.Write(code);
-            string contentType = "image/jpeg";
-            string filename = "barcode2of5.jpg";
+            var contentType = "image/jpeg";
+            var filename = "barcode2of5.jpg";
 
             context.Response.Clear();
             context.Response.ContentType = contentType;
             context.Response.AddHeader("content-disposition", "outline;filename=" + filename);
 
-            System.Drawing.Bitmap img = new C2of5i(code, 1, 50, code.Length).ToBitmap();
+            var img = new C2of5i(code, 1, 50, code.Length).ToBitmap();
 
             //img = img.GetThumbnailImage(460, 61, null, new IntPtr()) as System.Drawing.Bitmap;
 

@@ -5,12 +5,12 @@ using System.Drawing;
 using System.Text;
 using System.Web.UI;
 using BoletoNet.Util;
-//Envio por email
 using System.IO;
 using System.Net.Mail;
 using System.Net.Mime;
 using System.Reflection;
 using System.Globalization;
+using System.Linq;
 
 [assembly: WebResource("BoletoNet.BoletoImpressao.BoletoNet.css", "text/css", PerformSubstitution = true)]
 [assembly: WebResource("BoletoNet.Imagens.barra.gif", "image/gif")]
@@ -20,8 +20,6 @@ using System.Globalization;
 
 namespace BoletoNet
 {
-    using System.Linq;
-
     [Serializable, Designer(typeof(BoletoBancarioDesigner)), ToolboxBitmap(typeof(BoletoBancario)), 
         ToolboxData("<{0}:BoletoBancario Runat=\"server\"></{0}:BoletoBancario>")]
     public class BoletoBancario : Control
@@ -215,12 +213,6 @@ namespace BoletoNet
         
         #endregion Propriedades
 
-        public static string UrlLogo(int banco)
-        {
-            var page = System.Web.HttpContext.Current.CurrentHandler as Page;
-            return page.ClientScript.GetWebResourceUrl(typeof(BoletoBancario), "BoletoNet.Imagens." + Utils.FormatCode(banco.ToString(), 3) + ".jpg");
-        }
-
         #region Override
 
         protected override void OnPreRender(EventArgs e)
@@ -261,32 +253,6 @@ namespace BoletoNet
 
         #endregion Override
 
-        /// <summary>
-        /// Ajusta o tamanho dos textos e labels do boleto bancário.
-        /// </summary>
-        /// <param name="tamanhoFonteTextos">Padrão 10px</param>
-        /// <param name="tamanhoFonteRotulos">Padrão 9.8px. É o maior tamanho sem que o exista uma quebra de linha no rótulo "Data processamento"</param>
-        /// <param name="tamanhoFonteInstrucaoImpressao">Padrão 10px</param>
-        /// <param name="tamanhoFonteInstrucoes">Padrão 10px</param>
-        public void AjustaTamanhoFonte(double tamanhoFonteTextos = 10, double tamanhoFonteRotulos = 9.8, double tamanhoFonteInstrucaoImpressao = 9, double tamanhoFonteInstrucoes = 10)
-        {
-            _ajustaTamanhoFonte = true;
-
-            var html = new StringBuilder();
-
-            html.AppendLine("<style>");
-            html.AppendFormat(".cp$1 font-size: {0}px !important; $2", tamanhoFonteTextos);
-            html.AppendFormat(".ctN$1 font-size: {0}px !important; $2", tamanhoFonteRotulos);
-            html.AppendFormat(".cpN$1 font-size: {0}px !important; $2", tamanhoFonteTextos);
-            html.AppendFormat(".ti$1 font-size: {0}px !important; $2", tamanhoFonteInstrucaoImpressao);
-            html.AppendFormat(".ct$1 font-size: {0}px !important; $2", tamanhoFonteRotulos);
-            html.AppendFormat(".t$1 font-size: {0}px !important; $2", tamanhoFonteRotulos);
-            html.AppendFormat(".it$1 font-size: {0}px !important; $2", tamanhoFonteInstrucoes);
-            html.AppendLine("</style>");
-
-            _ajustaTamanhoFonteHtml = html.ToString().Replace("$1", "{").Replace("$2", "}");
-        }
-        
         #region Html
 
         public string GeraHtmlInstrucoes()
@@ -696,7 +662,7 @@ namespace BoletoNet
                 .Replace("@VALORDOCUMENTO", Boleto.ValorMoeda)
                 .Replace("@=VALORDOCUMENTO", valorBoleto)
                 .Replace("@VALORCOBRADO", Boleto.ValorCobrado == 0 ? "" : Boleto.ValorCobrado.ToString("C", CultureInfo.GetCultureInfo("PT-BR")))
-                .Replace("@OUTROSACRESCIMOS", "")
+                .Replace("@OUTROSACRESCIMOS", Boleto.OutrosAcrescimos == 0 ? "" : Boleto.OutrosAcrescimos.ToString("C", CultureInfo.GetCultureInfo("PT-BR")))
                 .Replace("@OUTRASDEDUCOES", "")
                 .Replace("@DESCONTOS", Boleto.ValorDesconto == 0 ? "" : Boleto.ValorDesconto.ToString("C", CultureInfo.GetCultureInfo("PT-BR")))
                 .Replace("@AGENCIACONTA", agenciaCodigoCedente)
@@ -760,19 +726,21 @@ namespace BoletoNet
         /// <summary>
         /// Função utilizada para gerar o html do boleto sem que o mesmo esteja dentro de uma página Web.
         /// </summary>
+        /// <param name="startText">Texto inicial.</param>
         /// <param name="srcLogo">Local apontado pela imagem de logo.</param>
         /// <param name="srcBarra">Local apontado pela imagem de barra.</param>
         /// <param name="srcCodigoBarra">Local apontado pela imagem do código de barras.</param>
+        /// <param name="usaCssPdf">True se usa o estilo específico para o pdf.</param>
         /// <returns>StringBuilder conténdo o código html do boleto bancário.</returns>
-        protected StringBuilder HtmlOffLine(string textoNoComecoDoEmail, string srcLogo, string srcBarra, string srcCodigoBarra, bool usaCssPdf = false)
-        {//protected StringBuilder HtmlOffLine(string srcCorte, string srcLogo, string srcBarra, string srcPonto, string srcBarraInterna, string srcCodigoBarra)
+        protected StringBuilder HtmlOffLine(string startText, string srcLogo, string srcBarra, string srcCodigoBarra, bool usaCssPdf = false)
+        {
             OnLoad(EventArgs.Empty);
 
             var html = new StringBuilder();
             HtmlOfflineHeader(html, usaCssPdf);
 
-            if (!string.IsNullOrEmpty(textoNoComecoDoEmail))
-                html.Append(textoNoComecoDoEmail);
+            if (!string.IsNullOrEmpty(startText))
+                html.Append(startText);
 
             html.Append(MontaHtml(srcLogo, srcBarra, "<img src=\"" + srcCodigoBarra + "\" alt=\"Código de Barras\" />"));
             HtmlOfflineFooter(html);
@@ -879,8 +847,7 @@ namespace BoletoNet
             
             return av;
         }
-
-
+        
         /// <summary>
         /// Função utilizada gerar o AlternateView necessário para enviar um boleto bancário por e-mail.
         /// </summary>
@@ -938,7 +905,6 @@ namespace BoletoNet
             lrImagemCodigoBarra = new LinkedResource(ms, MediaTypeNames.Image.Gif);
             lrImagemCodigoBarra.ContentId = "codigobarra" + randomSufix; ;
         }
-
 
         /// <summary>
         /// Função utilizada para gravar em um arquivo local o conteúdo do boleto. Este arquivo pode ser aberto em um browser sem que o site esteja no ar.
@@ -1248,6 +1214,38 @@ namespace BoletoNet
             }
         }
 
+        /// <summary>
+        /// Ajusta o tamanho dos textos e labels do boleto bancário.
+        /// </summary>
+        /// <param name="tamanhoFonteTextos">Padrão 10px</param>
+        /// <param name="tamanhoFonteRotulos">Padrão 9.8px. É o maior tamanho sem que o exista uma quebra de linha no rótulo "Data processamento"</param>
+        /// <param name="tamanhoFonteInstrucaoImpressao">Padrão 10px</param>
+        /// <param name="tamanhoFonteInstrucoes">Padrão 10px</param>
+        public void AjustaTamanhoFonte(double tamanhoFonteTextos = 10, double tamanhoFonteRotulos = 9.8, double tamanhoFonteInstrucaoImpressao = 9, double tamanhoFonteInstrucoes = 10)
+        {
+            _ajustaTamanhoFonte = true;
+
+            var html = new StringBuilder();
+
+            html.AppendLine("<style>");
+            html.AppendFormat(".cp$1 font-size: {0}px !important; $2", tamanhoFonteTextos);
+            html.AppendFormat(".ctN$1 font-size: {0}px !important; $2", tamanhoFonteRotulos);
+            html.AppendFormat(".cpN$1 font-size: {0}px !important; $2", tamanhoFonteTextos);
+            html.AppendFormat(".ti$1 font-size: {0}px !important; $2", tamanhoFonteInstrucaoImpressao);
+            html.AppendFormat(".ct$1 font-size: {0}px !important; $2", tamanhoFonteRotulos);
+            html.AppendFormat(".t$1 font-size: {0}px !important; $2", tamanhoFonteRotulos);
+            html.AppendFormat(".it$1 font-size: {0}px !important; $2", tamanhoFonteInstrucoes);
+            html.AppendLine("</style>");
+
+            _ajustaTamanhoFonteHtml = html.ToString().Replace("$1", "{").Replace("$2", "}");
+        }
+
+        public static string UrlLogo(int banco)
+        {
+            var page = System.Web.HttpContext.Current.CurrentHandler as Page;
+
+            return page.ClientScript.GetWebResourceUrl(typeof(BoletoBancario), "BoletoNet.Imagens." + Utils.FormatCode(banco.ToString(), 3) + ".jpg");
+        }
 
         public byte[] BoletosEmPdf(List<BoletoBancario> boletos, string title = "", string args = "", string header = "", bool grayscale = false, bool convertLinhaDigitavelToImage = false)
         {

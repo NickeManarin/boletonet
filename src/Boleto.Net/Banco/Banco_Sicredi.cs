@@ -1,7 +1,6 @@
 using System;
 using System.Web.UI;
 using BoletoNet.Util;
-using System.Text;
 using BoletoNet.EDI.Banco;
 
 [assembly: WebResource("BoletoNet.Imagens.748.jpg", "image/jpg")]
@@ -12,23 +11,21 @@ namespace BoletoNet
     /// </Author>
     internal class Banco_Sicredi : AbstractBanco, IBanco
     {
-
         /// <author>
         /// Classe responsavel em criar os campos do Banco Sicredi.
         /// </author>
         internal Banco_Sicredi()
         {
-            this.Codigo = 748;
-            this.Digito = "X";
-            this.Nome = "Banco Sicredi";
+            Codigo = 748;
+            Digito = "X";
+            Nome = "Banco Sicredi";
         }
-        
+
         public override void ValidaBoleto(Boleto boleto)
         {
             //Formata o tamanho do número da agência
             if (boleto.Cedente.ContaBancaria.Agencia.Length < 4)
                 boleto.Cedente.ContaBancaria.Agencia = Utils.FormatCode(boleto.Cedente.ContaBancaria.Agencia, 4);
-            
 
             //Formata o tamanho do número da conta corrente
             if (boleto.Cedente.ContaBancaria.Conta.Length < 5)
@@ -42,7 +39,8 @@ namespace BoletoNet
             //Verifica se o nosso número é válido
             if (Utils.ToInt64(boleto.NossoNumero) == 0 || boleto.NossoNumero.Length > 8)
                 throw new NotImplementedException("Nosso número inválido");
-            else if (boleto.NossoNumero.Length == 6)
+
+            if (boleto.NossoNumero.Length == 6)
             {
                 boleto.NossoNumero = DateTime.Now.ToString("yy") + boleto.NossoNumero;
                 boleto.DigitoNossoNumero = DigNossoNumeroSicredi(boleto);
@@ -55,13 +53,12 @@ namespace BoletoNet
                 //boleto.DigitoNossoNumero += DigNossoNumeroSicredi(boleto);
             }
 
-
             //Verifica se data do processamento é valida
-			if (boleto.DataProcessamento == DateTime.MinValue) // diegomodolo (diego.ribeiro@nectarnet.com.br)
+            if (boleto.DataProcessamento == DateTime.MinValue) // diegomodolo (diego.ribeiro@nectarnet.com.br)
                 boleto.DataProcessamento = DateTime.Now;
 
             //Verifica se data do documento é valida
-			if (boleto.DataDocumento == DateTime.MinValue) // diegomodolo (diego.ribeiro@nectarnet.com.br)
+            if (boleto.DataDocumento == DateTime.MinValue) // diegomodolo (diego.ribeiro@nectarnet.com.br)
                 boleto.DataDocumento = DateTime.Now;
 
             /* Comentado por sidneiklein pois a Carteira terá que vir preenchida pela classe, e não ser manipulada dentro da Boleto.DLL; 04/11/2013
@@ -70,6 +67,7 @@ namespace BoletoNet
             else
                 boleto.Carteira = "3";
             */
+
             FormataCodigoBarra(boleto);
             FormataLinhaDigitavel(boleto);
             FormataNossoNumero(boleto);
@@ -77,7 +75,7 @@ namespace BoletoNet
 
         public override void FormataNossoNumero(Boleto boleto)
         {
-            string nossoNumero = boleto.NossoNumero;            
+            var nossoNumero = boleto.NossoNumero;
             boleto.NossoNumero = string.Format("{0}/{1}-{2}", nossoNumero.Substring(0, 2), nossoNumero.Substring(2, 6), nossoNumero.Substring(8));
         }
 
@@ -85,90 +83,85 @@ namespace BoletoNet
         {
             throw new NotImplementedException("Função do fomata número do documento não implementada.");
         }
+
         public override void FormataLinhaDigitavel(Boleto boleto)
         {
             //041M2.1AAAd1  CCCCC.CCNNNd2  NNNNN.041XXd3  V FFFF9999999999
 
-            string campo1 = "7489" + boleto.CodigoBarra.Codigo.Substring(19,5);
-            int d1 = Mod10Sicredi(campo1);
-            campo1 = FormataCampoLD(campo1)+d1.ToString();
+            var campo1 = "7489" + boleto.CodigoBarra.Codigo.Substring(19, 5);
+            var d1 = Mod10Sicredi(campo1);
+            campo1 = FormataCampoLD(campo1) + d1;
 
-            string campo2 = boleto.CodigoBarra.Codigo.Substring(24, 10);
-            int d2 = Mod10Sicredi(campo2);
-            campo2 = FormataCampoLD(campo2)+d2.ToString();
+            var campo2 = boleto.CodigoBarra.Codigo.Substring(24, 10);
+            var d2 = Mod10Sicredi(campo2);
+            campo2 = FormataCampoLD(campo2) + d2;
 
-            string campo3 = boleto.CodigoBarra.Codigo.Substring(34, 10);
-            int d3 = Mod10Sicredi(campo3);
-            campo3 = FormataCampoLD(campo3)+d3.ToString();
+            var campo3 = boleto.CodigoBarra.Codigo.Substring(34, 10);
+            var d3 = Mod10Sicredi(campo3);
+            campo3 = FormataCampoLD(campo3) + d3;
 
-            string campo4 = boleto.CodigoBarra.Codigo.Substring(4, 1);
+            var campo4 = boleto.CodigoBarra.Codigo.Substring(4, 1);
 
-            string campo5 = boleto.CodigoBarra.Codigo.Substring(5, 14);
+            var campo5 = boleto.CodigoBarra.Codigo.Substring(5, 14);
 
             boleto.CodigoBarra.LinhaDigitavel = campo1 + "  " + campo2 + "  " + campo3 + "  " + campo4 + "  " + campo5;
         }
+
         private string FormataCampoLD(string campo)
         {
-            return string.Format("{0}.{1}",campo.Substring(0, 5), campo.Substring(5));
+            return string.Format("{0}.{1}", campo.Substring(0, 5), campo.Substring(5));
         }
 
         public override void FormataCodigoBarra(Boleto boleto)
         {
-            string valorBoleto = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "");
+            var valorBoleto = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "");
             valorBoleto = Utils.FormatCode(valorBoleto, 10);
 
-            string cmp_livre =  boleto.Carteira + "1" + boleto.NossoNumero + boleto.Cedente.ContaBancaria.Agencia + boleto.Cedente.ContaBancaria.OperacaConta + boleto.Cedente.Codigo + "10";
-            string dv_cmpLivre = digSicredi(cmp_livre).ToString();
+            var cmpLivre = boleto.Carteira + "1" + boleto.NossoNumero + boleto.Cedente.ContaBancaria.Agencia + boleto.Cedente.ContaBancaria.OperacaConta + boleto.Cedente.Codigo + "10";
+            var dvCmpLivre = DigSicredi(cmpLivre).ToString();
 
-            boleto.CodigoBarra.Codigo = string.Format("{0}{1}{2}{3}{4}{5}", Utils.FormatCode(Codigo.ToString(), 3), boleto.Moeda, FatorVencimento(boleto), valorBoleto, cmp_livre, digSicredi(cmp_livre).ToString());
+            boleto.CodigoBarra.Codigo = string.Format("{0}{1}{2}{3}{4}{5}", Utils.FormatCode(Codigo.ToString(), 3), boleto.Moeda, FatorVencimento(boleto), valorBoleto, cmpLivre, DigSicredi(cmpLivre));
 
-            int _dacBoleto = digSicredi(boleto.CodigoBarra.Codigo);
+            var dacBoleto = DigSicredi(boleto.CodigoBarra.Codigo);
 
-            if (_dacBoleto == 0 || _dacBoleto > 9)
-                _dacBoleto = 1;
+            if (dacBoleto == 0 || dacBoleto > 9)
+                dacBoleto = 1;
 
 
-            boleto.CodigoBarra.Codigo = Strings.Left(boleto.CodigoBarra.Codigo, 4) + _dacBoleto + Strings.Right(boleto.CodigoBarra.Codigo, 39);
+            boleto.CodigoBarra.Codigo = Strings.Left(boleto.CodigoBarra.Codigo, 4) + dacBoleto + Strings.Right(boleto.CodigoBarra.Codigo, 39);
         }
 
         public bool RegistroByCarteira(Boleto boleto)
         {
-            bool valida = false;
-            if (boleto.Carteira == "112"
-                || boleto.Carteira == "115"
-                || boleto.Carteira == "104"
-                || boleto.Carteira == "147"
-                || boleto.Carteira == "188"
-                || boleto.Carteira == "108"
-                || boleto.Carteira == "109"
-                || boleto.Carteira == "150"
-                || boleto.Carteira == "121")
-                valida = true;
+            var valida = boleto.Carteira == "112" || boleto.Carteira == "115" || boleto.Carteira == "104" || boleto.Carteira == "147"
+                || boleto.Carteira == "188" || boleto.Carteira == "108" || boleto.Carteira == "109" || boleto.Carteira == "150" || boleto.Carteira == "121";
+
             return valida;
         }
 
         #region Métodos de Geração do Arquivo de Remessa
+
         public override string GerarDetalheRemessa(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
         {
             try
             {
-                string _detalhe = " ";
+                var detalhe = " ";
 
                 //base.GerarDetalheRemessa(boleto, numeroRegistro, tipoArquivo);
 
                 switch (tipoArquivo)
                 {
                     case TipoArquivo.CNAB240:
-                        _detalhe = GerarDetalheRemessaCNAB240(boleto, numeroRegistro, tipoArquivo);
+                        detalhe = GerarDetalheRemessaCNAB240(boleto, numeroRegistro, tipoArquivo);
                         break;
                     case TipoArquivo.CNAB400:
-                        _detalhe = GerarDetalheRemessaCNAB400(boleto, numeroRegistro, tipoArquivo);
+                        detalhe = GerarDetalheRemessaCnab400(boleto, numeroRegistro, tipoArquivo);
                         break;
                     case TipoArquivo.Outro:
                         throw new Exception("Tipo de arquivo inexistente.");
                 }
 
-                return _detalhe;
+                return detalhe;
 
             }
             catch (Exception ex)
@@ -176,15 +169,17 @@ namespace BoletoNet
                 throw new Exception("Erro durante a geração do DETALHE arquivo de REMESSA.", ex);
             }
         }
+
         public override string GerarHeaderRemessa(string numeroConvenio, Cedente cedente, TipoArquivo tipoArquivo, int numeroArquivoRemessa, Boleto boletos)
         {
             throw new NotImplementedException("Função não implementada.");
         }
+
         public string GerarDetalheRemessaCNAB240(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
         {
             try
             {
-                string detalhe = Utils.FormatCode(Codigo.ToString(), "0", 3, true);
+                var detalhe = Utils.FormatCode(Codigo.ToString(), "0", 3, true);
                 detalhe += Utils.FormatCode("", "0", 4, true);
                 detalhe += "3";
                 detalhe += Utils.FormatCode(numeroRegistro.ToString(), 5);
@@ -194,13 +189,13 @@ namespace BoletoNet
                 detalhe += Utils.FormatCode(boleto.Cedente.ContaBancaria.Conta, 12);
                 detalhe += boleto.Cedente.ContaBancaria.DigitoConta;
                 detalhe += " ";
-                detalhe += Utils.FormatCode(boleto.NossoNumero.Replace("/", "").Replace("-", ""),20);
+                detalhe += Utils.FormatCode(boleto.NossoNumero.Replace("/", "").Replace("-", ""), 20);
                 detalhe += "1";
-                detalhe += (Convert.ToInt16(boleto.Carteira) == 1 ? "1" : "2");
+                detalhe += Convert.ToInt16(boleto.Carteira) == 1 ? "1" : "2";
                 detalhe += "122";
                 detalhe += Utils.FormatCode(boleto.NumeroDocumento, 15);
                 detalhe += boleto.DataVencimento.ToString("ddMMyyyy");
-                string valorBoleto = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "");
+                var valorBoleto = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "");
                 valorBoleto = Utils.FormatCode(valorBoleto, 13);
                 detalhe += valorBoleto;
                 detalhe += "00000 99A";
@@ -236,7 +231,7 @@ namespace BoletoNet
         {
             try
             {
-                string _header = " ";
+                var header = " ";
 
                 base.GerarHeaderRemessa("0", cedente, tipoArquivo, numeroArquivoRemessa);
 
@@ -244,16 +239,16 @@ namespace BoletoNet
                 {
 
                     case TipoArquivo.CNAB240:
-                        _header = GerarHeaderRemessaCNAB240(cedente);
+                        header = GerarHeaderRemessaCNAB240(cedente);
                         break;
                     case TipoArquivo.CNAB400:
-                        _header = GerarHeaderRemessaCNAB400(0, cedente, numeroArquivoRemessa);
+                        header = GerarHeaderRemessaCnab400(0, cedente, numeroArquivoRemessa);
                         break;
                     case TipoArquivo.Outro:
                         throw new Exception("Tipo de arquivo inexistente.");
                 }
 
-                return _header;
+                return header;
 
             }
             catch (Exception ex)
@@ -278,7 +273,7 @@ namespace BoletoNet
         {
             try
             {
-                string header = " ";
+                var header = " ";
 
                 switch (tipoArquivo)
                 {
@@ -306,11 +301,11 @@ namespace BoletoNet
         {
             try
             {
-                string header = "748";
+                var header = "748";
                 header += "0000";
                 header += "0";
                 header += Utils.FormatCode("", " ", 9);
-                header += (cedente.CPFCNPJ.Length == 11 ? "1" : "2");
+                header += cedente.CPFCNPJ.Length == 11 ? "1" : "2";
                 header += Utils.FormatCode(cedente.CPFCNPJ, "0", 14, true);
                 header += Utils.FormatCode(cedente.Convenio.ToString(), " ", 20);
                 header += Utils.FormatCode(cedente.ContaBancaria.Agencia, "0", 5, true);
@@ -342,21 +337,21 @@ namespace BoletoNet
         {
             try
             {
-                string _trailer = " ";
+                var trailer = " ";
 
                 switch (tipoArquivo)
                 {
                     case TipoArquivo.CNAB240:
-                        _trailer = GerarTrailerRemessa240(numeroRegistro);
+                        trailer = GerarTrailerRemessa240(numeroRegistro);
                         break;
                     case TipoArquivo.CNAB400:
-                        _trailer = GerarTrailerRemessa400(numeroRegistro, cedente);
+                        trailer = GerarTrailerRemessa400(numeroRegistro, cedente);
                         break;
                     case TipoArquivo.Outro:
                         throw new Exception("Tipo de arquivo inexistente.");
                 }
 
-                return _trailer;
+                return trailer;
 
             }
             catch (Exception ex)
@@ -369,19 +364,18 @@ namespace BoletoNet
         {
             try
             {
-                string complemento = new string(' ', 205);
-                string _trailer;
-                
-                _trailer = "74899999";
-                _trailer += Utils.FormatCode("", " ", 9);
-                _trailer += Utils.FormatCode("", 6);
-                _trailer += Utils.FormatCode(numeroRegistro.ToString(), 6);
-                _trailer += Utils.FormatCode("", 6);
-                _trailer += complemento;
+                var complemento = new string(' ', 205);
 
-                _trailer = Utils.SubstituiCaracteresEspeciais(_trailer);
+                var trailer = "74899999";
+                trailer += Utils.FormatCode("", " ", 9);
+                trailer += Utils.FormatCode("", 6);
+                trailer += Utils.FormatCode(numeroRegistro.ToString(), 6);
+                trailer += Utils.FormatCode("", 6);
+                trailer += complemento;
 
-                return _trailer;
+                trailer = Utils.SubstituiCaracteresEspeciais(trailer);
+
+                return trailer;
             }
             catch (Exception ex)
             {
@@ -392,6 +386,7 @@ namespace BoletoNet
         #endregion
 
         #region Métodos de Leitura do Arquivo de Retorno
+
         /*
          * Substituído Método de Leitura do Retorno pelo Interpretador de EDI;
         public override DetalheRetorno LerDetalheRetornoCNAB400(string registro)
@@ -454,6 +449,7 @@ namespace BoletoNet
             }
         }
         */
+
         #endregion Métodos de Leitura do Arquivo de Retorno
 
         public int Mod10Sicredi(string seq)
@@ -467,34 +463,36 @@ namespace BoletoNet
              * r - Resto
              */
 
-            int d, s = 0, p = 2, b = 2, r;
+            int s = 0, p = 2, b = 2;
 
-            for (int i = seq.Length - 1; i >= 0; i--)
+            for (var i = seq.Length - 1; i >= 0; i--)
             {
+                var r = Convert.ToInt32(seq.Substring(i, 1)) * p;
 
-                r = (Convert.ToInt32(seq.Substring(i, 1)) * p);
-                if(r > 9)
+                if (r > 9)
                     r = SomaDezena(r);
+
                 s = s + r;
+
                 if (p < b)
                     p++;
                 else
                     p--;
             }
 
-            d = Multiplo10(s);
+            var d = Multiplo10(s);
             return d;
         }
 
         public int SomaDezena(int dezena)
         {
-            string d = dezena.ToString();
-            int d1 = Convert.ToInt32(d.Substring(0, 1));
-            int d2 = Convert.ToInt32(d.Substring(1));
+            var d = dezena.ToString();
+            var d1 = Convert.ToInt32(d.Substring(0, 1));
+            var d2 = Convert.ToInt32(d.Substring(1));
             return d1 + d2;
         }
 
-        public int digSicredi(string seq)
+        public int DigSicredi(string seq)
         {
             /* Variáveis
              * -------------
@@ -507,16 +505,16 @@ namespace BoletoNet
 
             int d, s = 0, p = 2, b = 9;
 
-            for (int i = seq.Length - 1; i >= 0; i--)
+            for (var i = seq.Length - 1; i >= 0; i--)
             {
-                s = s + (Convert.ToInt32(seq.Substring(i, 1)) * p);
+                s = s + Convert.ToInt32(seq.Substring(i, 1)) * p;
                 if (p < b)
                     p = p + 1;
                 else
                     p = 2;
             }
 
-            d = 11 - (s % 11);
+            d = 11 - s % 11;
             if (d > 9)
                 d = 0;
             return d;
@@ -524,12 +522,13 @@ namespace BoletoNet
 
         public string DigNossoNumeroSicredi(Boleto boleto)
         {
-            string agencia = boleto.Cedente.ContaBancaria.Agencia;    //código da cooperativa de crédito/agência beneficiária (aaaa)
-            string posto = boleto.Cedente.ContaBancaria.OperacaConta; //código do posto beneficiário (pp)
-            string cedente = boleto.Cedente.Codigo;                   //código do beneficiário (ccccc)
-            string nossoNumero = boleto.NossoNumero;                  //ano atual (yy), indicador de geração do nosso número (b) e o número seqüencial do beneficiário (nnnnn);
+            var agencia = boleto.Cedente.ContaBancaria.Agencia;    //código da cooperativa de crédito/agência beneficiária (aaaa)
+            var posto = boleto.Cedente.ContaBancaria.OperacaConta; //código do posto beneficiário (pp)
+            var cedente = boleto.Cedente.Codigo;                   //código do beneficiário (ccccc)
+            var nossoNumero = boleto.NossoNumero;                  //ano atual (yy), indicador de geração do nosso número (b) e o número seqüencial do beneficiário (nnnnn);
 
-            string seq = string.Concat(agencia, posto, cedente, nossoNumero); // = aaaappcccccyybnnnnn
+            var seq = string.Concat(agencia, posto, cedente, nossoNumero); // = aaaappcccccyybnnnnn
+
             /* Variáveis
              * -------------
              * d - Dígito
@@ -539,30 +538,33 @@ namespace BoletoNet
              * r - Resto
              */
 
-            int d, s = 0, p = 2, b = 9;
+            int s = 0, p = 2, b = 9;
             //Atribui os pesos de {2..9}
-            for (int i = seq.Length - 1; i >= 0; i--)
+
+            for (var i = seq.Length - 1; i >= 0; i--)
             {
-                s = s + (Convert.ToInt32(seq.Substring(i, 1)) * p);
+                s = s + Convert.ToInt32(seq.Substring(i, 1)) * p;
+
                 if (p < b)
                     p = p + 1;
                 else
                     p = 2;
             }
-            d = 11 - (s % 11);//Calcula o Módulo 11;
+            var d = 11 - s % 11;
+
             if (d > 9)
                 d = 0;
+
             return d.ToString();
         }
-
 
         /// <summary>
         /// Efetua as Validações dentro da classe Boleto, para garantir a geração da remessa
         /// </summary>
         public override bool ValidarRemessa(TipoArquivo tipoArquivo, string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem)
         {
-            bool vRetorno = true;
-            string vMsg = string.Empty;
+            var vRetorno = true;
+            var vMsg = string.Empty;
             //            
             switch (tipoArquivo)
             {
@@ -570,7 +572,7 @@ namespace BoletoNet
                     //vRetorno = ValidarRemessaCNAB240(numeroConvenio, banco, cedente, boletos, numeroArquivoRemessa, out vMsg);
                     break;
                 case TipoArquivo.CNAB400:
-                    vRetorno = ValidarRemessaCNAB400(numeroConvenio, banco, cedente, boletos, numeroArquivoRemessa, out vMsg);
+                    vRetorno = ValidarRemessaCnab400(numeroConvenio, banco, cedente, boletos, numeroArquivoRemessa, out vMsg);
                     break;
                 case TipoArquivo.Outro:
                     throw new Exception("Tipo de arquivo inexistente.");
@@ -580,116 +582,126 @@ namespace BoletoNet
             return vRetorno;
         }
 
-
         #region CNAB 400 - sidneiklein
-        public bool ValidarRemessaCNAB400(string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem)
+
+        public bool ValidarRemessaCnab400(string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem)
         {
-            bool vRetorno = true;
-            string vMsg = string.Empty;
-            //
+            var vRetorno = true;
+            var vMsg = string.Empty;
+
             #region Pré Validações
+
             if (banco == null)
             {
-                vMsg += String.Concat("Remessa: O Banco é Obrigatório!", Environment.NewLine);
+                vMsg += string.Concat("Remessa: O Banco é Obrigatório!", Environment.NewLine);
                 vRetorno = false;
             }
             if (cedente == null)
             {
-                vMsg += String.Concat("Remessa: O Cedente/Beneficiário é Obrigatório!", Environment.NewLine);
+                vMsg += string.Concat("Remessa: O Cedente/Beneficiário é Obrigatório!", Environment.NewLine);
                 vRetorno = false;
             }
             if (boletos == null || boletos.Count.Equals(0))
             {
-                vMsg += String.Concat("Remessa: Deverá existir ao menos 1 boleto para geração da remessa!", Environment.NewLine);
+                vMsg += string.Concat("Remessa: Deverá existir ao menos 1 boleto para geração da remessa!", Environment.NewLine);
                 vRetorno = false;
             }
-            #endregion
-            //
-            foreach (Boleto boleto in boletos)
-            {
-                #region Validação de cada boleto
-                if (boleto.Remessa == null)
-                {
-                    vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe as diretrizes de remessa!", Environment.NewLine);
-                    vRetorno = false;
-                }
-                else
-                {
-                    #region Validações da Remessa que deverão estar preenchidas quando SICREDI
-                    //Comentado porque ainda está fixado em 01
-                    //if (String.IsNullOrEmpty(boleto.Remessa.CodigoOcorrencia))
-                    //{
-                    //    vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o Código de Ocorrência!", Environment.NewLine);
-                    //    vRetorno = false;
-                    //}
-                    if (String.IsNullOrEmpty(boleto.NumeroDocumento))
-                    {
-                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe um Número de Documento!", Environment.NewLine);
-                        vRetorno = false;
-                    }
-                    else if (String.IsNullOrEmpty(boleto.Remessa.TipoDocumento))
-                    {
-                        // Para o Sicredi, defini o Tipo de Documento sendo: 
-                        //       A = 'A' - SICREDI com Registro
-                        //      C1 = 'C' - SICREDI sem Registro Impressão Completa pelo Sicredi
-                        //      C2 = 'C' - SICREDI sem Registro Pedido de bloquetos pré-impressos
-                        // ** Isso porque são tratados 3 leiautes de escrita diferentes para o Detail da remessa;
 
-                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o Tipo Documento!", Environment.NewLine);
+            #endregion
+
+            if (boletos != null)
+                foreach (var boleto in boletos)
+                {
+                    #region Validação de cada boleto
+
+                    if (boleto.Remessa == null)
+                    {
+                        vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe as diretrizes de remessa!", Environment.NewLine);
                         vRetorno = false;
                     }
-                    else if (!boleto.Remessa.TipoDocumento.Equals("A") && !boleto.Remessa.TipoDocumento.Equals("C1") && !boleto.Remessa.TipoDocumento.Equals("C2"))
+                    else
                     {
-                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Tipo de Documento Inválido! Deverão ser: A = SICREDI com Registro; C1 = SICREDI sem Registro Impressão Completa pelo Sicredi;  C2 = SICREDI sem Registro Pedido de bloquetos pré-impressos", Environment.NewLine);
-                        vRetorno = false;
+                        #region Validações da Remessa que deverão estar preenchidas quando SICREDI
+                        
+                        //Comentado porque ainda está fixado em 01
+                        //if (String.IsNullOrEmpty(boleto.Remessa.CodigoOcorrencia))
+                        //{
+                        //    vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o Código de Ocorrência!", Environment.NewLine);
+                        //    vRetorno = false;
+                        //}
+
+                        if (string.IsNullOrEmpty(boleto.NumeroDocumento))
+                        {
+                            vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe um Número de Documento!", Environment.NewLine);
+                            vRetorno = false;
+                        }
+                        else if (string.IsNullOrEmpty(boleto.Remessa.TipoDocumento))
+                        {
+                            // Para o Sicredi, defini o Tipo de Documento sendo: 
+                            //      A1 = 'A' - SICREDI com Registro Impressão Completa pelo Sicredi
+                            //      A2 = 'A' - SICREDI com Registro Pedido de bloquetos pré-impressos
+                            //      C1 = 'C' - SICREDI sem Registro Impressão Completa pelo Sicredi
+                            //      C2 = 'C' - SICREDI sem Registro Pedido de bloquetos pré-impressos
+                            // ** Isso porque são tratados 4 leiautes de escrita diferentes para o Detail da remessa;
+
+                            vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o Tipo Documento!", Environment.NewLine);
+                            vRetorno = false;
+                        }
+                        else if (!boleto.Remessa.TipoDocumento.Equals("A1") && !boleto.Remessa.TipoDocumento.Equals("A2") &&
+                            !boleto.Remessa.TipoDocumento.Equals("C1") && !boleto.Remessa.TipoDocumento.Equals("C2"))
+                        {
+                            vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Tipo de Documento Inválido! Deverão ser: A = SICREDI com Registro; C1 = SICREDI sem Registro Impressão Completa pelo Sicredi;  C2 = SICREDI sem Registro Pedido de bloquetos pré-impressos", Environment.NewLine);
+                            vRetorno = false;
+                        }
+                        //else if (boleto.Remessa.TipoDocumento.Equals("06") && !String.IsNullOrEmpty(boleto.NossoNumero))
+                        //{
+                        //    //Para o "Remessa.TipoDocumento = "06", não poderá ter NossoNumero Gerado!
+                        //    vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Não pode existir NossoNumero para o Tipo Documento '06 - cobrança escritural'!", Environment.NewLine);
+                        //    vRetorno = false;
+                        //}
+                        else if (!boleto.EspecieDocumento.Codigo.Equals("A") && //A - Duplicata Mercantil por Indicação
+                                 !boleto.EspecieDocumento.Codigo.Equals("B") && //B - Duplicata Rural;
+                                 !boleto.EspecieDocumento.Codigo.Equals("C") && //C - Nota Promissória;
+                                 !boleto.EspecieDocumento.Codigo.Equals("D") && //D - Nota Promissória Rural;
+                                 !boleto.EspecieDocumento.Codigo.Equals("E") && //E - Nota de Seguros;
+                                 !boleto.EspecieDocumento.Codigo.Equals("F") && //G – Recibo;
+
+                                 !boleto.EspecieDocumento.Codigo.Equals("H") && //H - Letra de Câmbio;
+                                 !boleto.EspecieDocumento.Codigo.Equals("I") && //I - Nota de Débito;
+                                 !boleto.EspecieDocumento.Codigo.Equals("J") && //J - Duplicata de Serviço por Indicação;
+                                 !boleto.EspecieDocumento.Codigo.Equals("O") && //O – Boleto Proposta
+                                 !boleto.EspecieDocumento.Codigo.Equals("K")) //K – Outros.
+                        {
+                            vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o Código da EspécieDocumento! São Aceitas:{A,B,C,D,E,F,H,I,J,O,K}", Environment.NewLine);
+                            vRetorno = false;
+                        }
+                        else if (!boleto.Sacado.CPFCNPJ.Length.Equals(11) && !boleto.Sacado.CPFCNPJ.Length.Equals(14))
+                        {
+                            vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Cpf/Cnpj diferente de 11/14 caracteres!", Environment.NewLine);
+                            vRetorno = false;
+                        }
+                        else if (!boleto.NossoNumero.Length.Equals(8))
+                        {
+                            //sidnei.klein: Segundo definição recebida pelo Sicredi-RS, o Nosso Número sempre terá somente 8 caracteres sem o DV que está no boleto.DigitoNossoNumero
+                            vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: O Nosso Número diferente de 8 caracteres!", Environment.NewLine);
+                            vRetorno = false;
+                        }
+
+                        #endregion
                     }
-                    //else if (boleto.Remessa.TipoDocumento.Equals("06") && !String.IsNullOrEmpty(boleto.NossoNumero))
-                    //{
-                    //    //Para o "Remessa.TipoDocumento = "06", não poderá ter NossoNumero Gerado!
-                    //    vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Não pode existir NossoNumero para o Tipo Documento '06 - cobrança escritural'!", Environment.NewLine);
-                    //    vRetorno = false;
-                    //}
-                    else if (!boleto.EspecieDocumento.Codigo.Equals("A") && //A - Duplicata Mercantil por Indicação
-                             !boleto.EspecieDocumento.Codigo.Equals("B") && //B - Duplicata Rural;
-                             !boleto.EspecieDocumento.Codigo.Equals("C") && //C - Nota Promissória;
-                             !boleto.EspecieDocumento.Codigo.Equals("D") && //D - Nota Promissória Rural;
-                             !boleto.EspecieDocumento.Codigo.Equals("E") && //E - Nota de Seguros;
-                             !boleto.EspecieDocumento.Codigo.Equals("F") && //G – Recibo;
-                             
-                             !boleto.EspecieDocumento.Codigo.Equals("H") && //H - Letra de Câmbio;
-                             !boleto.EspecieDocumento.Codigo.Equals("I") && //I - Nota de Débito;
-                             !boleto.EspecieDocumento.Codigo.Equals("J") && //J - Duplicata de Serviço por Indicação;
-                             !boleto.EspecieDocumento.Codigo.Equals("O") && //O – Boleto Proposta
-                             !boleto.EspecieDocumento.Codigo.Equals("K") //K – Outros.
-                            )
-                    {
-                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o Código da EspécieDocumento! São Aceitas:{A,B,C,D,E,F,H,I,J,O,K}", Environment.NewLine);
-                        vRetorno = false;
-                    }
-                    else if (!boleto.Sacado.CPFCNPJ.Length.Equals(11) && !boleto.Sacado.CPFCNPJ.Length.Equals(14))
-                    {
-                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Cpf/Cnpj diferente de 11/14 caracteres!", Environment.NewLine);
-                        vRetorno = false;
-                    }
-                    else if (!boleto.NossoNumero.Length.Equals(8))
-                    {
-                        //sidnei.klein: Segundo definição recebida pelo Sicredi-RS, o Nosso Número sempre terá somente 8 caracteres sem o DV que está no boleto.DigitoNossoNumero
-                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: O Nosso Número diferente de 8 caracteres!", Environment.NewLine);
-                        vRetorno = false;
-                    }            
+
                     #endregion
                 }
-                #endregion
-            }
-            //
+
             mensagem = vMsg;
             return vRetorno;
         }
-        public string GerarHeaderRemessaCNAB400(int numeroConvenio, Cedente cedente, int numeroArquivoRemessa)
+
+        public string GerarHeaderRemessaCnab400(int numeroConvenio, Cedente cedente, int numeroArquivoRemessa)
         {
             try
             {
-                TRegistroEDI reg = new TRegistroEDI();
+                var reg = new TRegistroEDI();
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0001, 001, 0, "0", ' '));                             //001-001
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0002, 001, 0, "1", ' '));                             //002-002
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0003, 007, 0, "REMESSA", ' '));                       //003-009
@@ -706,13 +718,10 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0118, 273, 0, "", ' '));                              //118-390
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0391, 004, 0, "2.00", ' '));                          //391-394
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0395, 006, 0, "000001", ' '));                        //395-400
-                //
+
                 reg.CodificarLinha();
-                //
-                string vLinha = reg.LinhaRegistro;
-                string _header = Utils.SubstituiCaracteresEspeciais(vLinha);
-                //
-                return _header;
+
+                return Utils.SubstituiCaracteresEspeciais(reg.LinhaRegistro);
             }
             catch (Exception ex)
             {
@@ -720,32 +729,31 @@ namespace BoletoNet
             }
         }
 
-        public string GerarDetalheRemessaCNAB400(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
+        public string GerarDetalheRemessaCnab400(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
         {
-            string _detalhe = string.Empty;
-            //Variáveis Locais a serem Implementadas em nível de Config do Boleto...
-            //boleto.Remessa.CodigoOcorrencia = "01"; //remessa p/ bANRISUL
-            //
             base.GerarDetalheRemessa(boleto, numeroRegistro, tipoArquivo);
-            //
-            //Redireciona para o Detalhe da remessa Conforme o "Tipo de Documento" = "Tipo de Cobrança do CNAB400":
-            //  A = 'A' - SICREDI com Registro
-            // C1 = 'C' - SICREDI sem Registro Impressão Completa pelo Sicredi
-            // C2 = 'C' - SICREDI sem Registro Pedido de bloquetos pré-impressos
-            if (boleto.Remessa.TipoDocumento.Equals("A"))
-                _detalhe = GerarDetalheRemessaCNAB400_A(boleto, numeroRegistro, tipoArquivo);
-            else if (boleto.Remessa.TipoDocumento.Equals("C1"))
-                _detalhe = GerarDetalheRemessaCNAB400_C1(boleto, numeroRegistro, tipoArquivo);
-            else if (boleto.Remessa.TipoDocumento.Equals("C2"))
-                _detalhe = GerarDetalheRemessaCNAB400_C2(boleto, numeroRegistro, tipoArquivo);
 
-            return _detalhe;
+            //Redireciona para o Detalhe da remessa Conforme o "Tipo de Documento" = "Tipo de Cobrança do CNAB400":
+            // A1 = 'A' - SICREDI com Registro Impressão Completa pelo Sicredi.
+            // A2 = 'A' - SICREDI com Registro Pedido de bloquetos pré-impressos.
+            // C1 = 'C' - SICREDI sem Registro Impressão Completa pelo Sicredi.
+            // C2 = 'C' - SICREDI sem Registro Pedido de bloquetos pré-impressos.
+
+            if (boleto.Remessa.TipoDocumento.StartsWith("A"))
+                return GerarDetalheRemessaCNAB400_A(boleto, numeroRegistro, tipoArquivo, boleto.Remessa.TipoDocumento.EndsWith("1"));
+
+            //TODO: Não existe ainda.
+            if (boleto.Remessa.TipoDocumento.Equals("C"))
+                return GerarDetalheRemessaCNAB400_C(boleto, numeroRegistro, tipoArquivo, boleto.Remessa.TipoDocumento.EndsWith("1"));
+
+            return "";
         }
-        public string GerarDetalheRemessaCNAB400_A(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
+
+        public string GerarDetalheRemessaCNAB400_A(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo, bool bancoEmite = false)
         {
             try
             {
-                TRegistroEDI reg = new TRegistroEDI();
+                var reg = new TRegistroEDI();
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0001, 001, 0, "1", ' '));                                       //001-001
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0002, 001, 0, "A", ' '));                                       //002-002  'A' - SICREDI com Registro
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0003, 001, 0, "A", ' '));                                       //003-003  'A' - Simples
@@ -754,7 +762,7 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0017, 001, 0, "A", ' '));                                       //017-017  Tipo de moeda: 'A' - REAL
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0018, 001, 0, "A", ' '));                                       //018-018  Tipo de desconto: 'A' - VALOR
                 #region Código de Juros
-                string CodJuros = "A";
+                var CodJuros = "A";
                 decimal ValorOuPercJuros = 0;
                 if (boleto.JurosMora > 0)
                 {
@@ -771,15 +779,15 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0020, 028, 0, string.Empty, ' '));                              //020-047
                 #region Nosso Número + DV
                 boleto.DigitoNossoNumero = DigNossoNumeroSicredi(boleto);
-                string vAuxNossoNumeroComDV = boleto.NossoNumero + boleto.DigitoNossoNumero;
+                var vAuxNossoNumeroComDV = boleto.NossoNumero + boleto.DigitoNossoNumero;
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0048, 009, 0, vAuxNossoNumeroComDV, '0'));                      //048-056
                 #endregion
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0057, 006, 0, string.Empty, ' '));                              //057-062
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataAAAAMMDD_________, 0063, 008, 0, boleto.DataProcessamento, ' '));                  //063-070
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0071, 001, 0, string.Empty, ' '));                              //071-071
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0072, 001, 0, "N", ' '));                                       //072-072 'N' - Não Postar e remeter para o beneficiário
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0072, 001, 0, bancoEmite ? "S" : "N", ' '));                    //072-072 'S' Postar, 'N' - Não Postar e remeter para o beneficiário
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0073, 001, 0, string.Empty, ' '));                              //073-073
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0074, 001, 0, "B", ' '));                                       //074-074 'B' – Impressão é feita pelo Beneficiário
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0074, 001, 0, bancoEmite ? "A" : "B", ' '));                    //074-074 'A' - Impressão feita pelo banco, 'B' – Impressão é feita pelo Beneficiário
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0075, 002, 0, 0, '0'));                                         //075-076
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0077, 002, 0, 0, '0'));                                         //077-078
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0079, 004, 0, string.Empty, ' '));                              //079-082
@@ -795,8 +803,8 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0150, 001, 0, boleto.Aceite, ' '));                             //150-150
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataDDMMAA___________, 0151, 006, 0, boleto.DataProcessamento, ' '));                  //151-156
                 #region Instruções
-                string vInstrucao1 = "00"; //1ª instrução (2, N) Caso Queira colocar um cod de uma instrução. ver no Manual caso nao coloca 00
-                string vInstrucao2 = "00"; //2ª instrução (2, N) Caso Queira colocar um cod de uma instrução. ver no Manual caso nao coloca 00
+                var vInstrucao1 = "00"; //1ª instrução (2, N) Caso Queira colocar um cod de uma instrução. ver no Manual caso nao coloca 00
+                var vInstrucao2 = "00"; //2ª instrução (2, N) Caso Queira colocar um cod de uma instrução. ver no Manual caso nao coloca 00
                 foreach (Instrucao instrucao in boleto.Instrucoes)
                 {
                     switch ((EnumInstrucoes_Sicredi)instrucao.Codigo)
@@ -816,7 +824,7 @@ namespace BoletoNet
                 #endregion               
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0161, 013, 2, ValorOuPercJuros, '0'));                          //161-173 Valor/% de juros por dia de atraso
                 #region DataDesconto
-                string vDataDesconto = "000000";
+                var vDataDesconto = "000000";
                 if (!boleto.DataDesconto.Equals(DateTime.MinValue))
                     vDataDesconto = boleto.DataDesconto.ToString("ddMMyy");
                 #endregion
@@ -825,7 +833,7 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0193, 013, 0, 0, '0'));                                         //193-205
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0206, 013, 2, boleto.Abatimento, '0'));                         //206-218
                 #region Regra Tipo de Inscrição Sacado
-                string vCpfCnpjSac = "0";
+                var vCpfCnpjSac = "0";
                 if (boleto.Sacado.CPFCNPJ.Length.Equals(11)) vCpfCnpjSac = "1"; //Cpf é sempre 11;
                 else if (boleto.Sacado.CPFCNPJ.Length.Equals(14)) vCpfCnpjSac = "2"; //Cnpj é sempre 14;
                 #endregion
@@ -842,37 +850,32 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0340, 014, 0, string.Empty, ' '));                              //340-353
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0354, 041, 0, string.Empty, ' '));                              //354-394
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0395, 006, 0, numeroRegistro, '0'));                            //395-400
-                //
+
                 reg.CodificarLinha();
-                //
-                string _detalhe = Utils.SubstituiCaracteresEspeciais(reg.LinhaRegistro);
-                //
-                return _detalhe;
+
+                var detalhe = Utils.SubstituiCaracteresEspeciais(reg.LinhaRegistro);
+
+                return detalhe;
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro ao gerar DETALHE do arquivo CNAB400.", ex);
             }
         }
-        public string GerarDetalheRemessaCNAB400_C1(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
+
+        public string GerarDetalheRemessaCNAB400_C(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo, bool bancoEmite = false)
         {
             //TODO
-            string _detalhe = String.Empty;
+            var detalhe = string.Empty;
             //
-            return _detalhe;
+            return detalhe;
         }
-        public string GerarDetalheRemessaCNAB400_C2(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
-        {
-            //TODO
-            string _detalhe = String.Empty;
-            //
-            return _detalhe;
-        }
-        public string GerarTrailerRemessa400(int numeroRegistro,  Cedente cedente)
+
+        public string GerarTrailerRemessa400(int numeroRegistro, Cedente cedente)
         {
             try
             {
-                TRegistroEDI reg = new TRegistroEDI();
+                var reg = new TRegistroEDI();
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0001, 001, 0, "9", ' '));                         //001-001
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0002, 001, 0, "1", ' '));                         //002-002
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0003, 003, 0, "748", ' '));                       //003-006
@@ -882,10 +885,10 @@ namespace BoletoNet
                 //
                 reg.CodificarLinha();
                 //
-                string vLinha = reg.LinhaRegistro;
-                string _trailer = Utils.SubstituiCaracteresEspeciais(vLinha);
+                var vLinha = reg.LinhaRegistro;
+                var trailer = Utils.SubstituiCaracteresEspeciais(vLinha);
                 //
-                return _trailer;
+                return trailer;
             }
             catch (Exception ex)
             {
@@ -897,13 +900,13 @@ namespace BoletoNet
         {
             try
             {
-                TRegistroEDI_Sicredi_Retorno reg = new TRegistroEDI_Sicredi_Retorno();
+                var reg = new TRegistroEDI_Sicredi_Retorno();
                 //
                 reg.LinhaRegistro = registro;
                 reg.DecodificarLinha();
 
                 //Passa para o detalhe as propriedades de reg;
-                DetalheRetorno detalhe = new DetalheRetorno(registro);
+                var detalhe = new DetalheRetorno(registro);
                 //
                 detalhe.IdentificacaoDoRegistro = Utils.ToInt32(reg.IdentificacaoRegDetalhe);
                 //Filler1
@@ -918,27 +921,27 @@ namespace BoletoNet
                 detalhe.DACNossoNumero = reg.NossoNumeroSicredi.Substring(reg.NossoNumeroSicredi.Length - 1); //DV do Nosso Numero
                 #endregion
                 //Filler3
-                detalhe.CodigoOcorrencia = Utils.ToInt32(reg.Ocorrencia);                
-                int dataOcorrencia = Utils.ToInt32(reg.DataOcorrencia);
+                detalhe.CodigoOcorrencia = Utils.ToInt32(reg.Ocorrencia);
+                var dataOcorrencia = Utils.ToInt32(reg.DataOcorrencia);
                 detalhe.DataOcorrencia = Utils.ToDateTime(dataOcorrencia.ToString("##-##-##"));
                 detalhe.NumeroDocumento = reg.SeuNumero;
                 //Filler4
-                if (!String.IsNullOrEmpty(reg.DataVencimento))
+                if (!string.IsNullOrEmpty(reg.DataVencimento))
                 {
-                    int dataVencimento = Utils.ToInt32(reg.DataVencimento);
+                    var dataVencimento = Utils.ToInt32(reg.DataVencimento);
                     detalhe.DataVencimento = Utils.ToDateTime(dataVencimento.ToString("##-##-##"));
                 }
                 decimal valorTitulo = Convert.ToInt64(reg.ValorTitulo);
                 detalhe.ValorTitulo = valorTitulo / 100;
                 //Filler5
                 //Despesas de cobrança para os Códigos de Ocorrência (Valor Despesa)
-                if (!String.IsNullOrEmpty(reg.DespesasCobranca))
+                if (!string.IsNullOrEmpty(reg.DespesasCobranca))
                 {
                     decimal valorDespesa = Convert.ToUInt64(reg.DespesasCobranca);
                     detalhe.ValorDespesa = valorDespesa / 100;
                 }
                 //Outras despesas Custas de Protesto (Valor Outras Despesas)
-                if (!String.IsNullOrEmpty(reg.DespesasCustasProtesto))
+                if (!string.IsNullOrEmpty(reg.DespesasCustasProtesto))
                 {
                     decimal valorOutrasDespesas = Convert.ToUInt64(reg.DespesasCustasProtesto);
                     detalhe.ValorOutrasDespesas = valorOutrasDespesas / 100;
@@ -955,12 +958,12 @@ namespace BoletoNet
                 detalhe.ValorPago = valorPago / 100;
                 //Juros Mora
                 decimal jurosMora = Convert.ToUInt64(reg.JurosMora);
-                detalhe.JurosMora = jurosMora / 100;                
+                detalhe.JurosMora = jurosMora / 100;
                 //Filler7
                 //SomenteOcorrencia19
                 //Filler8
                 detalhe.MotivoCodigoOcorrencia = reg.MotivoOcorrencia;
-                int dataCredito = Utils.ToInt32(reg.DataPrevistaLancamentoContaCorrente);
+                var dataCredito = Utils.ToInt32(reg.DataPrevistaLancamentoContaCorrente);
                 detalhe.DataCredito = Utils.ToDateTime(dataCredito.ToString("####-##-##"));
                 //Filler9
                 detalhe.NumeroSequencial = Utils.ToInt32(reg.NumeroSequencialRegistro);
@@ -968,7 +971,7 @@ namespace BoletoNet
                 #region NAO RETORNADOS PELO SICREDI
                 //detalhe.Especie = reg.TipoDocumento; //Verificar Espécie de Documentos...
                 detalhe.OutrosCreditos = 0;
-                detalhe.OrigemPagamento = String.Empty;
+                detalhe.OrigemPagamento = string.Empty;
                 detalhe.MotivoCodigoOcorrencia = reg.MotivoOcorrencia;
                 //
                 detalhe.IOF = 0;
@@ -1002,6 +1005,5 @@ namespace BoletoNet
         }
 
         #endregion
-
     }
 }

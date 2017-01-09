@@ -272,13 +272,16 @@ namespace BoletoNet
                     boleto.NossoNumero = Utils.FormatCode(boleto.NossoNumero, 11);
             }
             #endregion Carteira 17-035
+
             #region Carteira 18
+            
             //Carteira 18 com nosso número de 11 posições
             if (boleto.Carteira.Equals("18"))
             {
                 boleto.BancoCarteira.ValidaBoleto(boleto);
                 boleto.BancoCarteira.FormataNossoNumero(boleto);
             }
+
             #endregion Carteira 18
 
             #region Carteira 18-019
@@ -1293,6 +1296,7 @@ namespace BoletoNet
         # endregion
 
         #region Métodos de geração do arquivo remessa - Genéricos
+
         /// <summary>
         /// HEADER DE LOTE do arquivo CNAB
         /// Gera o HEADER de Lote do arquivo remessa de acordo com o lay-out informado
@@ -1325,6 +1329,7 @@ namespace BoletoNet
                 throw new Exception("Erro durante a geração do HEADER DO LOTE do arquivo de REMESSA.", ex);
             }
         }
+
         /// <summary>
         /// HEADER do arquivo CNAB
         /// Gera o HEADER do arquivo remessa de acordo com o lay-out informado
@@ -1357,6 +1362,7 @@ namespace BoletoNet
                 throw new Exception("Erro durante a geração do HEADER do arquivo de REMESSA.", ex);
             }
         }
+
         /// <summary>
         /// Efetua as Validações dentro da classe Boleto, para garantir a geração da remessa
         /// </summary>
@@ -1380,6 +1386,7 @@ namespace BoletoNet
             mensagem = vMsg;
             return vRetorno;
         }
+        
         /// <summary>
         /// DETALHE do arquivo CNAB
         /// Gera o DETALHE do arquivo remessa de acordo com o lay-out informado
@@ -1412,6 +1419,7 @@ namespace BoletoNet
                 throw new Exception("Erro durante a geração do DETALHE arquivo de REMESSA.", ex);
             }
         }
+
         public override string GerarDetalheSegmentoPRemessa(Boleto boleto, int numeroRegistro, string numeroConvenio)
         {
             try
@@ -1605,6 +1613,7 @@ namespace BoletoNet
                 throw new Exception("Erro durante a geração do SEGMENTO P DO DETALHE do arquivo de REMESSA.", ex);
             }
         }
+
         public override string GerarDetalheSegmentoQRemessa(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
         {
             try
@@ -1705,6 +1714,7 @@ namespace BoletoNet
                 throw new Exception("Erro durante a geração do SEGMENTO R DO DETALHE do arquivo de REMESSA.", ex);
             }
         }
+
         /// <summary>
         /// TRAILER do arquivo CNAB
         /// Gera o TRAILER do arquivo remessa de acordo com o lay-out informado
@@ -1737,6 +1747,7 @@ namespace BoletoNet
                 throw new Exception("Erro durante a geração do TRAILER do arquivo de REMESSA.", ex);
             }
         }
+
         public override string GerarTrailerLoteRemessa(int numeroRegistro)
         {
             try
@@ -2109,11 +2120,12 @@ namespace BoletoNet
         #endregion
 
         #region CNAB 400 - Específicos sidneiklein
+
         public bool ValidarRemessaCNAB400(string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem)
         {
             bool vRetorno = true;
             string vMsg = string.Empty;
-            //
+            
             #region Pré Validações
             if (banco == null)
             {
@@ -2131,10 +2143,11 @@ namespace BoletoNet
                 vRetorno = false;
             }
             #endregion
-            //
+            
             foreach (Boleto boleto in boletos)
             {
                 #region Validação de cada boleto
+
                 if (boleto.Remessa == null)
                 {
                     vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe as diretrizes de remessa!", Environment.NewLine);
@@ -2143,19 +2156,23 @@ namespace BoletoNet
                 else
                 {
                     #region Validações da Remessa que deverão estar preenchidas quando BANCO DO BRASIL
+
                     if (String.IsNullOrEmpty(boleto.Remessa.TipoDocumento))
                     {
                         vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o Tipo Documento!", Environment.NewLine);
                         vRetorno = false;
                     }
+                
                     #endregion
                 }
+            
                 #endregion
             }
-            //
+            
             mensagem = vMsg;
             return vRetorno;
         }
+
         public string GerarHeaderRemessaCNAB400(Cedente cedente, int numeroArquivoRemessa)
         {
             try
@@ -2193,6 +2210,7 @@ namespace BoletoNet
                 throw new Exception("Erro ao gerar HEADER do arquivo de remessa do CNAB400.", ex);
             }
         }
+
         public string GerarDetalheRemessaCNAB400(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
         {
             try
@@ -2347,6 +2365,7 @@ namespace BoletoNet
                 throw new Exception("Erro ao gerar DETALHE do arquivo CNAB400.", ex);
             }
         }
+
         public string GerarTrailerRemessa400(int numeroRegistro, decimal vltitulostotal)
         {
             try
@@ -2368,8 +2387,7 @@ namespace BoletoNet
                 throw new Exception("Erro durante a geração do registro TRAILER do arquivo de REMESSA.", ex);
             }
         }
-        //
-
+        
         public override DetalheRetorno LerDetalheRetornoCNAB400(string registro)
         {
             try
