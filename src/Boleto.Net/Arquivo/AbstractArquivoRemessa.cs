@@ -14,16 +14,18 @@ namespace BoletoNet
         public event EventHandler<LinhaDeArquivoGeradaArgs> LinhaDeArquivoGerada;
 
         #region Variáveis
-        private IArquivoRemessa _arquivoRemessa;
+
+        private readonly IArquivoRemessa _arquivoRemessa;
+
         #endregion
 
         #region Construtores
+
         /// <summary>
         /// Cria uma nova instância abstrata de Arquivo para Remessa
         /// </summary>
         protected AbstractArquivoRemessa()
-        {
-        }
+        {}
 
         /// <summary>
         /// Cria uma nova instância abstrata de Arquivo para Remessa
@@ -35,12 +37,14 @@ namespace BoletoNet
             {
                 case TipoArquivo.CNAB240:
                     _arquivoRemessa = new ArquivoRemessaCNAB240();
-                    _arquivoRemessa.LinhaDeArquivoGerada += new EventHandler<LinhaDeArquivoGeradaArgs>(_arquivoRemessa_LinhaDeArquivoGerada);
+                    _arquivoRemessa.LinhaDeArquivoGerada += _arquivoRemessa_LinhaDeArquivoGerada;
                     break;
+
                 case TipoArquivo.CNAB400:
                     _arquivoRemessa = new ArquivoRemessaCNAB400();
-                    _arquivoRemessa.LinhaDeArquivoGerada += new EventHandler<LinhaDeArquivoGeradaArgs>(_arquivoRemessa_LinhaDeArquivoGerada);
+                    _arquivoRemessa.LinhaDeArquivoGerada += _arquivoRemessa_LinhaDeArquivoGerada;
                     break;
+
                 default:
                     throw new NotImplementedException("Arquivo não implementado.");
             }
@@ -56,9 +60,11 @@ namespace BoletoNet
         {
             OnLinhaGerada(e.Boleto, e.Linha, e.TipoLinha);
         }
+
         #endregion
 
         #region Propriedades
+
         /// <summary>
         /// Número do convênio
         /// <remarks>
@@ -100,9 +106,11 @@ namespace BoletoNet
         /// </remarks>
         /// </summary>
         public virtual TipoArquivo TipoArquivo { get; protected set; }
+
         #endregion
 
         #region Métodos
+
         /// <summary>
         /// Método que fará a verificação se a classe está devidamente implementada para a geração da Remessa
         /// </summary>
@@ -136,16 +144,18 @@ namespace BoletoNet
         /// <param name="numeroArquivoRemessa">Número do arquivo da remessa</param>
         public virtual void GerarArquivoRemessa(string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, Stream arquivo, int numeroArquivoRemessa)
         {
-            this.Banco = banco;
-            this.Cedente = cedente;
-            this.Boletos = boletos;
-            this.NumeroConvenio = numeroConvenio;
-            this.NumeroArquivoRemessa = numeroArquivoRemessa;
+            Banco = banco;
+            Cedente = cedente;
+            Boletos = boletos;
+            NumeroConvenio = numeroConvenio;
+            NumeroArquivoRemessa = numeroArquivoRemessa;
             _arquivoRemessa.GerarArquivoRemessa(numeroConvenio, banco, cedente, boletos, arquivo, numeroArquivoRemessa);
         }
+
         #endregion
 
         #region Disparadores de Eventos
+
         /// <summary>
         /// evebto disparado a cada linha gerada no arquivo
         /// </summary>
@@ -156,14 +166,15 @@ namespace BoletoNet
         {
             try
             {
-                if (this.LinhaDeArquivoGerada != null)
-                    this.LinhaDeArquivoGerada(this, new LinhaDeArquivoGeradaArgs(boleto, linha, tipoLinha));
+                if (LinhaDeArquivoGerada != null)
+                    LinhaDeArquivoGerada(this, new LinhaDeArquivoGeradaArgs(boleto, linha, tipoLinha));
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro ao gerar evento.", ex);
             }
         }
+
         #endregion
     }
 }

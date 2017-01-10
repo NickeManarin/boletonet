@@ -143,7 +143,6 @@ namespace BoletoNet
         [Browsable(true), Description("Caminho onde a NReco gera os arquivos temporários necessários para a construção do PDF.")]
         public string TempFilesPath { get; set; }
 
-        #region Propriedades
         [Browsable(true), Description("Mostra o comprovante de entrega sem dados para marcar")]
         public bool MostrarComprovanteEntregaLivre
         {
@@ -185,6 +184,7 @@ namespace BoletoNet
             get { return Utils.ToBool(ViewState["6"]); }
             set { ViewState["6"] = value; }
         }
+
         /// <summary> 
         /// Mostra o termo "Contra Apresentação" na data de vencimento do boleto
         /// </summary>
@@ -200,8 +200,6 @@ namespace BoletoNet
             get { return Utils.ToBool(ViewState["8"]); }
             set { ViewState["8"] = value; }
         }
-
-        #endregion Propriedades
 
         /// <summary> 
         /// Instruções disponíveis no Boleto
@@ -510,7 +508,7 @@ namespace BoletoNet
                         {
                             enderecoCedente += string.Format("{0} - {1}/{2} - CEP: {3}", Cedente.Endereco.Bairro,
                                                              Cedente.Endereco.Cidade, Cedente.Endereco.UF,
-                                                             Utils.FormataCEP(Cedente.Endereco.CEP));
+                                                             Utils.FormataCep(Cedente.Endereco.CEP));
                         }
 
                     }
@@ -528,9 +526,9 @@ namespace BoletoNet
             else
             {
                 if (Sacado.CPFCNPJ.Length <= 11)
-                    sacado = string.Format("{0}  CPF: {1}", Sacado.Nome, Utils.FormataCPF(Sacado.CPFCNPJ));
+                    sacado = string.Format("{0}  CPF: {1}", Sacado.Nome, Utils.FormataCpf(Sacado.CPFCNPJ));
                 else
-                    sacado = string.Format("{0}  CNPJ: {1}", Sacado.Nome, Utils.FormataCNPJ(Sacado.CPFCNPJ));
+                    sacado = string.Format("{0}  CNPJ: {1}", Sacado.Nome, Utils.FormataCnpj(Sacado.CPFCNPJ));
             }
 
             var infoSacado = Sacado.InformacoesSacado.GeraHTML(false);
@@ -544,7 +542,7 @@ namespace BoletoNet
                     enderecoSacado = string.Format("{0} - {1}/{2}", Sacado.Endereco.Bairro, Sacado.Endereco.Cidade, Sacado.Endereco.UF);
                 else
                     enderecoSacado = string.Format("{0} - {1}/{2} - CEP: {3}", Sacado.Endereco.Bairro,
-                    Sacado.Endereco.Cidade, Sacado.Endereco.UF, Utils.FormataCEP(Sacado.Endereco.CEP));
+                    Sacado.Endereco.Cidade, Sacado.Endereco.UF, Utils.FormataCep(Sacado.Endereco.CEP));
 
                 if (Sacado.Endereco.End != string.Empty && enderecoSacado != string.Empty)
                 {

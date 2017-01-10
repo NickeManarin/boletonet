@@ -582,7 +582,7 @@ namespace BoletoNet
             return vRetorno;
         }
 
-        #region CNAB 400 - sidneiklein
+        #region CNAB 400
 
         public bool ValidarRemessaCnab400(string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem)
         {
@@ -867,7 +867,7 @@ namespace BoletoNet
         {
             //TODO
             var detalhe = string.Empty;
-            //
+            
             return detalhe;
         }
 
@@ -901,13 +901,12 @@ namespace BoletoNet
             try
             {
                 var reg = new TRegistroEDI_Sicredi_Retorno();
-                //
                 reg.LinhaRegistro = registro;
+
                 reg.DecodificarLinha();
 
                 //Passa para o detalhe as propriedades de reg;
                 var detalhe = new DetalheRetorno(registro);
-                //
                 detalhe.IdentificacaoDoRegistro = Utils.ToInt32(reg.IdentificacaoRegDetalhe);
                 //Filler1
                 //TipoCobranca

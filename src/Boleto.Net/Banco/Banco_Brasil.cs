@@ -1,6 +1,4 @@
-
 using System;
-using System.Data;
 using System.Globalization;
 using System.Web.UI;
 using BoletoNet.Util;
@@ -14,7 +12,6 @@ namespace BoletoNet
     /// </summary>
     internal class Banco_Brasil : AbstractBanco, IBanco
     {
-
         #region Variáveis
 
         private string _dacNossoNumero = string.Empty;
@@ -28,9 +25,9 @@ namespace BoletoNet
         {
             try
             {
-                this.Codigo = 1;
-                this.Digito = "9";
-                this.Nome = "Banco do Brasil";
+                Codigo = 1;
+                Digito = "9";
+                Nome = "Banco do Brasil";
             }
             catch (Exception ex)
             {
@@ -578,7 +575,7 @@ namespace BoletoNet
 
         public override void FormataCodigoBarra(Boleto boleto)
         {
-            string valorBoleto = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "");
+            var valorBoleto = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "");
             valorBoleto = Utils.FormatCode(valorBoleto, 10);
 
             //Criada por AFK
@@ -1181,14 +1178,14 @@ namespace BoletoNet
 
         public override void FormataLinhaDigitavel(Boleto boleto)
         {
-            string cmplivre = string.Empty;
-            string campo1 = string.Empty;
-            string campo2 = string.Empty;
-            string campo3 = string.Empty;
-            string campo4 = string.Empty;
-            string campo5 = string.Empty;
+            var cmplivre = string.Empty;
+            var campo1 = string.Empty;
+            var campo2 = string.Empty;
+            var campo3 = string.Empty;
+            var campo4 = string.Empty;
+            var campo5 = string.Empty;
             long icampo5 = 0;
-            int digitoMod = 0;
+            var digitoMod = 0;
 
             /*
             Campos 1 (AAABC.CCCCX):
@@ -1305,7 +1302,7 @@ namespace BoletoNet
         {
             try
             {
-                string header = " ";
+                var header = " ";
 
                 base.GerarHeaderLoteRemessa(numeroConvenio, cedente, numeroArquivoRemessa, tipoArquivo);
 
@@ -1338,7 +1335,7 @@ namespace BoletoNet
         {
             try
             {
-                string _header = " ";
+                var _header = " ";
 
                 base.GerarHeaderRemessa(numeroConvenio, cedente, tipoArquivo, numeroArquivoRemessa);
 
@@ -1368,8 +1365,8 @@ namespace BoletoNet
         /// </summary>
         public override bool ValidarRemessa(TipoArquivo tipoArquivo, string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem)
         {
-            bool vRetorno = true;
-            string vMsg = string.Empty;
+            var vRetorno = true;
+            var vMsg = string.Empty;
             //            
             switch (tipoArquivo)
             {
@@ -1395,7 +1392,7 @@ namespace BoletoNet
         {
             try
             {
-                string _detalhe = " ";
+                var _detalhe = " ";
 
                 base.GerarDetalheRemessa(boleto, numeroRegistro, tipoArquivo);
 
@@ -1560,10 +1557,10 @@ namespace BoletoNet
 
                 //alterado por marcelhsouza em 28/03/2013
                 //O Banco do Brasil trata somente os códigos '1' – Protestar dias corridos, '2' – Protestar dias úteis, e '3' – Não protestar.
-                string codigo_protesto = "3";
-                string dias_protesto = "00";
+                var codigo_protesto = "3";
+                var dias_protesto = "00";
 
-                foreach (IInstrucao instrucao in boleto.Instrucoes)
+                foreach (var instrucao in boleto.Instrucoes)
                 {
                     switch ((EnumInstrucoes_BancoBrasil)instrucao.Codigo)
                     {
@@ -1618,9 +1615,9 @@ namespace BoletoNet
         {
             try
             {
-                string _zeros16 = new string('0', 16);
-                string _brancos28 = new string(' ', 28);
-                string _brancos40 = new string(' ', 40);
+                var _zeros16 = new string('0', 16);
+                var _brancos28 = new string(' ', 28);
+                var _brancos40 = new string(' ', 40);
 
                 string _segmentoQ;
 
@@ -1659,8 +1656,8 @@ namespace BoletoNet
         {
             try
             {
-                string _brancos110 = new string(' ', 110);
-                string _brancos9 = new string(' ', 9);
+                var _brancos110 = new string(' ', 110);
+                var _brancos9 = new string(' ', 9);
 
                 string _segmentoR;
 
@@ -1723,7 +1720,7 @@ namespace BoletoNet
         {
             try
             {
-                string _trailer = " ";
+                var _trailer = " ";
 
                 base.GerarTrailerRemessa(numeroRegistro, tipoArquivo, cedente, vltitulostotal);
 
@@ -1752,13 +1749,13 @@ namespace BoletoNet
         {
             try
             {
-                string trailer = Utils.FormatCode(Codigo.ToString(), "0", 3, true);
+                var trailer = Utils.FormatCode(Codigo.ToString(), "0", 3, true);
                 trailer += Utils.FitStringLength("1", 4, 4, '0', 0, true, true, true);
                 trailer += "5";
                 trailer += Utils.FormatCode("", " ", 9);
 
                 #region Pega o Numero de Registros + 1(HeaderLote) + 1(TrailerLote)
-                int vQtdeRegLote = numeroRegistro; // (numeroRegistro + 2);
+                var vQtdeRegLote = numeroRegistro; // (numeroRegistro + 2);
                 trailer += Utils.FitStringLength(vQtdeRegLote.ToString(), 6, 6, '0', 0, true, true, true);  //posição 18 até 23   (6) - Quantidade de Registros no Lote
                 //deve considerar 1 registro a mais - Header
                 #endregion
@@ -1779,7 +1776,7 @@ namespace BoletoNet
         {
             try
             {
-                string _brancos205 = new string(' ', 205);
+                var _brancos205 = new string(' ', 205);
 
                 string _trailerArquivo;
 
@@ -1807,7 +1804,7 @@ namespace BoletoNet
         #region CNAB240 - Específicos
         public bool ValidarRemessaCNAB240(string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem)
         {
-            string vMsg = string.Empty;
+            var vMsg = string.Empty;
             mensagem = vMsg;
             return true;
             //throw new NotImplementedException("Função não implementada.");
@@ -1816,8 +1813,8 @@ namespace BoletoNet
         {
             try
             {
-                string _brancos40 = new string(' ', 40);
-                string _brancos33 = new string(' ', 33);
+                var _brancos40 = new string(' ', 40);
+                var _brancos33 = new string(' ', 33);
                 string _headerLote;
 
                 //alterado por marcelhsouza em 28/03/2013
@@ -1877,8 +1874,8 @@ namespace BoletoNet
         {
             try
             {
-                string _brancos20 = new string(' ', 20);
-                string _brancos10 = new string(' ', 10);
+                var _brancos20 = new string(' ', 20);
+                var _brancos10 = new string(' ', 10);
                 string _header;
                 
                 _header = "00100000         ";
@@ -1939,37 +1936,37 @@ namespace BoletoNet
         public override DetalheSegmentoTRetornoCNAB240 LerDetalheSegmentoTRetornoCNAB240(string registro)
         {
 
-            string _Controle_numBanco = registro.Substring(0, 3); //01
-            string _Controle_lote = registro.Substring(3, 7); //02
-            string _Controle_regis = registro.Substring(7, 1); //03
-            string _Servico_numRegis = registro.Substring(8, 5); //04
-            string _Servico_segmento = registro.Substring(13, 1); //05
-            string _cnab06 = registro.Substring(14, 1); //06
-            string _Servico_codMov = registro.Substring(15, 2); //07
-            string _ccAgenciaCodigo = registro.Substring(17, 5); //08
-            string _ccAgenciaDv = registro.Substring(22, 1); //09
-            string _ccContaNumero = registro.Substring(23, 12); //10
-            string _ccContaDv = registro.Substring(35, 1); //11
-            string _ccDv = registro.Substring(36, 1); //12
-            string _outUsoExclusivo = registro.Substring(37, 9); //13
-            string _outNossoNumero = registro.Substring(37, 20); //14
-            string _outCarteira = registro.Substring(57, 1); //15
-            string _outNumeroDocumento = registro.Substring(58, 15); //16
-            string _outVencimento = registro.Substring(73, 8); //17
-            string _outValor = registro.Substring(81, 15); //18
-            string _outUf = registro.Substring(96, 2); //19
-            string _outBanco = registro.Substring(98, 1); //20
-            string _outCodCedente = registro.Substring(99, 5); //21
-            string _outDvCedente = registro.Substring(104, 1); //22
-            string _outNomeCedente = registro.Substring(105, 25); //23
-            string _outCodMoeda = registro.Substring(130, 2); //24
-            string _sacadoInscricaoTipo = registro.Substring(132, 1); //25
-            string _sacadoInscricaoNumero = registro.Substring(133, 15); //26
-            string _sacadoNome = registro.Substring(148, 40); //27
-            string _cnab28 = registro.Substring(188, 10); //28
-            string _valorTarifasCustas = registro.Substring(198, 13); //29
-            string _motivoCobraca = registro.Substring(213, 10); //30
-            string _cnab31 = registro.Substring(223, 17); //31
+            var _Controle_numBanco = registro.Substring(0, 3); //01
+            var _Controle_lote = registro.Substring(3, 7); //02
+            var _Controle_regis = registro.Substring(7, 1); //03
+            var _Servico_numRegis = registro.Substring(8, 5); //04
+            var _Servico_segmento = registro.Substring(13, 1); //05
+            var _cnab06 = registro.Substring(14, 1); //06
+            var _Servico_codMov = registro.Substring(15, 2); //07
+            var _ccAgenciaCodigo = registro.Substring(17, 5); //08
+            var _ccAgenciaDv = registro.Substring(22, 1); //09
+            var _ccContaNumero = registro.Substring(23, 12); //10
+            var _ccContaDv = registro.Substring(35, 1); //11
+            var _ccDv = registro.Substring(36, 1); //12
+            var _outUsoExclusivo = registro.Substring(37, 9); //13
+            var _outNossoNumero = registro.Substring(37, 20); //14
+            var _outCarteira = registro.Substring(57, 1); //15
+            var _outNumeroDocumento = registro.Substring(58, 15); //16
+            var _outVencimento = registro.Substring(73, 8); //17
+            var _outValor = registro.Substring(81, 15); //18
+            var _outUf = registro.Substring(96, 2); //19
+            var _outBanco = registro.Substring(98, 1); //20
+            var _outCodCedente = registro.Substring(99, 5); //21
+            var _outDvCedente = registro.Substring(104, 1); //22
+            var _outNomeCedente = registro.Substring(105, 25); //23
+            var _outCodMoeda = registro.Substring(130, 2); //24
+            var _sacadoInscricaoTipo = registro.Substring(132, 1); //25
+            var _sacadoInscricaoNumero = registro.Substring(133, 15); //26
+            var _sacadoNome = registro.Substring(148, 40); //27
+            var _cnab28 = registro.Substring(188, 10); //28
+            var _valorTarifasCustas = registro.Substring(198, 13); //29
+            var _motivoCobraca = registro.Substring(213, 10); //30
+            var _cnab31 = registro.Substring(223, 17); //31
 
             try
             {
@@ -1978,7 +1975,7 @@ namespace BoletoNet
                 {
                     throw new Exception("Registro inválida. O detalhe não possuí as características do segmento T.");
                 }
-                DetalheSegmentoTRetornoCNAB240 segmentoT = new DetalheSegmentoTRetornoCNAB240(registro);
+                var segmentoT = new DetalheSegmentoTRetornoCNAB240(registro);
                 segmentoT.CodigoBanco = Convert.ToInt32(registro.Substring(0, 3)); //01
                 segmentoT.idCodigoMovimento = Convert.ToInt32(registro.Substring(15, 2)); //07
                 segmentoT.Agencia = Convert.ToInt32(registro.Substring(17, 5)); //08
@@ -2010,25 +2007,25 @@ namespace BoletoNet
         }
         public override DetalheSegmentoURetornoCNAB240 LerDetalheSegmentoURetornoCNAB240(string registro)
         {
-            string _Controle_numBanco = registro.Substring(0, 3); //01
-            string _Controle_lote = registro.Substring(3, 7); //02
-            string _Controle_regis = registro.Substring(7, 1); //03
-            string _Servico_numRegis = registro.Substring(8, 5); //04
-            string _Servico_segmento = registro.Substring(13, 1); //05
-            string _cnab06 = registro.Substring(14, 1); //06
-            string _Servico_codMov = registro.Substring(15, 2); //07
-            string _dadosTituloAcrescimo = registro.Substring(17, 15); //08
-            string _dadosTituloValorDesconto = registro.Substring(32, 15); //09
-            string _dadosTituloValorAbatimento = registro.Substring(47, 15); //10
-            string _dadosTituloValorIof = registro.Substring(62, 15); //11
-            string _dadosTituloValorPago = registro.Substring(76, 15); //12
-            string _dadosTituloValorCreditoBruto = registro.Substring(92, 15); //13
-            string _outDespesas = registro.Substring(107, 15); //14
-            string _outPerCredEntRecb = registro.Substring(122, 5); //15
-            string _outBanco = registro.Substring(127, 10); //16
-            string _outDataOcorrencia = registro.Substring(137, 8); //17
-            string _outDataCredito = registro.Substring(145, 8); //18
-            string _cnab19 = registro.Substring(153, 87); //19
+            var _Controle_numBanco = registro.Substring(0, 3); //01
+            var _Controle_lote = registro.Substring(3, 7); //02
+            var _Controle_regis = registro.Substring(7, 1); //03
+            var _Servico_numRegis = registro.Substring(8, 5); //04
+            var _Servico_segmento = registro.Substring(13, 1); //05
+            var _cnab06 = registro.Substring(14, 1); //06
+            var _Servico_codMov = registro.Substring(15, 2); //07
+            var _dadosTituloAcrescimo = registro.Substring(17, 15); //08
+            var _dadosTituloValorDesconto = registro.Substring(32, 15); //09
+            var _dadosTituloValorAbatimento = registro.Substring(47, 15); //10
+            var _dadosTituloValorIof = registro.Substring(62, 15); //11
+            var _dadosTituloValorPago = registro.Substring(76, 15); //12
+            var _dadosTituloValorCreditoBruto = registro.Substring(92, 15); //13
+            var _outDespesas = registro.Substring(107, 15); //14
+            var _outPerCredEntRecb = registro.Substring(122, 5); //15
+            var _outBanco = registro.Substring(127, 10); //16
+            var _outDataOcorrencia = registro.Substring(137, 8); //17
+            var _outDataCredito = registro.Substring(145, 8); //18
+            var _cnab19 = registro.Substring(153, 87); //19
 
 
             try
@@ -2094,7 +2091,7 @@ namespace BoletoNet
             string d;
             int s = 0, p = 9, b = 2;
 
-            for (int i = value.Length - 1; i >= 0; i--)
+            for (var i = value.Length - 1; i >= 0; i--)
             {
                 s += (int.Parse(value[i].ToString()) * p);
                 if (p == b)
@@ -2103,7 +2100,7 @@ namespace BoletoNet
                     p--;
             }
 
-            int r = (s % 11);
+            var r = (s % 11);
             if (r == 10)
                 d = "X";
             else if (r == 0)
@@ -2123,8 +2120,8 @@ namespace BoletoNet
 
         public bool ValidarRemessaCNAB400(string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem)
         {
-            bool vRetorno = true;
-            string vMsg = string.Empty;
+            var vRetorno = true;
+            var vMsg = string.Empty;
             
             #region Pré Validações
             if (banco == null)
@@ -2144,7 +2141,7 @@ namespace BoletoNet
             }
             #endregion
             
-            foreach (Boleto boleto in boletos)
+            foreach (var boleto in boletos)
             {
                 #region Validação de cada boleto
 
@@ -2177,7 +2174,7 @@ namespace BoletoNet
         {
             try
             {
-                TRegistroEDI reg = new TRegistroEDI();
+                var reg = new TRegistroEDI();
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0001, 001, 0, "0", '0'));                                   //001-001
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0002, 001, 0, "1", '0'));                                   //002-002
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0003, 007, 0, "REMESSA", ' '));                             //003-009 "TESTE"
@@ -2197,13 +2194,10 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0130, 007, 0, cedente.Convenio, '0'));                      //130-136
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0137, 258, 0, string.Empty, ' '));                          //137-394
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0395, 006, 0, "000001", ' '));                              //395-400
-                //
+                
                 reg.CodificarLinha();
-                //
-                string vLinha = reg.LinhaRegistro;
-                string _header = Utils.SubstituiCaracteresEspeciais(vLinha);
-                //
-                return _header;
+                
+                return Utils.SubstituiCaracteresEspeciais(reg.LinhaRegistro);
             }
             catch (Exception ex)
             {
@@ -2220,10 +2214,10 @@ namespace BoletoNet
                 //
                 base.GerarDetalheRemessa(boleto, numeroRegistro, tipoArquivo);
                 //
-                TRegistroEDI reg = new TRegistroEDI();
+                var reg = new TRegistroEDI();
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0001, 001, 0, "7", '0'));                                       //001-001
                 #region Regra Tipo de Inscrição Cedente
-                string vCpfCnpjEmi = "00";
+                var vCpfCnpjEmi = "00";
                 if (boleto.Cedente.CPFCNPJ.Length.Equals(11)) vCpfCnpjEmi = "01"; //Cpf é sempre 11;
                 else if (boleto.Cedente.CPFCNPJ.Length.Equals(14)) vCpfCnpjEmi = "02"; //Cnpj é sempre 14;
                 #endregion
@@ -2253,7 +2247,7 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0140, 003, 0, "001", '0'));                                     //140-142   
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0143, 004, 0, "0000", '0'));                                    //143-146
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0147, 001, 0, string.Empty, ' '));                              //147-147 
-                string especie = boleto.Especie;
+                var especie = boleto.Especie;
                 if (boleto.EspecieDocumento.Sigla == "DM") // Conforme nota 7 explicativa do banco
                     especie = "01";
 
@@ -2264,8 +2258,8 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataDDMMAA___________, 0151, 006, 0, boleto.DataProcessamento, ' '));                  //151-156
                 //
                 #region Instruções
-                string vInstrucao1 = "0";
-                string vInstrucao2 = "0";
+                var vInstrucao1 = "0";
+                var vInstrucao2 = "0";
                 //string vInstrucao3 = "0";
                 switch (boleto.Instrucoes.Count)
                 {
@@ -2295,7 +2289,7 @@ namespace BoletoNet
                 if (boleto.Remessa.CodigoOcorrencia.Equals("35") || boleto.Remessa.CodigoOcorrencia.Equals("36"))   //“35” – Cobrar Multa – ou “36” - Dispensar Multa 
                 {
                     #region Código de Multa e Valor/Percentual Multa
-                    string vCodigoMulta = "9"; //“9” = Dispensar Multa
+                    var vCodigoMulta = "9"; //“9” = Dispensar Multa
                     Decimal vMulta = 0;
 
                     if (boleto.ValorMulta > 0)
@@ -2311,7 +2305,7 @@ namespace BoletoNet
                     #endregion
 
                     #region DataVencimento
-                    string vDataVencimento = "000000";
+                    var vDataVencimento = "000000";
                     if (!boleto.DataVencimento.Equals(DateTime.MinValue))
                         vDataVencimento = boleto.DataVencimento.ToString("ddMMyy");
                     #endregion
@@ -2323,7 +2317,7 @@ namespace BoletoNet
                 else
                 {
                     #region DataDesconto
-                    string vDataDesconto = "000000";
+                    var vDataDesconto = "000000";
                     if (!boleto.DataDesconto.Equals(DateTime.MinValue))
                         vDataDesconto = boleto.DataDesconto.ToString("ddMMyy");
                     #endregion
@@ -2336,7 +2330,7 @@ namespace BoletoNet
 
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0206, 013, 2, boleto.Abatimento, '0'));                         //206-218
                 #region Regra Tipo de Inscrição Sacado
-                string vCpfCnpjSac = "00";
+                var vCpfCnpjSac = "00";
                 if (boleto.Sacado.CPFCNPJ.Length.Equals(11)) vCpfCnpjSac = "01"; //Cpf é sempre 11;
                 else if (boleto.Sacado.CPFCNPJ.Length.Equals(14)) vCpfCnpjSac = "02"; //Cnpj é sempre 14;
                 #endregion
@@ -2356,7 +2350,7 @@ namespace BoletoNet
                 //
                 reg.CodificarLinha();
                 //
-                string _detalhe = Utils.SubstituiCaracteresEspeciais(reg.LinhaRegistro);
+                var _detalhe = Utils.SubstituiCaracteresEspeciais(reg.LinhaRegistro);
                 //
                 return _detalhe;
             }
@@ -2370,15 +2364,15 @@ namespace BoletoNet
         {
             try
             {
-                TRegistroEDI reg = new TRegistroEDI();
+                var reg = new TRegistroEDI();
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0001, 001, 0, "9", ' '));            //001-001
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0002, 393, 0, string.Empty, ' '));   //002-393
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0395, 006, 0, numeroRegistro, '0')); //395-400
                 //
                 reg.CodificarLinha();
                 //
-                string vLinha = reg.LinhaRegistro;
-                string _trailer = Utils.SubstituiCaracteresEspeciais(vLinha);
+                var vLinha = reg.LinhaRegistro;
+                var _trailer = Utils.SubstituiCaracteresEspeciais(vLinha);
                 //
                 return _trailer;
             }
@@ -2392,13 +2386,13 @@ namespace BoletoNet
         {
             try
             {
-                TRegistroEDI_BancoBrasil_Retorno reg = new TRegistroEDI_BancoBrasil_Retorno();
+                var reg = new TRegistroEDI_BancoBrasil_Retorno();
                 //
                 reg.LinhaRegistro = registro;
                 reg.DecodificarLinha();
 
                 //Passa para o detalhe as propriedades de reg;
-                DetalheRetorno detalhe = new DetalheRetorno(registro);
+                var detalhe = new DetalheRetorno(registro);
                 //
                 //detalhe. = reg.Identificacao;
                 //detalhe. = reg.Zeros1;
@@ -2426,13 +2420,13 @@ namespace BoletoNet
                 detalhe.Carteira = reg.Carteira;
                 detalhe.CodigoOcorrencia = Utils.ToInt32(reg.Comando);
                 //
-                int dataLiquidacao = Utils.ToInt32(reg.DataLiquidacao);
+                var dataLiquidacao = Utils.ToInt32(reg.DataLiquidacao);
                 detalhe.DataLiquidacao = Utils.ToDateTime(dataLiquidacao.ToString("##-##-##"));
                 //
                 detalhe.NumeroDocumento = reg.NumeroTituloCedente;
                 //detalhe. = reg.Brancos2;
                 //
-                int dataVencimento = Utils.ToInt32(reg.DataVencimento);
+                var dataVencimento = Utils.ToInt32(reg.DataVencimento);
                 detalhe.DataVencimento = Utils.ToDateTime(dataVencimento.ToString("##-##-##"));
                 //
                 detalhe.ValorTitulo = (Convert.ToDecimal(reg.ValorTitulo) / 100);
@@ -2441,7 +2435,7 @@ namespace BoletoNet
                 //detalhe. = reg.DVPrefixoRecebedora;
                 detalhe.Especie = Utils.ToInt32(reg.EspecieTitulo);
                 //
-                int dataCredito = Utils.ToInt32(reg.DataCredito);
+                var dataCredito = Utils.ToInt32(reg.DataCredito);
                 detalhe.DataOcorrencia = Utils.ToDateTime(dataCredito.ToString("##-##-##"));
                 //
                 detalhe.TarifaCobranca = (Convert.ToDecimal(reg.ValorTarifa) / 100);

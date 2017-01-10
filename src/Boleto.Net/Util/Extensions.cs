@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Collections;
-using System.Threading;
 using System.Globalization;
 
 namespace BoletoNet.Util
@@ -21,12 +19,12 @@ namespace BoletoNet.Util
         {
             return (T)type.GetCustomAttributes(typeof(T), false).FirstOrDefault();
         }
+
         public static T GetFirstAttribute<T>(this MemberInfo memberInfo)
         {
             return (T)memberInfo.GetCustomAttributes(typeof(T), false).FirstOrDefault();
         }
-
-
+        
         public static IEnumerable<TResult> Zip<TFirst, TSecond, TResult>(this IEnumerable<TFirst> first, IEnumerable<TSecond> second, Func<TFirst, TSecond, TResult> resultSelector)
         {
             if (first == null) throw new ArgumentNullException("first");
@@ -79,8 +77,8 @@ namespace BoletoNet.Util
         {
             if (!length.HasValue)
                 return str.Substring(start - 1);
-            else
-                return str.Substring(start -1, length.Value);
+
+            return str.Substring(start -1, length.Value);
         }
 
         public static string Left(this string s, int length)
@@ -92,6 +90,5 @@ namespace BoletoNet.Util
         {
             return str.Substring(str.Length - length);
         }
-
     }
 }

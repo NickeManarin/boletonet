@@ -1,29 +1,25 @@
 using System;
-using System.Collections;
-using System.Text;
 
 namespace BoletoNet
 {
     public class Banco : AbstractBanco, IBanco
     {
-
         #region Variaveis
 
-        private IBanco _IBanco;
+        private IBanco _iBanco;
 
         #endregion Variaveis
 
         #region Construtores
 
         internal Banco() 
-        { 
-        }
+        {}
 
-        public Banco(int CodigoBanco)
+        public Banco(int codigoBanco)
         {
             try
             {
-                InstanciaBanco(CodigoBanco);
+                InstanciaBanco(codigoBanco);
             }
             catch (Exception ex)
             {
@@ -37,23 +33,23 @@ namespace BoletoNet
 
         public override int Codigo
         {
-            get { return _IBanco.Codigo; }
-            set { _IBanco.Codigo = value; }
+            get { return _iBanco.Codigo; }
+            set { _iBanco.Codigo = value; }
         }
 
         public override string Digito
         {
-            get { return _IBanco.Digito; }
+            get { return _iBanco.Digito; }
         }
 
         public override string Nome
         {
-            get { return _IBanco.Nome; }
+            get { return _iBanco.Nome; }
         }
 
         #endregion
 
-        # region Métodos Privados
+        #region Métodos Privados
 
         private void InstanciaBanco(int codigoBanco)
         {
@@ -63,84 +59,84 @@ namespace BoletoNet
                 {
                     //104 - Caixa
                     case 104:
-                        _IBanco = new Banco_Caixa();
+                        _iBanco = new Banco_Caixa();
                         break;
                     //341 - Itaú
                     case 341:
-                        _IBanco = new Banco_Itau();
+                        _iBanco = new Banco_Itau();
                         break;
                     //356 - Real
                     case 275:
                     case 356:
-                        _IBanco = new Banco_Real();
+                        _iBanco = new Banco_Real();
                         break;
                     //422 - Safra
                     case 422:
-                        _IBanco = new Banco_Safra();
+                        _iBanco = new Banco_Safra();
                         break;
                     //237 - Bradesco
                     case 237:
-                        _IBanco = new Banco_Bradesco();
+                        _iBanco = new Banco_Bradesco();
                         break;
                     //347 - Sudameris
                     case 347:
-                        _IBanco = new Banco_Sudameris();
+                        _iBanco = new Banco_Sudameris();
                         break;
                     //353 - Santander
                     case 353:
-                        _IBanco = new Banco_Santander();
+                        _iBanco = new Banco_Santander();
                         break;
                     //070 - BRB
                     case 70:
-                        _IBanco = new Banco_BRB();
+                        _iBanco = new Banco_BRB();
                         break;
                     //479 - BankBoston
                     case 479:
-                        _IBanco = new Banco_BankBoston();
+                        _iBanco = new Banco_BankBoston();
                         break;
                     //001 - Banco do Brasil
                     case 1:
-                        _IBanco = new Banco_Brasil();
+                        _iBanco = new Banco_Brasil();
                         break;
                     //399 - HSBC
                     case 399:
-                        _IBanco = new Banco_HSBC();
+                        _iBanco = new Banco_HSBC();
                         break;
                     //003 - HSBC
                     case 3:
-                        _IBanco = new Banco_Basa();
+                        _iBanco = new Banco_Basa();
                         break;
                     //409 - Unibanco
                     case 409:
-                        _IBanco = new Banco_Unibanco();
+                        _iBanco = new Banco_Unibanco();
                         break;
                     //33 - Unibanco
                     case 33:
-                        _IBanco = new Banco_Santander();
+                        _iBanco = new Banco_Santander();
                         break;
                     //41 - Banrisul
                     case 41:
-                        _IBanco = new Banco_Banrisul();
+                        _iBanco = new Banco_Banrisul();
                         break;
                     //756 - Sicoob (Bancoob)
                     case 756:
-                        _IBanco = new Banco_Sicoob();
+                        _iBanco = new Banco_Sicoob();
                         break;
                     //748 - Sicredi
                     case 748:
-                        _IBanco = new Banco_Sicredi();
+                        _iBanco = new Banco_Sicredi();
                         break;
                     //21 - Banestes
                     case 21:
-                        _IBanco = new Banco_Banestes();
+                        _iBanco = new Banco_Banestes();
                         break;
                     //004 - Nordeste
                     case 4:
-                        _IBanco = new Banco_Nordeste();
+                        _iBanco = new Banco_Nordeste();
                         break;
                     //85 - CECRED
                     case 85:
-                        _IBanco = new Banco_Cecred();
+                        _iBanco = new Banco_Cecred();
                         break;
                     default:
                         throw new Exception("Código do banco não implementando: " + codigoBanco);
@@ -152,15 +148,15 @@ namespace BoletoNet
             }
         }
 
-        # endregion
+        #endregion
 
-        # region Métodos de Interface
+        #region Métodos de Interface
 
         public override void FormataCodigoBarra(Boleto boleto)
         {
             try
             {
-                _IBanco.FormataCodigoBarra(boleto);
+                _iBanco.FormataCodigoBarra(boleto);
             }
             catch (Exception ex)
             {
@@ -172,7 +168,7 @@ namespace BoletoNet
         {
             try
             {
-                _IBanco.FormataLinhaDigitavel(boleto);
+                _iBanco.FormataLinhaDigitavel(boleto);
             }
             catch (Exception ex)
             {
@@ -184,7 +180,7 @@ namespace BoletoNet
         {
             try
             {
-                _IBanco.FormataNossoNumero(boleto);
+                _iBanco.FormataNossoNumero(boleto);
             }
             catch (Exception ex)
             {
@@ -196,7 +192,7 @@ namespace BoletoNet
         {
             try
             {
-                _IBanco.FormataNumeroDocumento(boleto);
+                _iBanco.FormataNumeroDocumento(boleto);
             }
             catch (Exception ex)
             {
@@ -208,7 +204,7 @@ namespace BoletoNet
         {
             //try
             //{
-                _IBanco.ValidaBoleto(boleto);
+                _iBanco.ValidaBoleto(boleto);
             //}
             //catch (Exception ex)
             //{
@@ -216,40 +212,43 @@ namespace BoletoNet
             //}
         }
 
-        # endregion
+        #endregion
 
         #region Métodos de Validação de geração de arquivo
+
         public override bool ValidarRemessa(TipoArquivo tipoArquivo, string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem)
         {
             try
             {
-                return _IBanco.ValidarRemessa(tipoArquivo, numeroConvenio, _IBanco, cedente, boletos, numeroArquivoRemessa, out mensagem);
+                return _iBanco.ValidarRemessa(tipoArquivo, numeroConvenio, _iBanco, cedente, boletos, numeroArquivoRemessa, out mensagem);
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro durante a validação do arquivo de REMESSA.", ex);
             }
         }
+        
         #endregion
 
-        # region Métodos de geração de arquivo
+        #region Métodos de geração de arquivo
 
         public override string GerarHeaderRemessa(string numeroConvenio, Cedente cedente, TipoArquivo tipoArquivo, int numeroArquivoRemessa)
         {
             try
             {
-                return _IBanco.GerarHeaderRemessa(numeroConvenio, cedente, tipoArquivo, numeroArquivoRemessa);
+                return _iBanco.GerarHeaderRemessa(numeroConvenio, cedente, tipoArquivo, numeroArquivoRemessa);
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro durante a geração do registro HEADER do arquivo de REMESSA.", ex);
             }
         }
+
         public override string GerarHeaderRemessa(string numeroConvenio, Cedente cedente, TipoArquivo tipoArquivo, int numeroArquivoRemessa, Boleto boletos)
         {
             try
             {
-                return _IBanco.GerarHeaderRemessa(numeroConvenio, cedente, tipoArquivo, numeroArquivoRemessa, boletos);
+                return _iBanco.GerarHeaderRemessa(numeroConvenio, cedente, tipoArquivo, numeroArquivoRemessa, boletos);
             }
             catch (Exception ex)
             {
@@ -261,7 +260,7 @@ namespace BoletoNet
         {
             try
             {
-                return _IBanco.GerarDetalheRemessa(boleto, numeroRegistro, tipoArquivo);
+                return _iBanco.GerarDetalheRemessa(boleto, numeroRegistro, tipoArquivo);
             }
             catch (Exception ex)
             {
@@ -273,7 +272,7 @@ namespace BoletoNet
         {
             try
             {
-                return _IBanco.GerarTrailerRemessa(numeroRegistro, tipoArquivo, cedente, vltitulostotal);
+                return _iBanco.GerarTrailerRemessa(numeroRegistro, tipoArquivo, cedente, vltitulostotal);
             }
             catch (Exception ex)
             {
@@ -285,20 +284,19 @@ namespace BoletoNet
         {
             try
             {
-                return _IBanco.GerarTrailerRemessaComDetalhes(numeroRegistro, numeroRegistroDetalhes, tipoArquivo, cedente, vltitulostotal);
+                return _iBanco.GerarTrailerRemessaComDetalhes(numeroRegistro, numeroRegistroDetalhes, tipoArquivo, cedente, vltitulostotal);
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro durante a geração do registro TRAILER do arquivo de REMESSA.", ex);
             }
         }
-
-
+        
         public override string GerarHeaderRemessa(Cedente cedente, TipoArquivo tipoArquivo, int numeroArquivoRemessa)
         {
             try
             {
-                return _IBanco.GerarHeaderRemessa(cedente, tipoArquivo, numeroArquivoRemessa);
+                return _iBanco.GerarHeaderRemessa(cedente, tipoArquivo, numeroArquivoRemessa);
             }
             catch (Exception ex)
             {
@@ -310,7 +308,7 @@ namespace BoletoNet
         {
             try
             {
-                return _IBanco.GerarHeaderLoteRemessa(numeroConvenio, cedente, numeroArquivoRemessa);
+                return _iBanco.GerarHeaderLoteRemessa(numeroConvenio, cedente, numeroArquivoRemessa);
             }
             catch (Exception ex)
             {
@@ -322,7 +320,7 @@ namespace BoletoNet
         {
             try
             {
-                return _IBanco.GerarHeaderLoteRemessa(numeroConvenio, cedente, numeroArquivoRemessa, tipoArquivo);
+                return _iBanco.GerarHeaderLoteRemessa(numeroConvenio, cedente, numeroArquivoRemessa, tipoArquivo);
             }
             catch (Exception ex)
             {
@@ -334,7 +332,7 @@ namespace BoletoNet
         {
             try
             {
-                return _IBanco.GerarHeaderLoteRemessa(numeroConvenio, cedente, numeroArquivoRemessa, tipoArquivo, boletos);
+                return _iBanco.GerarHeaderLoteRemessa(numeroConvenio, cedente, numeroArquivoRemessa, tipoArquivo, boletos);
             }
             catch (Exception ex)
             {
@@ -346,7 +344,7 @@ namespace BoletoNet
         {
             try
             {
-                return _IBanco.GerarDetalheSegmentoARemessa(boleto, numeroRegistro);
+                return _iBanco.GerarDetalheSegmentoARemessa(boleto, numeroRegistro);
             }
             catch (Exception ex)
             {
@@ -358,7 +356,7 @@ namespace BoletoNet
         {
             try
             {
-                return _IBanco.GerarDetalheSegmentoBRemessa(boleto, numeroRegistro);
+                return _iBanco.GerarDetalheSegmentoBRemessa(boleto, numeroRegistro);
             }
             catch (Exception ex)
             {
@@ -370,7 +368,7 @@ namespace BoletoNet
         {
             try
             {
-                return _IBanco.GerarDetalheSegmentoPRemessa(boleto, numeroRegistro, numeroConvenio);
+                return _iBanco.GerarDetalheSegmentoPRemessa(boleto, numeroRegistro, numeroConvenio);
             }
             catch (Exception ex)
             {
@@ -382,7 +380,7 @@ namespace BoletoNet
         {
             try
             {
-                return _IBanco.GerarDetalheSegmentoPRemessa(boleto, numeroRegistro, numeroConvenio,cedente);
+                return _iBanco.GerarDetalheSegmentoPRemessa(boleto, numeroRegistro, numeroConvenio,cedente);
             }
             catch (Exception ex)
             {
@@ -394,18 +392,19 @@ namespace BoletoNet
         {
             try
             {
-                return _IBanco.GerarDetalheSegmentoQRemessa(boleto, numeroRegistro, tipoArquivo);
+                return _iBanco.GerarDetalheSegmentoQRemessa(boleto, numeroRegistro, tipoArquivo);
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro durante a geração dos registros de DETALHE do arquivo de REMESSA.", ex);
             }
         }
+
         public override string GerarDetalheSegmentoQRemessa(Boleto boleto, int numeroRegistro, Sacado sacado)
         {
             try
             {
-                return _IBanco.GerarDetalheSegmentoQRemessa(boleto, numeroRegistro, sacado);
+                return _iBanco.GerarDetalheSegmentoQRemessa(boleto, numeroRegistro, sacado);
             }
             catch (Exception ex)
             {
@@ -417,7 +416,7 @@ namespace BoletoNet
         {
             try
             {
-                return _IBanco.GerarDetalheSegmentoRRemessa(boleto, numeroRegistro, tipoArquivo);
+                return _iBanco.GerarDetalheSegmentoRRemessa(boleto, numeroRegistro, tipoArquivo);
             }
             catch (Exception ex)
             {
@@ -429,7 +428,7 @@ namespace BoletoNet
         {
             try
             {
-                return _IBanco.GerarDetalheSegmentoSRemessa(boleto, numeroRegistro, tipoArquivo);
+                return _iBanco.GerarDetalheSegmentoSRemessa(boleto, numeroRegistro, tipoArquivo);
             }
             catch (Exception ex)
             {
@@ -441,7 +440,7 @@ namespace BoletoNet
         {
             try
             {
-                return _IBanco.GerarTrailerArquivoRemessa(numeroRegistro);
+                return _iBanco.GerarTrailerArquivoRemessa(numeroRegistro);
             }
             catch (Exception ex)
             {
@@ -453,7 +452,7 @@ namespace BoletoNet
         {
             try
             {
-                return _IBanco.GerarTrailerArquivoRemessa(numeroRegistro, boletos);
+                return _iBanco.GerarTrailerArquivoRemessa(numeroRegistro, boletos);
             }
             catch (Exception ex)
             {
@@ -465,18 +464,19 @@ namespace BoletoNet
         {
             try
             {
-                return _IBanco.GerarTrailerLoteRemessa(numeroRegistro);
+                return _iBanco.GerarTrailerLoteRemessa(numeroRegistro);
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro durante a geração do registro TRAILER do arquivo de REMESSA.", ex);
             }
         }
+
         public override string GerarTrailerLoteRemessa(int numeroRegistro, Boleto boletos)
         {
             try
             {
-                return _IBanco.GerarTrailerLoteRemessa(numeroRegistro, boletos);
+                return _iBanco.GerarTrailerLoteRemessa(numeroRegistro, boletos);
             }
             catch (Exception ex)
             {
@@ -488,7 +488,7 @@ namespace BoletoNet
         {
             try
             {
-                return _IBanco.GerarMensagemVariavelRemessa(boleto, ref numeroRegistro, tipoArquivo);
+                return _iBanco.GerarMensagemVariavelRemessa(boleto, ref numeroRegistro, tipoArquivo);
             }
             catch (Exception ex)
             {
@@ -496,29 +496,28 @@ namespace BoletoNet
             }
         }
 
-        # endregion
+        #endregion
 
         #region Métodos de Leitura do arquivo de Retorno
 
         public override DetalheSegmentoTRetornoCNAB240 LerDetalheSegmentoTRetornoCNAB240(string registro)
         {
-            return _IBanco.LerDetalheSegmentoTRetornoCNAB240(registro);
+            return _iBanco.LerDetalheSegmentoTRetornoCNAB240(registro);
         }
 
         public override DetalheSegmentoURetornoCNAB240 LerDetalheSegmentoURetornoCNAB240(string registro)
         {
-            return _IBanco.LerDetalheSegmentoURetornoCNAB240(registro);
+            return _iBanco.LerDetalheSegmentoURetornoCNAB240(registro);
         }
 
         public override DetalheSegmentoWRetornoCNAB240 LerDetalheSegmentoWRetornoCNAB240(string registro)
         {
-            return _IBanco.LerDetalheSegmentoWRetornoCNAB240(registro);
+            return _iBanco.LerDetalheSegmentoWRetornoCNAB240(registro);
         }
-
 
         public override DetalheRetorno LerDetalheRetornoCNAB400(string registro)
         {
-            return _IBanco.LerDetalheRetornoCNAB400(registro);
+            return _iBanco.LerDetalheRetornoCNAB400(registro);
         }
 
         #endregion Métodos de Leitura do arquivo de Retorno

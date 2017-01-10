@@ -1,8 +1,6 @@
 using System;
 using System.Web.UI;
 using BoletoNet.Util;
-using System.Text;
-using System.Collections.Generic;
 using BoletoNet.EDI.Banco;
 
 [assembly: WebResource("BoletoNet.Imagens.041.jpg", "image/jpg")]
@@ -13,7 +11,6 @@ namespace BoletoNet
     /// </Author>
     internal class Banco_Banrisul : AbstractBanco, IBanco
     {
-        private string _dacNossoNumero = string.Empty;
         private int _primDigito;
         private int _segDigito;
 
@@ -22,9 +19,9 @@ namespace BoletoNet
         /// </author>
         internal Banco_Banrisul()
         {
-            this.Codigo = 041;
-            this.Digito = "8";
-            this.Nome = "Banco Banrisul";
+            Codigo = 041;
+            Digito = "8";
+            Nome = "Banco Banrisul";
         }
 
         public override void ValidaBoleto(Boleto boleto)
@@ -64,17 +61,17 @@ namespace BoletoNet
             FormataNossoNumero(boleto);
         }
 
-        private string CalcularNCNossoNumero(String nossoNumero)
+        private string CalcularNCNossoNumero(string nossoNumero)
         {
-            int dv1 = Mod10Banri(nossoNumero);
-            int dv1e2 = Mod11Banri(nossoNumero, dv1); // O módulo 11 sempre devolve os dois Dígitos, pois, as vezes o dígito calculado no mod10 será incrementado em 1
+            var dv1 = Mod10Banri(nossoNumero);
+            var dv1e2 = Mod11Banri(nossoNumero, dv1); // O módulo 11 sempre devolve os dois Dígitos, pois, as vezes o dígito calculado no mod10 será incrementado em 1
             return nossoNumero + dv1e2.ToString("00");
         }
 
-        private string CalcularNCCodBarras(String seq)
+        private string CalcularNCCodBarras(string seq)
         {
-            int dv1 = Mod10Banri(seq);
-            int dv2 = Mod11Banri(seq, dv1);// O módulo 11 sempre devolve os dois Dígitos, pois, as vezes, o dígito calculado no mod10 será incrementado em 1
+            var dv1 = Mod10Banri(seq);
+            var dv2 = Mod11Banri(seq, dv1);// O módulo 11 sempre devolve os dois Dígitos, pois, as vezes, o dígito calculado no mod10 será incrementado em 1
             return dv2.ToString("00");
         }
 
@@ -102,22 +99,16 @@ namespace BoletoNet
             //041M2.1AAAd1 ACCCCC.CCNNd2 NNNNN.N40XXd3 V FFFF9999999999
             //(Isso depende da constante que usar) no caso de cima "041" no de baixo "40" antes do "XX"
 
-            string Campo1 = string.Empty;
-            string Campo2 = string.Empty;
-            string Campo3 = string.Empty;
-            string Campo4 = string.Empty;
-            string Campo5 = string.Empty;
-
-            string Cedente = boleto.Cedente.Codigo.Substring(4); //Os quatro primeiros digitos do código do cedente é sempre a agência
-            string NossoNumero = boleto.NossoNumero.Substring(0, 8);
+            var Cedente = boleto.Cedente.Codigo.Substring(4); //Os quatro primeiros digitos do código do cedente é sempre a agência
+            var NossoNumero = boleto.NossoNumero.Substring(0, 8);
 
             //Campo 1
-            string M = boleto.Moeda.ToString();
-            string AAA = boleto.Cedente.ContaBancaria.Agencia.Substring(1, 3);
-            string Metade1 = "041" + M + "2";
-            string Metade2 = "1" + AAA;
-            string d1 = Mod10Banri(Metade1 + Metade2).ToString();
-            Campo1 = Metade1 + "." + Metade2 + d1;
+            var M = boleto.Moeda.ToString();
+            var AAA = boleto.Cedente.ContaBancaria.Agencia.Substring(1, 3);
+            var Metade1 = "041" + M + "2";
+            var Metade2 = "1" + AAA;
+            var d1 = Mod10Banri(Metade1 + Metade2).ToString();
+            var Campo1 = Metade1 + "." + Metade2 + d1;
 
             //Campo 2
             Metade1 = string.Empty;
@@ -125,57 +116,53 @@ namespace BoletoNet
             Metade1 = Cedente.Substring(0, 5);
             //Metade2 = Cedente.Substring(5, 2) + NossoNumero.Substring(0, 2);
             Metade2 = Cedente.Substring(5, 2) + NossoNumero.Substring(0, 3);
-            string d2 = Mod10Banri(Metade1 + Metade2).ToString();
-            Campo2 = Metade1 + "." + Metade2 + d2;
+            var d2 = Mod10Banri(Metade1 + Metade2).ToString();
+            var campo2 = Metade1 + "." + Metade2 + d2;
 
             //Campo 3
             Metade1 = string.Empty;
             Metade2 = string.Empty;
-            string XX = _primDigito.ToString() + _segDigito.ToString();
+            var xx = _primDigito + _segDigito.ToString();
             //Metade1 = NossoNumero.Substring(2, 5);
             Metade1 = NossoNumero.Substring(3, 5);
             //Metade2 = NossoNumero.Substring(7, 1) + "041" + XX;
-            Metade2 = "041" + XX;
-            string d3 = Mod10Banri(Metade1 + Metade2).ToString();
-            Campo3 = Metade1 + "." + Metade2 + d3;
+            Metade2 = "041" + xx;
+            var d3 = Mod10Banri(Metade1 + Metade2).ToString();
+            var campo3 = Metade1 + "." + Metade2 + d3;
 
             //Campo 4
-            Campo4 = boleto.CodigoBarra.Codigo.Substring(4, 1);
+            var campo4 = boleto.CodigoBarra.Codigo.Substring(4, 1);
 
             //Campo 5
-            string fatorVenc = FatorVencimento(boleto).ToString("0000");
-            string valor = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "");
+            var fatorVenc = FatorVencimento(boleto).ToString("0000");
+            var valor = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "");
             valor = Utils.FormatCode(valor, 10);
-            Campo5 = fatorVenc + valor;
+            var campo5 = fatorVenc + valor;
 
-            boleto.CodigoBarra.LinhaDigitavel = Campo1 + "  " + Campo2 + "  " + Campo3 + "  " + Campo4 + "  " + Campo5;
+            boleto.CodigoBarra.LinhaDigitavel = Campo1 + "  " + campo2 + "  " + campo3 + "  " + campo4 + "  " + campo5;
         }
 
         public override void FormataCodigoBarra(Boleto boleto)
         {
-            string campo1 = string.Empty;
-            string campo2 = string.Empty;
-            string campoLivre = string.Empty;
-            campo1 = "041" + boleto.Moeda.ToString();
-            int dacCodBarras;
-            string fatorVenc = FatorVencimento(boleto).ToString("0000");
-            string valor = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "");
+            var campo1 = "041" + boleto.Moeda;
+            var fatorVenc = FatorVencimento(boleto).ToString("0000");
+            var valor = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "");
             valor = Utils.FormatCode(valor, 10);
-            campo2 = fatorVenc + valor;
+            var campo2 = fatorVenc + valor;
 
-            string nossoNumero = boleto.NossoNumero.Replace(".", "").Replace("-", "");
+            var nossoNumero = boleto.NossoNumero.Replace(".", "").Replace("-", "");
             nossoNumero = nossoNumero.Substring(0, 8);
             //campoLivre = "21" + boleto.Cedente.ContaBancaria.Agencia.Substring(1, 3) + boleto.Cedente.ContaBancaria.Conta + nossoNumero + "041";
-            string codCedente = boleto.Cedente.Codigo.Substring(4, 7);// Os quatro primeiros digitos do código do cedente é sempre a agência
-            campoLivre = "21" + boleto.Cedente.ContaBancaria.Agencia.Substring(1, 3) + codCedente + nossoNumero + "041";
-            string ncCodBarra = CalcularNCCodBarras(campoLivre);
-            Int32.TryParse(ncCodBarra.Substring(0, 1), out _primDigito);
-            Int32.TryParse(ncCodBarra.Substring(1, 1), out _segDigito);
+            var codCedente = boleto.Cedente.Codigo.Substring(4, 7);// Os quatro primeiros digitos do código do cedente é sempre a agência
+            var campoLivre = "21" + boleto.Cedente.ContaBancaria.Agencia.Substring(1, 3) + codCedente + nossoNumero + "041";
+            var ncCodBarra = CalcularNCCodBarras(campoLivre);
+            int.TryParse(ncCodBarra.Substring(0, 1), out _primDigito);
+            int.TryParse(ncCodBarra.Substring(1, 1), out _segDigito);
             campoLivre = campoLivre + ncCodBarra;
 
-            dacCodBarras = Mod11Peso2a9Banri(campo1 + campo2 + campoLivre);
+            var dacCodBarras = Mod11Peso2a9Banri(campo1 + campo2 + campoLivre);
 
-            boleto.CodigoBarra.Codigo = campo1 + dacCodBarras.ToString() + campo2 + campoLivre;
+            boleto.CodigoBarra.Codigo = campo1 + dacCodBarras + campo2 + campoLivre;
         }
 
         private int Mod10Banri(string seq)
@@ -186,24 +173,23 @@ namespace BoletoNet
              * b) quando o somatório for menor que 10, o resto da divisão por 10 será o próprio somatório. 
              * c) quando o resto for 0, o primeiro DV é igual a 0.
              */
-            int soma = 0, resto, dv1, peso = 2, n, result;
+            int soma = 0, resto, peso = 2;
 
-            for (int i = seq.Length - 1; i >= 0; i--)
+            for (var i = seq.Length - 1; i >= 0; i--)
             {
-                n = Convert.ToInt32(seq.Substring(i, 1));
-                result = n * peso > 9 ? (n * peso) - 9 : n * peso;
+                var n = Convert.ToInt32(seq.Substring(i, 1));
+                var result = n * peso > 9 ? (n * peso) - 9 : n * peso;
                 soma += result;
-                if (peso == 2)
-                    peso = 1;
-                else
-                    peso = 2;
+
+                peso = peso == 2 ? 1 : 2;
             }
 
             if (soma < 10)
                 resto = soma;
             else
                 resto = soma % 10;
-            dv1 = resto == 0 ? 0 : 10 - resto;
+
+            var dv1 = resto == 0 ? 0 : 10 - resto;
             return dv1;
         }
 
@@ -217,13 +203,14 @@ namespace BoletoNet
              * Neste caso, o DV do módulo "10" automaticamente será igual a "0" e procede-se assim novo cálculo pelo módulo "11". 
              * Caso o ''resto'' obtido no cálculo do módulo "11" seja ''0'', o segundo ''NC'' será igual ao próprio ''resto''
              */
-            int peso = 2, mult, sum = 0, rest, dv2, b = 7, n;
+            int peso = 2;
+            int sum = 0, dv2, b = 7;
             seq += dv1.ToString();
             bool dvInvalido;
-            for (int i = seq.Length - 1; i >= 0; i--)
+            for (var i = seq.Length - 1; i >= 0; i--)
             {
-                n = Convert.ToInt32(seq.Substring(i, 1));
-                mult = n * peso;
+                var n = Convert.ToInt32(seq.Substring(i, 1));
+                var mult = n * peso;
                 sum += mult;
                 if (peso < b)
                     peso++;
@@ -231,15 +218,13 @@ namespace BoletoNet
                     peso = 2;
             }
             seq = seq.Substring(0, seq.Length - 1);
-            rest = sum < 11 ? sum : sum % 11;
-            if (rest == 1)
-                dvInvalido = true;
-            else
-                dvInvalido = false;
+            var rest = sum < 11 ? sum : sum % 11;
+
+            dvInvalido = rest == 1;
 
             if (dvInvalido)
             {
-                int novoDv1 = dv1 == 9 ? 0 : dv1 + 1;
+                var novoDv1 = dv1 == 9 ? 0 : dv1 + 1;
                 dv2 = Mod11Banri(seq, novoDv1);
             }
             else
@@ -248,13 +233,11 @@ namespace BoletoNet
             }
             if (!dvInvalido)
             {
-                string digitos = dv1.ToString() + dv2;
+                var digitos = dv1.ToString() + dv2;
                 return Convert.ToInt32(digitos);
             }
-            else
-            {
-                return dv2;
-            }
+
+            return dv2;
         }
 
         private int Mod11BaseIndef(string seq, int b)
@@ -271,7 +254,7 @@ namespace BoletoNet
             int d, s = 0, p = 2;
 
 
-            for (int i = seq.Length; i > 0; i--)
+            for (var i = seq.Length; i > 0; i--)
             {
                 s = s + (Convert.ToInt32(seq.Mid( i, 1)) * p);
                 if (p == b)
@@ -303,7 +286,7 @@ namespace BoletoNet
 
             int d, r, s = 0, p = 2, b = 9, n;
 
-            for (int i = seq.Length - 1; i >= 0; i--)
+            for (var i = seq.Length - 1; i >= 0; i--)
             {
                 n = Convert.ToInt32(seq.Substring(i, 1));
 
@@ -325,19 +308,15 @@ namespace BoletoNet
             return d;
         }
 
-        private int CalculaSoma(string Numero)
+        private int CalculaSoma(string numero)
         {
-            int mult;
             int x;
-            int y;
-            int resul;
-            int resto;
-            int soma;
-            soma = 0;
-            mult = 2;
-            int I = Numero.Length;
-            //para começar o cálculo pelo nº final (sempre começa multiplicando por 2)
-            for (x = 1; x <= Numero.Length; x++)
+            var soma = 0;
+            var mult = 2;
+            var I = numero.Length;
+
+            //Para começar o cálculo pelo nº final (sempre começa multiplicando por 2)
+            for (x = 1; x <= numero.Length; x++)
             {
                 if (Codigo == 41)
                 {
@@ -350,50 +329,53 @@ namespace BoletoNet
                     if (mult == 10)
                         mult = 2;
                 }
-                y = Convert.ToInt32(Strings.Mid(Numero, I, 1));
-                resul = y * mult;
+                var y = Convert.ToInt32(Strings.Mid(numero, I, 1));
+                var resul = y * mult;
                 soma = soma + resul;
                 mult = mult + 1;
                 I = I - 1;
             }
+
             if (Codigo == 41 | Codigo == 33 | Codigo == 353)
             {
                 return soma;
                 // calcula no retorno pois tem umas exceções
             }
-            else
-            {
-                resto = soma % 11;
-                if (resto == 0)
-                    resto = 1;
-                return resto;
-            }
+
+            var resto = soma % 11;
+
+            if (resto == 0)
+                resto = 1;
+
+            return resto;
         }
 
         #region Métodos de validação e geração do arquivo remessa - sidneiklein
+
         /// <summary>
         /// Efetua as Validações dentro da classe Boleto, para garantir a geração da remessa
         /// </summary>
         public override bool ValidarRemessa(TipoArquivo tipoArquivo, string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem)
         {
-            bool vRetorno = true;
-            string vMsg = string.Empty;
-            //            
+            var vRetorno = true;
+            var vMsg = string.Empty;
+                        
             switch (tipoArquivo)
             {
                 case TipoArquivo.CNAB240:
                     vRetorno = ValidarRemessaCNAB240(numeroConvenio, banco, cedente, boletos, numeroArquivoRemessa, out vMsg);
                     break;
                 case TipoArquivo.CNAB400:
-                    vRetorno = ValidarRemessaCNAB400(numeroConvenio, banco, cedente, boletos, numeroArquivoRemessa, out vMsg);
+                    vRetorno = ValidarRemessaCnab400(numeroConvenio, banco, cedente, boletos, numeroArquivoRemessa, out vMsg);
                     break;
                 case TipoArquivo.Outro:
                     throw new Exception("Tipo de arquivo inexistente.");
             }
-            //
+            
             mensagem = vMsg;
             return vRetorno;
         }
+
         /// <summary>
         /// Gera o HEADER do arquivo remessa de acordo com o lay-out informado
         /// </summary>
@@ -401,7 +383,7 @@ namespace BoletoNet
         {
             try
             {
-                string _header = " ";
+                var header = " ";
 
                 base.GerarHeaderRemessa(numeroConvenio, cedente, tipoArquivo, numeroArquivoRemessa);
 
@@ -409,16 +391,16 @@ namespace BoletoNet
                 {
 
                     case TipoArquivo.CNAB240:
-                        _header = GerarHeaderRemessaCNAB240();
+                        header = GerarHeaderRemessaCNAB240();
                         break;
                     case TipoArquivo.CNAB400:
-                        _header = GerarHeaderRemessaCNAB400(int.Parse(numeroConvenio), cedente, numeroArquivoRemessa);
+                        header = GerarHeaderRemessaCnab400(int.Parse(numeroConvenio), cedente, numeroArquivoRemessa);
                         break;
                     case TipoArquivo.Outro:
                         throw new Exception("Tipo de arquivo inexistente.");
                 }
 
-                return _header;
+                return header;
 
             }
             catch (Exception ex)
@@ -426,6 +408,7 @@ namespace BoletoNet
                 throw new Exception("Erro durante a geração do HEADER do arquivo de REMESSA.", ex);
             }
         }
+
         /// <summary>
         /// DETALHE do arquivo CNAB
         /// Gera o DETALHE do arquivo remessa de acordo com o lay-out informado
@@ -434,23 +417,23 @@ namespace BoletoNet
         {
             try
             {
-                string _detalhe = " ";
+                var detalhe = " ";
 
                 base.GerarDetalheRemessa(boleto, numeroRegistro, tipoArquivo);
 
                 switch (tipoArquivo)
                 {
                     case TipoArquivo.CNAB240:
-                        _detalhe = GerarDetalheRemessaCNAB240();
+                        detalhe = GerarDetalheRemessaCNAB240();
                         break;
                     case TipoArquivo.CNAB400:
-                        _detalhe = GerarDetalheRemessaCNAB400(boleto, numeroRegistro, tipoArquivo);
+                        detalhe = GerarDetalheRemessaCnab400(boleto, numeroRegistro, tipoArquivo);
                         break;
                     case TipoArquivo.Outro:
                         throw new Exception("Tipo de arquivo inexistente.");
                 }
 
-                return _detalhe;
+                return detalhe;
 
             }
             catch (Exception ex)
@@ -458,6 +441,7 @@ namespace BoletoNet
                 throw new Exception("Erro durante a geração do DETALHE arquivo de REMESSA.", ex);
             }
         }
+
         /// <summary>
         /// TRAILER do arquivo CNAB
         /// Gera o TRAILER do arquivo remessa de acordo com o lay-out informado
@@ -466,23 +450,23 @@ namespace BoletoNet
         {
             try
             {
-                string _trailer = " ";
+                var trailer = " ";
 
                 base.GerarTrailerRemessa(numeroRegistro, tipoArquivo, cedente, vltitulostotal);
 
                 switch (tipoArquivo)
                 {
                     case TipoArquivo.CNAB240:
-                        _trailer = GerarTrailerRemessa240();
+                        trailer = GerarTrailerRemessa240();
                         break;
                     case TipoArquivo.CNAB400:
-                        _trailer = GerarTrailerRemessa400(numeroRegistro, vltitulostotal);
+                        trailer = GerarTrailerRemessa400(numeroRegistro, vltitulostotal);
                         break;
                     case TipoArquivo.Outro:
                         throw new Exception("Tipo de arquivo inexistente.");
                 }
 
-                return _trailer;
+                return trailer;
 
             }
             catch (Exception ex)
@@ -495,133 +479,145 @@ namespace BoletoNet
         {
             throw new NotImplementedException("Função não implementada.");
         }
+
         #endregion
 
         #region CNAB 240
+
         public bool ValidarRemessaCNAB240(string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem)
         {
             throw new NotImplementedException("Função não implementada.");
         }
+
         public string GerarHeaderRemessaCNAB240()
         {
             throw new NotImplementedException("Função não implementada.");
         }
+
         public string GerarDetalheRemessaCNAB240()
         {
             throw new NotImplementedException("Função não implementada.");
         }
+
         public string GerarTrailerRemessa240()
         {
             throw new NotImplementedException("Função não implementada.");
         }
+
         #endregion
 
-        #region CNAB 400 - sidneiklein
-        public bool ValidarRemessaCNAB400(string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem)
+        #region CNAB 400
+
+        public bool ValidarRemessaCnab400(string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem)
         {
-            bool vRetorno = true;
-            string vMsg = string.Empty;
-            //
+            var vRetorno = true;
+            var vMsg = string.Empty;
+            
             #region Pré Validações
+
             if (banco == null)
             {
-                vMsg += String.Concat("Remessa: O Banco é Obrigatório!", Environment.NewLine);
+                vMsg += string.Concat("Remessa: O Banco é Obrigatório!", Environment.NewLine);
                 vRetorno = false;
             }
             if (cedente == null)
             {
-                vMsg += String.Concat("Remessa: O Cedente/Beneficiário é Obrigatório!", Environment.NewLine);
+                vMsg += string.Concat("Remessa: O Cedente/Beneficiário é Obrigatório!", Environment.NewLine);
                 vRetorno = false;
             }
             if (boletos == null || boletos.Count.Equals(0))
             {
-                vMsg += String.Concat("Remessa: Deverá existir ao menos 1 boleto para geração da remessa!", Environment.NewLine);
+                vMsg += string.Concat("Remessa: Deverá existir ao menos 1 boleto para geração da remessa!", Environment.NewLine);
                 vRetorno = false;
             }
+            
             #endregion
-            //
-            foreach (Boleto boleto in boletos)
+            
+            foreach (var boleto in boletos)
             {
                 #region Validação de cada boleto
+
                 if (boleto.Remessa == null)
                 {
-                    vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe as diretrizes de remessa!", Environment.NewLine);
+                    vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe as diretrizes de remessa!", Environment.NewLine);
                     vRetorno = false;
                 }
                 else
                 {
                     #region Validações da Remessa que deverão estar preenchidas quando BANRISUL
+
                     //Comentado porque ainda está fixado em 01
                     //if (String.IsNullOrEmpty(boleto.Remessa.CodigoOcorrencia))
                     //{
                     //    vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o Código de Ocorrência!", Environment.NewLine);
                     //    vRetorno = false;
                     //}
-                    if (String.IsNullOrEmpty(boleto.Remessa.TipoDocumento))
+
+                    if (string.IsNullOrEmpty(boleto.Remessa.TipoDocumento))
                     {
-                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o Tipo Documento!", Environment.NewLine);
+                        vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o Tipo Documento!", Environment.NewLine);
                         vRetorno = false;
                     }
-                    else if (boleto.Remessa.TipoDocumento.Equals("06") && !String.IsNullOrEmpty(boleto.NossoNumero))
+                    else if (boleto.Remessa.TipoDocumento.Equals("06") && !string.IsNullOrEmpty(boleto.NossoNumero))
                     {
                         //Para o "Remessa.TipoDocumento = "06", não poderá ter NossoNumero Gerado!
-                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Não pode existir NossoNumero para o Tipo Documento '06 - cobrança escritural'!", Environment.NewLine);
+                        vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Não pode existir NossoNumero para o Tipo Documento '06 - cobrança escritural'!", Environment.NewLine);
                         vRetorno = false;
                     }
 
                     //Para o Tipo
                     #endregion
                 }
+
                 #endregion
             }
-            //
+            
             mensagem = vMsg;
             return vRetorno;
         }
-        public string GerarHeaderRemessaCNAB400(int numeroConvenio, Cedente cedente, int numeroArquivoRemessa)
+
+        public string GerarHeaderRemessaCnab400(int numeroConvenio, Cedente cedente, int numeroArquivoRemessa)
         {
             try
             {
-                TRegistroEDI reg = new TRegistroEDI();
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0001, 010, 0, "01REMESSA", ' ')); //001-009
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0010, 016, 0, "", ' ')); //010-026
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0027, 013, 0, cedente.Codigo, ' ')); //027-039
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0040, 007, 0, "", ' ')); //040-046
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0047, 030, 0, cedente.Nome.ToUpper(), ' ')); //047-076
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0077, 011, 0, "041BANRISUL", ' ')); //077-087
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0088, 007, 0, "", ' ')); //088-094
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataDDMMAA___________, 0095, 006, 0, DateTime.Now, ' ')); //095-100
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0101, 009, 0, "", ' ')); //101-109
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0110, 004, 0, "", ' ')); //110-113
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0114, 001, 0, "", ' ')); //114-114
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0115, 001, 0, "", ' ')); //115-115
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0116, 001, 0, "", ' ')); //116/116
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0117, 010, 0, "", ' ')); //117-126
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0127, 268, 0, "", ' ')); //126-394
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0395, 006, 0, "000001", ' ')); //395-400
-                //
+                var reg = new TRegistroEDI();
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0001, 010, 0, "01REMESSA", ' '));               //001-009
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0010, 016, 0, "", ' '));                        //010-026
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0027, 013, 0, cedente.Codigo, ' '));            //027-039
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0040, 007, 0, "", ' '));                        //040-046
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0047, 030, 0, cedente.Nome.ToUpper(), ' '));    //047-076
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0077, 011, 0, "041BANRISUL", ' '));             //077-087
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0088, 007, 0, "", ' '));                        //088-094
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataDDMMAA___________, 0095, 006, 0, DateTime.Now, ' '));              //095-100
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0101, 009, 0, "", ' '));                        //101-109
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0110, 004, 0, "", ' '));                        //110-113
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0114, 001, 0, "", ' '));                        //114-114
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0115, 001, 0, "", ' '));                        //115-115
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0116, 001, 0, "", ' '));                        //116-116
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0117, 010, 0, "", ' '));                        //117-126
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0127, 268, 0, "", ' '));                        //126-394
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0395, 006, 0, "000001", ' '));                  //395-400
+                
                 reg.CodificarLinha();
-                //
-                string vLinha = reg.LinhaRegistro;
-                string _header = Utils.SubstituiCaracteresEspeciais(vLinha);
-                //
-                return _header;
+
+                return Utils.SubstituiCaracteresEspeciais(reg.LinhaRegistro);
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro ao gerar HEADER do arquivo de remessa do CNAB400.", ex);
             }
         }
-        public string GerarDetalheRemessaCNAB400(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
+
+        public string GerarDetalheRemessaCnab400(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
         {
             try
             {
                 //Variáveis Locais a serem Implementadas em nível de Config do Boleto...
                 boleto.Remessa.CodigoOcorrencia = "01"; //remessa p/ bANRISUL
-                //
+                
                 base.GerarDetalheRemessa(boleto, numeroRegistro, tipoArquivo);
-                //
-                TRegistroEDI reg = new TRegistroEDI();
+                
+                var reg = new TRegistroEDI();
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0001, 001, 0, "1", ' '));                                       //001-001
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0002, 016, 0, string.Empty, ' '));                              //002-017
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0018, 013, 0, boleto.Cedente.Codigo, ' '));                     //018-030 (sidnei.klein 22/11/2013: No Banrisul, o Código do Cedente não é a concatenação de Número da Conta com o Dígito Verificador.)
@@ -640,12 +636,13 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0148, 002, 0, boleto.Remessa.TipoDocumento, ' '));              //148-149
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0150, 001, 0, boleto.Aceite, ' '));                             //150-150
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataDDMMAA___________, 0151, 006, 0, boleto.DataProcessamento, ' '));                  //151-156
-                //
+
                 #region Instruções
-                string vQtdeDiasCodigo_9_ou_15 = "0";
-                //
-                string vInstrucao1 = string.Empty;
-                string vInstrucao2 = string.Empty;
+
+                var vQtdeDiasCodigo9Ou15 = "0";
+                var vInstrucao1 = string.Empty;
+                var vInstrucao2 = string.Empty;
+
                 switch (boleto.Instrucoes.Count)
                 {
                     case 1:
@@ -653,31 +650,32 @@ namespace BoletoNet
                         vInstrucao2 = string.Empty;
                         //valida se é código 9 ou 15, para adicionar os dias na posição 370-371
                         if (boleto.Instrucoes[0].Codigo == 9 || boleto.Instrucoes[0].Codigo == 15)
-                            vQtdeDiasCodigo_9_ou_15 = boleto.Instrucoes[0].QuantidadeDias.ToString();
+                            vQtdeDiasCodigo9Ou15 = boleto.Instrucoes[0].QuantidadeDias.ToString();
                         //
                         break;
                     case 2:
                         vInstrucao1 += boleto.Instrucoes[0].Codigo.ToString().PadLeft(2, '0');
                         //valida se é código 9 ou 15, para adicionar os dias na posição 370-371
                         if (boleto.Instrucoes[0].Codigo == 9 || boleto.Instrucoes[0].Codigo == 15)
-                            vQtdeDiasCodigo_9_ou_15 = boleto.Instrucoes[0].QuantidadeDias.ToString();
+                            vQtdeDiasCodigo9Ou15 = boleto.Instrucoes[0].QuantidadeDias.ToString();
                         //
                         vInstrucao2 += boleto.Instrucoes[1].Codigo.ToString().PadLeft(2, '0');
                         //valida se é código 9 ou 15, para adicionar os dias na posição 370-371
                         if (boleto.Instrucoes[1].Codigo == 9 || boleto.Instrucoes[1].Codigo == 15)
-                            vQtdeDiasCodigo_9_ou_15 = boleto.Instrucoes[1].QuantidadeDias.ToString();
+                            vQtdeDiasCodigo9Ou15 = boleto.Instrucoes[1].QuantidadeDias.ToString();
                         //
                         break;
                 }
+                
                 #endregion
-                //
+                
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0157, 002, 0, vInstrucao1, ' '));                               //157-158
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0159, 002, 0, vInstrucao2, ' '));                               //159-160
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0161, 001, 0, "0", ' '));                                       //161-161
 
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0162, 012, 2, boleto.JurosMora, '0'));                          //162-173
                 #region DataDesconto
-                string vDataDesconto = "000000";
+                var vDataDesconto = "000000";
                 if (!boleto.DataDesconto.Equals(DateTime.MinValue))
                     vDataDesconto = boleto.DataDesconto.ToString("ddMMyy");
                 #endregion
@@ -686,7 +684,7 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0193, 013, 2, boleto.IOF, '0'));                                //193-205
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0206, 013, 2, boleto.Abatimento, '0'));                         //206-218
                 #region Regra Tipo de Inscrição Sacado
-                string vCpfCnpjSac = "99";
+                var vCpfCnpjSac = "99";
                 if (boleto.Sacado.CPFCNPJ.Length.Equals(11)) vCpfCnpjSac = "01"; //Cpf é sempre 11;
                 else if (boleto.Sacado.CPFCNPJ.Length.Equals(14)) vCpfCnpjSac = "02"; //Cnpj é sempre 14;
                 #endregion
@@ -704,57 +702,52 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0352, 004, 1, 0, '0'));                                         //352-355
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0356, 001, 0, string.Empty, ' '));                              //356-356
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0357, 013, 2, 0, '0'));                                         //357-369
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0370, 002, 0, vQtdeDiasCodigo_9_ou_15, '0'));                   //370-371
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0370, 002, 0, vQtdeDiasCodigo9Ou15, '0'));                      //370-371
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0372, 023, 0, string.Empty, ' '));                              //372-394
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0395, 006, 0, numeroRegistro, '0'));                            //395-400
-                //
 
-                //
                 reg.CodificarLinha();
-                //
-                string _detalhe = Utils.SubstituiCaracteresEspeciais(reg.LinhaRegistro);
-                //
-                return _detalhe;
+                
+                return Utils.SubstituiCaracteresEspeciais(reg.LinhaRegistro);
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro ao gerar DETALHE do arquivo CNAB400.", ex);
             }
         }
+
         public string GerarTrailerRemessa400(int numeroRegistro, decimal vltitulostotal)
         {
             try
             {
-                TRegistroEDI reg = new TRegistroEDI();
+                var reg = new TRegistroEDI();
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0001, 001, 0, "9", ' '));            //001-001
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0002, 026, 0, string.Empty, ' '));   //002-027
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0028, 013, 2, vltitulostotal, '0')); //027-039
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0041, 354, 0, string.Empty, ' '));   //040-394
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0395, 006, 0, numeroRegistro, '0')); //395-400
-                //
+                
                 reg.CodificarLinha();
-                //
-                string vLinha = reg.LinhaRegistro;
-                string _trailer = Utils.SubstituiCaracteresEspeciais(vLinha);
-                //
-                return _trailer;
+
+                return Utils.SubstituiCaracteresEspeciais(reg.LinhaRegistro);
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro durante a geração do registro TRAILER do arquivo de REMESSA.", ex);
             }
         }
+
         public override DetalheRetorno LerDetalheRetornoCNAB400(string registro)
         {
             try
             {
-                TRegistroEDI_Banrisul_Retorno reg = new TRegistroEDI_Banrisul_Retorno();
+                var reg = new TRegistroEDI_Banrisul_Retorno();
                 //
                 reg.LinhaRegistro = registro;
                 reg.DecodificarLinha();
 
                 //Passa para o detalhe as propriedades de reg;
-                DetalheRetorno detalhe = new DetalheRetorno(registro);
+                var detalhe = new DetalheRetorno(registro);
                 //
                 //detalhe. = Constante1;
                 detalhe.CodigoInscricao = Utils.ToInt32(reg.TipoInscricao);
@@ -773,7 +766,7 @@ namespace BoletoNet
                 //detalhe. = reg.TipoCarteira;
                 detalhe.CodigoOcorrencia = Utils.ToInt32(reg.CodigoOcorrencia);
                 //
-                int dataOcorrencia = Utils.ToInt32(reg.DataOcorrenciaBanco);
+                var dataOcorrencia = Utils.ToInt32(reg.DataOcorrenciaBanco);
                 detalhe.DataOcorrencia = Utils.ToDateTime(dataOcorrencia.ToString("##-##-##"));
                 //
                 detalhe.NumeroDocumento = reg.SeuNumero;
@@ -781,7 +774,7 @@ namespace BoletoNet
                 detalhe.NossoNumero = reg.NossoNumero.Substring(0, reg.NossoNumero.Length - 1); //Nosso Número sem o DV!
                 detalhe.DACNossoNumero = reg.NossoNumero.Substring(reg.NossoNumero.Length - 1); //DV
                 //
-                int dataVencimento = Utils.ToInt32(reg.DataVencimentoTitulo);
+                var dataVencimento = Utils.ToInt32(reg.DataVencimentoTitulo);
                 detalhe.DataVencimento = Utils.ToDateTime(dataVencimento.ToString("##-##-##"));
                 //
                 decimal valorTitulo = Convert.ToInt64(reg.ValorTitulo);
@@ -820,7 +813,7 @@ namespace BoletoNet
                 decimal outrosCreditos = Convert.ToUInt64(reg.ValorOutrosRecebimentos);
                 detalhe.OutrosCreditos = outrosCreditos / 100;
                 //detalhe. = reg.Brancos3;
-                int dataCredito = Utils.ToInt32(reg.DataCreditoConta);
+                var dataCredito = Utils.ToInt32(reg.DataCreditoConta);
                 detalhe.DataCredito = Utils.ToDateTime(dataCredito.ToString("##-##-##"));
                 //detalhe. = reg.Brancos4;
                 detalhe.OrigemPagamento = reg.PagamentoDinheiro_Cheque;
@@ -849,7 +842,6 @@ namespace BoletoNet
                 throw new Exception("Erro ao ler detalhe do arquivo de RETORNO / CNAB 400.", ex);
             }
         }
-
 
         #endregion
     }

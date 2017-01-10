@@ -1,4 +1,3 @@
-using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -8,6 +7,7 @@ namespace BoletoNet
     public abstract class BarCodeBase
     {
         #region Variables
+
         private string _code;
         private int _height;
         private int _digits;
@@ -20,12 +20,13 @@ namespace BoletoNet
 
         private string _contenttype;
 
-        protected Brush BLACK = Brushes.Black;
-        protected Brush WHITE = Brushes.White;
+        protected Brush Black = Brushes.Black;
+        protected Brush White = Brushes.White;
 
         #endregion
 
         #region Property
+
         /// <summary>
         /// The Barcode.
         /// </summary>
@@ -54,6 +55,7 @@ namespace BoletoNet
                 }
             }
         }
+
         /// <summary>
         /// The width of the thin bar (pixels).
         /// </summary>
@@ -74,20 +76,21 @@ namespace BoletoNet
             {
                 try
                 {
-                    int temp = value;
+                    var temp = value;
                     _thin = temp;
                     //					_half = temp * 2;
                     _full = temp * 3;
                 }
                 catch
                 {
-                    int temp = 1;
+                    var temp = 1;
                     _thin = temp;
                     //					_half = temp * 2;
                     _full = temp * 3;
                 }
             }
         }
+
         /// <summary>
         /// The Height of barcode (pixels).
         /// </summary>
@@ -116,6 +119,7 @@ namespace BoletoNet
                 }
             }
         }
+
         /// <summary>
         /// Number of digits of the barcode.
         /// </summary>
@@ -144,6 +148,7 @@ namespace BoletoNet
                 }
             }
         }
+
         /// <summary>
         /// Content type of code. Default: image/jpeg
         /// </summary>
@@ -174,6 +179,7 @@ namespace BoletoNet
                 }
             }
         }
+
         protected int Thin
         {
             get
@@ -188,6 +194,7 @@ namespace BoletoNet
                 }
             }
         }
+
         protected int Full
         {
             get
@@ -202,52 +209,46 @@ namespace BoletoNet
                 }
             }
         }
-        #endregion
-        protected virtual byte[] toByte(Bitmap bitmap)
-        {
-            MemoryStream mstream = new MemoryStream();
-            ImageCodecInfo myImageCodecInfo = GetEncoderInfo(ContentType);
 
-            EncoderParameter myEncoderParameter0 = new EncoderParameter(Encoder.Quality, (long)100);
-            EncoderParameters myEncoderParameters = new EncoderParameters(1);
-            myEncoderParameters.Param[0] = myEncoderParameter0;
+        #endregion
+
+        protected virtual byte[] ToByte(Bitmap bitmap)
+        {
+            var mstream = new MemoryStream();
+            var myImageCodecInfo = GetEncoderInfo(ContentType);
+
+            var myEncoderParameter0 = new EncoderParameter(Encoder.Quality, (long)100);
+            var myEncoderParameters = new EncoderParameters(1) {Param = {[0] = myEncoderParameter0}};
 
             bitmap.Save(mstream, myImageCodecInfo, myEncoderParameters);
 
             return mstream.GetBuffer();
         }
+
         private static ImageCodecInfo GetEncoderInfo(string mimeType)
         {
             int j;
-            ImageCodecInfo[] encoders;
-            encoders = ImageCodecInfo.GetImageEncoders();
+            var encoders = ImageCodecInfo.GetImageEncoders();
+
             for (j = 0; j < encoders.Length; ++j)
             {
                 if (encoders[j].MimeType == mimeType)
                     return encoders[j];
             }
+
             return null;
         }
-        protected virtual void DrawPattern(ref Graphics g, string Pattern)
+
+        protected virtual void DrawPattern(ref Graphics g, string pattern)
         {
-            int tempWidth;
-
-            for (int i = 0; i < Pattern.Length; i++)
+            for (var i = 0; i < pattern.Length; i++)
             {
-                if (Pattern[i] == '0')
-                    tempWidth = _thin;
-                else
-                    tempWidth = _full;
+                var tempWidth = pattern[i] == '0' ? _thin : _full;
 
-                if (i % 2 == 0)
-                    g.FillRectangle(BLACK, xPos, yPos, tempWidth, _height);
-                else
-                    g.FillRectangle(WHITE, xPos, yPos, tempWidth, _height);
+                g.FillRectangle(i % 2 == 0 ? Black : White, xPos, yPos, tempWidth, _height);
 
                 xPos += tempWidth;
             }
         }
-
-
     }
 }

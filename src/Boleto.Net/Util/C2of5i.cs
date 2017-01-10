@@ -6,11 +6,13 @@ namespace BoletoNet
     public class C2of5i : BarCodeBase
     {
         #region variables
-        private string[] cPattern = new string[100];
-        private const string START = "0000";
-        private const string STOP = "1000";
-        private Bitmap bitmap;
-        private Graphics g;
+
+        private readonly string[] _cPattern = new string[100];
+        private const string Start = "0000";
+        private const string Stop = "1000";
+        private Bitmap _bitmap;
+        private Graphics _g;
+
         #endregion
 
         #region Constructor
@@ -27,7 +29,7 @@ namespace BoletoNet
         {
             this.Code = Code;
             this.Height = Height;
-            this.Width = BarWidth;
+            Width = BarWidth;
         }
         /// <summary>
         /// Code 2 of 5 intrelaced Constructor
@@ -40,101 +42,99 @@ namespace BoletoNet
         {
             this.Code = Code;
             this.Height = Height;
-            this.Width = BarWidth;
+            Width = BarWidth;
             this.Digits = Digits;
         }
         #endregion
 
         private void FillPatern()
         {
-            int f;
-            string strTemp;
+            if (_cPattern[0] != null)
+                return;
 
-            if (cPattern[0] == null)
+            _cPattern[0] = "00110";
+            _cPattern[1] = "10001";
+            _cPattern[2] = "01001";
+            _cPattern[3] = "11000";
+            _cPattern[4] = "00101";
+            _cPattern[5] = "10100";
+            _cPattern[6] = "01100";
+            _cPattern[7] = "00011";
+            _cPattern[8] = "10010";
+            _cPattern[9] = "01010";
+
+            //Create a draw pattern for each char from 0 to 99
+            for (var f1 = 9; f1 >= 0; f1--)
             {
-                cPattern[0] = "00110";
-                cPattern[1] = "10001";
-                cPattern[2] = "01001";
-                cPattern[3] = "11000";
-                cPattern[4] = "00101";
-                cPattern[5] = "10100";
-                cPattern[6] = "01100";
-                cPattern[7] = "00011";
-                cPattern[8] = "10010";
-                cPattern[9] = "01010";
-                //Create a draw pattern for each char from 0 to 99
-                for (int f1 = 9; f1 >= 0; f1--)
+                for (var f2 = 9; f2 >= 0; f2--)
                 {
-                    for (int f2 = 9; f2 >= 0; f2--)
+                    var f = f1 * 10 + f2;
+                    var strTemp = "";
+
+                    for (var i = 0; i < 5; i++)
                     {
-                        f = f1 * 10 + f2;
-                        strTemp = "";
-                        for (int i = 0; i < 5; i++)
-                        {
-                            strTemp += cPattern[f1][i].ToString() + cPattern[f2][i].ToString();
-                        }
-                        cPattern[f] = strTemp;
+                        strTemp += _cPattern[f1][i] + _cPattern[f2][i].ToString();
                     }
+
+                    _cPattern[f] = strTemp;
                 }
             }
         }
+
         /// <summary>
         /// Generate the Bitmap of Barcode.
         /// </summary>
         /// <returns>Return System.Drawing.Bitmap</returns>
         public Bitmap ToBitmap()
         {
-            int i;
-            string ftemp;
-
             xPos = 0;
             yPos = 0;
 
-            if (this.Digits == 0)
+            if (Digits == 0)
             {
-                this.Digits = this.Code.Length;
+                Digits = Code.Length;
             }
 
-            if (this.Digits % 2 > 0) this.Digits++;
+            if (Digits % 2 > 0) Digits++;
 
-            while (this.Code.Length < this.Digits || this.Code.Length % 2 > 0)
+            while (Code.Length < Digits || Code.Length % 2 > 0)
             {
-                this.Code = "0" + this.Code;
+                Code = "0" + Code;
             }
 
-            int _width = (2 * Full + 3 * Thin) * (Digits) + 7 * Thin + Full;
+            var width = (2 * Full + 3 * Thin) * (Digits) + 7 * Thin + Full;
 
-            bitmap = new Bitmap(_width, Height);
-            g = Graphics.FromImage(bitmap);
+            _bitmap = new Bitmap(width, Height);
+            _g = Graphics.FromImage(_bitmap);
 
             //Start Pattern
-            DrawPattern(ref g, START);
+            DrawPattern(ref _g, Start);
 
             //Draw code
-            this.FillPatern();
-            while (this.Code.Length > 0)
+            FillPatern();
+            while (Code.Length > 0)
             {
-                i = Convert.ToInt32(this.Code.Substring(0, 2));
-                if (this.Code.Length > 2)
-                    this.Code = this.Code.Substring(2, this.Code.Length - 2);
-                else
-                    this.Code = "";
-                ftemp = cPattern[i];
-                DrawPattern(ref g, ftemp);
+                var i = Convert.ToInt32(Code.Substring(0, 2));
+
+                Code = Code.Length > 2 ? Code.Substring(2, Code.Length - 2) : "";
+
+                var ftemp = _cPattern[i];
+                DrawPattern(ref _g, ftemp);
             }
 
             //Stop Patern
-            DrawPattern(ref g, STOP);
+            DrawPattern(ref _g, Stop);
 
-            return bitmap;
+            return _bitmap;
         }
+
         /// <summary>
         /// Returns the byte array of Barcode
         /// </summary>
         /// <returns>byte[]</returns>
         public byte[] ToByte()
         {
-            return base.toByte(ToBitmap());
+            return base.ToByte(ToBitmap());
         }
     }
 }

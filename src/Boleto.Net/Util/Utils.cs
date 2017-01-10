@@ -15,10 +15,10 @@ namespace BoletoNet
         {
             //first, create a dummy bitmap just to get a graphics object
             Image img = new Bitmap(1, 1);
-            Graphics drawing = Graphics.FromImage(img);
+            var drawing = Graphics.FromImage(img);
 
             //measure the string to see how big the image needs to be
-            SizeF textSize = drawing.MeasureString(text, font);
+            var textSize = drawing.MeasureString(text, font);
 
             //free up the dummy image and old graphics object
             img.Dispose();
@@ -44,37 +44,40 @@ namespace BoletoNet
 
             return img;
         }
-        internal static long DateDiff(DateInterval Interval, System.DateTime StartDate, System.DateTime EndDate)
+
+        internal static long DateDiff(DateInterval interval, DateTime startDate, DateTime endDate)
         {
             long lngDateDiffValue = 0;
-            System.TimeSpan TS = new System.TimeSpan(EndDate.Ticks - StartDate.Ticks);
-            switch (Interval)
+            var ts = new System.TimeSpan(endDate.Ticks - startDate.Ticks);
+
+            switch (interval)
             {
                 case DateInterval.Day:
-                    lngDateDiffValue = (long)TS.Days;
+                    lngDateDiffValue = ts.Days;
                     break;
                 case DateInterval.Hour:
-                    lngDateDiffValue = (long)TS.TotalHours;
+                    lngDateDiffValue = (long)ts.TotalHours;
                     break;
                 case DateInterval.Minute:
-                    lngDateDiffValue = (long)TS.TotalMinutes;
+                    lngDateDiffValue = (long)ts.TotalMinutes;
                     break;
                 case DateInterval.Month:
-                    lngDateDiffValue = (long)(TS.Days / 30);
+                    lngDateDiffValue = ts.Days / 30;
                     break;
                 case DateInterval.Quarter:
-                    lngDateDiffValue = (long)((TS.Days / 30) / 3);
+                    lngDateDiffValue = (ts.Days / 30) / 3;
                     break;
                 case DateInterval.Second:
-                    lngDateDiffValue = (long)TS.TotalSeconds;
+                    lngDateDiffValue = (long)ts.TotalSeconds;
                     break;
                 case DateInterval.Week:
-                    lngDateDiffValue = (long)(TS.Days / 7);
+                    lngDateDiffValue = ts.Days / 7;
                     break;
                 case DateInterval.Year:
-                    lngDateDiffValue = (long)(TS.Days / 365);
+                    lngDateDiffValue = ts.Days / 365;
                     break;
             }
+
             return (lngDateDiffValue);
         }
 
@@ -101,14 +104,14 @@ namespace BoletoNet
             length -= text.Length;
             if (left)
             {
-                for (int i = 0; i < length; ++i)
+                for (var i = 0; i < length; ++i)
                 {
                     text = with + text;
                 }
             }
             else
             {
-                for (int i = 0; i < length; ++i)
+                for (var i = 0; i < length; ++i)
                 {
                     text += with;
                 }
@@ -140,14 +143,14 @@ namespace BoletoNet
         {
             // separa os números
             pattern = pattern.Replace('-', ',');
-            string[] coord = pattern.Split(',');
+            var coord = pattern.Split(',');
 
             //cria objeto para armazenágem, buffer.
-            string[] dados = new string[coord.Length / 2];
+            var dados = new string[coord.Length / 2];
 
             //pega os números de 2 em 2 e preenche o array
-            int x = 0;
-            for (int i = 0; i < coord.Length; i += 2)
+            var x = 0;
+            for (var i = 0; i < coord.Length; i += 2)
             {
                 dados[x] = linha.Substring(Convert.ToInt32(coord[i]) - 1, Convert.ToInt32(coord[i + 1]) - Convert.ToInt32(coord[i]) + 1);
                 //arg[x] = linha.Substring(Convert.ToInt32(coord[i]), Convert.ToInt32(coord[i + 1]));
@@ -181,12 +184,12 @@ namespace BoletoNet
 
         internal static bool IsNumber(string value)
         {
-            Regex objNotNumberPattern = new Regex("[^0-9.-]");
-            Regex objTwoDotPattern = new Regex("[0-9]*[.][0-9]*[.][0-9]*");
-            Regex objTwoMinusPattern = new Regex("[0-9]*[-][0-9]*[-][0-9]*");
-            String strValidRealPattern = "^([-]|[.]|[-.]|[0-9])[0-9]*[.]*[0-9]+$";
-            String strValidIntegerPattern = "^([-]|[0-9])[0-9]*$";
-            Regex objNumberPattern = new Regex("(" + strValidRealPattern + ")|(" + strValidIntegerPattern + ")");
+            var objNotNumberPattern = new Regex("[^0-9.-]");
+            var objTwoDotPattern = new Regex("[0-9]*[.][0-9]*[.][0-9]*");
+            var objTwoMinusPattern = new Regex("[0-9]*[-][0-9]*[-][0-9]*");
+            var strValidRealPattern = "^([-]|[.]|[-.]|[0-9])[0-9]*[.]*[0-9]+$";
+            var strValidIntegerPattern = "^([-]|[0-9])[0-9]*$";
+            var objNumberPattern = new Regex("(" + strValidRealPattern + ")|(" + strValidIntegerPattern + ")");
 
             return !objNotNumberPattern.IsMatch(value) &&
                    !objTwoDotPattern.IsMatch(value) &&
@@ -268,12 +271,13 @@ namespace BoletoNet
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        internal static string FormataCPFCPPJ(string value)
+        internal static string FormataCpfCnpj(string value)
         {
             if (value.Trim().Length == 11)
-                return FormataCPF(value);
-            else if (value.Trim().Length == 14)
-                return FormataCNPJ(value);
+                return FormataCpf(value);
+
+            if (value.Trim().Length == 14)
+                return FormataCnpj(value);
 
             throw new Exception(string.Format("O CPF ou CNPJ: {0} é inválido.", value));
         }
@@ -283,7 +287,7 @@ namespace BoletoNet
         /// </summary>
         /// <param name="cpf">Sequencia numérica de 11 dígitos. Exemplo: 00000000000</param>
         /// <returns>CPF formatado</returns>
-        internal static string FormataCPF(string cpf)
+        internal static string FormataCpf(string cpf)
         {
             try
             {
@@ -300,7 +304,7 @@ namespace BoletoNet
         /// </summary>
         /// <param name="cnpj">Sequencia numérica de 14 dígitos. Exemplo: 00000000000000</param>
         /// <returns>CNPJ formatado</returns>
-        internal static string FormataCNPJ(string cnpj)
+        internal static string FormataCnpj(string cnpj)
         {
             try
             {
@@ -317,7 +321,7 @@ namespace BoletoNet
         /// </summary>
         /// <param name="cep">Sequencia numérica de 8 dígitos. Exemplo: 00000000</param>
         /// <returns>CEP formatado</returns>
-        internal static string FormataCEP(string cep)
+        internal static string FormataCep(string cep)
         {
             try
             {
@@ -339,7 +343,7 @@ namespace BoletoNet
         /// <returns>Agência e conta formatadas</returns>
         internal static string FormataAgenciaConta(string agencia, string digitoAgencia, string conta, string digitoConta)
         {
-            string agenciaConta = string.Empty;
+            var agenciaConta = string.Empty;
             try
             {
                 agenciaConta = agencia;
@@ -365,7 +369,7 @@ namespace BoletoNet
         {
             try
             {
-                string result = "";
+                var result = "";
 
                 if (maxTest == true)
                 {
@@ -383,11 +387,11 @@ namespace BoletoNet
                     {
                         if (isNumber == true)
                         {
-                            result += (string)(new string(FitChar, (minLength - SringToBeFit.Length)) + SringToBeFit);
+                            result += new string(FitChar, (minLength - SringToBeFit.Length)) + SringToBeFit;
                         }
                         else
                         {
-                            result += (string)(SringToBeFit + new string(FitChar, (minLength - SringToBeFit.Length)));
+                            result += SringToBeFit + new string(FitChar, (minLength - SringToBeFit.Length));
                         }
                     }
                 }
@@ -395,7 +399,7 @@ namespace BoletoNet
             }
             catch (Exception ex)
             {
-                Exception tmpEx = new Exception("Problemas ao Formatar a string. String = " + SringToBeFit, ex);
+                var tmpEx = new Exception("Problemas ao Formatar a string. String = " + SringToBeFit, ex);
                 throw tmpEx;
             }
         }
@@ -410,7 +414,7 @@ namespace BoletoNet
         public static string IdentificaTipoInscricaoSacado(string inscricao)
         {
             //Variaveis
-            string tipo = string.Empty;
+            var tipo = string.Empty;
             //Tratamento
             inscricao = inscricao.Replace(".", "").Replace("-", "").Replace("/", "");
             //Verifica tipo
@@ -434,7 +438,7 @@ namespace BoletoNet
                 var sb = new StringBuilder();
                 var arrayChar = text.Normalize(NormalizationForm.FormD).ToCharArray();
 
-                foreach (char c in arrayChar)
+                foreach (var c in arrayChar)
                 {
                     if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
                         sb.Append(c);
@@ -464,25 +468,26 @@ namespace BoletoNet
             byte[] bytes;
             if (image.GetType().ToString() == "System.Drawing.Image")
             {
-                ImageConverter converter = new ImageConverter();
+                var converter = new ImageConverter();
                 bytes = (byte[])converter.ConvertTo(image, typeof(byte[]));
                 return bytes;
             }
-            else if (image.GetType().ToString() == "System.Drawing.Bitmap")
+
+            if (image.GetType().ToString() == "System.Drawing.Bitmap")
             {
                 bytes = (byte[])TypeDescriptor.GetConverter(image).ConvertTo(image, typeof(byte[]));
                 return bytes;
             }
-            else
-                throw new NotImplementedException("ConvertImageToByte invalid type " + image.GetType().ToString());
+
+            throw new NotImplementedException("ConvertImageToByte invalid type " + image.GetType().ToString());
         }
 
         internal static bool DataValida(DateTime dateTime)
         {
             if (dateTime.ToString("dd/MM/yyyy") == "01/01/1900" | dateTime.ToString("dd/MM/yyyy") == "01/01/0001")
                 return false;
-            else
-                return true;
+
+            return true;
         }
 
         /// <summary>
@@ -497,15 +502,14 @@ namespace BoletoNet
             string final;
             final = Strings.Right(seq, qtde);
             return FitStringLength(final, qtde, qtde, ch, 0, true, true, completaPelaEsquerda);
-            ;
         }
 
         public static string Transform(string text, string mask, char charMask = 'X') {
-            string retorno = text;
+            var retorno = text;
 
             if (!string.IsNullOrEmpty(mask)) {
 
-                int idx = 0;
+                var idx = 0;
                 foreach (var m in mask) {
                     if (m != charMask) {
                         retorno = retorno.Insert(idx, m.ToString());
@@ -519,13 +523,13 @@ namespace BoletoNet
         }
 
 
-        public static bool IsNullOrWhiteSpace(String value)
+        public static bool IsNullOrWhiteSpace(string value)
         {
             if (value == null) return true;
 
-            for (int i = 0; i < value.Length; i++)
+            for (var i = 0; i < value.Length; i++)
             {
-                if (!Char.IsWhiteSpace(value[i])) return false;
+                if (!char.IsWhiteSpace(value[i])) return false;
             }
 
             return true;

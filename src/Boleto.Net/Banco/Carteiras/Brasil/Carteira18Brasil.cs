@@ -29,6 +29,7 @@ namespace BoletoNet
         public override void ValidaBoleto(Boleto boleto)
         {
             boleto.NossoNumero = boleto.NossoNumero.PadLeft(10, '0');
+
             if (boleto.Cedente.Codigo.Length != 7)
                 throw new Exception("Para a carteira 18, o código do cedente deve ter no mínimo 7 dígitos, ou seja, deve ser maior que 1 milhão");
         }

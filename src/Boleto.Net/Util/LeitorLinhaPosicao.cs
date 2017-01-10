@@ -31,21 +31,21 @@ namespace BoletoNet
         {
             string valor = ExtrairDaPosicao(linha, de, ate);
             int aux;
+
             if (int.TryParse(valor, out aux))
-            {
                 return aux;
-            }
+            
             return null;
         }
 
         public static DateTime? ExtrairDataOpcionalDaPosicao(string linha, int de, int ate)
         {
-            string valor = ExtrairDaPosicao(linha, de, ate);
+            var valor = ExtrairDaPosicao(linha, de, ate);
+
             DateTime aux;
             if (DateTime.TryParseExact(valor, "ddMMyyyy", null, DateTimeStyles.None, out aux))
-            {
                 return aux;
-            }
+            
             return null;
         }
     }
