@@ -2326,8 +2326,7 @@ namespace BoletoNet
                     reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0193, 013, 2, boleto.IOF, '0'));                                //193-205
                 }
                 #endregion
-                //
-
+                
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0206, 013, 2, boleto.Abatimento, '0'));                         //206-218
                 #region Regra Tipo de Inscrição Sacado
                 var vCpfCnpjSac = "00";
@@ -2347,12 +2346,10 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0392, 002, 0, string.Empty, ' '));                              //392-393
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0394, 001, 0, string.Empty, ' '));                              //394-394                
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0395, 006, 0, numeroRegistro, '0'));                            //395-400
-                //
+                
                 reg.CodificarLinha();
-                //
-                var _detalhe = Utils.SubstituiCaracteresEspeciais(reg.LinhaRegistro);
-                //
-                return _detalhe;
+                
+                return Utils.SubstituiCaracteresEspeciais(reg.LinhaRegistro);
             }
             catch (Exception ex)
             {
@@ -2372,9 +2369,9 @@ namespace BoletoNet
                 reg.CodificarLinha();
                 //
                 var vLinha = reg.LinhaRegistro;
-                var _trailer = Utils.SubstituiCaracteresEspeciais(vLinha);
+                var trailer = Utils.SubstituiCaracteresEspeciais(vLinha);
                 //
-                return _trailer;
+                return trailer;
             }
             catch (Exception ex)
             {
