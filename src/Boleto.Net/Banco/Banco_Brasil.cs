@@ -70,7 +70,6 @@ namespace BoletoNet
             if (Utils.ToString(boleto.NossoNumero) == string.Empty)
                 throw new NotImplementedException("Nosso número inválido");
 
-
             #region Carteira 11
             //Carteira 18 com nosso número de 11 posições
             if (boleto.Carteira.Equals("11"))
@@ -164,7 +163,7 @@ namespace BoletoNet
                 else if (boleto.Cedente.Convenio.ToString().Length == 6)
                 {
                     //Nosso Número com 17 posições
-                    if ((boleto.Cedente.Codigo.ToString().Length + boleto.NossoNumero.Length) > 11)
+                    if ((boleto.Cedente.Codigo.Length + boleto.NossoNumero.Length) > 11)
                         throw new NotImplementedException(string.Format("Para a carteira {0}, a quantidade máxima são de 11 de posições para o nosso número. Onde o nosso número é formado por CCCCCCNNNNN-X: C -> número do convênio fornecido pelo Banco, N -> seqüencial atribuído pelo cliente e X -> dígito verificador do “Nosso-Número”.", boleto.Carteira));
 
                     boleto.NossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 5));
@@ -207,7 +206,7 @@ namespace BoletoNet
                 else if (boleto.Cedente.Convenio.ToString().Length == 6)
                 {
                     //Nosso Número com 17 posições
-                    if ((boleto.Cedente.Codigo.ToString().Length + boleto.NossoNumero.Length) > 11)
+                    if ((boleto.Cedente.Codigo.Length + boleto.NossoNumero.Length) > 11)
                         throw new NotImplementedException(string.Format("Para a carteira {0}, a quantidade máxima são de 11 de posições para o nosso número. Onde o nosso número é formado por CCCCCCNNNNN-X: C -> número do convênio fornecido pelo Banco, N -> seqüencial atribuído pelo cliente e X -> dígito verificador do “Nosso-Número”.", boleto.Carteira));
 
                     boleto.NossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 5));
@@ -249,7 +248,7 @@ namespace BoletoNet
                  */
                 else if (boleto.Cedente.Convenio.ToString().Length == 6)
                 {
-                        if ((boleto.Cedente.Codigo.ToString().Length + boleto.NossoNumero.Length) > 11)
+                        if ((boleto.Cedente.Codigo.Length + boleto.NossoNumero.Length) > 11)
                             throw new NotImplementedException(string.Format("Para a carteira {0}, a quantidade máxima são de 11 de posições para o nosso número. Onde o nosso número é formado por CCCCCCNNNNN-X: C -> número do convênio fornecido pelo Banco, N -> seqüencial atribuído pelo cliente e X -> dígito verificador do “Nosso-Número”.", boleto.Carteira));
 
                         boleto.NossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 5));
@@ -275,6 +274,9 @@ namespace BoletoNet
             //Carteira 18 com nosso número de 11 posições
             if (boleto.Carteira.Equals("18"))
             {
+                if (boleto.BancoCarteira == null)
+                    boleto.BancoCarteira = BancoCarteiraFactory.Fabrica(boleto.Carteira, boleto.Banco.Codigo);
+
                 boleto.BancoCarteira.ValidaBoleto(boleto);
                 boleto.BancoCarteira.FormataNossoNumero(boleto);
             }
@@ -306,7 +308,7 @@ namespace BoletoNet
                     //Nosso Número com 17 posições
                     if (!boleto.TipoModalidade.Equals("21"))
                     {
-                        if ((boleto.Cedente.Codigo.ToString().Length + boleto.NossoNumero.Length) > 11)
+                        if ((boleto.Cedente.Codigo.Length + boleto.NossoNumero.Length) > 11)
                             throw new NotImplementedException(string.Format("Para a carteira {0}, a quantidade máxima são de 11 de posições para o nosso número. Onde o nosso número é formado por CCCCCCNNNNN-X: C -> número do convênio fornecido pelo Banco, N -> seqüencial atribuído pelo cliente e X -> dígito verificador do “Nosso-Número”.", boleto.Carteira));
 
                         boleto.NossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 5));
@@ -335,7 +337,6 @@ namespace BoletoNet
             }
             #endregion Carteira 18-019
 
-
             //Para atender o cliente Fiemg foi adaptado no código na variação 18-027 as variações 18-035 e 18-140
             #region Carteira 18-027
             //Carteira 18, com variação 019
@@ -362,7 +363,7 @@ namespace BoletoNet
                     //Nosso Número com 17 posições
                     if (!boleto.TipoModalidade.Equals("21"))
                     {
-                        if ((boleto.Cedente.Codigo.ToString().Length + boleto.NossoNumero.Length) > 11)
+                        if ((boleto.Cedente.Codigo.Length + boleto.NossoNumero.Length) > 11)
                             throw new NotImplementedException(string.Format("Para a carteira {0}, a quantidade máxima são de 11 de posições para o nosso número. Onde o nosso número é formado por CCCCCCNNNNN-X: C -> número do convênio fornecido pelo Banco, N -> seqüencial atribuído pelo cliente e X -> dígito verificador do “Nosso-Número”.", boleto.Carteira));
 
                         boleto.NossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 5));
@@ -416,7 +417,7 @@ namespace BoletoNet
                     //Nosso Número com 17 posições
                     if (!boleto.TipoModalidade.Equals("21"))
                     {
-                        if ((boleto.Cedente.Codigo.ToString().Length + boleto.NossoNumero.Length) > 11)
+                        if ((boleto.Cedente.Codigo.Length + boleto.NossoNumero.Length) > 11)
                             throw new NotImplementedException(string.Format("Para a carteira {0}, a quantidade máxima são de 11 de posições para o nosso número. Onde o nosso número é formado por CCCCCCNNNNN-X: C -> número do convênio fornecido pelo Banco, N -> seqüencial atribuído pelo cliente e X -> dígito verificador do “Nosso-Número”.", boleto.Carteira));
 
                         boleto.NossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 5));
@@ -470,7 +471,7 @@ namespace BoletoNet
                     //Nosso Número com 17 posições
                     if (!boleto.TipoModalidade.Equals("21"))
                     {
-                        if ((boleto.Cedente.Codigo.ToString().Length + boleto.NossoNumero.Length) > 11)
+                        if ((boleto.Cedente.Codigo.Length + boleto.NossoNumero.Length) > 11)
                             throw new NotImplementedException(string.Format("Para a carteira {0}, a quantidade máxima são de 11 de posições para o nosso número. Onde o nosso número é formado por CCCCCCNNNNN-X: C -> número do convênio fornecido pelo Banco, N -> seqüencial atribuído pelo cliente e X -> dígito verificador do “Nosso-Número”.", boleto.Carteira));
 
                         boleto.NossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 5));
@@ -1178,12 +1179,6 @@ namespace BoletoNet
 
         public override void FormataLinhaDigitavel(Boleto boleto)
         {
-            var cmplivre = string.Empty;
-            var campo1 = string.Empty;
-            var campo2 = string.Empty;
-            var campo3 = string.Empty;
-            var campo4 = string.Empty;
-            var campo5 = string.Empty;
             long icampo5 = 0;
             var digitoMod = 0;
 
@@ -1195,20 +1190,20 @@ namespace BoletoNet
             X = DV que amarra o campo 1 (Módulo 10, contido no Anexo 7)
              */
 
-            cmplivre = Strings.Mid(boleto.CodigoBarra.Codigo, 20, 25);
+            var cmplivre = Strings.Mid(boleto.CodigoBarra.Codigo, 20, 25);
 
-            campo1 = Strings.Left(boleto.CodigoBarra.Codigo, 4) + Strings.Mid(cmplivre, 1, 5);
+            var campo1 = Strings.Left(boleto.CodigoBarra.Codigo, 4) + Strings.Mid(cmplivre, 1, 5);
             digitoMod = Mod10(campo1);
-            campo1 = campo1 + digitoMod.ToString();
+            campo1 = campo1 + digitoMod;
             campo1 = Strings.Mid(campo1, 1, 5) + "." + Strings.Mid(campo1, 6, 5);
             /*
             Campo 2 (DDDDD.DDDDDY)
             D = Posição 25 a 34 do código de barras
             Y = DV que amarra o campo 2 (Módulo 10, contido no Anexo 7)
              */
-            campo2 = Strings.Mid(cmplivre, 6, 10);
+            var campo2 = Strings.Mid(cmplivre, 6, 10);
             digitoMod = Mod10(campo2);
-            campo2 = campo2 + digitoMod.ToString();
+            campo2 = campo2 + digitoMod;
             campo2 = Strings.Mid(campo2, 1, 5) + "." + Strings.Mid(campo2, 6, 6);
 
 
@@ -1217,7 +1212,7 @@ namespace BoletoNet
             E = Posição 35 a 44 do código de barras
             Z = DV que amarra o campo 3 (Módulo 10, contido no Anexo 7)
              */
-            campo3 = Strings.Mid(cmplivre, 16, 10);
+            var campo3 = Strings.Mid(cmplivre, 16, 10);
             digitoMod = Mod10(campo3);
             campo3 = campo3 + digitoMod;
             campo3 = Strings.Mid(campo3, 1, 5) + "." + Strings.Mid(campo3, 6, 6);
@@ -1226,7 +1221,7 @@ namespace BoletoNet
             Campo 4 (K)
             K = DV do Código de Barras (Módulo 11, contido no Anexo 10)
              */
-            campo4 = Strings.Mid(boleto.CodigoBarra.Codigo, 5, 1);
+            var campo4 = Strings.Mid(boleto.CodigoBarra.Codigo, 5, 1);
 
             /*
             Campo 5 (UUUUVVVVVVVVVV)
@@ -1235,10 +1230,7 @@ namespace BoletoNet
              */
             icampo5 = Convert.ToInt64(Strings.Mid(boleto.CodigoBarra.Codigo, 6, 14));
 
-            if (icampo5 == 0)
-                campo5 = "000";
-            else
-                campo5 = icampo5.ToString();
+            var campo5 = icampo5 == 0 ? "000" : icampo5.ToString();
 
             boleto.CodigoBarra.LinhaDigitavel = campo1 + " " + campo2 + " " + campo3 + " " + campo4 + " " + campo5;
         }
@@ -1392,23 +1384,23 @@ namespace BoletoNet
         {
             try
             {
-                var _detalhe = " ";
+                var detalhe = " ";
 
                 base.GerarDetalheRemessa(boleto, numeroRegistro, tipoArquivo);
 
                 switch (tipoArquivo)
                 {
                     case TipoArquivo.CNAB240:
-                        _detalhe = GerarDetalheRemessaCNAB240(boleto, numeroRegistro, tipoArquivo);
+                        detalhe = GerarDetalheRemessaCNAB240(boleto, numeroRegistro, tipoArquivo);
                         break;
                     case TipoArquivo.CNAB400:
-                        _detalhe = GerarDetalheRemessaCNAB400(boleto, numeroRegistro, tipoArquivo);
+                        detalhe = GerarDetalheRemessaCNAB400(boleto, numeroRegistro, tipoArquivo);
                         break;
                     case TipoArquivo.Outro:
                         throw new Exception("Tipo de arquivo inexistente.");
                 }
 
-                return _detalhe;
+                return detalhe;
 
             }
             catch (Exception ex)
@@ -1422,7 +1414,7 @@ namespace BoletoNet
             try
             {
                 string _segmentoP;
-                string _nossoNumero;
+                string nossoNumero;
 
                 _segmentoP = "00100013";
                 _segmentoP += Utils.FitStringLength(numeroRegistro.ToString(), 5, 5, '0', 0, true, true, true);
@@ -1454,15 +1446,15 @@ namespace BoletoNet
                     case 4:
                         // Se convênio de 4 posições - normalmente carteira 17 - (0001 à 9999), informar NossoNumero com 11 caracteres, com DV, sendo:
                         // 4 posições do nº do convênio e 7 posições do nº de controle (nº do documento) e DV.
-                        _nossoNumero = string.Format("{0}{1}{2}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 7), Mod11BancoBrasil(boleto.NossoNumero));
+                        nossoNumero = string.Format("{0}{1}{2}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 7), Mod11BancoBrasil(boleto.NossoNumero));
                         break;
                     case 6:
                         // Se convênio de 6 posições (acima de 10.000 à 999.999), informar NossoNumero com 11 caracteres + DV, sendo:
                         // 6 posições do nº do convênio e 5 posições do nº de controle (nº do documento) e DV do nosso numero.
                         if (boleto.NossoNumero.Length != 11)
-                            _nossoNumero = string.Format("{0}{1}{2}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 5), Mod11BancoBrasil(boleto.NossoNumero));
+                            nossoNumero = string.Format("{0}{1}{2}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 5), Mod11BancoBrasil(boleto.NossoNumero));
                         else
-                            _nossoNumero = boleto.NossoNumero + Mod11BancoBrasil(boleto.NossoNumero);
+                            nossoNumero = boleto.NossoNumero + Mod11BancoBrasil(boleto.NossoNumero);
                         break;
                     case 7:
                         // Se convênio de 7 posições (acima de 1.000.000 à 9.999.999), informar NossoNumero com 17 caracteres, sem DV, sendo:
@@ -1470,16 +1462,16 @@ namespace BoletoNet
                         //_nossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 7));
                         //ALTERADO POR MARCELHSOUZA EM 28/03/2013
                         if (boleto.NossoNumero.Length != 17)
-                            _nossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 10)); //sao 10 digitos pro no. sequencial
+                            nossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 10)); //sao 10 digitos pro no. sequencial
                         else
-                            _nossoNumero = boleto.NossoNumero;
+                            nossoNumero = boleto.NossoNumero;
                         break;
                     default:
                         throw new Exception("Posições do nº de convênio deve ser 4, 6 ou 7.");
                 }
 
                 // Importante: Nosso número, alinhar à esquerda com brancos à direita (conforme manual)
-                _segmentoP += Utils.FitStringLength(_nossoNumero, 20, 20, ' ', 0, true, true, false);
+                _segmentoP += Utils.FitStringLength(nossoNumero, 20, 20, ' ', 0, true, true, false);
 
                 // Informar 1 – para carteira 11/12 na modalidade Simples; 
                 // 2 ou 3 – para carteira 11/17 modalidade Vinculada/Caucionada e carteira 31; 
@@ -1519,7 +1511,7 @@ namespace BoletoNet
                 _segmentoP += Utils.FitStringLength(boleto.DataVencimento.ToString("ddMMyyyy"), 8, 8, ' ', 0, true, true, false);
                 _segmentoP += Utils.FitStringLength(boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", ""), 15, 15, '0', 0, true, true, true);
                 _segmentoP += "00000 ";
-                _segmentoP += Utils.FitStringLength(boleto.EspecieDocumento.Codigo.ToString(), 2, 2, '0', 0, true, true, true);
+                _segmentoP += Utils.FitStringLength(boleto.EspecieDocumento.Codigo, 2, 2, '0', 0, true, true, true);
                 _segmentoP += "N";
                 _segmentoP += Utils.FitStringLength(boleto.DataDocumento.ToString("ddMMyyyy"), 8, 8, ' ', 0, true, true, false);
 
@@ -1566,11 +1558,11 @@ namespace BoletoNet
                     {
                         case EnumInstrucoes_BancoBrasil.ProtestarAposNDiasCorridos:
                             codigo_protesto = "1";
-                            dias_protesto = Utils.FitStringLength(instrucao.QuantidadeDias.ToString(), 2, 2, '0', 0, true, true, true); //Para código '1' – é possível, de 6 a 29 dias
+                            dias_protesto = Utils.FitStringLength(instrucao.Dias.ToString(), 2, 2, '0', 0, true, true, true); //Para código '1' – é possível, de 6 a 29 dias
                             break;
                         case EnumInstrucoes_BancoBrasil.ProtestarAposNDiasUteis:
                             codigo_protesto = "2";
-                            dias_protesto = Utils.FitStringLength(instrucao.QuantidadeDias.ToString(), 2, 2, '0', 0, true, true, true); //Para código '2' – é possível, 3º, 4º ou 5º dia útil
+                            dias_protesto = Utils.FitStringLength(instrucao.Dias.ToString(), 2, 2, '0', 0, true, true, true); //Para código '2' – é possível, 3º, 4º ou 5º dia útil
                             break;
                         case EnumInstrucoes_BancoBrasil.NaoProtestar:
                             codigo_protesto = "3";
@@ -1586,10 +1578,10 @@ namespace BoletoNet
                 _segmentoP += codigo_protesto;
                 _segmentoP += dias_protesto;
 
-                /*if (boleto.Instrucoes.Count > 1 && boleto.Instrucoes[0].QuantidadeDias > 0)
+                /*if (boleto.Instrucoes.Count > 1 && boleto.Instrucoes[0].Dias > 0)
                 {
                     _segmentoP += "2";
-                    _segmentoP += Utils.FitStringLength(boleto.Instrucoes[0].QuantidadeDias.ToString(), 2, 2, '0', 0, true, true, true);
+                    _segmentoP += Utils.FitStringLength(boleto.Instrucoes[0].Dias.ToString(), 2, 2, '0', 0, true, true, true);
                 }
                 else
                     _segmentoP += "300";*/
@@ -1615,36 +1607,34 @@ namespace BoletoNet
         {
             try
             {
-                var _zeros16 = new string('0', 16);
-                var _brancos28 = new string(' ', 28);
-                var _brancos40 = new string(' ', 40);
+                var zeros16 = new string('0', 16);
+                var brancos28 = new string(' ', 28);
+                var brancos40 = new string(' ', 40);
 
-                string _segmentoQ;
-
-                _segmentoQ = "00100013";
-                _segmentoQ += Utils.FitStringLength(numeroRegistro.ToString(), 5, 5, '0', 0, true, true, true);
-                _segmentoQ += "Q 01";
+                var segmentoQ = "00100013";
+                segmentoQ += Utils.FitStringLength(numeroRegistro.ToString(), 5, 5, '0', 0, true, true, true);
+                segmentoQ += "Q 01";
 
                 if (boleto.Sacado.CPFCNPJ.Length <= 11)
-                    _segmentoQ += "1";
+                    segmentoQ += "1";
                 else
-                    _segmentoQ += "2";
+                    segmentoQ += "2";
 
-                _segmentoQ += Utils.FitStringLength(boleto.Sacado.CPFCNPJ, 15, 15, '0', 0, true, true, true);
-                _segmentoQ += Utils.FitStringLength(boleto.Sacado.Nome.TrimStart(' '), 40, 40, ' ', 0, true, true, false).ToUpper();
-                _segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.End.TrimStart(' '), 40, 40, ' ', 0, true, true, false).ToUpper();
-                _segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.Bairro.TrimStart(' '), 15, 15, ' ', 0, true, true, false).ToUpper();
-                _segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.CEP, 8, 8, ' ', 0, true, true, false).ToUpper(); ;
-                _segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.Cidade.TrimStart(' '), 15, 15, ' ', 0, true, true, false).ToUpper();
-                _segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.UF, 2, 2, ' ', 0, true, true, false).ToUpper();
-                _segmentoQ += _zeros16;
-                _segmentoQ += _brancos40;
-                _segmentoQ += "000";
-                _segmentoQ += _brancos28;
+                segmentoQ += Utils.FitStringLength(boleto.Sacado.CPFCNPJ, 15, 15, '0', 0, true, true, true);
+                segmentoQ += Utils.FitStringLength(boleto.Sacado.Nome.TrimStart(' '), 40, 40, ' ', 0, true, true, false).ToUpper();
+                segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.End.TrimStart(' '), 40, 40, ' ', 0, true, true, false).ToUpper();
+                segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.Bairro.TrimStart(' '), 15, 15, ' ', 0, true, true, false).ToUpper();
+                segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.CEP, 8, 8, ' ', 0, true, true, false).ToUpper(); ;
+                segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.Cidade.TrimStart(' '), 15, 15, ' ', 0, true, true, false).ToUpper();
+                segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.UF, 2, 2, ' ', 0, true, true, false).ToUpper();
+                segmentoQ += zeros16;
+                segmentoQ += brancos40;
+                segmentoQ += "000";
+                segmentoQ += brancos28;
 
-                _segmentoQ = Utils.SubstituiCaracteresEspeciais(_segmentoQ);
+                segmentoQ = Utils.SubstituiCaracteresEspeciais(segmentoQ);
 
-                return _segmentoQ;
+                return segmentoQ;
 
             }
             catch (Exception ex)
@@ -1720,23 +1710,23 @@ namespace BoletoNet
         {
             try
             {
-                var _trailer = " ";
+                var trailer = " ";
 
                 base.GerarTrailerRemessa(numeroRegistro, tipoArquivo, cedente, vltitulostotal);
 
                 switch (tipoArquivo)
                 {
                     case TipoArquivo.CNAB240:
-                        _trailer = GerarTrailerRemessa240();
+                        trailer = GerarTrailerRemessa240();
                         break;
                     case TipoArquivo.CNAB400:
-                        _trailer = GerarTrailerRemessa400(numeroRegistro, 0);
+                        trailer = GerarTrailerRemessa400(numeroRegistro, 0);
                         break;
                     case TipoArquivo.Outro:
                         throw new Exception("Tipo de arquivo inexistente.");
                 }
 
-                return _trailer;
+                return trailer;
 
             }
             catch (Exception ex)
@@ -1776,18 +1766,16 @@ namespace BoletoNet
         {
             try
             {
-                var _brancos205 = new string(' ', 205);
+                var brancos205 = new string(' ', 205);
 
-                string _trailerArquivo;
+                var trailerArquivo = "00199999         000001";
+                trailerArquivo += Utils.FitStringLength((numeroRegistro + 1).ToString(), 6, 6, '0', 0, true, true, true); //deve considerar 1 registro a mais - Header
+                trailerArquivo += "000000";
+                trailerArquivo += brancos205;
 
-                _trailerArquivo = "00199999         000001";
-                _trailerArquivo += Utils.FitStringLength((numeroRegistro + 1).ToString(), 6, 6, '0', 0, true, true, true); //deve considerar 1 registro a mais - Header
-                _trailerArquivo += "000000";
-                _trailerArquivo += _brancos205;
+                trailerArquivo = Utils.SubstituiCaracteresEspeciais(trailerArquivo);
 
-                _trailerArquivo = Utils.SubstituiCaracteresEspeciais(_trailerArquivo);
-
-                return _trailerArquivo;
+                return trailerArquivo;
             }
             catch (Exception ex)
             {
@@ -1840,7 +1828,7 @@ namespace BoletoNet
                 // - nº da carteira 9(02)
                 // - variação (se houver) 9(03)
                 if (cedente.Carteira.Length == 2)
-                    _headerLote += cedente.Carteira.ToString() + "019  ";
+                    _headerLote += cedente.Carteira + "019  ";
                 else
                     _headerLote += cedente.Carteira.Replace("-", "") + "  ";
 
@@ -1986,7 +1974,7 @@ namespace BoletoNet
                 segmentoT.NossoNumero = registro.Substring(37, 20); //14
                 segmentoT.CodigoCarteira = Convert.ToInt32(registro.Substring(57, 1)); //15
                 segmentoT.NumeroDocumento = registro.Substring(58, 15); //16
-                segmentoT.DataVencimento = registro.Substring(73, 8).ToString() == "00000000" ? DateTime.Now : DateTime.ParseExact(registro.Substring(73, 8), "ddMMyyyy", CultureInfo.InvariantCulture); //17
+                segmentoT.DataVencimento = registro.Substring(73, 8) == "00000000" ? DateTime.Now : DateTime.ParseExact(registro.Substring(73, 8), "ddMMyyyy", CultureInfo.InvariantCulture); //17
                 segmentoT.ValorTitulo = Convert.ToDecimal(registro.Substring(81, 15)) / 100; //18
                 segmentoT.IdentificacaoTituloEmpresa = registro.Substring(105, 25); //23
                 segmentoT.TipoInscricao = Convert.ToInt32(registro.Substring(132, 1)); //25
@@ -2047,7 +2035,7 @@ namespace BoletoNet
                 segmentoU.ValorOutrasDespesas = Convert.ToDecimal(registro.Substring(107, 15)) / 100;
                 segmentoU.ValorOutrosCreditos = Convert.ToDecimal(registro.Substring(122, 15)) / 100;
                 segmentoU.DataOcorrencia = segmentoU.DataOcorrencia = DateTime.ParseExact(registro.Substring(137, 8), "ddMMyyyy", CultureInfo.InvariantCulture);
-                segmentoU.DataCredito = registro.Substring(145, 8).ToString() == "00000000" ? segmentoU.DataOcorrencia : DateTime.ParseExact(registro.Substring(145, 8), "ddMMyyyy", CultureInfo.InvariantCulture);
+                segmentoU.DataCredito = registro.Substring(145, 8) == "00000000" ? segmentoU.DataOcorrencia : DateTime.ParseExact(registro.Substring(145, 8), "ddMMyyyy", CultureInfo.InvariantCulture);
                 segmentoU.CodigoOcorrenciaSacado = registro.Substring(15, 2);
 
                 return segmentoU;

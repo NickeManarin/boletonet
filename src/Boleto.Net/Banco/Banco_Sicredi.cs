@@ -815,7 +815,7 @@ namespace BoletoNet
                             break;
                         case EnumInstrucoes_Sicredi.PedidoProtesto:
                             vInstrucao1 = "06"; //Indicar o código “06” - (Protesto)
-                            vInstrucao2 = Utils.FitStringLength(instrucao.QuantidadeDias.ToString(), 2, 2, '0', 0, true, true, true);
+                            vInstrucao2 = Utils.FitStringLength(instrucao.Dias.ToString(), 2, 2, '0', 0, true, true, true);
                             break;
                     }
                 }

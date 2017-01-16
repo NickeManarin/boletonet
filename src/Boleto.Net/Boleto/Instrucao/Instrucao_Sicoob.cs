@@ -135,7 +135,7 @@ namespace BoletoNet
 
 				}
 
-				this.QuantidadeDias = nrDias;
+				this.Dias = nrDias;
 			}
 			catch (Exception ex)
 			{

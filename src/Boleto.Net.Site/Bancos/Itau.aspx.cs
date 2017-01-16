@@ -36,7 +36,7 @@ public partial class Bancos_Itau : System.Web.UI.Page
         // Exemplo de como adicionar mais informações ao sacado
         b.Sacado.InformacoesSacado.Add(new InfoSacado("TÍTULO: " + "2541245"));
 
-        item2.Descricao += " " + item2.QuantidadeDias.ToString() + " dias corridos do vencimento.";
+        item2.Descricao += " " + item2.Dias.ToString() + " dias corridos do vencimento.";
         b.Instrucoes.Add(item1);
         b.Instrucoes.Add(item2);
 

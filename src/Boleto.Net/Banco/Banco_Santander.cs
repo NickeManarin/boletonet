@@ -853,7 +853,7 @@ namespace BoletoNet
                     {
                         case EnumInstrucoes_Santander.Protestar:
                             codigo_protesto = "1";
-                            dias_protesto = Utils.FitStringLength(instrucao.QuantidadeDias.ToString(), 2, 2, '0', 0, true, true, true); //Para código '1' – é possível, de 6 a 29 dias
+                            dias_protesto = Utils.FitStringLength(instrucao.Dias.ToString(), 2, 2, '0', 0, true, true, true); //Para código '1' – é possível, de 6 a 29 dias
                             break;
                         default:
                             break;
@@ -1462,7 +1462,7 @@ namespace BoletoNet
                 var instrucao = boleto.Instrucoes.FirstOrDefault(x => x.Codigo == 6);
                 if (instrucao != null)
                 {
-                    _detalhe += Utils.FitStringLength(((Instrucao_Santander)instrucao).QuantidadeDias.ToString(), 2, 2, '0', 0, true, true, true);
+                    _detalhe += Utils.FitStringLength(((Instrucao_Santander)instrucao).Dias.ToString(), 2, 2, '0', 0, true, true, true);
                 }
                 else
                     _detalhe += "00";

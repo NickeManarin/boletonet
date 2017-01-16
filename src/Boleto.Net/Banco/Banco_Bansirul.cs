@@ -99,32 +99,28 @@ namespace BoletoNet
             //041M2.1AAAd1 ACCCCC.CCNNd2 NNNNN.N40XXd3 V FFFF9999999999
             //(Isso depende da constante que usar) no caso de cima "041" no de baixo "40" antes do "XX"
 
-            var Cedente = boleto.Cedente.Codigo.Substring(4); //Os quatro primeiros digitos do código do cedente é sempre a agência
-            var NossoNumero = boleto.NossoNumero.Substring(0, 8);
+            var cedente = boleto.Cedente.Codigo.Substring(4); //Os quatro primeiros digitos do código do cedente é sempre a agência
+            var nossoNumero = boleto.NossoNumero.Substring(0, 8);
 
             //Campo 1
-            var M = boleto.Moeda.ToString();
-            var AAA = boleto.Cedente.ContaBancaria.Agencia.Substring(1, 3);
-            var Metade1 = "041" + M + "2";
-            var Metade2 = "1" + AAA;
+            var moeda = boleto.Moeda.ToString();
+            var agencia = boleto.Cedente.ContaBancaria.Agencia.Substring(1, 3);
+            var Metade1 = "041" + moeda + "2";
+            var Metade2 = "1" + agencia;
             var d1 = Mod10Banri(Metade1 + Metade2).ToString();
             var Campo1 = Metade1 + "." + Metade2 + d1;
 
             //Campo 2
-            Metade1 = string.Empty;
-            Metade2 = string.Empty;
-            Metade1 = Cedente.Substring(0, 5);
+            Metade1 = cedente.Substring(0, 5);
             //Metade2 = Cedente.Substring(5, 2) + NossoNumero.Substring(0, 2);
-            Metade2 = Cedente.Substring(5, 2) + NossoNumero.Substring(0, 3);
+            Metade2 = cedente.Substring(5, 2) + nossoNumero.Substring(0, 3);
             var d2 = Mod10Banri(Metade1 + Metade2).ToString();
             var campo2 = Metade1 + "." + Metade2 + d2;
 
             //Campo 3
-            Metade1 = string.Empty;
-            Metade2 = string.Empty;
             var xx = _primDigito + _segDigito.ToString();
             //Metade1 = NossoNumero.Substring(2, 5);
-            Metade1 = NossoNumero.Substring(3, 5);
+            Metade1 = nossoNumero.Substring(3, 5);
             //Metade2 = NossoNumero.Substring(7, 1) + "041" + XX;
             Metade2 = "041" + xx;
             var d3 = Mod10Banri(Metade1 + Metade2).ToString();
@@ -206,7 +202,7 @@ namespace BoletoNet
             int peso = 2;
             int sum = 0, dv2, b = 7;
             seq += dv1.ToString();
-            bool dvInvalido;
+
             for (var i = seq.Length - 1; i >= 0; i--)
             {
                 var n = Convert.ToInt32(seq.Substring(i, 1));
@@ -217,10 +213,11 @@ namespace BoletoNet
                 else
                     peso = 2;
             }
+
             seq = seq.Substring(0, seq.Length - 1);
             var rest = sum < 11 ? sum : sum % 11;
 
-            dvInvalido = rest == 1;
+            var dvInvalido = rest == 1;
 
             if (dvInvalido)
             {
@@ -231,6 +228,7 @@ namespace BoletoNet
             {
                 dv2 = rest == 0 ? 0 : 11 - rest;
             }
+
             if (!dvInvalido)
             {
                 var digitos = dv1.ToString() + dv2;
@@ -650,19 +648,19 @@ namespace BoletoNet
                         vInstrucao2 = string.Empty;
                         //valida se é código 9 ou 15, para adicionar os dias na posição 370-371
                         if (boleto.Instrucoes[0].Codigo == 9 || boleto.Instrucoes[0].Codigo == 15)
-                            vQtdeDiasCodigo9Ou15 = boleto.Instrucoes[0].QuantidadeDias.ToString();
+                            vQtdeDiasCodigo9Ou15 = boleto.Instrucoes[0].Dias.ToString();
                         //
                         break;
                     case 2:
                         vInstrucao1 += boleto.Instrucoes[0].Codigo.ToString().PadLeft(2, '0');
                         //valida se é código 9 ou 15, para adicionar os dias na posição 370-371
                         if (boleto.Instrucoes[0].Codigo == 9 || boleto.Instrucoes[0].Codigo == 15)
-                            vQtdeDiasCodigo9Ou15 = boleto.Instrucoes[0].QuantidadeDias.ToString();
+                            vQtdeDiasCodigo9Ou15 = boleto.Instrucoes[0].Dias.ToString();
                         //
                         vInstrucao2 += boleto.Instrucoes[1].Codigo.ToString().PadLeft(2, '0');
                         //valida se é código 9 ou 15, para adicionar os dias na posição 370-371
                         if (boleto.Instrucoes[1].Codigo == 9 || boleto.Instrucoes[1].Codigo == 15)
-                            vQtdeDiasCodigo9Ou15 = boleto.Instrucoes[1].QuantidadeDias.ToString();
+                            vQtdeDiasCodigo9Ou15 = boleto.Instrucoes[1].Dias.ToString();
                         //
                         break;
                 }
@@ -674,20 +672,26 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0161, 001, 0, "0", ' '));                                       //161-161
 
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0162, 012, 2, boleto.JurosMora, '0'));                          //162-173
+                
                 #region DataDesconto
                 var vDataDesconto = "000000";
                 if (!boleto.DataDesconto.Equals(DateTime.MinValue))
                     vDataDesconto = boleto.DataDesconto.ToString("ddMMyy");
                 #endregion
+
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0174, 006, 0, vDataDesconto, '0'));                             //174-179
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0180, 013, 2, boleto.ValorDesconto, '0'));                      //180-192
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0193, 013, 2, boleto.IOF, '0'));                                //193-205
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0206, 013, 2, boleto.Abatimento, '0'));                         //206-218
+                
                 #region Regra Tipo de Inscrição Sacado
+
                 var vCpfCnpjSac = "99";
                 if (boleto.Sacado.CPFCNPJ.Length.Equals(11)) vCpfCnpjSac = "01"; //Cpf é sempre 11;
                 else if (boleto.Sacado.CPFCNPJ.Length.Equals(14)) vCpfCnpjSac = "02"; //Cnpj é sempre 14;
+
                 #endregion
+
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0219, 002, 0, vCpfCnpjSac, '0'));                               //219-220
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0221, 014, 0, boleto.Sacado.CPFCNPJ, '0'));                     //221-234
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0235, 035, 0, boleto.Sacado.Nome.ToUpper(), ' '));              //235-269
@@ -821,8 +825,7 @@ namespace BoletoNet
                 detalhe.MotivoCodigoOcorrencia = reg.MotivoOcorrencia;
                 //detalhe. = reg.Brancos6;
                 detalhe.NumeroSequencial = Utils.ToInt32(reg.NumeroSequenciaRegistro);
-                //
-                //
+
                 #region NAO RETORNADOS PELO BANRISUL
                 detalhe.IOF = 0;
                 //Motivos das Rejeições para os Códigos de Ocorrência

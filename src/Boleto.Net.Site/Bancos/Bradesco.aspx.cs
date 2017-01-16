@@ -24,7 +24,7 @@ public partial class Bancos_Bradesco : System.Web.UI.Page
         b.Sacado.Endereco.CEP = "00000000";
         b.Sacado.Endereco.UF = "UF";     
 
-        item.Descricao += " após " + item.QuantidadeDias.ToString() + " dias corridos do vencimento.";
+        item.Descricao += " após " + item.Dias.ToString() + " dias corridos do vencimento.";
         b.Instrucoes.Add(item); //"Não Receber após o vencimento");
 
         Instrucao i = new Instrucao(237);

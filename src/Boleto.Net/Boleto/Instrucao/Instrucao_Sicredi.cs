@@ -28,7 +28,7 @@ namespace BoletoNet
 
     #endregion 
 
-    public class Instrucao_Sicredi: AbstractInstrucao, IInstrucao
+    public sealed class Instrucao_Sicredi: AbstractInstrucao
     {
         #region Construtores 
 
@@ -44,96 +44,41 @@ namespace BoletoNet
 			}
 		}
 
-        public Instrucao_Sicredi(int codigo)
+        public Instrucao_Sicredi(int cod, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
         {
-            carregar(codigo, 0);
+            Carrega(cod, dias, valor, tipo);
         }
 
-        public Instrucao_Sicredi(int codigo, int nrDias)
-        {
-            carregar(codigo, nrDias);
-        }
-        public Instrucao_Sicredi(int codigo, double valor)
-        {
-            carregar(codigo, valor);
-        }
-
-        public Instrucao_Sicredi(int codigo, double valor, EnumTipoValor tipoValor)
-        {
-            carregar(codigo, valor, tipoValor);
-        }
         #endregion
 
-        #region Metodos Privados
+        #region Métodos
 
-        private void carregar(int idInstrucao, double valor, EnumTipoValor tipoValor = EnumTipoValor.Percentual)
+        public override void Carrega(int cod, int dias = 0, decimal valor = 0, EnumTipoValor tipo = EnumTipoValor.Percentual)
         {
             try
             {
                 Banco = new Banco_Sicredi();
                 Valida();
 
-                switch ((EnumInstrucoes_Sicredi)idInstrucao)
-                {
-                    case EnumInstrucoes_Sicredi.OutrasInstrucoes_ExibeMensagem_MoraDiaria:
-                        Codigo = (int)EnumInstrucoes_Sicredi.AlteracaoOutrosDados;
-                        Descricao = string.Format("  - APÓS VENCIMENTO COBRAR JUROS DE {0} {1} POR DIA DE ATRASO",
-                            tipoValor.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2"),
-                            tipoValor.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
-                        break;
-                    case EnumInstrucoes_Sicredi.OutrasInstrucoes_ExibeMensagem_MultaVencimento:
-                        Codigo = (int)EnumInstrucoes_Sicredi.AlteracaoOutrosDados;
-                        Descricao = string.Format("  - APÓS VENCIMENTO COBRAR MULTA DE {0} {1}",
-                            tipoValor.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2"),
-                            tipoValor.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
-                        break;
-                    case EnumInstrucoes_Sicredi.AlteracaoOutrosDados_Desconto:
-                        Codigo = (int)EnumInstrucoes_Sicredi.AlteracaoOutrosDados;
-                        Descricao = "  - CONCEDER DESCONTO DE R$ " + valor;
-                        break;
-                    case EnumInstrucoes_Sicredi.AlteracaoOutrosDados_DescontoAntecipacao:
-                        Codigo = (int)EnumInstrucoes_Sicredi.AlteracaoOutrosDados;
-                        Descricao = "  - CONCEDER DESCONTO DE R$ " + valor + "POR DIA DE ANTECIPAÇÃO";
-                        break;
-                    case EnumInstrucoes_Sicredi.AlteracaoOutrosDados_JuroDia:
-                        Codigo = (int)EnumInstrucoes_Sicredi.AlteracaoOutrosDados;
-                        Descricao = "  - APÓS VENCIMENTO COBRAR JURO DE " + valor + "% POR DIA DE ATRASO";
-                        break;
-                    default:
-                        Codigo = 0;
-                        Descricao = " (Selecione) ";
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Erro ao carregar objeto", ex);
-            }
-        }
+                Codigo = cod;
+                Dias = dias;
+                Valor = valor;
+                Tipo = tipo;
 
-        private void carregar(int idInstrucao, int nrDias)
-        {
-            try
-            {
-                Banco = new Banco_Sicredi();
                 Valida();
 
-                switch ((EnumInstrucoes_Sicredi)idInstrucao)
+                switch ((EnumInstrucoes_Sicredi)cod)
                 {
                     case EnumInstrucoes_Sicredi.CadastroDeTitulo:
-                        Codigo = (int)EnumInstrucoes_Sicredi.CadastroDeTitulo;
                         Descricao = "";
                         break;
                     case EnumInstrucoes_Sicredi.PedidoBaixa:
-                        Codigo = (int)EnumInstrucoes_Sicredi.PedidoBaixa;
                         Descricao = "";
                         break;   
                     case EnumInstrucoes_Sicredi.ConcessaoAbatimento:
-                        Codigo = (int)EnumInstrucoes_Sicredi.ConcessaoAbatimento;
                         Descricao = "";
                         break;
                     case EnumInstrucoes_Sicredi.CancelamentoAbatimentoConcedido:
-                        Codigo = (int)EnumInstrucoes_Sicredi.CancelamentoAbatimentoConcedido;
                         Descricao = "";
                         break;
                     case EnumInstrucoes_Sicredi.AlteracaoVencimento:
@@ -141,28 +86,41 @@ namespace BoletoNet
                         Descricao = "";
                         break;
                     case EnumInstrucoes_Sicredi.PedidoProtesto:
-                        Codigo = (int)EnumInstrucoes_Sicredi.PedidoProtesto;
-                        Descricao = "  - PROTESTAR APÓS " + nrDias + " DIAS ÚTEIS DO VENCIMENTO";
+                        Descricao = "  - PROTESTAR APÓS " + dias + " DIAS ÚTEIS DO VENCIMENTO";
                         break;
                     case EnumInstrucoes_Sicredi.SustarProtestoBaixarTitulo:
-                        Codigo = (int)EnumInstrucoes_Sicredi.SustarProtestoBaixarTitulo;
                         Descricao = "";
                         break;
                     case EnumInstrucoes_Sicredi.SustarProtestoManterCarteira:
-                        Codigo = (int)EnumInstrucoes_Sicredi.SustarProtestoManterCarteira;
                         Descricao = "";
                         break;
                     case EnumInstrucoes_Sicredi.AlteracaoOutrosDados:
-                        Codigo = (int)EnumInstrucoes_Sicredi.AlteracaoOutrosDados;
                         Descricao = "";
+                        break;
+                    case EnumInstrucoes_Sicredi.OutrasInstrucoes_ExibeMensagem_MoraDiaria:
+                        Descricao = string.Format("  - APÓS VENCIMENTO COBRAR JUROS DE {0} {1} POR DIA DE ATRASO",
+                            tipo.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2"),
+                            tipo.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
+                        break;
+                    case EnumInstrucoes_Sicredi.OutrasInstrucoes_ExibeMensagem_MultaVencimento:
+                        Descricao = string.Format("  - APÓS VENCIMENTO COBRAR MULTA DE {0} {1}",
+                            tipo.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2"),
+                            tipo.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
+                        break;
+                    case EnumInstrucoes_Sicredi.AlteracaoOutrosDados_Desconto:
+                        Descricao = "  - CONCEDER DESCONTO DE R$ " + valor;
+                        break;
+                    case EnumInstrucoes_Sicredi.AlteracaoOutrosDados_DescontoAntecipacao:
+                        Descricao = "  - CONCEDER DESCONTO DE R$ " + valor + "POR DIA DE ANTECIPAÇÃO";
+                        break;
+                    case EnumInstrucoes_Sicredi.AlteracaoOutrosDados_JuroDia:
+                        Descricao = "  - APÓS VENCIMENTO COBRAR JURO DE " + valor + "% POR DIA DE ATRASO";
                         break;
                     default:
                         Codigo = 0;
-                        Descricao = " (Selecione) ";
+                        Descricao = "(Selecione)";
                         break;
                 }
-
-                QuantidadeDias = nrDias;
             }
             catch (Exception ex)
             {
@@ -170,11 +128,6 @@ namespace BoletoNet
             }
         }
         
-        public override void Valida()
-        {
-            //base.Valida();
-        }
-
         #endregion
     }
 }

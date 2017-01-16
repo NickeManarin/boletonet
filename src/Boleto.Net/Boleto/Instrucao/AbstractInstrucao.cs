@@ -1,65 +1,45 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BoletoNet
 {
+    #region Enum
+
+    public enum EnumTipoValor
+    {
+        Percentual = 1,
+        Reais = 2
+    }
+
+    #endregion
+
     public abstract class AbstractInstrucao : IInstrucao
     {
+        #region Propriedades
 
-        #region Enum
+        public virtual IBanco Banco { get; set; }
 
-        public enum EnumTipoValor
-        {
-            Percentual = 1,
-            Reais = 2
-        }
+        public virtual int Codigo { get; set; }
 
-        #endregion
+        public virtual string Descricao { get; set; }
 
-        #region Variaveis
+        public virtual int Dias { get; set; }
 
-        private IBanco _banco;
-        private int _codigo;
-        private string _descricao;
-        private int _quantidadeDias;
+        public virtual decimal Valor { get; set; }
+
+        public virtual EnumTipoValor Tipo { get; set; }
 
         #endregion
 
-        # region Propriedades
-
-        public virtual IBanco Banco
-        {
-            get { return _banco; }
-            set { _banco = value; }
-        }
-
-        public virtual int Codigo
-        {
-            get { return _codigo; }
-            set { _codigo = value; }
-        }
-
-        public virtual string Descricao
-        {
-            get { return _descricao; }
-            set { _descricao = value; }
-        }
-
-        public virtual int QuantidadeDias
-        {
-            get { return _quantidadeDias; }
-            set { _quantidadeDias = value; }
-        }
-
-        # endregion
-
-        # region Metodos
+        #region Metódos
 
         public virtual void Valida()
         {
-            throw new NotImplementedException("Função não implementada");
+            if (Codigo == 0 && string.IsNullOrWhiteSpace(Descricao))
+                throw new Exception("O código da instrução deve ser diferente de zero quando a descrição estiver vazia.");
         }
+
+        public virtual void Carrega(int cod, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
+        {}
 
         #endregion
     }

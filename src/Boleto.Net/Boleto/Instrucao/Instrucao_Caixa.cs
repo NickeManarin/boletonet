@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Text;
 
 namespace BoletoNet
 {
@@ -21,19 +19,17 @@ namespace BoletoNet
         Multa = 8
     }
 
-
     #endregion
 
-    public class Instrucao_Caixa : AbstractInstrucao, IInstrucao
+    public sealed class Instrucao_Caixa : AbstractInstrucao
     {
-
         #region Construtores
 
         public Instrucao_Caixa()
         {
             try
             {
-                this.Banco = new Banco(104);
+                Banco = new Banco(104);
             }
             catch (Exception ex)
             {
@@ -41,95 +37,74 @@ namespace BoletoNet
             }
         }
 
-        public Instrucao_Caixa(int codigo)
+        public Instrucao_Caixa(int cod, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
         {
-            this.carregar(codigo, 0, 0);
-        }
-
-        public Instrucao_Caixa(int codigo, int nrDias)
-        {
-            this.carregar(codigo, nrDias, 0);
-        }
-
-        public Instrucao_Caixa(int codigo, decimal valor)
-        {
-            this.carregar(codigo, 0, valor);
-        }
-
-        public Instrucao_Caixa(int codigo, decimal valor, EnumTipoValor tipoValor)
-        {
-            this.carregar(codigo, 0, valor, tipoValor);
+            Carrega(cod, dias, valor, tipo);
         }
 
         #endregion
 
-        #region Metodos Privados
+        #region Métodos
 
-        private void carregar(int idInstrucao, int nrDias, decimal valor, EnumTipoValor tipoValor = EnumTipoValor.Percentual)
+        public override void Carrega(int cod, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
         {
             try
             {
-                this.Banco = new Banco_Caixa();
+                Banco = new Banco_Caixa();
 
-                //  this.Valida();
+                Codigo = cod;
+                Dias = dias;
+                Valor = valor;
+                Tipo = tipo;
 
-                switch ((EnumInstrucoes_Caixa)idInstrucao)
+                Valida();
+
+                switch ((EnumInstrucoes_Caixa)cod)
                 {
                     case EnumInstrucoes_Caixa.Protestar:
-                        this.Codigo = (int)EnumInstrucoes_Caixa.Protestar;
-                        this.Descricao = "Protestar após " + nrDias + " dias úteis.";
+                        Descricao = "Protestar após " + dias + " dias úteis.";
                         break;
                     case EnumInstrucoes_Caixa.NaoProtestar:
-                        this.Codigo = (int)EnumInstrucoes_Caixa.NaoProtestar;
-                        this.Descricao = "Não protestar";
+                        Descricao = "Não protestar";
                         break;
                     case EnumInstrucoes_Caixa.ImportanciaporDiaDesconto:
-                        this.Codigo = (int)EnumInstrucoes_Caixa.ImportanciaporDiaDesconto;
-                        this.Descricao = "Importância por dia de desconto.";
+                        Descricao = "Importância por dia de desconto.";
                         break;
                     case EnumInstrucoes_Caixa.ProtestoFinsFalimentares:
-                        this.Codigo = (int)EnumInstrucoes_Caixa.ProtestoFinsFalimentares;
-                        this.Descricao = "Protesto para fins falimentares";
+                        Descricao = "Protesto para fins falimentares";
                         break;
                     case EnumInstrucoes_Caixa.ProtestarAposNDiasCorridos:
-                        this.Codigo = (int)EnumInstrucoes_Caixa.ProtestarAposNDiasCorridos;
-                        this.Descricao = "Protestar após " + nrDias + " dias corridos do vencimento";
+                        Descricao = "Protestar após " + dias + " dias corridos do vencimento";
                         break;
                     case EnumInstrucoes_Caixa.ProtestarAposNDiasUteis:
-                        this.Codigo = (int)EnumInstrucoes_Caixa.ProtestarAposNDiasUteis;
-                        this.Descricao = "Protestar após " + nrDias + " dias úteis do vencimento";
+                        Descricao = "Protestar após " + dias + " dias úteis do vencimento";
                         break;
                     case EnumInstrucoes_Caixa.NaoReceberAposNDias:
-                        this.Codigo = (int)EnumInstrucoes_Caixa.NaoReceberAposNDias;
-                        this.Descricao = "Não receber após " + nrDias + " dias do vencimento";
+                        Descricao = "Não receber após " + dias + " dias do vencimento";
                         break;
                     case EnumInstrucoes_Caixa.DevolverAposNDias:
-                        this.Codigo = (int)EnumInstrucoes_Caixa.DevolverAposNDias;
-                        this.Descricao = "Devolver após " + nrDias + " dias do vencimento";
+                        Descricao = "Devolver após " + dias + " dias do vencimento";
                         break;
                     case EnumInstrucoes_Caixa.JurosdeMora:
-                        this.Codigo = (int)EnumInstrucoes_Caixa.JurosdeMora;
-                        this.Descricao = String.Format("Após vencimento cobrar juros de {0} {1} por dia de atraso",
-                            (tipoValor.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2")),
-                            (tipoValor.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2")));
+                        Descricao = string.Format("Após vencimento cobrar juros de {0} {1} por dia de atraso",
+                            tipo.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2"),
+                            tipo.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
                         break;
                     case EnumInstrucoes_Caixa.Multa:
-                        this.Codigo = (int)EnumInstrucoes_Caixa.Multa;
-                        this.Descricao = String.Format("Após vencimento cobrar multa de {0} {1}",
-                            (tipoValor.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2")),
-                            (tipoValor.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2")));
+                        Descricao = string.Format("Após vencimento cobrar multa de {0} {1}",
+                            tipo.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2"),
+                            tipo.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
                         break;
                     case EnumInstrucoes_Caixa.DescontoporDia:
-                        this.Codigo = (int)EnumInstrucoes_Caixa.DescontoporDia;
-                        this.Descricao = "Conceder desconto de " + valor + "%" + " por dia de antecipação";
+                        Descricao = "Conceder desconto de " + valor + "%" + " por dia de antecipação";
                         break;
                     default:
-                        this.Codigo = 0;
-                        this.Descricao = "( Selecione )";
+                        Codigo = 0;
+                        Descricao = "(Selecione)";
                         break;
                 }
 
-                this.QuantidadeDias = nrDias;
+                Dias = dias;
             }
             catch (Exception ex)
             {
@@ -137,12 +112,6 @@ namespace BoletoNet
             }
         }
 
-        public override void Valida()
-        {
-            //base.Valida();
-        }
-
         #endregion
-
     }
 }

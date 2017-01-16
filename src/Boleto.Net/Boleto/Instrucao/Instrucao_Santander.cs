@@ -78,7 +78,7 @@ namespace BoletoNet
                     case EnumInstrucoes_Santander.Protestar:
                         this.Codigo = (int)EnumInstrucoes_Santander.Protestar;
                         this.Descricao = "Protestar após "+nrDias+" do vencimento";
-                        this.QuantidadeDias = nrDias;
+                        this.Dias = nrDias;
                         break;
                     case EnumInstrucoes_Santander.NaoProtestar:
                         this.Codigo = (int)EnumInstrucoes_Santander.NaoProtestar;

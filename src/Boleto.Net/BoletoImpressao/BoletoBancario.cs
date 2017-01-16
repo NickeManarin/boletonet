@@ -1097,8 +1097,7 @@ namespace BoletoNet
 
             var assembly = Assembly.GetExecutingAssembly();
 
-            var streamLogo = assembly.GetManifestResourceStream("BoletoNet.Imagens." + CodigoBanco.ToString("000") + ".jpg");
-            var base64Logo = Convert.ToBase64String(new BinaryReader(streamLogo).ReadBytes((int)streamLogo.Length));
+            var base64Logo = Convert.ToBase64String(ObterLogoDoBanco(CodigoBanco));
             var fnLogo = string.Format("data:image/gif;base64,{0}", base64Logo);
 
             var streamBarra = assembly.GetManifestResourceStream("BoletoNet.Imagens.barra.gif");
@@ -1199,6 +1198,17 @@ namespace BoletoNet
         {
             var cb = new C2of5i(boleto.CodigoBarra.Codigo, 1, 50, boleto.CodigoBarra.Codigo.Length);
             return cb.ToBitmap();
+        }
+
+        /// <summary>
+        /// Obtem o array de bytes da logo do banco.
+        /// </summary>
+        /// <returns>bytes da logo</returns>
+        public static byte[] ObterLogoDoBanco(short codigoBanco)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var streamLogo = assembly.GetManifestResourceStream(string.Format("BoletoNet.Imagens.{0}.jpg", codigoBanco.ToString("000")));
+            return new BinaryReader(streamLogo).ReadBytes((int)streamLogo.Length);
         }
 
         private void CopiarStream(Stream entrada, Stream saida)

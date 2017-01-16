@@ -562,32 +562,34 @@ namespace BoletoNet
         {
             if (boleto.Remessa.TipoDocumento.Equals("2") || boleto.Remessa.TipoDocumento.Equals("1"))
                 return GerarDetalheSegmentoPRemessaCNAB240SIGCB(cedente, boleto, numeroRegistro);
-            else
-                return GerarDetalheSegmentoPRemessaCNAB240(boleto, numeroRegistro, numeroConvenio, cedente);
+
+            return GerarDetalheSegmentoPRemessaCNAB240(boleto, numeroRegistro, numeroConvenio, cedente);
         }
+
         public override string GerarDetalheSegmentoQRemessa(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
         {
             return GerarDetalheSegmentoQRemessaCNAB240(boleto, numeroRegistro, tipoArquivo);
         }
+
         public override string GerarDetalheSegmentoQRemessa(Boleto boleto, int numeroRegistro, Sacado sacado)
         {
             return GerarDetalheSegmentoQRemessaCNAB240SIGCB(boleto, numeroRegistro, sacado);
         }
 
-        public override string GerarDetalheSegmentoRRemessa(Boleto boleto, int numeroRegistroDetalhe, TipoArquivo CNAB240)
+        public override string GerarDetalheSegmentoRRemessa(Boleto boleto, int numeroRegistroDetalhe, TipoArquivo cnab240)
         {
             if (boleto.Remessa.TipoDocumento.Equals("2") || boleto.Remessa.TipoDocumento.Equals("1"))
-                return GerarDetalheSegmentoRRemessaCNAB240SIGCB(boleto, numeroRegistroDetalhe, CNAB240);
-            else
-                return GerarDetalheSegmentoRRemessaCNAB240(boleto, numeroRegistroDetalhe, CNAB240);
+                return GerarDetalheSegmentoRRemessaCNAB240SIGCB(boleto, numeroRegistroDetalhe, cnab240);
+
+            return GerarDetalheSegmentoRRemessaCNAB240(boleto, numeroRegistroDetalhe, cnab240);
         }
 
         public override string GerarTrailerLoteRemessa(int numeroRegistro, Boleto boletos)
         {
             if (boletos.Remessa.TipoDocumento.Equals("2") || boletos.Remessa.TipoDocumento.Equals("1"))
                 return GerarTrailerLoteRemessaCNAC240SIGCB(numeroRegistro);
-            else
-                return GerarTrailerLoteRemessaCNAB240(numeroRegistro);
+
+            return GerarTrailerLoteRemessaCNAB240(numeroRegistro);
         }
 
         /// <summary>
@@ -603,23 +605,23 @@ namespace BoletoNet
         {
             try
             {
-                var _trailer = " ";
+                var trailer = " ";
 
                 base.GerarTrailerRemessa(numeroRegistro, tipoArquivo, cedente, vltitulostotal);
 
                 switch (tipoArquivo)
                 {
                     case TipoArquivo.CNAB240:
-                        _trailer = GerarTrailerRemessaCNAB240SIGCB(numeroRegistro);
+                        trailer = GerarTrailerRemessaCNAB240SIGCB(numeroRegistro);
                         break;
                     case TipoArquivo.CNAB400:
-                        _trailer = GerarTrailerRemessa400(numeroRegistro, 0);
+                        trailer = GerarTrailerRemessa400(numeroRegistro, 0);
                         break;
                     case TipoArquivo.Outro:
                         throw new Exception("Tipo de arquivo inexistente.");
                 }
 
-                return _trailer;
+                return trailer;
 
             }
             catch (Exception ex)
@@ -632,8 +634,8 @@ namespace BoletoNet
         {
             if (boletos.Remessa.TipoDocumento.Equals("2") || boletos.Remessa.TipoDocumento.Equals("1"))
                 return GerarTrailerRemessaCNAB240SIGCB(numeroRegistro);
-            else
-                return GerarTrailerArquivoRemessaCNAB240(numeroRegistro);
+
+            return GerarTrailerArquivoRemessaCNAB240(numeroRegistro);
         }
 
         public override string GerarHeaderLoteRemessa(string numeroConvenio, Cedente cedente, int numeroArquivoRemessa, TipoArquivo tipoArquivo)
@@ -663,6 +665,7 @@ namespace BoletoNet
                 throw new Exception("Erro durante a geração do HEADER DO LOTE do arquivo de REMESSA.", ex);
             }
         }
+
         public override string GerarHeaderLoteRemessa(string numeroConvenio, Cedente cedente, int numeroArquivoRemessa, TipoArquivo tipoArquivo, Boleto boletos)
         {
             try
@@ -768,17 +771,17 @@ namespace BoletoNet
                 if (instrucao.Codigo.Equals(9) || instrucao.Codigo.Equals(42) || instrucao.Codigo.Equals(81) || instrucao.Codigo.Equals(82))
                 {
                     protestar = true;
-                    diasProtesto = instrucao.QuantidadeDias;
+                    diasProtesto = instrucao.Dias;
                 }
                 else if (instrucao.Codigo.Equals(91) || instrucao.Codigo.Equals(92))
                 {
                     baixaDevolver = true;
-                    diasDevolucao = instrucao.QuantidadeDias;
+                    diasDevolucao = instrucao.Dias;
                 }
                 else if (instrucao.Codigo.Equals(999))
                 {
                     desconto = true;
-                    diasDesconto = instrucao.QuantidadeDias;
+                    diasDesconto = instrucao.Dias;
                 }
             }
         }
@@ -1498,6 +1501,7 @@ namespace BoletoNet
         #endregion
 
         #region CNAB 400 - sidneiklein
+
         public bool ValidarRemessaCNAB400(string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem)
         {
             var vRetorno = true;
@@ -1604,6 +1608,7 @@ namespace BoletoNet
             mensagem = vMsg;
             return vRetorno;
         }
+
         public string GerarHeaderRemessaCNAB400(int numeroConvenio, Cedente cedente, int numeroArquivoRemessa)
         {
             try
@@ -1637,6 +1642,7 @@ namespace BoletoNet
                 throw new Exception("Erro ao gerar HEADER do arquivo de remessa do CNAB400.", ex);
             }
         }
+
         public string GerarDetalheRemessaCNAB400(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
         {
             try
@@ -1688,7 +1694,7 @@ namespace BoletoNet
                     {
                         case EnumInstrucoes_Caixa.Protestar:
                             vInstrucao1 = "01";
-                            prazoProtesto_Devolucao = instrucao.QuantidadeDias;
+                            prazoProtesto_Devolucao = instrucao.Dias;
                             break;
 
                         default:
@@ -1766,6 +1772,7 @@ namespace BoletoNet
                 throw new Exception("Erro ao gerar DETALHE do arquivo CNAB400.", ex);
             }
         }
+
         public string GerarTrailerRemessa400(int numeroRegistro, decimal vltitulostotal)
         {
             try
@@ -1787,7 +1794,7 @@ namespace BoletoNet
                 throw new Exception("Erro durante a geração do registro TRAILER do arquivo de REMESSA.", ex);
             }
         }
-        //
+        
         public override DetalheRetorno LerDetalheRetornoCNAB400(string registro)
         {
             try
@@ -1868,8 +1875,7 @@ namespace BoletoNet
                 throw new Exception("Erro ao ler detalhe do arquivo de RETORNO / CNAB 400.", ex);
             }
         }
+
         #endregion
-
-
     }
 }

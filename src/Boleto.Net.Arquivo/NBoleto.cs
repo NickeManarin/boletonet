@@ -1,14 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using System.Threading;
-
-using BoletoNet;
 
 namespace BoletoNet.Arquivo
 {
@@ -16,8 +11,8 @@ namespace BoletoNet.Arquivo
     {
         private short _codigoBanco = 0;
         private Progresso _progresso;
-        string _arquivo = string.Empty;
-        private ImpressaoBoleto _impressaoBoleto = new ImpressaoBoleto();
+        private string _arquivo = string.Empty;
+        private readonly ImpressaoBoleto _impressaoBoleto = new ImpressaoBoleto();
 
         public short CodigoBanco
         {
@@ -29,58 +24,56 @@ namespace BoletoNet.Arquivo
         {
             InitializeComponent();
 
-            _impressaoBoleto.FormClosed += new FormClosedEventHandler(_impressaoBoleto_FormClosed);
+            _impressaoBoleto.FormClosed += ImpressaoBoleto_FormClosed;
         }
 
-        void _impressaoBoleto_FormClosed(object sender, FormClosedEventArgs e)
+        void ImpressaoBoleto_FormClosed(object sender, FormClosedEventArgs e)
         {
             Close();
             Dispose();
         }
 
-        #region GERA LAYOUT DO BOLETO
         private void GeraLayout(List<BoletoBancario> boletos)
         {
-            StringBuilder html = new StringBuilder();
-            foreach (BoletoBancario o in boletos)
+            var html = new StringBuilder();
+            foreach (var o in boletos)
             {
                 html.Append(o.MontaHtml());
                 html.Append("</br></br></br></br></br></br></br></br></br></br>");
             }
 
-            _arquivo = System.IO.Path.GetTempFileName();
+            _arquivo = Path.GetTempFileName();
 
-            using (FileStream f = new FileStream(_arquivo, FileMode.Create))
+            using (var f = new FileStream(_arquivo, FileMode.Create))
             {
-                StreamWriter w = new StreamWriter(f, System.Text.Encoding.UTF8);
+                var w = new StreamWriter(f, Encoding.UTF8);
                 w.Write(html.ToString());
                 w.Close();
                 f.Close();
             }
         }
-        #endregion
 
-        #region BOLETO Caixa
         private void GeraBoletoCaixa(int qtde)
         {
             // Cria o boleto, e passa os parâmetros usuais
-            BoletoBancario bb;
 
-            List<BoletoBancario> boletos = new List<BoletoBancario>();
-            for (int i = 0; i < qtde; i++)
+            var boletos = new List<BoletoBancario>();
+            for (var i = 0; i < qtde; i++)
             {
 
-                bb = new BoletoBancario();
-                bb.CodigoBanco = _codigoBanco;
-                bb.MostrarEnderecoCedente = true;
-                DateTime vencimento = DateTime.Now.AddDays(10);
+                var bb = new BoletoBancario
+                {
+                    CodigoBanco = _codigoBanco,
+                    MostrarEnderecoCedente = true
+                };
+                var vencimento = DateTime.Now.AddDays(10);
 
-                Instrucao_Caixa item1 = new Instrucao_Caixa(9, 5);
-                Instrucao_Caixa item2 = new Instrucao_Caixa(81, 10);
-                Cedente c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0132", "00542");
+                var item1 = new Instrucao_Caixa(9, 5);
+                var item2 = new Instrucao_Caixa(81, 10);
+                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0132", "00542");
 
-                Boleto b = new Boleto(vencimento, 460, "SR", "00000000010001", c);
-                Endereco endCed = new Endereco();
+                var b = new Boleto(vencimento, 460, "SR", "00000000010001", c);
+                var endCed = new Endereco();
 
                 endCed.End = "Rua Testando o Boleto";
                 endCed.Bairro = "BairroTest";
@@ -98,16 +91,13 @@ namespace BoletoNet.Arquivo
                 b.Sacado.Endereco.CEP = "70000000";
                 b.Sacado.Endereco.UF = "DF";
 
-                item2.Descricao += " " + item2.QuantidadeDias.ToString() + " dias corridos do vencimento.";
                 b.Instrucoes.Add(item1);
                 b.Instrucoes.Add(item2);
 
                 // juros/descontos
-
                 if (b.ValorDesconto == 0)
                 {
-                    Instrucao_Caixa item3 = new Instrucao_Caixa(999, 1);
-                    item3.Descricao += ("1,00 por dia de antecipação.");
+                    var item3 = new Instrucao_Caixa(999, 1);
                     b.Instrucoes.Add(item3);
                 }
 
@@ -119,30 +109,27 @@ namespace BoletoNet.Arquivo
 
             GeraLayout(boletos);
         }
-        #endregion
 
-        #region BOLETO ITAÚ
         private void GeraBoletoItau(int qtde)
         {
             // Cria o boleto, e passa os parâmetros usuais
-            BoletoBancario bb;
 
-            List<BoletoBancario> boletos = new List<BoletoBancario>();
-            for (int i = 0; i < qtde; i++)
+            var boletos = new List<BoletoBancario>();
+            for (var i = 0; i < qtde; i++)
             {
 
-                bb = new BoletoBancario();
+                var bb = new BoletoBancario();
                 bb.CodigoBanco = _codigoBanco;
 
-                DateTime vencimento = DateTime.Now.AddDays(10);
+                var vencimento = DateTime.Now.AddDays(10);
 
-                Instrucao_Itau item1 = new Instrucao_Itau(9, 5);
-                Instrucao_Itau item2 = new Instrucao_Itau(81, 10);
-                Cedente c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0542", "13000");
+                var item1 = new Instrucao_Itau(9, 5);
+                var item2 = new Instrucao_Itau(81, 10);
+                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0542", "13000");
                 //Na carteira 198 o código do Cedente é a conta bancária
                 c.Codigo = "13000";
 
-                Boleto b = new Boleto(vencimento, 1642, "198", "92082835", c, new EspecieDocumento(341, "1"));
+                var b = new Boleto(vencimento, 1642, "198", "92082835", c, new EspecieDocumento(341, "1"));
                 b.NumeroDocumento = Convert.ToString(10000 + i);
 
                 b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
@@ -152,7 +139,7 @@ namespace BoletoNet.Arquivo
                 b.Sacado.Endereco.CEP = "70000000";
                 b.Sacado.Endereco.UF = "DF";
 
-                item2.Descricao += " " + item2.QuantidadeDias.ToString() + " dias corridos do vencimento.";
+                item2.Descricao += " " + item2.Dias.ToString() + " dias corridos do vencimento.";
                 b.Instrucoes.Add(item1);
                 b.Instrucoes.Add(item2);
 
@@ -160,7 +147,7 @@ namespace BoletoNet.Arquivo
 
                 if (b.ValorDesconto == 0)
                 {
-                    Instrucao_Itau item3 = new Instrucao_Itau(999, 1);
+                    var item3 = new Instrucao_Itau(999, 1);
                     item3.Descricao += ("1,00 por dia de antecipação.");
                     b.Instrucoes.Add(item3);
                 }
@@ -173,30 +160,25 @@ namespace BoletoNet.Arquivo
 
             GeraLayout(boletos);
         }
-        #endregion
 
-
-        #region BOLETO UNIBANCO
         public void GeraBoletoUnibanco(int qtde)
         {
-
             // Cria o boleto, e passa os parâmetros usuais
-            BoletoBancario bb;
 
-            List<BoletoBancario> boletos = new List<BoletoBancario>();
-            for (int i = 0; i < qtde; i++)
+            var boletos = new List<BoletoBancario>();
+            for (var i = 0; i < qtde; i++)
             {
 
-                bb = new BoletoBancario();
+                var bb = new BoletoBancario();
                 bb.CodigoBanco = _codigoBanco;
 
-                DateTime vencimento = DateTime.Now.AddDays(10);
+                var vencimento = DateTime.Now.AddDays(10);
 
-                Instrucao instr = new Instrucao(001);
-                Cedente c = new Cedente("00.000.000/0000-00", "Next Consultoria Ltda.", "0123", "100618", "9");
+                var instr = new Instrucao(001);
+                var c = new Cedente("00.000.000/0000-00", "Next Consultoria Ltda.", "0123", "100618", "9");
                 c.Codigo = "203167";
 
-                Boleto b = new Boleto(vencimento, 2952.95m, "20", "1803029901", c);
+                var b = new Boleto(vencimento, 2952.95m, "20", "1803029901", c);
                 b.NumeroDocumento = b.NossoNumero;
 
                 b.Sacado = new Sacado("000.000.000-00", "Marlon Oliveira");
@@ -220,35 +202,29 @@ namespace BoletoNet.Arquivo
 
             GeraLayout(boletos);
         }
-        #endregion
 
-
-        #region BOLETO SUDAMERIS
         public void GeraBoletoSudameris(int qtde)
         {
-
             // Cria o boleto, e passa os parâmetros usuais
-            BoletoBancario bb;
 
-            List<BoletoBancario> boletos = new List<BoletoBancario>();
-            for (int i = 0; i < qtde; i++)
+            var boletos = new List<BoletoBancario>();
+            for (var i = 0; i < qtde; i++)
             {
-
-                bb = new BoletoBancario();
+                var bb = new BoletoBancario();
                 bb.CodigoBanco = _codigoBanco;
 
-                DateTime vencimento = DateTime.Now.AddDays(10);
-                Instrucao instr = new Instrucao(001);
+                var vencimento = DateTime.Now.AddDays(10);
+                var instr = new Instrucao(001);
 
-                Cedente c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0501", "6703255");
+                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0501", "6703255");
                 c.Codigo = "13000";
 
                 //Nosso número com 7 dígitos
-                string nn = "0003020";
+                var nn = "0003020";
                 //Nosso número com 13 dígitos
                 //nn = "0000000003025";
 
-                Boleto b = new Boleto(vencimento, 1642, "198", nn, c);// EnumEspecieDocumento_Sudameris.DuplicataMercantil);
+                var b = new Boleto(vencimento, 1642, "198", nn, c);// EnumEspecieDocumento_Sudameris.DuplicataMercantil);
                 b.NumeroDocumento = "1008073";
 
                 b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
@@ -269,30 +245,23 @@ namespace BoletoNet.Arquivo
 
             GeraLayout(boletos);
         }
-        #endregion
 
-
-        #region BOLETO SAFRA
         public void GeraBoletoSafra(int qtde)
         {
-
             // Cria o boleto, e passa os parâmetros usuais
-            BoletoBancario bb;
-
-            List<BoletoBancario> boletos = new List<BoletoBancario>();
-            for (int i = 0; i < qtde; i++)
+            var boletos = new List<BoletoBancario>();
+            for (var i = 0; i < qtde; i++)
             {
-
-                bb = new BoletoBancario();
+                var bb = new BoletoBancario();
                 bb.CodigoBanco = _codigoBanco;
 
-                DateTime vencimento = DateTime.Now.AddDays(10);
-                Instrucao instr = new Instrucao(001);
+                var vencimento = DateTime.Now.AddDays(10);
+                var instr = new Instrucao(001);
 
-                Cedente c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0542", "5413000");
+                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0542", "5413000");
                 c.Codigo = "13000";
 
-                Boleto b = new Boleto(vencimento, 1642, "198", "02592082835", c);
+                var b = new Boleto(vencimento, 1642, "198", "02592082835", c);
                 b.NumeroDocumento = "1008073";
 
                 b.Sacado = new Sacado("000.000.000-00", "Eduardo Frare");
@@ -312,29 +281,22 @@ namespace BoletoNet.Arquivo
 
             GeraLayout(boletos);
         }
-        #endregion
 
-
-        #region BOLETO REAL
         public void GeraBoletoReal(int qtde)
         {
-
             // Cria o boleto, e passa os parâmetros usuais
-            BoletoBancario bb;
-
-            List<BoletoBancario> boletos = new List<BoletoBancario>();
-            for (int i = 0; i < qtde; i++)
+            var boletos = new List<BoletoBancario>();
+            for (var i = 0; i < qtde; i++)
             {
-
-                bb = new BoletoBancario();
+                var bb = new BoletoBancario();
                 bb.CodigoBanco = _codigoBanco;
 
-                DateTime vencimento = DateTime.Now.AddDays(10);
-                Instrucao instr = new Instrucao(001);
-                Cedente c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0542", "13000");
+                var vencimento = DateTime.Now.AddDays(10);
+                var instr = new Instrucao(001);
+                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0542", "13000");
                 c.Codigo = "13000";
 
-                Boleto b = new Boleto(vencimento, 1642, "57", "92082835", c);
+                var b = new Boleto(vencimento, 1642, "57", "92082835", c);
                 b.NumeroDocumento = "1008073";
 
                 b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
@@ -355,30 +317,23 @@ namespace BoletoNet.Arquivo
 
             GeraLayout(boletos);
         }
-        #endregion
 
-
-        #region BOLETO HSBC
         public void GeraBoletoHsbc(int qtde)
         {
-
             // Cria o boleto, e passa os parâmetros usuais
-            BoletoBancario bb;
-
-            List<BoletoBancario> boletos = new List<BoletoBancario>();
-            for (int i = 0; i < qtde; i++)
+            var boletos = new List<BoletoBancario>();
+            for (var i = 0; i < qtde; i++)
             {
-
-                bb = new BoletoBancario();
+                var bb = new BoletoBancario();
                 bb.CodigoBanco = _codigoBanco;
 
-                DateTime vencimento = DateTime.Now.AddDays(10);
-                Instrucao instr = new Instrucao(001);
-                Cedente c = new Cedente("00.000.000/0000-00", "Minha empresa", "0000", "", "00000", "00");
+                var vencimento = DateTime.Now.AddDays(10);
+                var instr = new Instrucao(001);
+                var c = new Cedente("00.000.000/0000-00", "Minha empresa", "0000", "", "00000", "00");
                 // Código fornecido pela agencia, NÃO é o numero da conta
                 c.Codigo = "0000000"; // 7 posicoes
 
-                Boleto b = new Boleto(vencimento, 2, "CNR", "888888888", c); //cod documento
+                var b = new Boleto(vencimento, 2, "CNR", "888888888", c); //cod documento
                 b.NumeroDocumento = "9999999999999"; // nr documento
 
                 b.Sacado = new Sacado("000.000.000-00", "Fulano de Tal");
@@ -399,28 +354,21 @@ namespace BoletoNet.Arquivo
 
             GeraLayout(boletos);
         }
-        #endregion
 
-
-        #region BOLETO BANCO DO BRASIL
         public void GeraBoletoBB(int qtde)
         {
-
             // Cria o boleto, e passa os parâmetros usuais
-            BoletoBancario bb;
-
-            List<BoletoBancario> boletos = new List<BoletoBancario>();
-            for (int i = 0; i < qtde; i++)
+            var boletos = new List<BoletoBancario>();
+            for (var i = 0; i < qtde; i++)
             {
-
-                bb = new BoletoBancario();
+                var bb = new BoletoBancario();
                 bb.CodigoBanco = _codigoBanco;
 
-                DateTime vencimento = DateTime.Now.AddDays(10);
-                Cedente c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "1234", "5", "12345678", "9");
+                var vencimento = DateTime.Now.AddDays(10);
+                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "1234", "5", "12345678", "9");
 
                 c.Codigo = "00000000504";
-                Boleto b = new Boleto(vencimento, 45.50m, "11", "12345678901", c);                
+                var b = new Boleto(vencimento, 45.50m, "11", "12345678901", c);                
                 
                 b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
                 b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
@@ -431,7 +379,7 @@ namespace BoletoNet.Arquivo
 
                 //Adiciona as instruções ao boleto
                 //Protestar
-                Instrucao_BancoBrasil item = new Instrucao_BancoBrasil(9, 5);
+                var item = new Instrucao_BancoBrasil(9, 5);
                 b.Instrucoes.Add(item);
                 //ImportanciaporDiaDesconto
                 item = new Instrucao_BancoBrasil(30, 0);
@@ -450,30 +398,23 @@ namespace BoletoNet.Arquivo
 
             GeraLayout(boletos);
         }
-        #endregion
 
-
-        #region BOLETO BRADESCO
         public void GeraBoletoBradesco(int qtde)
         {
-
             // Cria o boleto, e passa os parâmetros usuais
-            BoletoBancario bb;
-
-            List<BoletoBancario> boletos = new List<BoletoBancario>();
-            for (int i = 0; i < qtde; i++)
+            var boletos = new List<BoletoBancario>();
+            for (var i = 0; i < qtde; i++)
             {
-
-                bb = new BoletoBancario();
+                var bb = new BoletoBancario();
                 bb.CodigoBanco = _codigoBanco;
 
-                DateTime vencimento = DateTime.Now.AddDays(10);
-                Instrucao_Bradesco item = new Instrucao_Bradesco(9, 5);
+                var vencimento = DateTime.Now.AddDays(10);
+                var item = new Instrucao_Bradesco(9, 5);
 
-                Cedente c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "1234", "5", "123456", "7");
+                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "1234", "5", "123456", "7");
                 c.Codigo = "13000";
 
-                Endereco end = new Endereco();
+                var end = new Endereco();
                 end.Bairro = "Lago Sul";
                 end.CEP = "71666660";
                 end.Cidade = "Brasília- DF";
@@ -483,13 +424,13 @@ namespace BoletoNet.Arquivo
                 end.Numero = "55";
                 end.UF = "DF";
 
-                Boleto b = new Boleto(vencimento, 1.01m, "02", "01000000001", c);
+                var b = new Boleto(vencimento, 1.01m, "02", "01000000001", c);
                 b.NumeroDocumento = "01000000001";
 
                 b.Sacado = new Sacado("000.000.000-00", "Eduardo Frare");
                 b.Sacado.Endereco = end;
 
-                item.Descricao += " após " + item.QuantidadeDias.ToString() + " dias corridos do vencimento.";
+                item.Descricao += " após " + item.Dias.ToString() + " dias corridos do vencimento.";
                 b.Instrucoes.Add(item); //"Não Receber após o vencimento");
 
                 bb.Boleto = b;
@@ -500,32 +441,29 @@ namespace BoletoNet.Arquivo
 
             GeraLayout(boletos);
         }
-        #endregion
 
-        #region BOLETO NORDESTE
         public void GeraBoletoBNB(int qtde)
         {
-                        // Cria o boleto, e passa os parâmetros usuais
-            BoletoBancario bb;
+            // Cria o boleto, e passa os parâmetros usuais
 
-            List<BoletoBancario> boletos = new List<BoletoBancario>();
-            for (int i = 0; i < qtde; i++)
+            var boletos = new List<BoletoBancario>();
+            for (var i = 0; i < qtde; i++)
             {
-                bb = new BoletoBancario();
+                var bb = new BoletoBancario();
                 bb.CodigoBanco = _codigoBanco;
 
-                ContaBancaria conta = new ContaBancaria();
+                var conta = new ContaBancaria();
                 conta.Agencia = "21";
                 conta.DigitoAgencia = "0";
                 conta.Conta = "12717";
                 conta.DigitoConta = "8";
 
-                Cedente c = new Cedente();
+                var c = new Cedente();
                 c.ContaBancaria = conta;
                 c.CPFCNPJ = "00.000.000/0000-00";
                 c.Nome = "Empresa de Atacado";
 
-                Boleto b = new Boleto();
+                var b = new Boleto();
                 b.Cedente = c;
                 //
                 b.DataProcessamento = DateTime.Now;
@@ -544,7 +482,7 @@ namespace BoletoNet.Arquivo
 
                 b.Banco = new Banco(004);
 
-                EspecieDocumento especiedocumento = new EspecieDocumento(004, "1");//Duplicata Mercantil
+                var especiedocumento = new EspecieDocumento(004, "1");//Duplicata Mercantil
                 b.EspecieDocumento = especiedocumento;
 
                 bb.Boleto = b;
@@ -555,12 +493,10 @@ namespace BoletoNet.Arquivo
 
 
         }
-        #endregion 
 
-        #region Eventos do BackgroundWorker
+
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-
             switch (CodigoBanco)
             {
                 case 1: // Banco do Brasil
@@ -614,9 +550,6 @@ namespace BoletoNet.Arquivo
             _impressaoBoleto.ShowDialog();
 
         }
-        #endregion Eventos do BackgroundWorker
-
-
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -629,9 +562,9 @@ namespace BoletoNet.Arquivo
             if ((int)numericUpDown.Value > 1)
                 MessageBox.Show("O exemplo de envio do boleto bancário como imagem só está implementado para somente um boleto por vez.", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            BackgroundWorker backgroundWorker = new BackgroundWorker();
-            backgroundWorker.DoWork += new DoWorkEventHandler(backgroundWorker_DoWork);
-            backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);
+            var backgroundWorker = new BackgroundWorker();
+            backgroundWorker.DoWork += backgroundWorker_DoWork;
+            backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
             backgroundWorker.RunWorkerAsync();
             _progresso = new Progresso();
             _progresso.ShowDialog();

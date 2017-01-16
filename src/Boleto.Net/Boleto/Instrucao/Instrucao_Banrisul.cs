@@ -17,7 +17,7 @@ namespace BoletoNet
 
     #endregion
 
-    public class Instrucao_Banrisul : AbstractInstrucao, IInstrucao
+    public sealed class Instrucao_Banrisul : AbstractInstrucao
     {
         #region Construtores
 
@@ -33,84 +33,61 @@ namespace BoletoNet
             }
         }
 
-        public Instrucao_Banrisul(int codigo)
+        public Instrucao_Banrisul(int cod, int dias = 0, decimal valor = 0m)
         {
-            carregar(codigo, 0, 0);
+            Carrega(cod, dias, valor);
         }
-
-        public Instrucao_Banrisul(int codigo, int nrDias)
-        {
-            carregar(codigo, nrDias, (double)0.0);
-        }
-
-        public Instrucao_Banrisul(int codigo, double percentualMultaDia)
-        {
-            carregar(codigo, 0, percentualMultaDia);
-        }
-
-        public Instrucao_Banrisul(int codigo, int nrDias, double percentualMultaDia)
-        {
-            carregar(codigo, nrDias, percentualMultaDia);
-        }
-
+        
         #endregion
 
-        #region Metodos Privados
+        #region Métodos
 
-        private void carregar(int idInstrucao, int nrDias, double percentualMultaDia)
+        public override void Carrega(int cod, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
         {
             try
             {
                 Banco = new Banco_Banrisul();
+
+                Codigo = cod;
+                Dias = dias;
+                Valor = valor;
+                Tipo = tipo;
+
                 Valida();
 
-                switch ((EnumInstrucoes_Banrisul)idInstrucao)
+                switch ((EnumInstrucoes_Banrisul)cod)
                 {
                     case EnumInstrucoes_Banrisul.NaoDispensarComissaoPermanencia:
-                        Codigo = (int)EnumInstrucoes_Banrisul.NaoDispensarComissaoPermanencia;
                         Descricao = "Não dispensar comissão de permanência"; //01
                         break;
                     case EnumInstrucoes_Banrisul.NaoCobrarComissaoPermanencia:
-                        Codigo = (int)EnumInstrucoes_Banrisul.NaoCobrarComissaoPermanencia;
                         Descricao = "Não cobrar comissão de permanência"; //08
                         break;
                     case EnumInstrucoes_Banrisul.Protestar:
-                        Codigo = (int)EnumInstrucoes_Banrisul.Protestar;
-                        Descricao = "Protestar caso impago " + nrDias + " dias após vencimento"; //09
+                        Descricao = "Protestar caso não pago até " + dias + " dias após vencimento"; //09
                         break;
                     case EnumInstrucoes_Banrisul.DevolverAposNDias:
-                        Codigo = (int)EnumInstrucoes_Banrisul.DevolverAposNDias;
-                        Descricao = "Devolver se impago após " + nrDias + " dias do vencimento"; //15
+                        Descricao = "Devolver se não pago após " + dias + " dias do vencimento"; //15
                         break;
                     case EnumInstrucoes_Banrisul.CobrarMultaAposNDias:
-                        Codigo = (int)EnumInstrucoes_Banrisul.CobrarMultaAposNDias;
-                        Descricao = "Após " + nrDias + " dias do vencimento, cobrar " + percentualMultaDia + "% de multa"; //18
+                        Descricao = "Após " + dias + " dias do vencimento, cobrar " + valor + "% de multa"; //18
                         break;
                     case EnumInstrucoes_Banrisul.CobrarMultaOuFracaoAposNDias:
-                        Codigo = (int)EnumInstrucoes_Banrisul.CobrarMultaOuFracaoAposNDias;
-                        Descricao = "Após " + nrDias + " dias do vencimento, cobrar " + percentualMultaDia + "% de multa ao mês ou fração"; //20
+                        Descricao = "Após " + dias + " dias do vencimento, cobrar " + valor + "% de multa ao mês ou fração"; //20
                         break;
                     case EnumInstrucoes_Banrisul.NaoProtestar:
-                        Codigo = (int)EnumInstrucoes_Banrisul.NaoProtestar;
                         Descricao = "Não protestar"; //23
                         break;
                     default:
                         Codigo = 0;
-                        Descricao = "( Selecione )";
+                        Descricao = "(Selecione)";
                         break;
                 }
-
-                QuantidadeDias = nrDias;
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro ao carregar objeto", ex);
             }
-        }
-
-        public override void Valida()
-        {
-            //base.Valida();
         }
 
         #endregion
