@@ -13,7 +13,7 @@ public partial class EnvioEmail : System.Web.UI.Page
 
     protected MailMessage PreparaMail()
     {
-        MailMessage mail = new MailMessage();
+        var mail = new MailMessage();
         mail.To.Add(new MailAddress(TextBox1.Text));
         mail.Subject = "Teste de envio de Boleto Bancário";
         mail.IsBodyHtml = true;
@@ -23,15 +23,15 @@ public partial class EnvioEmail : System.Web.UI.Page
 
     protected BoletoBancario PreparaBoleto()
     {
-        DateTime vencimento = new DateTime(2007, 9, 10);
+        var vencimento = new DateTime(2007, 9, 10);
 
-        Instrucao_Itau item1 = new Instrucao_Itau(9, 5);
-        Instrucao_Itau item2 = new Instrucao_Itau(81, 10);
-        Cedente c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0542", "13000");
+        var item1 = new Instrucao_Itau(9, 5);
+        var item2 = new Instrucao_Itau(81, 10);
+        var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0542", "13000");
         //Na carteira 198 o código do Cedente é a conta bancária
         c.Codigo = "13000";
 
-        Boleto b = new Boleto(vencimento, 1642, "198", "92082835", c);
+        var b = new Boleto(vencimento, 1642, "198", "92082835", c);
         b.NumeroDocumento = "1008073";
 
         b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
@@ -41,13 +41,11 @@ public partial class EnvioEmail : System.Web.UI.Page
         b.Sacado.Endereco.CEP = "70000000";
         b.Sacado.Endereco.UF = "DF";
 
-        item2.Descricao += " " + item2.QuantidadeDias.ToString() + " dias corridos do vencimento.";
+        item2.Descricao += " " + item2.Dias + " dias corridos do vencimento.";
         b.Instrucoes.Add(item1);
         b.Instrucoes.Add(item2);
-
-
-
-        BoletoBancario itau = new BoletoBancario();
+        
+        var itau = new BoletoBancario();
         itau.CodigoBanco = 341;
         itau.Boleto = b;
 
@@ -59,18 +57,18 @@ public partial class EnvioEmail : System.Web.UI.Page
     {
 
 
-        BoletoBancario  itau = PreparaBoleto();
-        MailMessage mail = PreparaMail();
+        var  itau = PreparaBoleto();
+        var mail = PreparaMail();
 
         if (RadioButton1.Checked)
         {
             mail.Subject += " - On-Line";
             Panel1.Controls.Add(itau);
 
-            System.IO.StringWriter sw = new System.IO.StringWriter();
-            HtmlTextWriter htmlTW = new HtmlTextWriter(sw);
+            var sw = new System.IO.StringWriter();
+            var htmlTW = new HtmlTextWriter(sw);
             Panel1.RenderControl(htmlTW);
-            string html = sw.ToString();
+            var html = sw.ToString();
             //
             mail.Body = html;
         }
@@ -86,13 +84,13 @@ public partial class EnvioEmail : System.Web.UI.Page
     protected void Button1_Click2(object sender, EventArgs e)
     {
 
-        BoletoBancario itau = PreparaBoleto();
+        var itau = PreparaBoleto();
 
         // embora estou mandando o mesmo boleto duas vezes, voce pode obviamente mandar boletos distintos
-        BoletoBancario[] arrayDeBoletos = new BoletoBancario[] { itau, itau };
-        AlternateView  av = BoletoBancario.GeraHtmlDeVariosBoletosParaEmail("Isto é um email com <b>dois</b> boletos", arrayDeBoletos);
+        var arrayDeBoletos = new BoletoBancario[] { itau, itau };
+        var  av = BoletoBancario.GeraHtmlDeVariosBoletosParaEmail("Isto é um email com <b>dois</b> boletos", arrayDeBoletos);
 
-        MailMessage  mail = PreparaMail();
+        var  mail = PreparaMail();
         mail.Subject += " - Off-Line - Múltiplo";
         mail.AlternateViews.Add(av);
 
@@ -103,7 +101,7 @@ public partial class EnvioEmail : System.Web.UI.Page
 
     void MandaEmail(MailMessage mail)
     {
-        SmtpClient objSmtpClient = new SmtpClient();
+        var objSmtpClient = new SmtpClient();
 
         objSmtpClient.Host = "smtp.dominio.com.br";
         objSmtpClient.Port = 25;

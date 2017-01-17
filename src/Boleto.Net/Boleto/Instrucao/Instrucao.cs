@@ -2,7 +2,7 @@ using System;
 
 namespace BoletoNet
 {
-    public class Instrucao : AbstractInstrucao
+    public sealed class Instrucao : AbstractInstrucao
     {
         #region Variaveis
 
@@ -12,11 +12,11 @@ namespace BoletoNet
 
         #region Construtores
 
-        public Instrucao(int codigoBanco)
+        public Instrucao(int banco, int cod = 0, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
         {
             try
             {
-                InstanciaInstrucao(codigoBanco);
+                Bancos(banco, cod, descricao, dias, valor, tipo);
             }
             catch (Exception ex)
             {
@@ -28,7 +28,7 @@ namespace BoletoNet
 
         #region Métodos Privados
 
-        private void InstanciaInstrucao(int codigoBanco)
+        private void Bancos(int codigoBanco, int cod = 0, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace BoletoNet
                         break;
                     //1 - Banco do Brasil
                     case 1:
-                        _interface = new Instrucao_BancoBrasil();
+                        _interface = new Instrucao_BancoBrasil(cod, descricao, dias, valor, tipo);
                         break;
                     //356 - Real
                     case 356:
@@ -147,6 +147,13 @@ namespace BoletoNet
             set { _interface.Tipo = value; }
         }
 
+        //public override IBanco Banco { get; set; }
+        //public override int Codigo { get; set; }
+        //public override string Descricao { get; set; }
+        //public override int Dias { get; set; }
+        //public override decimal Valor { get; set; }
+        //public override EnumTipoValor Tipo { get; set; }
+
         #endregion
 
         #region Métodos de interface
@@ -163,9 +170,9 @@ namespace BoletoNet
             }
         }
 
-        public override void Carrega(int cod, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
+        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
         {
-            _interface.Carrega(cod, dias, valor, tipo);
+            _interface.Carrega(cod, descricao, dias, valor, tipo);
         }
 
         #endregion

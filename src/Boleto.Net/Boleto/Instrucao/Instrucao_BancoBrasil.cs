@@ -37,16 +37,16 @@ namespace BoletoNet
             }
         }
 
-        public Instrucao_BancoBrasil(int cod, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
+        public Instrucao_BancoBrasil(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
         {
-            Carrega(cod, dias, valor, tipo);
+            Carrega(cod, descricao, dias, valor, tipo);
         }
 
         #endregion
 
         #region Métodos
 
-        public override void Carrega(int cod, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
+        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
         {
             try
             {
@@ -102,12 +102,10 @@ namespace BoletoNet
                             tipo.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
                         break;
                     default:
+                        Descricao = descricao;
                         Codigo = 0;
-                        Descricao = "(Selecione)";
                         break;
                 }
-
-                Dias = dias;
             }
             catch (Exception ex)
             {

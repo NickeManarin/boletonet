@@ -32,9 +32,9 @@ public partial class Bancos_Caixa : System.Web.UI.Page
         #region Instruções
         Instrucao_Caixa item; 
         //ImportanciaporDiaDesconto
-        item = new Instrucao_Caixa((int)EnumInstrucoes_Caixa.Multa, Convert.ToDecimal(0.40));
+        item = new Instrucao_Caixa((int)EnumInstrucoes_Caixa.Multa, 0, Convert.ToDecimal(0.40));
         b.Instrucoes.Add(item);
-        item = new Instrucao_Caixa((int)EnumInstrucoes_Caixa.JurosdeMora, Convert.ToDecimal(0.01));
+        item = new Instrucao_Caixa((int)EnumInstrucoes_Caixa.JurosdeMora, 0, Convert.ToDecimal(0.01));
         b.Instrucoes.Add(item);
         item = new Instrucao_Caixa((int)EnumInstrucoes_Caixa.NaoReceberAposNDias, 90);
         b.Instrucoes.Add(item);

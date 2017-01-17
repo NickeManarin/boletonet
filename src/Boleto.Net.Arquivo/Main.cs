@@ -175,7 +175,7 @@ namespace BoletoNet.Arquivo
             b.Sacado.Endereco.CEP = "70000000";
             b.Sacado.Endereco.UF = "RS";
 
-            Instrucao_Banrisul item1 = new Instrucao_Banrisul(9, 5, 0);
+            Instrucao_Banrisul item1 = new Instrucao_Banrisul(9, null, 5, 0);
             b.Instrucoes.Add(item1);
             //b.Instrucoes.Add(item2);
             b.Banco = new Banco(041);
@@ -225,7 +225,7 @@ namespace BoletoNet.Arquivo
             b.Sacado.Endereco.CEP = "70000000";
             b.Sacado.Endereco.UF = "RS";
 
-            Instrucao_Sicredi item1 = new Instrucao_Sicredi(9, 5);
+            Instrucao_Sicredi item1 = new Instrucao_Sicredi(9, null, 5);
             b.Instrucoes.Add(item1);
             //b.Instrucoes.Add(item2);
             b.Banco = new Banco(748);
@@ -321,7 +321,7 @@ namespace BoletoNet.Arquivo
             b.Sacado.Endereco.CEP = "70000000";
             b.Sacado.Endereco.UF = "RS";
 
-            Instrucao_Caixa item1 = new Instrucao_Caixa(9, 5);
+            Instrucao_Caixa item1 = new Instrucao_Caixa(9, null, 5);
             b.Instrucoes.Add(item1);
             //b.Instrucoes.Add(item2);
             b.Banco = new Banco(104);

@@ -68,8 +68,8 @@ namespace BoletoNet.Arquivo
                 };
                 var vencimento = DateTime.Now.AddDays(10);
 
-                var item1 = new Instrucao_Caixa(9, 5);
-                var item2 = new Instrucao_Caixa(81, 10);
+                var item1 = new Instrucao_Caixa(9, null, 5);
+                var item2 = new Instrucao_Caixa(81, null, 10);
                 var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0132", "00542");
 
                 var b = new Boleto(vencimento, 460, "SR", "00000000010001", c);
@@ -97,7 +97,7 @@ namespace BoletoNet.Arquivo
                 // juros/descontos
                 if (b.ValorDesconto == 0)
                 {
-                    var item3 = new Instrucao_Caixa(999, 1);
+                    var item3 = new Instrucao_Caixa(999, null, 1);
                     b.Instrucoes.Add(item3);
                 }
 
@@ -379,14 +379,17 @@ namespace BoletoNet.Arquivo
 
                 //Adiciona as instruções ao boleto
                 //Protestar
-                var item = new Instrucao_BancoBrasil(9, 5);
-                b.Instrucoes.Add(item);
-                //ImportanciaporDiaDesconto
-                item = new Instrucao_BancoBrasil(30, 0);
-                b.Instrucoes.Add(item);
-                //ProtestarAposNDiasCorridos
-                item = new Instrucao_BancoBrasil(81, 15);
-                b.Instrucoes.Add(item);
+                //var item = new Instrucao_BancoBrasil(9, 5);
+                //b.Instrucoes.Add(item);
+                ////ImportanciaporDiaDesconto
+                //item = new Instrucao_BancoBrasil(30, 0);
+                //b.Instrucoes.Add(item);
+                ////ProtestarAposNDiasCorridos
+                //item = new Instrucao_BancoBrasil(81, 15);
+                //b.Instrucoes.Add(item);
+
+
+                b.Instrucoes.Add(new Instrucao(1, Convert.ToInt32("30"), "30", 5, 1));
 
                 b.NumeroDocumento = "12345678901";
 

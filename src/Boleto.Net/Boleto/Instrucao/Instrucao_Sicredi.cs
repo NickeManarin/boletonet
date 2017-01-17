@@ -37,23 +37,23 @@ namespace BoletoNet
 			try
 			{
                 Banco = new Banco(748);
-			}
+            }
 			catch (Exception ex)
 			{
                 throw new Exception("Erro ao carregar objeto", ex);
 			}
 		}
 
-        public Instrucao_Sicredi(int cod, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
+        public Instrucao_Sicredi(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
         {
-            Carrega(cod, dias, valor, tipo);
+            Carrega(cod, descricao, dias, valor, tipo);
         }
 
         #endregion
 
         #region Métodos
 
-        public override void Carrega(int cod, int dias = 0, decimal valor = 0, EnumTipoValor tipo = EnumTipoValor.Percentual)
+        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0, EnumTipoValor tipo = EnumTipoValor.Percentual)
         {
             try
             {
@@ -117,8 +117,8 @@ namespace BoletoNet
                         Descricao = "  - APÓS VENCIMENTO COBRAR JURO DE " + valor + "% POR DIA DE ATRASO";
                         break;
                     default:
+                        Descricao = descricao;
                         Codigo = 0;
-                        Descricao = "(Selecione)";
                         break;
                 }
             }
