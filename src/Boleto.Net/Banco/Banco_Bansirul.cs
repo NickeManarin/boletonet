@@ -14,9 +14,6 @@ namespace BoletoNet
         private int _primDigito;
         private int _segDigito;
 
-        /// <author>
-        /// Classe responsavel em criar os campos do Banco Banrisul.
-        /// </author>
         internal Banco_Banrisul()
         {
             Codigo = 041;
@@ -518,17 +515,25 @@ namespace BoletoNet
                 vMsg += string.Concat("Remessa: O Banco é Obrigatório!", Environment.NewLine);
                 vRetorno = false;
             }
+
             if (cedente == null)
             {
                 vMsg += string.Concat("Remessa: O Cedente/Beneficiário é Obrigatório!", Environment.NewLine);
                 vRetorno = false;
             }
+
             if (boletos == null || boletos.Count.Equals(0))
             {
                 vMsg += string.Concat("Remessa: Deverá existir ao menos 1 boleto para geração da remessa!", Environment.NewLine);
                 vRetorno = false;
             }
-            
+
+            if (cedente != null && (string.IsNullOrWhiteSpace(cedente.Codigo) || cedente.Codigo.Length != 12))
+            {
+                vMsg += string.Concat("Remessa: O código do cedente deve ser de 12 posições.", Environment.NewLine);
+                vRetorno = false;
+            }
+
             #endregion
             
             foreach (var boleto in boletos)
@@ -622,7 +627,7 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0031, 007, 0, string.Empty, ' '));                              //031-037
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0038, 025, 0, boleto.NumeroDocumento, ' '));                    //038-062
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0063, 010, 0, boleto.NossoNumero, '0'));                        //063-072
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0073, 032, 0, string.Empty, ' '));                              //073-104
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0073, 032, 0, string.Empty, ' '));                              //073-104 Mensagem.
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0105, 003, 0, string.Empty, ' '));                              //105-107
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0108, 001, 0, "1", ' '));                                       //108-108   //COBRANÇA SIMPLES
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0109, 002, 0, boleto.Remessa.CodigoOcorrencia, ' '));           //109-110   //REMESSA
@@ -646,22 +651,23 @@ namespace BoletoNet
                     case 1:
                         vInstrucao1 = boleto.Instrucoes[0].Codigo.ToString().PadLeft(2, '0');
                         vInstrucao2 = string.Empty;
+
                         //valida se é código 9 ou 15, para adicionar os dias na posição 370-371
                         if (boleto.Instrucoes[0].Codigo == 9 || boleto.Instrucoes[0].Codigo == 15)
                             vQtdeDiasCodigo9Ou15 = boleto.Instrucoes[0].Dias.ToString();
-                        //
+                        
                         break;
                     case 2:
                         vInstrucao1 += boleto.Instrucoes[0].Codigo.ToString().PadLeft(2, '0');
                         //valida se é código 9 ou 15, para adicionar os dias na posição 370-371
                         if (boleto.Instrucoes[0].Codigo == 9 || boleto.Instrucoes[0].Codigo == 15)
                             vQtdeDiasCodigo9Ou15 = boleto.Instrucoes[0].Dias.ToString();
-                        //
+                        
                         vInstrucao2 += boleto.Instrucoes[1].Codigo.ToString().PadLeft(2, '0');
                         //valida se é código 9 ou 15, para adicionar os dias na posição 370-371
                         if (boleto.Instrucoes[1].Codigo == 9 || boleto.Instrucoes[1].Codigo == 15)
                             vQtdeDiasCodigo9Ou15 = boleto.Instrucoes[1].Dias.ToString();
-                        //
+                        
                         break;
                 }
                 
@@ -746,13 +752,12 @@ namespace BoletoNet
             try
             {
                 var reg = new TRegistroEDI_Banrisul_Retorno();
-                //
                 reg.LinhaRegistro = registro;
                 reg.DecodificarLinha();
 
                 //Passa para o detalhe as propriedades de reg;
                 var detalhe = new DetalheRetorno(registro);
-                //
+                
                 //detalhe. = Constante1;
                 detalhe.CodigoInscricao = Utils.ToInt32(reg.TipoInscricao);
                 detalhe.NumeroInscricao = reg.CpfCnpj;
@@ -769,18 +774,17 @@ namespace BoletoNet
                 //detalhe. = reg.Brancos2;
                 //detalhe. = reg.TipoCarteira;
                 detalhe.CodigoOcorrencia = Utils.ToInt32(reg.CodigoOcorrencia);
-                //
+                
                 var dataOcorrencia = Utils.ToInt32(reg.DataOcorrenciaBanco);
                 detalhe.DataOcorrencia = Utils.ToDateTime(dataOcorrencia.ToString("##-##-##"));
-                //
                 detalhe.NumeroDocumento = reg.SeuNumero;
                 detalhe.NossoNumeroComDV = reg.NossoNumero;
                 detalhe.NossoNumero = reg.NossoNumero.Substring(0, reg.NossoNumero.Length - 1); //Nosso Número sem o DV!
                 detalhe.DACNossoNumero = reg.NossoNumero.Substring(reg.NossoNumero.Length - 1); //DV
-                //
+                
                 var dataVencimento = Utils.ToInt32(reg.DataVencimentoTitulo);
                 detalhe.DataVencimento = Utils.ToDateTime(dataVencimento.ToString("##-##-##"));
-                //
+                
                 decimal valorTitulo = Convert.ToInt64(reg.ValorTitulo);
                 detalhe.ValorTitulo = valorTitulo / 100;
 

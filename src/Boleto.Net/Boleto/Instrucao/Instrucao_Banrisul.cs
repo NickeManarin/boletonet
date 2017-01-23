@@ -49,6 +49,7 @@ namespace BoletoNet
                 Banco = new Banco_Banrisul();
 
                 Codigo = cod;
+                Descricao = descricao;
                 Dias = dias;
                 Valor = valor;
                 Tipo = tipo;

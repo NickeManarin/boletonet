@@ -1,14 +1,6 @@
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using System.Threading;
-
-using BoletoNet;
 
 namespace BoletoNet.Arquivo
 {
@@ -19,12 +11,8 @@ namespace BoletoNet.Arquivo
             InitializeComponent();
         }
 
-        private void remessaToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         #region Remessa
+
         public void GeraArquivoCNAB400(IBanco banco, Cedente cedente, Boletos boletos)
         {
             try
@@ -59,20 +47,20 @@ namespace BoletoNet.Arquivo
                 MessageBox.Show(ex.Message);
             }
         }
+
         public void GeraArquivoCNAB240(IBanco banco, Cedente cedente, Boletos boletos)
         {
             saveFileDialog.Filter = "Arquivos de Retorno (*.rem)|*.rem|Todos Arquivos (*.*)|*.*";
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                ArquivoRemessa arquivo = new ArquivoRemessa(TipoArquivo.CNAB240);
+                var arquivo = new ArquivoRemessa(TipoArquivo.CNAB240);
                 arquivo.GerarArquivoRemessa("1200303001417053", banco, cedente, boletos, saveFileDialog.OpenFile(), 1);
 
                 MessageBox.Show("Arquivo gerado com sucesso!", "Teste",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Information);
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
-        //
+        
         public void GeraDadosItau(TipoArquivo tipoArquivo)
         {
             DateTime vencimento = new DateTime(2007, 9, 10);
@@ -141,6 +129,7 @@ namespace BoletoNet.Arquivo
             }            
                 
         }
+
         public void GeraDadosBanrisul()
         {
             ContaBancaria conta = new ContaBancaria();
@@ -175,7 +164,7 @@ namespace BoletoNet.Arquivo
             b.Sacado.Endereco.CEP = "70000000";
             b.Sacado.Endereco.UF = "RS";
 
-            Instrucao_Banrisul item1 = new Instrucao_Banrisul(9, null, 5, 0);
+            var item1 = new Instrucao_Banrisul(9, null, 5, 0);
             b.Instrucoes.Add(item1);
             //b.Instrucoes.Add(item2);
             b.Banco = new Banco(041);
@@ -191,6 +180,7 @@ namespace BoletoNet.Arquivo
 
             GeraArquivoCNAB400(b.Banco, c, boletos);
         }
+
         public void GeraDadosSicredi()
         {
             ContaBancaria conta = new ContaBancaria();
@@ -246,6 +236,7 @@ namespace BoletoNet.Arquivo
 
             GeraArquivoCNAB400(b.Banco, c, boletos);
         }
+
         public void GeraDadosSantander()
         {
             Boletos boletos = new Boletos();
@@ -284,6 +275,7 @@ namespace BoletoNet.Arquivo
 
             GeraArquivoCNAB240(new Banco(33), c, boletos);
         }
+
         public void GeraDadosCaixa()
         {
             ContaBancaria conta = new ContaBancaria();
@@ -338,6 +330,7 @@ namespace BoletoNet.Arquivo
 
             GeraArquivoCNAB240(b.Banco, c, boletos);
         }
+
         public void GeraDadosBancoDoNordeste()
         {
             ContaBancaria conta = new ContaBancaria();
@@ -384,6 +377,7 @@ namespace BoletoNet.Arquivo
 
             GeraArquivoCNAB400(b.Banco, c, boletos);
         }
+
         #endregion Remessa
 
         #region Retorno
@@ -572,7 +566,7 @@ namespace BoletoNet.Arquivo
 
         private void impressãoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            NBoleto form = new NBoleto();
+            var form = new NBoleto();
 
             if (radioButtonItau.Checked)
                 form.CodigoBanco = Convert.ToInt16(radioButtonItau.Tag);

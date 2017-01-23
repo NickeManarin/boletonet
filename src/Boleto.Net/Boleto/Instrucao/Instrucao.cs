@@ -14,14 +14,7 @@ namespace BoletoNet
 
         public Instrucao(int banco, int cod = 0, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
         {
-            try
-            {
-                Bancos(banco, cod, descricao, dias, valor, tipo);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Erro ao instanciar objeto.", ex);
-            }
+            Bancos(banco, cod, descricao, dias, valor, tipo);         
         }
 
         #endregion
@@ -40,7 +33,7 @@ namespace BoletoNet
                         break;
                     //104 - Caixa
                     case 104:
-                        _interface = new Instrucao_Caixa();
+                        _interface = new Instrucao_Caixa(cod, descricao, dias, valor, tipo);
                         break;
                     //341 - Itaú
                     case 341:
@@ -60,7 +53,7 @@ namespace BoletoNet
                         break;
                     //237 - Bradesco
                     case 237:
-                        _interface = new Instrucao_Bradesco();
+                        _interface = new Instrucao_Bradesco(cod, descricao, dias, valor, tipo);
                         break;
                     //347 - Sudameris
                     case 347:
@@ -83,7 +76,7 @@ namespace BoletoNet
                         break;
                     //41 - Banrisul
                     case 41:
-                        _interface = new Instrucao_Banrisul();
+                        _interface = new Instrucao_Banrisul(cod, descricao, dias, valor, tipo);
                         break;
                     //756 - Sicoob
                     case 756:
@@ -95,7 +88,7 @@ namespace BoletoNet
                         break;
                     //748 - Sicredi
                     case 748:
-                        _interface = new Instrucao_Sicredi();
+                        _interface = new Instrucao_Sicredi(cod, descricao, dias, valor, tipo);
                         break;
                     default:
                         throw new Exception("Código do banco não implementando: " + codigoBanco);

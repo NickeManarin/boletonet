@@ -9,11 +9,8 @@ namespace BoletoNet
     /// <Author>
     /// Samuel Schmidt - Sicredi Nordeste RS / Felipe Eduardo - RS
     /// </Author>
-    internal class Banco_Sicredi : AbstractBanco, IBanco
+    internal sealed class Banco_Sicredi : AbstractBanco, IBanco
     {
-        /// <author>
-        /// Classe responsavel em criar os campos do Banco Sicredi.
-        /// </author>
         internal Banco_Sicredi()
         {
             Codigo = 748;

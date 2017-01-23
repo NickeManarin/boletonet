@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Text;
 
 namespace BoletoNet
 {
@@ -24,16 +22,15 @@ namespace BoletoNet
 
     #endregion 
 
-    public class Instrucao_Bradesco : AbstractInstrucao, IInstrucao
+    public sealed class Instrucao_Bradesco : AbstractInstrucao
     {
-
         #region Construtores 
 
 		public Instrucao_Bradesco()
 		{
 			try
 			{
-                this.Banco = new Banco(237);
+                Banco = new Banco(237);
 			}
 			catch (Exception ex)
 			{
@@ -41,111 +38,75 @@ namespace BoletoNet
 			}
 		}
 
-        public Instrucao_Bradesco(int codigo)
+        public Instrucao_Bradesco(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
         {
-            this.carregar(codigo, 0);
+            Carrega(cod, descricao, dias, valor, tipo);
         }
 
-        public Instrucao_Bradesco(int codigo, int nrDias)
-        {
-            this.carregar(codigo, nrDias);
-        }
-        public Instrucao_Bradesco(int codigo, double valor)
-        {
-            this.carregar(codigo, valor);
-        }
-
-        public Instrucao_Bradesco(int codigo, double valor, EnumTipoValor tipoValor)
-        {
-            this.carregar(codigo, valor, tipoValor);
-        }
-
+        //TODO: Com data.
         public Instrucao_Bradesco(int codigo, double valor, DateTime data, EnumTipoValor tipoValor)
         {
-            this.carregar(codigo, valor, data, tipoValor);
+            Carregar(codigo, valor, data, tipoValor);
         }
 
         #endregion Construtores
 
         #region Metodos Privados
 
-        private void carregar(int idInstrucao, double valor, EnumTipoValor tipoValor = EnumTipoValor.Percentual)
+        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
         {
             try
             {
-                this.Banco = new Banco_Bradesco();
-                this.Valida();
+                Banco = new Banco_Bradesco();
 
-                switch ((EnumInstrucoes_Bradesco)idInstrucao)
-                {
-                    case EnumInstrucoes_Bradesco.OutrasInstrucoes_ExibeMensagem_MoraDiaria:
-                        this.Codigo = 0;
-                        this.Descricao = String.Format("Após vencimento cobrar juros de {0} {1} por dia de atraso",
-                            (tipoValor.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2")),
-                            (tipoValor.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2")));
-                        break;
-                    case EnumInstrucoes_Bradesco.OutrasInstrucoes_ExibeMensagem_MultaVencimento:
-                        this.Codigo = 0;
-                        this.Descricao = String.Format("Após vencimento cobrar multa de {0} {1}",
-                            (tipoValor.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2")),
-                            (tipoValor.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2")));
-                        break;
-                    default:
-                        this.Codigo = 0;
-                        this.Descricao = " (Selecione) ";
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Erro ao carregar objeto", ex);
-            }
-        }
+                Codigo = cod;
+                Descricao = descricao;
+                Dias = dias;
+                Valor = valor;
+                Tipo = tipo;
 
-        private void carregar(int idInstrucao, int nrDias)
-        {
-            try
-            {
-                this.Banco = new Banco_Bradesco();
-                this.Valida();
+                Valida();
 
-                switch ((EnumInstrucoes_Bradesco)idInstrucao)
+                switch ((EnumInstrucoes_Bradesco)cod)
                 {
                     case EnumInstrucoes_Bradesco.Protestar:
-                        this.Codigo = (int)EnumInstrucoes_Bradesco.Protestar;
-                        this.Descricao = "Protestar";
+                        Descricao = "Protestar";
                         break;
                     case EnumInstrucoes_Bradesco.NaoProtestar:
-                        this.Codigo = (int)EnumInstrucoes_Bradesco.NaoProtestar;
-                        this.Descricao = "Não protestar";
+                        Descricao = "Não protestar";
                         break;
                     case EnumInstrucoes_Bradesco.ProtestoFinsFalimentares:
-                        this.Codigo = (int)EnumInstrucoes_Bradesco.ProtestoFinsFalimentares;
-                        this.Descricao = "Protesto para fins falimentares";
+                        Descricao = "Protesto para fins falimentares";
                         break;
                     case EnumInstrucoes_Bradesco.ProtestarAposNDiasCorridos:
-                        this.Codigo = (int)EnumInstrucoes_Bradesco.ProtestarAposNDiasCorridos;
-                        this.Descricao = "Protestar após " + nrDias + " dias corridos do vencimento";
+                        Descricao = "Protestar após " + dias + " dias corridos do vencimento";
                         break;
                     case EnumInstrucoes_Bradesco.ProtestarAposNDiasUteis:
-                        this.Codigo = (int)EnumInstrucoes_Bradesco.ProtestarAposNDiasUteis;
-                        this.Descricao = "Protestar após " + nrDias + " dias úteis do vencimento";
+                        Descricao = "Protestar após " + dias + " dias úteis do vencimento";
                         break;
                     case EnumInstrucoes_Bradesco.NaoReceberAposNDias:
-                        this.Codigo = (int)EnumInstrucoes_Bradesco.NaoReceberAposNDias;
-                        this.Descricao = "Não receber após " + nrDias + " dias do vencimento";
+                        Descricao = "Não receber após " + dias + " dias do vencimento";
                         break;
                     case EnumInstrucoes_Bradesco.DevolverAposNDias:
-                        this.Codigo = (int)EnumInstrucoes_Bradesco.DevolverAposNDias;
-                        this.Descricao = "Devolver após " + nrDias + " dias do vencimento";
+                        Descricao = "Devolver após " + dias + " dias do vencimento";
+                        break;
+                    case EnumInstrucoes_Bradesco.OutrasInstrucoes_ExibeMensagem_MoraDiaria:
+                        Codigo = 0;
+                        Descricao = string.Format("Após vencimento cobrar juros de {0} {1} por dia de atraso",
+                            tipo.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2"),
+                            tipo.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
+                        break;
+                    case EnumInstrucoes_Bradesco.OutrasInstrucoes_ExibeMensagem_MultaVencimento:
+                        Codigo = 0;
+                        Descricao = string.Format("Após vencimento cobrar multa de {0} {1}",
+                            tipo.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2"),
+                            tipo.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
                         break;
                     default:
-                        this.Codigo = 0;
-                        this.Descricao = " (Selecione) ";
+                        Descricao = descricao;
+                        Codigo = 0;
                         break;
                 }
-
-                this.Dias = nrDias;
             }
             catch (Exception ex)
             {
@@ -153,28 +114,29 @@ namespace BoletoNet
             }
         }
 
-        private void carregar(int idInstrucao, double valor, DateTime data, EnumTipoValor tipoValor = EnumTipoValor.Reais)
+        //TODO: Com data.
+        private void Carregar(int idInstrucao, double valor, DateTime data, EnumTipoValor tipoValor = EnumTipoValor.Reais)
         {
             try
             {
-                this.Banco = new Banco_Bradesco();
-                this.Valida();
+                Banco = new Banco_Bradesco();
+                Valida();
 
                 switch ((EnumInstrucoes_Bradesco)idInstrucao)
                 {
                     case EnumInstrucoes_Bradesco.ComDesconto:
-                        this.Codigo = (int)EnumInstrucoes_Bradesco.ComDesconto;
-                        this.Descricao = String.Format("Desconto de pontualidade no valor de {0} {1} se pago até " + data.ToShortDateString(),
-                            (tipoValor.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("C")),
-                            (tipoValor.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2")));
+                        Codigo = (int)EnumInstrucoes_Bradesco.ComDesconto;
+                        Descricao = string.Format("Desconto de pontualidade no valor de {0} {1} se pago até " + data.ToShortDateString(),
+                            tipoValor.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("C"),
+                            tipoValor.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
                         break;
                     case EnumInstrucoes_Bradesco.BoletoOriginal:
-                        this.Codigo = (int)EnumInstrucoes_Bradesco.BoletoOriginal;
-                        this.Descricao = "Vencimento " + data.ToShortDateString() + ", no valor de " + valor.ToString("C") + "";
+                        Codigo = (int)EnumInstrucoes_Bradesco.BoletoOriginal;
+                        Descricao = "Vencimento " + data.ToShortDateString() + ", no valor de " + valor.ToString("C") + "";
                         break;
                     default:
-                        this.Codigo = 0;
-                        this.Descricao = " (Selecione) ";
+                        Codigo = 0;
+                        Descricao = " (Selecione) ";
                         break;
                 }
             }
@@ -184,13 +146,6 @@ namespace BoletoNet
             }
         }
 
-
-        public override void Valida()
-        {
-            //base.Valida();
-        }
-
         #endregion
-
     }
 }

@@ -355,7 +355,7 @@ namespace BoletoNet.Arquivo
             GeraLayout(boletos);
         }
 
-        public void GeraBoletoBB(int qtde)
+        public void GeraBoletoBancoBrasil(int qtde)
         {
             // Cria o boleto, e passa os parâmetros usuais
             var boletos = new List<BoletoBancario>();
@@ -377,6 +377,8 @@ namespace BoletoNet.Arquivo
                 b.Sacado.Endereco.CEP = "70000000";
                 b.Sacado.Endereco.UF = "DF";
 
+                b.EspecieDocumento = new EspecieDocumento(Convert.ToInt16(1), "01");
+
                 //Adiciona as instruções ao boleto
                 //Protestar
                 //var item = new Instrucao_BancoBrasil(9, 5);
@@ -388,8 +390,7 @@ namespace BoletoNet.Arquivo
                 //item = new Instrucao_BancoBrasil(81, 15);
                 //b.Instrucoes.Add(item);
 
-
-                b.Instrucoes.Add(new Instrucao(1, Convert.ToInt32("30"), "30", 5, 1));
+                b.Instrucoes.Add(new Instrucao(b.EspecieDocumento.Banco.Codigo, 0, "Ha", 5, 1));
 
                 b.NumeroDocumento = "12345678901";
 
@@ -412,7 +413,7 @@ namespace BoletoNet.Arquivo
                 bb.CodigoBanco = _codigoBanco;
 
                 var vencimento = DateTime.Now.AddDays(10);
-                var item = new Instrucao_Bradesco(9, 5);
+                var item = new Instrucao_Bradesco(9, null, 5);
 
                 var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "1234", "5", "123456", "7");
                 c.Codigo = "13000";
@@ -503,7 +504,7 @@ namespace BoletoNet.Arquivo
             switch (CodigoBanco)
             {
                 case 1: // Banco do Brasil
-                    GeraBoletoBB((int)numericUpDown.Value);
+                    GeraBoletoBancoBrasil((int)numericUpDown.Value);
                     break;
 
                 case 409: // Unibanco

@@ -53,6 +53,7 @@ namespace BoletoNet
                 Banco = new Banco_Caixa();
 
                 Codigo = cod;
+                Descricao = descricao;
                 Dias = dias;
                 Valor = valor;
                 Tipo = tipo;

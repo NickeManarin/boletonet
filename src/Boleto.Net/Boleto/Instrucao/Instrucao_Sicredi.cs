@@ -61,6 +61,7 @@ namespace BoletoNet
                 Valida();
 
                 Codigo = cod;
+                Descricao = descricao;
                 Dias = dias;
                 Valor = valor;
                 Tipo = tipo;

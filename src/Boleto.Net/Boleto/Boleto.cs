@@ -279,10 +279,10 @@ namespace BoletoNet
 			set { _dataProcessamento = value; }
 		}
 
-		/// <summary> 
-		/// Retorna a numero de parcelas
-		/// </summary>        
-		public int NumeroParcela
+        /// <summary> 
+        /// Retorna a numero de parcelas
+        /// </summary>        
+        public int NumeroParcela
 		{
 			get { return _numeroParcela; }
 			set { _numeroParcela = value; }
