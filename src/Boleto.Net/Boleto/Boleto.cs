@@ -252,10 +252,15 @@ namespace BoletoNet
 			set { _especie = value; }
 		}
 
-		/// <summary> 
-		/// Retorna o campo especie do documento que por padrao vem com DV
-		/// </summary>
-		public IEspecieDocumento EspecieDocumento
+        /// <summary> 
+        /// Se verdadeiro, habilita a impressão e postagem do boleto pelo banco. 
+        /// </summary>
+        public bool Postagem { get; set; }
+
+        /// <summary> 
+        /// Retorna o campo especie do documento que por padrao vem com DV
+        /// </summary>
+        public IEspecieDocumento EspecieDocumento
 		{
 			get { return _especieDocumento ?? (_especieDocumento = new EspecieDocumento()); }
 			set { _especieDocumento = value; }
@@ -391,7 +396,6 @@ namespace BoletoNet
 			get { return _jurosMora; }
 			set { _jurosMora = value; }
 		}
-
 
         /// <summary> 
 		/// Código de Juros de mora (1 = ao dia, 2 = ao mes)
@@ -545,6 +549,7 @@ namespace BoletoNet
             get { return _numeroDiasBaixa; }
             set { _numeroDiasBaixa = value; }
         }
+
         /// <summary>
         /// Retorna os Parâmetros utilizados na geração da Remessa para o Boleto
         /// </summary>

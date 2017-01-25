@@ -857,8 +857,8 @@ namespace BoletoNet
 
                 // 1 = Banco emite e Processa o registro
                 // 2 = Cliente emite e o Banco somente processa
-                //Condição para Emissão da Papeleta de Cobrança(1, N)
-                detalhe += "2";
+                //Condição para Emissão da Papeleta de Cobrança (1, N) [193-193]
+                detalhe += boleto.Postagem ? "1" : "2";
                 //Ident. se emite papeleta para Débito Automático (1, A)
                 detalhe += "N";
                 //Identificação da Operação do Banco (10, A) Em Branco

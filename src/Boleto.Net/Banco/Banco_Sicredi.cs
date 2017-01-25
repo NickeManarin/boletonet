@@ -562,11 +562,11 @@ namespace BoletoNet
         {
             var vRetorno = true;
             var vMsg = string.Empty;
-            //            
+
             switch (tipoArquivo)
             {
                 case TipoArquivo.CNAB240:
-                    //vRetorno = ValidarRemessaCNAB240(numeroConvenio, banco, cedente, boletos, numeroArquivoRemessa, out vMsg);
+                    //vRetorno = ValidarRemessaCnab240(numeroConvenio, banco, cedente, boletos, numeroArquivoRemessa, out vMsg);
                     break;
                 case TipoArquivo.CNAB400:
                     vRetorno = ValidarRemessaCnab400(numeroConvenio, banco, cedente, boletos, numeroArquivoRemessa, out vMsg);
@@ -574,7 +574,7 @@ namespace BoletoNet
                 case TipoArquivo.Outro:
                     throw new Exception("Tipo de arquivo inexistente.");
             }
-            //
+
             mensagem = vMsg;
             return vRetorno;
         }
@@ -632,52 +632,56 @@ namespace BoletoNet
                             vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe um Número de Documento!", Environment.NewLine);
                             vRetorno = false;
                         }
-                        else if (string.IsNullOrEmpty(boleto.Remessa.TipoDocumento))
-                        {
-                            // Para o Sicredi, defini o Tipo de Documento sendo: 
-                            //      A1 = 'A' - SICREDI com Registro Impressão Completa pelo Sicredi
-                            //      A2 = 'A' - SICREDI com Registro Pedido de bloquetos pré-impressos
-                            //      C1 = 'C' - SICREDI sem Registro Impressão Completa pelo Sicredi
-                            //      C2 = 'C' - SICREDI sem Registro Pedido de bloquetos pré-impressos
-                            // ** Isso porque são tratados 4 leiautes de escrita diferentes para o Detail da remessa;
 
-                            vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o Tipo Documento!", Environment.NewLine);
-                            vRetorno = false;
-                        }
-                        else if (!boleto.Remessa.TipoDocumento.Equals("A1") && !boleto.Remessa.TipoDocumento.Equals("A2") &&
-                            !boleto.Remessa.TipoDocumento.Equals("C1") && !boleto.Remessa.TipoDocumento.Equals("C2"))
-                        {
-                            vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Tipo de Documento Inválido! Deverão ser: A = SICREDI com Registro; C1 = SICREDI sem Registro Impressão Completa pelo Sicredi;  C2 = SICREDI sem Registro Pedido de bloquetos pré-impressos", Environment.NewLine);
-                            vRetorno = false;
-                        }
+                        //Comentado, pois sempre vai utilizar a opção com registro.
+                        //if (string.IsNullOrEmpty(boleto.Remessa.TipoDocumento))
+                        //{
+                        //    // Para o Sicredi, defini o Tipo de Documento sendo: 
+                        //    // A = 'A' - SICREDI com Registro 
+                        //    // C = 'C' - SICREDI sem Registro
+
+                        //    vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o Tipo Documento!", Environment.NewLine);
+                        //    vRetorno = false;
+                        //}
+
+                        //if (!boleto.Remessa.TipoDocumento.Equals("A") && !boleto.Remessa.TipoDocumento.Equals("C"))
+                        //{
+                        //    vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, 
+                        //        "; Remessa: Tipo de Documento Inválido! Deverão ser: A = SICREDI com Registro; C = SICREDI sem Registro;", Environment.NewLine);
+                        //    vRetorno = false;
+                        //}
                         //else if (boleto.Remessa.TipoDocumento.Equals("06") && !String.IsNullOrEmpty(boleto.NossoNumero))
                         //{
                         //    //Para o "Remessa.TipoDocumento = "06", não poderá ter NossoNumero Gerado!
                         //    vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Não pode existir NossoNumero para o Tipo Documento '06 - cobrança escritural'!", Environment.NewLine);
                         //    vRetorno = false;
                         //}
-                        else if (!boleto.EspecieDocumento.Codigo.Equals("A") && //A - Duplicata Mercantil por Indicação
-                                 !boleto.EspecieDocumento.Codigo.Equals("B") && //B - Duplicata Rural;
-                                 !boleto.EspecieDocumento.Codigo.Equals("C") && //C - Nota Promissória;
-                                 !boleto.EspecieDocumento.Codigo.Equals("D") && //D - Nota Promissória Rural;
-                                 !boleto.EspecieDocumento.Codigo.Equals("E") && //E - Nota de Seguros;
-                                 !boleto.EspecieDocumento.Codigo.Equals("F") && //G – Recibo;
 
-                                 !boleto.EspecieDocumento.Codigo.Equals("H") && //H - Letra de Câmbio;
-                                 !boleto.EspecieDocumento.Codigo.Equals("I") && //I - Nota de Débito;
-                                 !boleto.EspecieDocumento.Codigo.Equals("J") && //J - Duplicata de Serviço por Indicação;
-                                 !boleto.EspecieDocumento.Codigo.Equals("O") && //O – Boleto Proposta
-                                 !boleto.EspecieDocumento.Codigo.Equals("K")) //K – Outros.
+                        if (!boleto.EspecieDocumento.Codigo.Equals("A") && //A - Duplicata Mercantil por Indicação
+                            !boleto.EspecieDocumento.Codigo.Equals("B") && //B - Duplicata Rural;
+                            !boleto.EspecieDocumento.Codigo.Equals("C") && //C - Nota Promissória;
+                            !boleto.EspecieDocumento.Codigo.Equals("D") && //D - Nota Promissória Rural;
+                            !boleto.EspecieDocumento.Codigo.Equals("E") && //E - Nota de Seguros;
+                            !boleto.EspecieDocumento.Codigo.Equals("F") && //G – Recibo;
+
+                            !boleto.EspecieDocumento.Codigo.Equals("H") && //H - Letra de Câmbio;
+                            !boleto.EspecieDocumento.Codigo.Equals("I") && //I - Nota de Débito;
+                            !boleto.EspecieDocumento.Codigo.Equals("J") && //J - Duplicata de Serviço por Indicação;
+                            !boleto.EspecieDocumento.Codigo.Equals("O") && //O – Boleto Proposta
+                            !boleto.EspecieDocumento.Codigo.Equals("K")) //K – Outros.
                         {
-                            vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o Código da EspécieDocumento! São Aceitas:{A,B,C,D,E,F,H,I,J,O,K}", Environment.NewLine);
+                            vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, 
+                                "; Remessa: Informe o Código da EspécieDocumento! São Aceitas:{A,B,C,D,E,F,H,I,J,O,K}", Environment.NewLine);
                             vRetorno = false;
                         }
-                        else if (!boleto.Sacado.CPFCNPJ.Length.Equals(11) && !boleto.Sacado.CPFCNPJ.Length.Equals(14))
+
+                        if (!boleto.Sacado.CPFCNPJ.Length.Equals(11) && !boleto.Sacado.CPFCNPJ.Length.Equals(14))
                         {
                             vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Cpf/Cnpj diferente de 11/14 caracteres!", Environment.NewLine);
                             vRetorno = false;
                         }
-                        else if (!boleto.NossoNumero.Length.Equals(8))
+
+                        if (!boleto.NossoNumero.Length.Equals(8))
                         {
                             //sidnei.klein: Segundo definição recebida pelo Sicredi-RS, o Nosso Número sempre terá somente 8 caracteres sem o DV que está no boleto.DigitoNossoNumero
                             vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: O Nosso Número diferente de 8 caracteres!", Environment.NewLine);
@@ -730,23 +734,10 @@ namespace BoletoNet
         {
             base.GerarDetalheRemessa(boleto, numeroRegistro, tipoArquivo);
 
-            //Redireciona para o Detalhe da remessa Conforme o "Tipo de Documento" = "Tipo de Cobrança do CNAB400":
-            // A1 = 'A' - SICREDI com Registro Impressão Completa pelo Sicredi.
-            // A2 = 'A' - SICREDI com Registro Pedido de bloquetos pré-impressos.
-            // C1 = 'C' - SICREDI sem Registro Impressão Completa pelo Sicredi.
-            // C2 = 'C' - SICREDI sem Registro Pedido de bloquetos pré-impressos.
-
-            if (boleto.Remessa.TipoDocumento.StartsWith("A"))
-                return GerarDetalheRemessaCNAB400_A(boleto, numeroRegistro, tipoArquivo, boleto.Remessa.TipoDocumento.EndsWith("1"));
-
-            //TODO: Não existe ainda.
-            if (boleto.Remessa.TipoDocumento.Equals("C"))
-                return GerarDetalheRemessaCNAB400_C(boleto, numeroRegistro, tipoArquivo, boleto.Remessa.TipoDocumento.EndsWith("1"));
-
-            return "";
+            return GerarDetalheRemessaCnab400_A(boleto, numeroRegistro, tipoArquivo);
         }
 
-        public string GerarDetalheRemessaCNAB400_A(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo, bool bancoEmite = false)
+        public string GerarDetalheRemessaCnab400_A(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
         {
             try
             {
@@ -758,33 +749,42 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0005, 012, 0, string.Empty, ' '));                              //005-016
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0017, 001, 0, "A", ' '));                                       //017-017  Tipo de moeda: 'A' - REAL
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0018, 001, 0, "A", ' '));                                       //018-018  Tipo de desconto: 'A' - VALOR
+                
                 #region Código de Juros
-                var CodJuros = "A";
-                decimal ValorOuPercJuros = 0;
+
+                var codJuros = "A";
+                decimal valorOuPercJuros = 0;
+
                 if (boleto.JurosMora > 0)
                 {
-                    CodJuros = "A";
-                    ValorOuPercJuros = boleto.JurosMora;
+                    codJuros = "A";
+                    valorOuPercJuros = boleto.JurosMora;
                 }
                 else if (boleto.PercJurosMora > 0)
                 {
-                    CodJuros = "B";
-                    ValorOuPercJuros = boleto.PercJurosMora;
+                    codJuros = "B";
+                    valorOuPercJuros = boleto.PercJurosMora;
                 }
+
                 #endregion
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0019, 001, 0, CodJuros, ' '));                                  //019-019  Tipo de juros: 'A' - VALOR / 'B' PERCENTUAL
+
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0019, 001, 0, codJuros, ' '));                                  //019-019  Tipo de juros: 'A' - VALOR / 'B' PERCENTUAL
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0020, 028, 0, string.Empty, ' '));                              //020-047
+
                 #region Nosso Número + DV
+
                 boleto.DigitoNossoNumero = DigNossoNumeroSicredi(boleto);
-                var vAuxNossoNumeroComDV = boleto.NossoNumero + boleto.DigitoNossoNumero;
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0048, 009, 0, vAuxNossoNumeroComDV, '0'));                      //048-056
+                var vAuxNossoNumeroComDv = boleto.NossoNumero + boleto.DigitoNossoNumero;
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0048, 009, 0, vAuxNossoNumeroComDv, '0'));                      //048-056
+                
                 #endregion
+
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0057, 006, 0, string.Empty, ' '));                              //057-062
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataAAAAMMDD_________, 0063, 008, 0, boleto.DataProcessamento, ' '));                  //063-070
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0071, 001, 0, string.Empty, ' '));                              //071-071
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0072, 001, 0, bancoEmite ? "S" : "N", ' '));                    //072-072 'S' Postar, 'N' - Não Postar e remeter para o beneficiário
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0072, 001, 0, boleto.Postagem ? "S" : "N", ' '));               //072-072 'S' Postar, 'N' - Não Postar e remeter para o beneficiário
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0073, 001, 0, string.Empty, ' '));                              //073-073
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0074, 001, 0, bancoEmite ? "A" : "B", ' '));                    //074-074 'A' - Impressão feita pelo banco, 'B' – Impressão é feita pelo Beneficiário
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0074, 001, 0, boleto.Postagem ? "A" : "B", ' '));               //074-074 'A' - Impressão feita pelo banco, 'B' – Impressão é feita pelo Beneficiário
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0075, 002, 0, 0, '0'));                                         //075-076
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0077, 002, 0, 0, '0'));                                         //077-078
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0079, 004, 0, string.Empty, ' '));                              //079-082
@@ -799,9 +799,12 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0149, 001, 0, boleto.EspecieDocumento.Codigo, ' '));            //149-149
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0150, 001, 0, boleto.Aceite, ' '));                             //150-150
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataDDMMAA___________, 0151, 006, 0, boleto.DataProcessamento, ' '));                  //151-156
+
                 #region Instruções
+
                 var vInstrucao1 = "00"; //1ª instrução (2, N) Caso Queira colocar um cod de uma instrução. ver no Manual caso nao coloca 00
                 var vInstrucao2 = "00"; //2ª instrução (2, N) Caso Queira colocar um cod de uma instrução. ver no Manual caso nao coloca 00
+
                 foreach (Instrucao instrucao in boleto.Instrucoes)
                 {
                     switch ((EnumInstrucoes_Sicredi)instrucao.Codigo)
@@ -816,24 +819,37 @@ namespace BoletoNet
                             break;
                     }
                 }
+
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0157, 002, 0, vInstrucao1, '0'));                               //157-158
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0159, 002, 0, vInstrucao2, '0'));                               //159-160
-                #endregion               
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0161, 013, 2, ValorOuPercJuros, '0'));                          //161-173 Valor/% de juros por dia de atraso
+                
+                #endregion
+
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0161, 013, 2, valorOuPercJuros, '0'));                          //161-173 Valor/% de juros por dia de atraso
+                
                 #region DataDesconto
+
                 var vDataDesconto = "000000";
                 if (!boleto.DataDesconto.Equals(DateTime.MinValue))
                     vDataDesconto = boleto.DataDesconto.ToString("ddMMyy");
+
                 #endregion
+
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0174, 006, 0, vDataDesconto, '0'));                             //174-179
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0180, 013, 2, boleto.ValorDesconto, '0'));                      //180-192
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0193, 013, 0, 0, '0'));                                         //193-205
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0206, 013, 2, boleto.Abatimento, '0'));                         //206-218
+                
                 #region Regra Tipo de Inscrição Sacado
+
                 var vCpfCnpjSac = "0";
-                if (boleto.Sacado.CPFCNPJ.Length.Equals(11)) vCpfCnpjSac = "1"; //Cpf é sempre 11;
-                else if (boleto.Sacado.CPFCNPJ.Length.Equals(14)) vCpfCnpjSac = "2"; //Cnpj é sempre 14;
+                if (boleto.Sacado.CPFCNPJ.Length.Equals(11))
+                    vCpfCnpjSac = "1"; //Cpf é sempre 11;
+                else if (boleto.Sacado.CPFCNPJ.Length.Equals(14))
+                    vCpfCnpjSac = "2"; //Cnpj é sempre 14;
+
                 #endregion
+                
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0219, 001, 0, vCpfCnpjSac, '0'));                               //219-219
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0220, 001, 0, "0", '0'));                                       //220-220
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0221, 014, 0, boleto.Sacado.CPFCNPJ, '0'));                     //221-234
@@ -860,7 +876,7 @@ namespace BoletoNet
             }
         }
 
-        public string GerarDetalheRemessaCNAB400_C(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo, bool bancoEmite = false)
+        public string GerarDetalheRemessaCnab400_C(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
         {
             //TODO
             var detalhe = string.Empty;
@@ -879,12 +895,12 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0006, 005, 0, cedente.Codigo, ' '));              //006-010                
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0011, 384, 0, string.Empty, ' '));                //011-394
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0395, 006, 0, numeroRegistro, '0'));              //395-400
-                //
+                
                 reg.CodificarLinha();
-                //
+                
                 var vLinha = reg.LinhaRegistro;
                 var trailer = Utils.SubstituiCaracteresEspeciais(vLinha);
-                //
+                
                 return trailer;
             }
             catch (Exception ex)

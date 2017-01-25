@@ -26,8 +26,7 @@ namespace BoletoNet
         #endregion Variaveis
 
         public Cedente()
-        {
-        }
+        {}
 
         public Cedente(ContaBancaria contaBancaria)
         {

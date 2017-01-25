@@ -209,7 +209,7 @@ namespace BoletoNet
                 {
                     case TipoArquivo.CNAB240:
                         throw new NotImplementedException("Remessa não implementada!");
-                        break;
+                        
                     case TipoArquivo.CNAB400:
                         _header = GerarHeaderRemessaCNAB400(cedente, numeroArquivoRemessa);
                         break;
@@ -498,15 +498,17 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0143, 004, 0, "0000", '0'));                                    //143-146
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0147, 001, 0, string.Empty, ' '));                              //147-147
                 string especieDocumento = "";
-                if (boleto.EspecieDocumento == null)
-                    especieDocumento = "01";//Sigla == "DM"
-                else especieDocumento = boleto.EspecieDocumento.Codigo;
+
+                especieDocumento = boleto.EspecieDocumento == null ? "01" : boleto.EspecieDocumento.Codigo; //Sigla == "DM"
+
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0148, 002, 0, especieDocumento, '0'));                          //148-149
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0150, 001, 0, boleto.Aceite, ' '));                             //150-150
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataDDMMAA___________, 0151, 006, 0, boleto.DataProcessamento, ' '));                  //151-156
+
                 string vInstrucao = "00";
                 if (!(boleto.Instrucoes == null || boleto.Instrucoes.Count == 0 || boleto.Instrucoes[0].Codigo == null))
                     vInstrucao = boleto.Instrucoes[0].Codigo.ToString();
+
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0157, 004, 0, vInstrucao, '0'));                               //157-160
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0161, 013, 2, boleto.JurosMora, '0'));                         //161-173
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0174, 006, 0, "000000", '0'));                                 //174-179

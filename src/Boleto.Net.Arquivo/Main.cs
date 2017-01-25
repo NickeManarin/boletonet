@@ -18,28 +18,27 @@ namespace BoletoNet.Arquivo
             try
             {
                 saveFileDialog.Filter = "Arquivos de Retorno (*.rem)|*.rem|Todos Arquivos (*.*)|*.*";
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+
+                if (saveFileDialog.ShowDialog() != DialogResult.OK)
+                    return;
+
+                var arquivo = new ArquivoRemessa(TipoArquivo.CNAB400);
+
+                //Valida a Remessa Correspondentes antes de Gerar a mesma...
+                string vMsgRetorno;
+                var vValouOk = arquivo.ValidarArquivoRemessa(cedente.Convenio.ToString(), banco, cedente, boletos, 1, out vMsgRetorno);
+
+                if (!vValouOk)
                 {
-                    ArquivoRemessa arquivo = new ArquivoRemessa(TipoArquivo.CNAB400);
+                    MessageBox.Show(String.Concat("Foram localizados inconsistências na validação da remessa!", Environment.NewLine, vMsgRetorno),
+                        "Teste", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    arquivo.GerarArquivoRemessa("0", banco, cedente, boletos, saveFileDialog.OpenFile(), 1);
 
-                    //Valida a Remessa Correspondentes antes de Gerar a mesma...
-                    string vMsgRetorno = string.Empty;
-                    bool vValouOK = arquivo.ValidarArquivoRemessa(cedente.Convenio.ToString(), banco, cedente, boletos, 1, out vMsgRetorno);
-                    if (!vValouOK)
-                    {
-                        MessageBox.Show(String.Concat("Foram localizados inconsistências na validação da remessa!", Environment.NewLine, vMsgRetorno),
-                                        "Teste",
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-                        arquivo.GerarArquivoRemessa("0", banco, cedente, boletos, saveFileDialog.OpenFile(), 1);
-
-                        MessageBox.Show("Arquivo gerado com sucesso!", "Teste",
-                                        MessageBoxButtons.OK,
-                                        MessageBoxIcon.Information);
-                    }
+                    MessageBox.Show("Arquivo gerado com sucesso!", "Teste",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
@@ -63,15 +62,15 @@ namespace BoletoNet.Arquivo
         
         public void GeraDadosItau(TipoArquivo tipoArquivo)
         {
-            DateTime vencimento = new DateTime(2007, 9, 10);
+            var vencimento = new DateTime(2007, 9, 10);
 
-            Instrucao_Itau item1 = new Instrucao_Itau(9, 5);
-            Instrucao_Itau item2 = new Instrucao_Itau(81, 10);
-            Cedente c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0542", "13000");
+            var item1 = new Instrucao_Itau(9, 5);
+            var item2 = new Instrucao_Itau(81, 10);
+            var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0542", "13000");
             //Na carteira 198 o código do Cedente é a conta bancária
             c.Codigo = "13000";
 
-            Boleto b = new Boleto(vencimento, 1642, "198", "92082835", c);
+            var b = new Boleto(vencimento, 1642, "198", "92082835", c);
             b.NumeroDocumento = "1008073";
 
             b.DataVencimento = Convert.ToDateTime("12-12-12");
@@ -83,7 +82,7 @@ namespace BoletoNet.Arquivo
             b.Sacado.Endereco.CEP = "70000000";
             b.Sacado.Endereco.UF = "DF";
 
-            item2.Descricao += item2.Dias.ToString() + " dias corridos do vencimento.";
+            item2.Descricao += item2.Dias + " dias corridos do vencimento.";
             b.Instrucoes.Add(item1);
             b.Instrucoes.Add(item2);
             b.Cedente.ContaBancaria.DigitoAgencia = "1";
@@ -91,10 +90,10 @@ namespace BoletoNet.Arquivo
 
             b.Banco = new Banco(341);
 
-            Boletos boletos = new Boletos();
+            var boletos = new Boletos();
             boletos.Add(b);
 
-            Boleto b2 = new Boleto(vencimento, 1642, "198", "92082835", c);
+            var b2 = new Boleto(vencimento, 1642, "198", "92082835", c);
             b2.NumeroDocumento = "1008073";
 
             b2.DataVencimento = Convert.ToDateTime("12-12-12");
@@ -106,7 +105,7 @@ namespace BoletoNet.Arquivo
             b2.Sacado.Endereco.CEP = "70000000";
             b2.Sacado.Endereco.UF = "DF";
 
-            item2.Descricao += item2.Dias.ToString() + " dias corridos do vencimento.";
+            item2.Descricao += item2.Dias + " dias corridos do vencimento.";
             b2.Instrucoes.Add(item1);
             b2.Instrucoes.Add(item2);
             b2.Cedente.ContaBancaria.DigitoAgencia = "1";
@@ -132,13 +131,13 @@ namespace BoletoNet.Arquivo
 
         public void GeraDadosBanrisul()
         {
-            ContaBancaria conta = new ContaBancaria();
+            var conta = new ContaBancaria();
             conta.Agencia = "051";
             conta.DigitoAgencia = "2";
             conta.Conta = "13000";
             conta.DigitoConta = "3";
             //
-            Cedente c = new Cedente();
+            var c = new Cedente();
             c.ContaBancaria = conta;
             c.CPFCNPJ = "00.000.000/0000-00";
             c.Nome = "Empresa de Atacado";
@@ -146,7 +145,7 @@ namespace BoletoNet.Arquivo
             c.Codigo = "513035600299";//No Banrisul, esse código está no manual como 12 caracteres, por eu(sidneiklein) isso tive que alterar o tipo de int para string;
             c.Convenio = 124522;
             //
-            Boleto b = new Boleto();
+            var b = new Boleto();
             b.Cedente = c;
             //
             b.DataProcessamento = DateTime.Now;
@@ -175,7 +174,7 @@ namespace BoletoNet.Arquivo
             #endregion
 
             //
-            Boletos boletos = new Boletos();
+            var boletos = new Boletos();
             boletos.Add(b);
 
             GeraArquivoCNAB400(b.Banco, c, boletos);
@@ -183,13 +182,13 @@ namespace BoletoNet.Arquivo
 
         public void GeraDadosSicredi()
         {
-            ContaBancaria conta = new ContaBancaria();
+            var conta = new ContaBancaria();
             conta.Agencia = "051";
             conta.DigitoAgencia = "2";
             conta.Conta = "13000";
             conta.DigitoConta = "3";
             //
-            Cedente c = new Cedente();
+            var c = new Cedente();
             c.ContaBancaria = conta;
             c.CPFCNPJ = "00000000000000";
             c.Nome = "Empresa de Atacado";
@@ -197,7 +196,7 @@ namespace BoletoNet.Arquivo
             c.Codigo = "12345";//No Banrisul, esse código está no manual como 12 caracteres, por eu(sidneiklein) isso tive que alterar o tipo de int para string;
             c.Convenio = 124522;
             //
-            Boleto b = new Boleto();
+            var b = new Boleto();
             b.Cedente = c;
             //
             b.DataProcessamento = DateTime.Now;
@@ -215,13 +214,13 @@ namespace BoletoNet.Arquivo
             b.Sacado.Endereco.CEP = "70000000";
             b.Sacado.Endereco.UF = "RS";
 
-            Instrucao_Sicredi item1 = new Instrucao_Sicredi(9, null, 5);
+            var item1 = new Instrucao_Sicredi(9, null, 5);
             b.Instrucoes.Add(item1);
             //b.Instrucoes.Add(item2);
             b.Banco = new Banco(748);
 
             //
-            EspecieDocumento especiedocumento = new EspecieDocumento(748, "A");//(341, 1);
+            var especiedocumento = new EspecieDocumento(748, "A");//(341, 1);
             b.EspecieDocumento = especiedocumento;
 
 
@@ -231,7 +230,7 @@ namespace BoletoNet.Arquivo
             #endregion
 
             //
-            Boletos boletos = new Boletos();
+            var boletos = new Boletos();
             boletos.Add(b);
 
             GeraArquivoCNAB400(b.Banco, c, boletos);
@@ -239,14 +238,14 @@ namespace BoletoNet.Arquivo
 
         public void GeraDadosSantander()
         {
-            Boletos boletos = new Boletos();
+            var boletos = new Boletos();
 
-            DateTime vencimento = new DateTime(2003, 5, 15);
+            var vencimento = new DateTime(2003, 5, 15);
 
-            Cedente c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "2269", "130000946");
+            var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "2269", "130000946");
             c.Codigo = "1795082";
 
-            Boleto b = new Boleto(vencimento, 0.20m, "101", "566612457800", c);
+            var b = new Boleto(vencimento, 0.20m, "101", "566612457800", c);
 
             //NOSSO NÚMERO
             //############################################################################################################################
@@ -278,21 +277,21 @@ namespace BoletoNet.Arquivo
 
         public void GeraDadosCaixa()
         {
-            ContaBancaria conta = new ContaBancaria();
+            var conta = new ContaBancaria();
             conta.OperacaConta = "OPE";
             conta.Agencia = "345";
             conta.DigitoAgencia = "6";
             conta.Conta = "87654321";
             conta.DigitoConta = "0";
             //
-            Cedente c = new Cedente();
+            var c = new Cedente();
             c.ContaBancaria = conta;
             c.CPFCNPJ = "00.000.000/0000-00";
             c.Nome = "Empresa de Atacado";
             //Na carteira 198 o código do Cedente é a conta bancária
             c.Codigo = String.Concat(conta.Agencia, conta.DigitoAgencia, conta.OperacaConta, conta.Conta, conta.DigitoConta); //Na Caixa, esse código está no manual como 16 caracteres AAAAOOOCCCCCCCCD;
             //
-            Boleto b = new Boleto();
+            var b = new Boleto();
             b.Cedente = c;
             //
             b.DataProcessamento = DateTime.Now;
@@ -301,7 +300,7 @@ namespace BoletoNet.Arquivo
             b.Carteira = "SR";
             b.NossoNumero = "92082835";
             b.NumeroDocumento = "1008073";
-            EspecieDocumento ED = new EspecieDocumento(104);
+            var ED = new EspecieDocumento(104);
             b.EspecieDocumento = ED;
 
             //
@@ -313,7 +312,7 @@ namespace BoletoNet.Arquivo
             b.Sacado.Endereco.CEP = "70000000";
             b.Sacado.Endereco.UF = "RS";
 
-            Instrucao_Caixa item1 = new Instrucao_Caixa(9, null, 5);
+            var item1 = new Instrucao_Caixa(9, null, 5);
             b.Instrucoes.Add(item1);
             //b.Instrucoes.Add(item2);
             b.Banco = new Banco(104);
@@ -325,7 +324,7 @@ namespace BoletoNet.Arquivo
             #endregion
 
             //
-            Boletos boletos = new Boletos();
+            var boletos = new Boletos();
             boletos.Add(b);
 
             GeraArquivoCNAB240(b.Banco, c, boletos);
@@ -333,18 +332,18 @@ namespace BoletoNet.Arquivo
 
         public void GeraDadosBancoDoNordeste()
         {
-            ContaBancaria conta = new ContaBancaria();
+            var conta = new ContaBancaria();
             conta.Agencia = "21";
             conta.DigitoAgencia = "0";
             conta.Conta = "12717";
             conta.DigitoConta = "8";
 
-            Cedente c = new Cedente();
+            var c = new Cedente();
             c.ContaBancaria = conta;
             c.CPFCNPJ = "00.000.000/0000-00";
             c.Nome = "Empresa de Atacado";
 
-            Boleto b = new Boleto();
+            var b = new Boleto();
             b.Cedente = c;
             //
             b.DataProcessamento = DateTime.Now;
@@ -363,7 +362,7 @@ namespace BoletoNet.Arquivo
 
             b.Banco = new Banco(004);
 
-            EspecieDocumento especiedocumento = new EspecieDocumento(004, "1");//Duplicata Mercantil
+            var especiedocumento = new EspecieDocumento(004, "1");//Duplicata Mercantil
             b.EspecieDocumento = especiedocumento;
 
             #region Dados para Remessa:
@@ -372,7 +371,7 @@ namespace BoletoNet.Arquivo
             #endregion
 
 
-            Boletos boletos = new Boletos();
+            var boletos = new Boletos();
             boletos.Add(b);
 
             GeraArquivoCNAB400(b.Banco, c, boletos);
@@ -381,25 +380,26 @@ namespace BoletoNet.Arquivo
         #endregion Remessa
 
         #region Retorno
+
         private void LerRetorno(int codigo)
         {
             try
             {
-                Banco bco = new Banco(codigo);
+                var bco = new Banco(codigo);
 
                 openFileDialog.FileName = "";
                 openFileDialog.Title = "Selecione um arquivo de retorno";
                 openFileDialog.Filter = "Arquivos de Retorno (*.ret;*.crt)|*.ret;*.crt|Todos Arquivos (*.*)|*.*";
+
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-
                     if (radioButtonCNAB400.Checked)
                     {
                         ArquivoRetornoCNAB400 cnab400 = null;
                         if (openFileDialog.CheckFileExists == true)
                         {
                             cnab400 = new ArquivoRetornoCNAB400();
-                            cnab400.LinhaDeArquivoLida += new EventHandler<LinhaDeArquivoLidaArgs>(cnab400_LinhaDeArquivoLida);
+                            cnab400.LinhaDeArquivoLida += cnab400_LinhaDeArquivoLida;
                             cnab400.LerArquivoRetorno(bco, openFileDialog.OpenFile());
                         }
 
@@ -411,9 +411,9 @@ namespace BoletoNet.Arquivo
 
                         lstReturnFields.Items.Clear();
 
-                        foreach (DetalheRetorno detalhe in cnab400.ListaDetalhe)
+                        foreach (var detalhe in cnab400.ListaDetalhe)
                         {
-                            ListViewItem li = new ListViewItem(detalhe.NomeSacado.ToString().Trim());
+                            var li = new ListViewItem(detalhe.NomeSacado.Trim());
                             li.Tag = detalhe;
 
                             li.SubItems.Add(detalhe.DataVencimento.ToString("dd/MM/yy"));
@@ -444,20 +444,19 @@ namespace BoletoNet.Arquivo
                             MessageBox.Show("Arquivo não processado!");
                             return;
                         }
-
-
+                        
                         lstReturnFields.Items.Clear();
 
-                        foreach (DetalheRetornoCNAB240 detalhe in cnab240.ListaDetalhes)
+                        foreach (var detalhe in cnab240.ListaDetalhes)
                         {
-                            ListViewItem li = new ListViewItem(detalhe.SegmentoT.NomeSacado.Trim());
+                            var li = new ListViewItem(detalhe.SegmentoT.NomeSacado.Trim());
                             li.Tag = detalhe;
 
                             li.SubItems.Add(detalhe.SegmentoT.DataVencimento.ToString("dd/MM/yy"));
                             li.SubItems.Add(detalhe.SegmentoU.DataCredito.ToString("dd/MM/yy"));
                             li.SubItems.Add(detalhe.SegmentoT.ValorTitulo.ToString("###,###.00"));
                             li.SubItems.Add(detalhe.SegmentoU.ValorPagoPeloSacado.ToString("###,###.00"));
-                            li.SubItems.Add(detalhe.SegmentoU.CodigoOcorrenciaSacado.ToString());
+                            li.SubItems.Add(detalhe.SegmentoU.CodigoOcorrenciaSacado);
                             li.SubItems.Add("");
                             li.SubItems.Add(detalhe.SegmentoT.NossoNumero);
                             lstReturnFields.Items.Add(li);
@@ -488,7 +487,7 @@ namespace BoletoNet.Arquivo
         {
             try
             {
-                StreamWriter gravaLinha = new StreamWriter(arquivo);
+                var gravaLinha = new StreamWriter(arquivo);
 
                 #region Variáveis
 
@@ -498,13 +497,13 @@ namespace BoletoNet.Arquivo
                 string _detalhe3;
                 string _trailer;
 
-                string n275 = new string(' ', 275);
-                string n025 = new string(' ', 25);
-                string n023 = new string(' ', 23);
-                string n039 = new string('0', 39);
-                string n026 = new string('0', 26);
-                string n090 = new string(' ', 90);
-                string n160 = new string(' ', 160);
+                var n275 = new string(' ', 275);
+                var n025 = new string(' ', 25);
+                var n023 = new string(' ', 23);
+                var n039 = new string('0', 39);
+                var n026 = new string('0', 26);
+                var n090 = new string(' ', 90);
+                var n160 = new string(' ', 160);
 
                 #endregion
 

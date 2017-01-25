@@ -1277,12 +1277,10 @@ namespace BoletoNet
                 boleto.NossoNumero = string.Format("{0}", boleto.NossoNumero);
         }
 
-
         public override void FormataNumeroDocumento(Boleto boleto)
-        {
-        }
+        {}
 
-        # endregion
+        #endregion
 
         #region Métodos de geração do arquivo remessa - Genéricos
 
@@ -1970,7 +1968,7 @@ namespace BoletoNet
                 segmentoT.DigitoAgencia = registro.Substring(22, 1); //09
                 segmentoT.Conta = Convert.ToInt64(registro.Substring(23, 12)); //10
                 segmentoT.DigitoConta = registro.Substring(35, 1); //11
-                segmentoT.DACAgenciaConta = (String.IsNullOrEmpty(registro.Substring(36, 1).Trim())) ? 0 : Convert.ToInt32(registro.Substring(36, 1)); //12
+                segmentoT.DACAgenciaConta = (string.IsNullOrEmpty(registro.Substring(36, 1).Trim())) ? 0 : Convert.ToInt32(registro.Substring(36, 1)); //12
                 segmentoT.NossoNumero = registro.Substring(37, 20); //14
                 segmentoT.CodigoCarteira = Convert.ToInt32(registro.Substring(57, 1)); //15
                 segmentoT.NumeroDocumento = registro.Substring(58, 15); //16
@@ -2114,17 +2112,17 @@ namespace BoletoNet
             #region Pré Validações
             if (banco == null)
             {
-                vMsg += String.Concat("Remessa: O Banco é Obrigatório!", Environment.NewLine);
+                vMsg += string.Concat("Remessa: O Banco é Obrigatório!", Environment.NewLine);
                 vRetorno = false;
             }
             if (cedente == null)
             {
-                vMsg += String.Concat("Remessa: O Cedente/Beneficiário é Obrigatório!", Environment.NewLine);
+                vMsg += string.Concat("Remessa: O Cedente/Beneficiário é Obrigatório!", Environment.NewLine);
                 vRetorno = false;
             }
             if (boletos == null || boletos.Count.Equals(0))
             {
-                vMsg += String.Concat("Remessa: Deverá existir ao menos 1 boleto para geração da remessa!", Environment.NewLine);
+                vMsg += string.Concat("Remessa: Deverá existir ao menos 1 boleto para geração da remessa!", Environment.NewLine);
                 vRetorno = false;
             }
             #endregion
@@ -2135,16 +2133,16 @@ namespace BoletoNet
 
                 if (boleto.Remessa == null)
                 {
-                    vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe as diretrizes de remessa!", Environment.NewLine);
+                    vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe as diretrizes de remessa!", Environment.NewLine);
                     vRetorno = false;
                 }
                 else
                 {
                     #region Validações da Remessa que deverão estar preenchidas quando BANCO DO BRASIL
 
-                    if (String.IsNullOrEmpty(boleto.Remessa.TipoDocumento))
+                    if (string.IsNullOrEmpty(boleto.Remessa.TipoDocumento))
                     {
-                        vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o Tipo Documento!", Environment.NewLine);
+                        vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o Tipo Documento!", Environment.NewLine);
                         vRetorno = false;
                     }
                 
@@ -2199,16 +2197,22 @@ namespace BoletoNet
             {
                 //Variáveis Locais a serem Implementadas em nível de Config do Boleto...
                 boleto.Remessa.CodigoOcorrencia = "01"; //remessa p/ BANCO DO BRASIL
-                //
+                
                 base.GerarDetalheRemessa(boleto, numeroRegistro, tipoArquivo);
-                //
+                
                 var reg = new TRegistroEDI();
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0001, 001, 0, "7", '0'));                                       //001-001
+
                 #region Regra Tipo de Inscrição Cedente
+
                 var vCpfCnpjEmi = "00";
-                if (boleto.Cedente.CPFCNPJ.Length.Equals(11)) vCpfCnpjEmi = "01"; //Cpf é sempre 11;
-                else if (boleto.Cedente.CPFCNPJ.Length.Equals(14)) vCpfCnpjEmi = "02"; //Cnpj é sempre 14;
+                if (boleto.Cedente.CPFCNPJ.Length.Equals(11))
+                    vCpfCnpjEmi = "01"; //Cpf é sempre 11;
+                else if (boleto.Cedente.CPFCNPJ.Length.Equals(14))
+                    vCpfCnpjEmi = "02"; //Cnpj é sempre 14;
+                
                 #endregion
+
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0002, 002, 0, vCpfCnpjEmi, '0'));                               //002-003
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0004, 014, 0, boleto.Cedente.CPFCNPJ, '0'));                    //004-017
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0018, 004, 0, boleto.Cedente.ContaBancaria.Agencia, '0'));      //018-021
@@ -2278,7 +2282,7 @@ namespace BoletoNet
                 {
                     #region Código de Multa e Valor/Percentual Multa
                     var vCodigoMulta = "9"; //“9” = Dispensar Multa
-                    Decimal vMulta = 0;
+                    decimal vMulta = 0;
 
                     if (boleto.ValorMulta > 0)
                     {
@@ -2382,7 +2386,7 @@ namespace BoletoNet
                 //detalhe. = reg.Identificacao;
                 //detalhe. = reg.Zeros1;
                 //detalhe. = reg.Zeros2;
-                detalhe.Agencia = Utils.ToInt32(String.Concat(reg.PrefixoAgencia, reg.DVPrefixoAgencia));
+                detalhe.Agencia = Utils.ToInt32(string.Concat(reg.PrefixoAgencia, reg.DVPrefixoAgencia));
                 detalhe.Conta = Utils.ToInt32(reg.ContaCorrente);
                 detalhe.DACConta = Utils.ToInt32(reg.DVContaCorrente);
                 //detalhe. = reg.NumeroConvenioCobranca;
