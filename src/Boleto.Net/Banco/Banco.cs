@@ -8,9 +8,9 @@ namespace BoletoNet
 
         private IBanco _iBanco;
 
-        #endregion Variaveis
+		#endregion Variaveis
 
-        #region Construtores
+		#region Construtores
 
         internal Banco() 
         {}
@@ -27,9 +27,9 @@ namespace BoletoNet
             }
         }
 
-        #endregion
+		#endregion
 
-        #region Propriedades da Interface
+		#region Propriedades da Interface
 
         public override int Codigo
         {
@@ -47,7 +47,7 @@ namespace BoletoNet
             get { return _iBanco.Nome; }
         }
 
-        #endregion
+		#endregion
 
         #region Métodos Privados
 
@@ -137,6 +137,12 @@ namespace BoletoNet
                     //85 - CECRED
                     case 85:
                         _iBanco = new Banco_Cecred();
+                        break;
+                    case 707:
+                        _iBanco = new Banco_Daycoval();
+                        break;
+                    case 637:
+                        _iBanco = new Banco_Sofisa();
                         break;
                     default:
                         throw new Exception("Código do banco não implementando: " + codigoBanco);
