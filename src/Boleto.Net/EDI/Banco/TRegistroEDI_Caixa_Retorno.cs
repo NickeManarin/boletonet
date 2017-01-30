@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BoletoNet.EDI.Banco
 {
@@ -9,8 +7,8 @@ namespace BoletoNet.EDI.Banco
 	/// </summary>
     public class TRegistroEDI_Caixa_Retorno : TRegistroEDI
     {
+        #region Atributos e Propriedades
 
-		#region Atributos e Propriedades
         private string _CodigoIdentificadorTipoRegistro = String.Empty;
         public string CodigoIdentificadorTipoRegistro
         {
@@ -234,6 +232,7 @@ namespace BoletoNet.EDI.Banco
             get { return _NumeroSequenciaRegistro; }
             set { _NumeroSequenciaRegistro = value; }
         }
+
         #endregion
     
         public TRegistroEDI_Caixa_Retorno()

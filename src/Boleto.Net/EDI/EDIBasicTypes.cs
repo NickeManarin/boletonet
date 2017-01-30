@@ -90,8 +90,7 @@ namespace BoletoNet
         /// </summary>
         ediDataAAAAMMDDWithZeros
     }
-
-
+    
     public class TCampoRegistroEDI
     {
         #region Variáveis Privadas
@@ -110,6 +109,7 @@ namespace BoletoNet
         #endregion
 
         #region Propriedades
+
         /// <summary>
         /// Descrição do campo no registro EDI (meramente descritivo)
         /// </summary>
@@ -222,15 +222,16 @@ namespace BoletoNet
             get { return _Preenchimento; }
             set { _Preenchimento = value; }
         }
+
         #endregion
 
         #region Construtores
+
         /// <summary>
         /// Cria um objeto TCampoRegistroEDI
         /// </summary>
         public TCampoRegistroEDI()
-        { 
-        }
+        {}
 
         /// <summary>
         /// Cria um objeto do tipo TCampoRegistroEDI inicializando as propriedades básicas.
@@ -257,6 +258,7 @@ namespace BoletoNet
             _PosicaoFinal = pPosicaoInicial + _TamanhoCampo;
             _Preenchimento = pPreenchimento;
         }
+
         /// <summary>
         /// Cria um objeto do tipo TCampoRegistroEDI inicializando as propriedades básicas.
         /// </summary>
@@ -280,9 +282,11 @@ namespace BoletoNet
             _PosicaoFinal = pPosicaoInicial + _TamanhoCampo;
             _Preenchimento = pPreenchimento;
         }
+
         #endregion
 
         #region Métodos Públicos
+
         /// <summary>
         /// Aplica formatação ao valor do campo em ValorNatural, colocando o resultado na propriedade ValorFormatado
         /// </summary>
@@ -733,8 +737,6 @@ namespace BoletoNet
         #region Métodos Privados e Protegidos
 
         #endregion
-
-
     }
 
     /// <summary>
@@ -800,12 +802,11 @@ namespace BoletoNet
             get { return _CamposEDI; }
             set { _CamposEDI = value; }
         }
-        #endregion
 
-        #region Métodos Privados e Protegidos
         #endregion
 
         #region Métodos Públicos
+
         /// <summary>
         /// Codifica uma linha a partir dos campos; o resultado irá na propriedade LinhaRegistro
         /// </summary>
@@ -834,6 +835,7 @@ namespace BoletoNet
                 campos.DecodificarEDIParaNatural();
             }
         }
+
         #endregion
     }
 }

@@ -415,7 +415,7 @@ namespace BoletoNet
                 detalhe.EspecieTitulo = registro.Substring(174, 1);
 
                 decimal despeasaDeCobranca = Convert.ToUInt64(registro.Substring(175, 13));
-                detalhe.DespeasaDeCobranca = despeasaDeCobranca / 100;
+                detalhe.DespesaDeCobranca = despeasaDeCobranca / 100;
 
                 decimal outrasDespesas = Convert.ToUInt64(registro.Substring(188, 13));
                 detalhe.OutrasDespesas = outrasDespesas / 100;

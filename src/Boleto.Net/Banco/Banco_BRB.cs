@@ -307,7 +307,7 @@ namespace BoletoNet
 
                 //Despesas de cobrança para os Códigos de Ocorrência (Valor Despesa)
                 decimal despeasaDeCobranca = Convert.ToUInt64(registro.Substring(179, 13));
-                detalhe.DespeasaDeCobranca = despeasaDeCobranca / 100;
+                detalhe.DespesaDeCobranca = despeasaDeCobranca / 100;
 
                 //Outras despesas Custas de Protesto (Valor Outras Despesas)
                 decimal outrasDespesas = Convert.ToUInt64(registro.Substring(192, 13));

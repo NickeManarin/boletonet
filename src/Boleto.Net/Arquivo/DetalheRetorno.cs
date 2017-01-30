@@ -4,7 +4,6 @@ namespace BoletoNet
 {
     public class DetalheRetorno
     {
-
         #region Variáveis
 
         private int _codigoInscricao = 0;
@@ -59,7 +58,7 @@ namespace BoletoNet
         private int _bancoCobrador = 0;
         private int _agencia = 0;
         private string _especieTitulo = string.Empty;
-        private decimal _despeasaDeCobranca = 0;
+        private decimal _despesaDeCobranca = 0;
         private decimal _outrasDespesas = 0;
         private decimal _juros = 0;
         private decimal _iof = 0;
@@ -71,7 +70,6 @@ namespace BoletoNet
         private DateTime _dataLiquidacao = new DateTime(1, 1, 1);
         private int _sequencial = 0;
         private string _NossoNumeroComDV;
-        private decimal _valorMulta;
 
         #endregion
 
@@ -80,8 +78,7 @@ namespace BoletoNet
         #region Construtores
 
         public DetalheRetorno()
-        {
-        }
+        {}
 
         public DetalheRetorno(string registro)
         {
@@ -129,6 +126,7 @@ namespace BoletoNet
             get { return _usoEmpresa; }
             set { _usoEmpresa = value; }
         }
+
         /// <summary>
         /// Nosso Numero Sem o DV
         /// </summary>
@@ -137,6 +135,7 @@ namespace BoletoNet
             get { return _nossoNumero; }
             set { _nossoNumero = value; }
         }
+
         /// <summary>
         /// DV do Nosso Numero
         /// </summary>
@@ -145,6 +144,7 @@ namespace BoletoNet
             get { return _dacNossoNumero; }
             set { _dacNossoNumero = value; }
         }
+
         /// <summary>
         /// Nosso Numero Completo Com o Dígito Verificador
         /// </summary>
@@ -419,10 +419,10 @@ namespace BoletoNet
             set { _especieTitulo = value; }
         }
 
-        public decimal DespeasaDeCobranca
+        public decimal DespesaDeCobranca
         {
-            get { return _despeasaDeCobranca; }
-            set { _despeasaDeCobranca = value; }
+            get { return _despesaDeCobranca; }
+            set { _despesaDeCobranca = value; }
         }
 
         public decimal OutrasDespesas
@@ -455,17 +455,7 @@ namespace BoletoNet
             set { _sequencial = value; }
         }
 
-        public decimal ValorMulta
-        {
-            get
-            {
-                return _valorMulta;
-            }
-            set
-            {
-                _valorMulta = value;
-            }
-        }
+        public decimal ValorMulta { get; set; }
 
         #endregion
 
@@ -545,6 +535,5 @@ namespace BoletoNet
         }
 
         #endregion
-
     }
 }
