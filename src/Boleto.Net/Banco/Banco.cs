@@ -526,6 +526,11 @@ namespace BoletoNet
             return _iBanco.LerDetalheRetornoCNAB400(registro);
         }
 
-        #endregion Métodos de Leitura do arquivo de Retorno
-    }
+        public override HeaderRetorno LerHeaderRetornoCNAB400(string registro)
+        {
+            return _iBanco.LerHeaderRetornoCNAB400(registro);
+        }
+
+		#endregion
+	}
 }
