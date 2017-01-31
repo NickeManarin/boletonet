@@ -1,12 +1,4 @@
-﻿//  --------------------------------------------------------------------------------------------------------------------
-//  <copyright file="TamanhoNossoNumeroInvalidoException.cs">
-//    Boleto.Net
-//  </copyright>
-//  <summary>
-//    Defines the TamanhoNossoNumeroInvalidoException.cs type.
-//  </summary>
-//  --------------------------------------------------------------------------------------------------------------------
-namespace BoletoNet.Excecoes
+﻿namespace BoletoNet.Excecoes
 {
 	using System;
 
@@ -16,8 +8,7 @@ namespace BoletoNet.Excecoes
 
 		public TamanhoNossoNumeroInvalidoException(int tamanhoMaximo)
 			: base(string.Format("O tamanho máximo para o campo 'nosso número' é de {0} caracteres.", tamanhoMaximo))
-		{
-		}
+		{}
 
 		#endregion
 	}

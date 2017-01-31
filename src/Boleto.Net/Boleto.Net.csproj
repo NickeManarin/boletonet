@@ -109,7 +109,7 @@
     <Compile Include="Boleto\EspecieDocumento\EspecieDocumento_Sofisa.cs" />
     <Compile Include="Boleto\Instrucao\Instrucao_BancoNordeste.cs" />
     <Compile Include="Boleto\Instrucao\Instrucao_Banestes.cs" />
-    <Compile Include="Banco\Banco_Bansirul.cs" />
+    <Compile Include="Banco\Banco_Banrisul.cs" />
     <Compile Include="Banco\Banco_Basa.cs" />
     <Compile Include="Banco\Banco_BRB.cs" />
     <Compile Include="Banco\Banco_Caixa.cs" />
@@ -208,7 +208,7 @@
     <Compile Include="Boleto\Cedente.cs" />
     <Compile Include="Boleto\CodigoBarra.cs" />
     <Compile Include="Boleto\ContaBancaria.cs" />
-    <Compile Include="Util\DateInterval.cs" />
+    <Compile Include="Enums\DateInterval.cs" />
     <Compile Include="Boleto\Endereco.cs" />
     <Compile Include="Html.Designer.cs">
       <AutoGen>True</AutoGen>

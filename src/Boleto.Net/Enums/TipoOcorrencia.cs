@@ -76,6 +76,5 @@ namespace BoletoNet
       RetDebitoTarifas,
       RetAcertoDepositaria,
       RetOutrasOcorrencias
-
     }
 }

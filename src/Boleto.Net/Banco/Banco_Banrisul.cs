@@ -9,7 +9,7 @@ namespace BoletoNet
     /// <Author>
     /// Felipe Silveira - Transis Informática
     /// </Author>
-    internal class Banco_Banrisul : AbstractBanco, IBanco
+    internal sealed class Banco_Banrisul : AbstractBanco, IBanco
     {
         private int _primDigito;
         private int _segDigito;

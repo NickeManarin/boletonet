@@ -188,20 +188,20 @@ namespace BoletoNet
         public override void ValidaBoleto(Boleto boleto)
         {
             if (boleto.Carteira != "02" && boleto.Carteira != "03" && boleto.Carteira != "06" && boleto.Carteira != "09" && boleto.Carteira != "16" && boleto.Carteira != "19" && boleto.Carteira != "25" && boleto.Carteira != "26")
-                throw new NotImplementedException("Carteira não implementada. Carteiras implementadas 02, 03, 06, 09, 16, 19, 25, 26.");
+                throw new Exception("Carteira não implementada. Carteiras implementadas 02, 03, 06, 09, 16, 19, 25, 26.");
 
             //O valor é obrigatório para a carteira 03
             if (boleto.Carteira == "03")
             {
                 if (boleto.ValorBoleto == 0)
-                    throw new NotImplementedException("Para a carteira 03, o valor do boleto não pode ser igual a zero");
+                    throw new Exception("Para a carteira 03, o valor do boleto não pode ser igual a zero");
             }
 
             //O valor é obrigatório para a carteira 09
             if (boleto.Carteira == "09")
             {
                 if (boleto.ValorBoleto == 0)
-                    throw new NotImplementedException("Para a carteira 09, o valor do boleto não pode ser igual a zero");
+                    throw new Exception("Para a carteira 09, o valor do boleto não pode ser igual a zero");
             }
             //else if (boleto.Carteira == "06")
             //{
@@ -210,21 +210,21 @@ namespace BoletoNet
 
             //Verifica se o nosso número é válido
             if (boleto.NossoNumero.Length > 11)
-                throw new NotImplementedException("A quantidade de dígitos do nosso número, são 11 números.");
+                throw new Exception("A quantidade de dígitos do nosso número, são 11 números.");
 
             if (boleto.NossoNumero.Length < 11)
                 boleto.NossoNumero = Utils.FormatCode(boleto.NossoNumero, 11);
 
             //Verificar se a Agencia esta correta
             if (boleto.Cedente.ContaBancaria.Agencia.Length > 4)
-                throw new NotImplementedException("A quantidade de dígitos da Agência " + boleto.Cedente.ContaBancaria.Agencia + ", são de 4 números.");
+                throw new Exception("A quantidade de dígitos da Agência deve ser de 4 dígitos. Foram informados " + boleto.Cedente.ContaBancaria.Agencia.Length + " dígitos.");
 
             if (boleto.Cedente.ContaBancaria.Agencia.Length < 4)
                 boleto.Cedente.ContaBancaria.Agencia = Utils.FormatCode(boleto.Cedente.ContaBancaria.Agencia, 4);
 
             //Verificar se a Conta esta correta
             if (boleto.Cedente.ContaBancaria.Conta.Length > 7)
-                throw new NotImplementedException("A quantidade de dígitos da Conta " + boleto.Cedente.ContaBancaria.Conta + ", são de 07 números.");
+                throw new Exception("A quantidade de dígitos da Conta deve ser de 7 dígitos. Foram informados " + boleto.Cedente.ContaBancaria.Conta.Length + " dígitos.");
 
             if (boleto.Cedente.ContaBancaria.Conta.Length < 7)
                 boleto.Cedente.ContaBancaria.Conta = Utils.FormatCode(boleto.Cedente.ContaBancaria.Conta, 7);
@@ -695,7 +695,7 @@ namespace BoletoNet
         {
             try
             {
-                HeaderRetorno header = new HeaderRetorno(registro);
+                var header = new HeaderRetorno(registro);
                 header.TipoRegistro = Utils.ToInt32(registro.Substring(000, 1));
                 header.CodigoRetorno = Utils.ToInt32(registro.Substring(001, 1));
                 header.LiteralRetorno = registro.Substring(002, 7);

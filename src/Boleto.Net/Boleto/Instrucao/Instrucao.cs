@@ -12,16 +12,16 @@ namespace BoletoNet
 
         #region Construtores
 
-        public Instrucao(int banco, int cod = 0, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
+        public Instrucao(int banco, int cod = 0, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual, DateTime? data = null)
         {
-            Bancos(banco, cod, descricao, dias, valor, tipo);         
+            Bancos(banco, cod, descricao, dias, valor, tipo, data);         
         }
 
         #endregion
 
         #region Métodos Privados
 
-        private void Bancos(int codigoBanco, int cod = 0, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
+        private void Bancos(int codigoBanco, int cod = 0, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual, DateTime? data = null)
         {
             try
             {
@@ -53,7 +53,7 @@ namespace BoletoNet
                         break;
                     //237 - Bradesco
                     case 237:
-                        _interface = new Instrucao_Bradesco(cod, descricao, dias, valor, tipo);
+                        _interface = new Instrucao_Bradesco(cod, descricao, dias, valor, tipo, data);
                         break;
                     //347 - Sudameris
                     case 347:
@@ -163,7 +163,7 @@ namespace BoletoNet
             }
         }
 
-        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
+        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual, DateTime? data = null)
         {
             _interface.Carrega(cod, descricao, dias, valor, tipo);
         }

@@ -33,13 +33,13 @@ namespace BoletoNet.Arquivo
             Dispose();
         }
 
-        private void GeraLayout(List<BoletoBancario> boletos)
+        private void GeraLayout(IEnumerable<BoletoBancario> boletos)
         {
             var html = new StringBuilder();
             foreach (var o in boletos)
             {
                 html.Append(o.MontaHtml());
-                html.Append("</br></br></br></br></br></br></br></br></br></br>");
+                //html.Append("</br></br></br></br></br></br></br></br></br></br>");
             }
 
             _arquivo = Path.GetTempFileName();
@@ -139,7 +139,7 @@ namespace BoletoNet.Arquivo
                 b.Sacado.Endereco.CEP = "70000000";
                 b.Sacado.Endereco.UF = "DF";
 
-                item2.Descricao += " " + item2.Dias.ToString() + " dias corridos do vencimento.";
+                item2.Descricao += " " + item2.Dias + " dias corridos do vencimento.";
                 b.Instrucoes.Add(item1);
                 b.Instrucoes.Add(item2);
 
@@ -434,9 +434,11 @@ namespace BoletoNet.Arquivo
                 b.Sacado = new Sacado("000.000.000-00", "Eduardo Frare");
                 b.Sacado.Endereco = end;
 
-                item.Descricao += " após " + item.Dias.ToString() + " dias corridos do vencimento.";
+                item.Descricao += " após " + item.Dias + " dias corridos do vencimento.";
                 b.Instrucoes.Add(item); //"Não Receber após o vencimento");
 
+                bb.FormatoCarne = true;
+                bb.OcultarInstrucoes = true;
                 bb.Boleto = b;
                 bb.Boleto.Valida();
 

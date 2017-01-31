@@ -20,7 +20,7 @@ using System.Linq;
 
 namespace BoletoNet
 {
-    [Serializable, Designer(typeof(BoletoBancarioDesigner)), ToolboxBitmap(typeof(BoletoBancario)), 
+    [Serializable, Designer(typeof(BoletoBancarioDesigner)), ToolboxBitmap(typeof(BoletoBancario)),
         ToolboxData("<{0}:BoletoBancario Runat=\"server\"></{0}:BoletoBancario>")]
     public class BoletoBancario : Control
     {
@@ -208,7 +208,7 @@ namespace BoletoNet
         {
             get { return _instrucoes; }
         }
-        
+
         #endregion Propriedades
 
         #region Override
@@ -226,7 +226,7 @@ namespace BoletoNet
         }
 
         protected override void OnLoad(EventArgs e)
-        {}
+        { }
 
         [System.Security.Permissions.PermissionSet(System.Security.Permissions.SecurityAction.Demand, Name = "Execution")]
         protected override void Render(HtmlTextWriter output)
@@ -526,9 +526,9 @@ namespace BoletoNet
             else
             {
                 if (Sacado.CPFCNPJ.Length <= 11)
-                    sacado = string.Format("{0}  CPF: {1}", Sacado.Nome, Utils.FormataCpf(Sacado.CPFCNPJ));
+                    sacado = string.Format("{0}<br/>CPF: {1}", Sacado.Nome, Utils.FormataCpf(Sacado.CPFCNPJ));
                 else
-                    sacado = string.Format("{0}  CNPJ: {1}", Sacado.Nome, Utils.FormataCnpj(Sacado.CPFCNPJ));
+                    sacado = string.Format("{0}<br/>CNPJ: {1}", Sacado.Nome, Utils.FormataCnpj(Sacado.CPFCNPJ));
             }
 
             var infoSacado = Sacado.InformacoesSacado.GeraHTML(false);
@@ -627,8 +627,7 @@ namespace BoletoNet
 
             var valorBoleto = Boleto.ValorBoleto == 0 ? "" : Boleto.ValorBoleto.ToString("C", CultureInfo.GetCultureInfo("PT-BR"));
 
-            return html
-                .Replace("@CODIGOBANCO", Utils.FormatCode(_ibanco.Codigo.ToString(), 3))
+            return html.Replace("@CODIGOBANCO", Utils.FormatCode(_ibanco.Codigo.ToString(), 3))
                 .Replace("@DIGITOBANCO", _ibanco.Digito)
                 //.Replace("@URLIMAGEMBARRAINTERNA", urlImagemBarraInterna)
                 //.Replace("@URLIMAGEMCORTE", urlImagemCorte)
@@ -647,14 +646,20 @@ namespace BoletoNet
                 .Replace("@DATAPROCESSAMENTO", Boleto.DataProcessamento.ToString("dd/MM/yyyy"))
 
             #region Implementação para o Banco do Brasil
+
                 //Variável inserida para atender às especificações das carteiras "17-019", "17-027" e "18-019" do Banco do Brasil
                 //apenas para a ficha de compensação.
-                //Como a variável não existirá se não forem as carteiras "17-019", "17-027", "17-019", "17-035", "17-140", "17-159", "17-067", "17-167" e "18-019", não foi colocado o [if].
-                .Replace("@NOSSONUMEROBB", Boleto.Banco.Codigo == 1 & (Boleto.Carteira.Equals("17-019") | Boleto.Carteira.Equals("17-027") | Boleto.Carteira.Equals("17-035") | Boleto.Carteira.Equals("18-019") | Boleto.Carteira.Equals("17-140") | Boleto.Carteira.Equals("17-159") | Boleto.Carteira.Equals("17-067") | Boleto.Carteira.Equals("17-167")) ? Boleto.NossoNumero.Substring(3) : string.Empty)
-            #endregion Implementação para o Banco do Brasil
+                //Como a variável não existirá se não forem as carteiras "17-019", "17-027", "17-019", "17-035", "17-140", "17-159", "17-067", 
+                //"17-167" e "18-019", não foi colocado o [if].
+                .Replace("@NOSSONUMEROBB", Boleto.Banco.Codigo == 1 & (Boleto.Carteira.Equals("17-019") | Boleto.Carteira.Equals("17-027") | 
+                    Boleto.Carteira.Equals("17-035") | Boleto.Carteira.Equals("18-019") | Boleto.Carteira.Equals("17-140") | Boleto.Carteira.Equals("17-159") | 
+                    Boleto.Carteira.Equals("17-067") | Boleto.Carteira.Equals("17-167")) ? Boleto.NossoNumero.Substring(3) : string.Empty)
+
+            #endregion
 
                 .Replace("@NOSSONUMERO", Boleto.NossoNumero)
                 .Replace("@CARTEIRA", FormataDescricaoCarteira())
+                .Replace("@PARCELAS", Boleto.TotalParcelas <= 1 ? "ÚNICA" : string.Format("{0} de {1}", Boleto.Parcela, Boleto.TotalParcelas))
                 .Replace("@ESPECIE", Boleto.Especie)
                 .Replace("@QUANTIDADE", Boleto.QuantidadeMoeda == 0 ? "" : Boleto.QuantidadeMoeda.ToString())
                 .Replace("@VALORDOCUMENTO", Boleto.ValorMoeda)
@@ -664,7 +669,8 @@ namespace BoletoNet
                 .Replace("@OUTRASDEDUCOES", "")
                 .Replace("@DESCONTOS", Boleto.ValorDesconto == 0 ? "" : Boleto.ValorDesconto.ToString("C", CultureInfo.GetCultureInfo("PT-BR")))
                 .Replace("@AGENCIACONTA", agenciaCodigoCedente)
-                .Replace("@SACADO", sacado)
+                .Replace("@SACADO2", sacado)
+                .Replace("@SACADO", sacado.Replace("<br/>", " - ")) //Com a quebra de linha apenas no recibo do sacado do carnê.
                 .Replace("@INFOSACADO", infoSacado)
                 .Replace("@AGENCIACODIGOCEDENTE", agenciaCodigoCedente)
                 .Replace("@CPFCNPJ", Cedente.CPFCNPJ)
@@ -674,47 +680,44 @@ namespace BoletoNet
                 .Replace("@IMAGEMCODIGOBARRA", imagemCodigoBarras)
                 .Replace("@ACEITE", Boleto.Aceite).ToString()
                 .Replace("@ENDERECOCEDENTE", MostrarEnderecoCedente ? enderecoCedente : "")
-                .Replace("@AVALISTA", string.Format("{0} - {1}", Boleto.Avalista != null ? Boleto.Avalista.Nome : string.Empty, Boleto.Avalista != null ? Boleto.Avalista.CPFCNPJ : string.Empty))
+                .Replace("@AVALISTA", string.Format("{0} - {1}", Boleto.Avalista != null ? Boleto.Avalista.Nome : "", Boleto.Avalista != null ? Boleto.Avalista.CPFCNPJ : ""))
                 .Replace("Ar\">R$", RemoveSimboloMoedaValorDocumento ? "Ar\">" : "Ar\">R$");
         }
 
         private string FormataDescricaoCarteira()
         {
-            if (MostrarCodigoCarteira)
+            if (!MostrarCodigoCarteira)
+                return Boleto.Carteira;
+
+            string descricaoCarteira;
+            var carteira = Utils.ToInt32(Boleto.Carteira);
+
+            switch (Banco.Codigo)
             {
-                var descricaoCarteira = "";
-                var carteira = Utils.ToInt32(Boleto.Carteira);
+                case 1:
+                    descricaoCarteira = new Carteira_BancoBrasil(carteira).Codigo;
+                    break;
+                case 353:
+                case 8:
+                case 33:
+                    descricaoCarteira = new Carteira_Santander(carteira).Codigo;
+                    break;
+                case 104:
+                    descricaoCarteira = new Carteira_Caixa(carteira).Codigo;
+                    break;
+                case 341:
+                    descricaoCarteira = new Carteira_Itau(carteira).Codigo;
+                    break;
 
-                switch (Banco.Codigo)
-                {
-                    case 1:
-                        descricaoCarteira = new Carteira_BancoBrasil(carteira).Codigo;
-                        break;
-                    case 353:
-                    case 8:
-                    case 33:
-                        descricaoCarteira = new Carteira_Santander(carteira).Codigo;
-                        break;
-                    case 104:
-                        descricaoCarteira = new Carteira_Caixa(carteira).Codigo;
-                        break;
-                    case 341:
-                        descricaoCarteira = new Carteira_Itau(carteira).Codigo;
-                        break;
-
-                    default:
-                        throw new Exception(string.Format("A descrição para o banco {0} não foi implementada.", Boleto.Banco));
-                        //throw new Exception(string.Format("A descrição da carteira {0} / banco {1} não foi implementada (marque false na propriedade MostrarCodigoCarteira)", carteira, Banco.Codigo));
-
-                }
-
-                if (string.IsNullOrEmpty(descricaoCarteira))
-                    throw new Exception("O código da carteira não foi implementado.");
-
-                return string.Format("{0} - {1}", Boleto.Carteira, descricaoCarteira);
+                default:
+                    throw new Exception(string.Format("A descrição para o banco {0} não foi implementada.", Boleto.Banco));
+                //throw new Exception(string.Format("A descrição da carteira {0} / banco {1} não foi implementada (marque false na propriedade MostrarCodigoCarteira)", carteira, Banco.Codigo));
             }
 
-            return Boleto.Carteira;
+            if (string.IsNullOrEmpty(descricaoCarteira))
+                throw new Exception("O código da carteira não foi implementado.");
+
+            return string.Format("{0} - {1}", Boleto.Carteira, descricaoCarteira);
         }
 
         #endregion Html
@@ -789,7 +792,7 @@ namespace BoletoNet
             saida.Append("</body>\n");
             saida.Append("</html>\n");
         }
-        
+
         /// <summary>
         /// Junta varios boletos em uma unica AlternateView, para todos serem mandados juntos no mesmo email
         /// </summary>
@@ -842,10 +845,10 @@ namespace BoletoNet
             {
                 av.LinkedResources.Add(theResource);
             }
-            
+
             return av;
         }
-        
+
         /// <summary>
         /// Função utilizada gerar o AlternateView necessário para enviar um boleto bancário por e-mail.
         /// </summary>
@@ -854,7 +857,7 @@ namespace BoletoNet
         {
             return HtmlBoletoParaEnvioEmail(null);
         }
-        
+
         /// <summary>
         /// Função utilizada gerar o AlternateView necessário para enviar um boleto bancário por e-mail.
         /// </summary>
@@ -993,7 +996,7 @@ namespace BoletoNet
         /// <para>@{Layout = null;}@Html.Raw(ViewBag.Boleto)</para>
         /// </code>
         /// </summary>
-        /// <param name="Url">Pasta dos boletos. Exemplo MontaHtml("/Content/Boletos/", "000100")</param>
+        /// <param name="url">Pasta dos boletos. Exemplo MontaHtml("/Content/Boletos/", "000100")</param>
         /// <param name="fileName">Nome do arquivo para o boleto</param>
         /// <returns>Html do boleto gerado</returns>
         /// <desenvolvedor>Sandro Ribeiro</desenvolvedor>
@@ -1128,7 +1131,7 @@ namespace BoletoNet
             return s;
         }
 
-        public byte[] MontaBytesPDF(bool convertLinhaDigitavelToImage = false)
+        public byte[] MontaBytesPdf(bool convertLinhaDigitavelToImage = false)
         {
             var converter = new NReco.PdfGenerator.HtmlToPdfConverter();
 
@@ -1140,7 +1143,7 @@ namespace BoletoNet
 
             return converter.GeneratePdf(MontaHtmlEmbedded(convertLinhaDigitavelToImage, true));
         }
-        
+
         /// <summary>
         /// Lista de Boletos, objetos do tipo
         /// BoletoBancario
@@ -1152,7 +1155,7 @@ namespace BoletoNet
         /// <param name="grayscale">Preto e Branco = true</param>
         /// <param name="convertLinhaDigitavelToImage">bool Converter a Linha Digitavel Em Imagem</param>
         /// <returns>byte[], Vetor de bytes do PDF</returns>
-        public byte[] MontaBytesListaBoletosPDF(List<BoletoBancario> boletos, string title = "", string args = "", string header = "", bool grayscale = false, bool convertLinhaDigitavelToImage = false)
+        public byte[] MontaBytesListaBoletosPdf(List<BoletoBancario> boletos, string title = "", string args = "", string header = "", bool grayscale = false, bool convertLinhaDigitavelToImage = false)
         {
             var htmlBoletos = new StringBuilder();
             htmlBoletos.Append("<html><head><title>");
@@ -1168,19 +1171,29 @@ namespace BoletoNet
                 htmlBoletos.Append("</h1></center><br/>");
             }
 
+            var index = 1;
             foreach (var boleto in boletos)
             {
-                htmlBoletos.Append("<div class='break'>");
+                if (boleto.FormatoCarne)
+                    boleto.OcultarInstrucoes = true;
+
+                if ((boleto.FormatoCarne && index % 3 == 0) || !boleto.FormatoCarne)
+                    htmlBoletos.Append("<div class='break'>");
+                else
+                    htmlBoletos.Append("<div>");
+
                 htmlBoletos.Append(boleto.MontaHtmlEmbedded(convertLinhaDigitavelToImage, true));
                 htmlBoletos.Append("</div>");
+
+                index++;
             }
 
             htmlBoletos.Append("</body></html>");
 
             var converter = new NReco.PdfGenerator.HtmlToPdfConverter
             {
-              CustomWkHtmlArgs = args,
-              Grayscale = grayscale
+                CustomWkHtmlArgs = args,
+                Grayscale = grayscale
             };
 
             if (!string.IsNullOrEmpty(PdfToolPath))
@@ -1191,7 +1204,7 @@ namespace BoletoNet
 
             return converter.GeneratePdf(htmlBoletos.ToString());
         }
-        
+
         #endregion Geração do Html OffLine
 
         public Image GeraImagemCodigoBarras(Boleto boleto)

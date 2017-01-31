@@ -38,22 +38,16 @@ namespace BoletoNet
 			}
 		}
 
-        public Instrucao_Bradesco(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
+        public Instrucao_Bradesco(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual, DateTime? data = null)
         {
-            Carrega(cod, descricao, dias, valor, tipo);
-        }
-
-        //TODO: Com data.
-        public Instrucao_Bradesco(int codigo, double valor, DateTime data, EnumTipoValor tipoValor)
-        {
-            Carregar(codigo, valor, data, tipoValor);
+            Carrega(cod, descricao, dias, valor, tipo, data);
         }
 
         #endregion Construtores
 
         #region Metodos Privados
 
-        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
+        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual, DateTime? data = null)
         {
             try
             {
@@ -102,41 +96,17 @@ namespace BoletoNet
                             tipo.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2"),
                             tipo.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
                         break;
+                    case EnumInstrucoes_Bradesco.ComDesconto:
+                        Descricao = string.Format("Desconto de pontualidade no valor de {0} {1} se pago até " + data.Value.ToShortDateString(),
+                            tipo.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("C"),
+                            tipo.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
+                        break;
+                    case EnumInstrucoes_Bradesco.BoletoOriginal:
+                        Descricao = "Vencimento " + data.Value.ToShortDateString() + ", no valor de " + valor.ToString("C") + "";
+                        break;
                     default:
                         Descricao = descricao;
                         Codigo = 0;
-                        break;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Erro ao carregar objeto", ex);
-            }
-        }
-
-        //TODO: Com data.
-        private void Carregar(int idInstrucao, double valor, DateTime data, EnumTipoValor tipoValor = EnumTipoValor.Reais)
-        {
-            try
-            {
-                Banco = new Banco_Bradesco();
-                Valida();
-
-                switch ((EnumInstrucoes_Bradesco)idInstrucao)
-                {
-                    case EnumInstrucoes_Bradesco.ComDesconto:
-                        Codigo = (int)EnumInstrucoes_Bradesco.ComDesconto;
-                        Descricao = string.Format("Desconto de pontualidade no valor de {0} {1} se pago até " + data.ToShortDateString(),
-                            tipoValor.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("C"),
-                            tipoValor.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
-                        break;
-                    case EnumInstrucoes_Bradesco.BoletoOriginal:
-                        Codigo = (int)EnumInstrucoes_Bradesco.BoletoOriginal;
-                        Descricao = "Vencimento " + data.ToShortDateString() + ", no valor de " + valor.ToString("C") + "";
-                        break;
-                    default:
-                        Codigo = 0;
-                        Descricao = " (Selecione) ";
                         break;
                 }
             }

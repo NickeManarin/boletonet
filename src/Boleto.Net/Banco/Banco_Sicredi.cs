@@ -149,7 +149,7 @@ namespace BoletoNet
                 switch (tipoArquivo)
                 {
                     case TipoArquivo.CNAB240:
-                        detalhe = GerarDetalheRemessaCNAB240(boleto, numeroRegistro, tipoArquivo);
+                        detalhe = GerarDetalheRemessaCnab240(boleto, numeroRegistro, tipoArquivo);
                         break;
                     case TipoArquivo.CNAB400:
                         detalhe = GerarDetalheRemessaCnab400(boleto, numeroRegistro, tipoArquivo);
@@ -172,7 +172,7 @@ namespace BoletoNet
             throw new NotImplementedException("Função não implementada.");
         }
 
-        public string GerarDetalheRemessaCNAB240(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
+        public string GerarDetalheRemessaCnab240(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
         {
             try
             {
@@ -236,7 +236,7 @@ namespace BoletoNet
                 {
 
                     case TipoArquivo.CNAB240:
-                        header = GerarHeaderRemessaCNAB240(cedente);
+                        header = GerarHeaderRemessaCnab240(cedente);
                         break;
                     case TipoArquivo.CNAB400:
                         header = GerarHeaderRemessaCnab400(0, cedente, numeroArquivoRemessa);
@@ -254,11 +254,11 @@ namespace BoletoNet
             }
         }
 
-        private string GerarHeaderLoteRemessaCNAB240(Cedente cedente, int numeroArquivoRemessa)
+        private string GerarHeaderLoteRemessaCnab240(Cedente cedente, int numeroArquivoRemessa)
         {
             try
             {
-                return GerarHeaderRemessaCNAB240(cedente);
+                return GerarHeaderRemessaCnab240(cedente);
             }
             catch (Exception e)
             {
@@ -276,7 +276,7 @@ namespace BoletoNet
                 {
 
                     case TipoArquivo.CNAB240:
-                        header = GerarHeaderLoteRemessaCNAB240(cedente, numeroArquivoRemessa);
+                        header = GerarHeaderLoteRemessaCnab240(cedente, numeroArquivoRemessa);
                         break;
                     case TipoArquivo.CNAB400:
                         // não tem no CNAB 400 header = GerarHeaderLoteRemessaCNAB400(0, cedente, numeroArquivoRemessa);
@@ -294,7 +294,7 @@ namespace BoletoNet
             }
         }
 
-        public string GerarHeaderRemessaCNAB240(Cedente cedente)
+        public string GerarHeaderRemessaCnab240(Cedente cedente)
         {
             try
             {
@@ -322,7 +322,6 @@ namespace BoletoNet
                 header += Utils.FormatCode("", " ", 69);
                 header = Utils.SubstituiCaracteresEspeciais(header);
                 return header;
-
             }
             catch (Exception ex)
             {
@@ -349,7 +348,6 @@ namespace BoletoNet
                 }
 
                 return trailer;
-
             }
             catch (Exception ex)
             {

@@ -53,7 +53,7 @@ namespace BoletoNet
 
         #region Métodos
 
-        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0, EnumTipoValor tipo = EnumTipoValor.Percentual)
+        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0, EnumTipoValor tipo = EnumTipoValor.Percentual, DateTime? data = null)
         {
             try
             {

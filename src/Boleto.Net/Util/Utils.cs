@@ -48,7 +48,7 @@ namespace BoletoNet
         internal static long DateDiff(DateInterval interval, DateTime startDate, DateTime endDate)
         {
             long lngDateDiffValue = 0;
-            var ts = new System.TimeSpan(endDate.Ticks - startDate.Ticks);
+            var ts = new TimeSpan(endDate.Ticks - startDate.Ticks);
 
             switch (interval)
             {
@@ -65,7 +65,7 @@ namespace BoletoNet
                     lngDateDiffValue = ts.Days / 30;
                     break;
                 case DateInterval.Quarter:
-                    lngDateDiffValue = (ts.Days / 30) / 3;
+                    lngDateDiffValue = ts.Days / 30 / 3;
                     break;
                 case DateInterval.Second:
                     lngDateDiffValue = (long)ts.TotalSeconds;
@@ -78,7 +78,7 @@ namespace BoletoNet
                     break;
             }
 
-            return (lngDateDiffValue);
+            return lngDateDiffValue;
         }
 
         // uislcs: Acho que a função FormatCode() deveria ser renomeada para Completar().
@@ -95,13 +95,14 @@ namespace BoletoNet
         /// </summary>
         /// <param name="text">O valor recebe os zeros ou espaços em branco</param>
         /// <param name="with">caractere a ser inserido</param>
-        /// <param name="size">Tamanho do campo</param>
+        /// <param name="length">Tamanho do campo</param>
         /// <param name="left">Indica se caracteres serão inseridos à esquerda ou à direita, o valor default é inicializar pela esquerda (left)</param>
         /// <returns></returns>
         internal static string FormatCode(string text, string with, int length, bool left)
         {
             //Esse método já existe, é PadLeft e PadRight da string
             length -= text.Length;
+
             if (left)
             {
                 for (var i = 0; i < length; ++i)
@@ -234,9 +235,12 @@ namespace BoletoNet
         }
 
         internal static decimal ToDecimal(string value) {
-            try {
+            try
+            {
                 return Convert.ToDecimal(value);
-            } catch {
+            }
+            catch
+            {
                 return 0;
             }
         }
@@ -343,14 +347,15 @@ namespace BoletoNet
         /// <returns>Agência e conta formatadas</returns>
         internal static string FormataAgenciaConta(string agencia, string digitoAgencia, string conta, string digitoConta)
         {
-            var agenciaConta = string.Empty;
             try
             {
-                agenciaConta = agencia;
+                var agenciaConta = agencia;
+
                 if (!string.IsNullOrEmpty(digitoAgencia))
                     agenciaConta += "-" + digitoAgencia;
 
                 agenciaConta += "/" + conta;
+
                 if (!string.IsNullOrEmpty(digitoConta))
                     agenciaConta += "-" + digitoConta;
 
@@ -371,7 +376,7 @@ namespace BoletoNet
             {
                 var result = "";
 
-                if (maxTest == true)
+                if (maxTest)
                 {
                     // max
                     if (SringToBeFit.Length > maxLength)
@@ -380,21 +385,22 @@ namespace BoletoNet
                     }
                 }
 
-                if (minTest == true)
+                if (minTest)
                 {
-                    // min
+                    //min
                     if (SringToBeFit.Length <= minLength)
                     {
-                        if (isNumber == true)
+                        if (isNumber)
                         {
-                            result += new string(FitChar, (minLength - SringToBeFit.Length)) + SringToBeFit;
+                            result += new string(FitChar, minLength - SringToBeFit.Length) + SringToBeFit;
                         }
                         else
                         {
-                            result += SringToBeFit + new string(FitChar, (minLength - SringToBeFit.Length));
+                            result += SringToBeFit + new string(FitChar, minLength - SringToBeFit.Length);
                         }
                     }
                 }
+
                 return result;
             }
             catch (Exception ex)
@@ -415,17 +421,15 @@ namespace BoletoNet
         {
             //Variaveis
             var tipo = string.Empty;
+            
             //Tratamento
             inscricao = inscricao.Replace(".", "").Replace("-", "").Replace("/", "");
+            
             //Verifica tipo
             if (inscricao.Length == 11)
-            {
                 tipo = "01"; //CPF
-            }
             else if (inscricao.Length == 14)
-            {
                 tipo = "02"; // CNPJ
-            }
 
             //Retorno
             return tipo;
@@ -443,6 +447,7 @@ namespace BoletoNet
                     if (CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
                         sb.Append(c);
                 }
+
                 return Regex.Replace(sb.ToString(), @"[^0-9a-zA-Z°ºª&¹²³.,\\@\- ]+", " ")
                     .Replace("ª", "a")
                     .Replace("º", "o")
@@ -452,6 +457,7 @@ namespace BoletoNet
                     .Replace("²", "2")
                     .Replace("³", "3");
             }
+
             return string.Empty;
         }
 
@@ -499,24 +505,24 @@ namespace BoletoNet
         /// </summary>        
         public static string Right(string seq, int qtde, char ch, bool completaPelaEsquerda)
         {
-            string final;
-            final = Strings.Right(seq, qtde);
+            var final = Strings.Right(seq, qtde);
             return FitStringLength(final, qtde, qtde, ch, 0, true, true, completaPelaEsquerda);
         }
 
-        public static string Transform(string text, string mask, char charMask = 'X') {
+        public static string Transform(string text, string mask, char charMask = 'X')
+        {
             var retorno = text;
 
-            if (!string.IsNullOrEmpty(mask)) {
-
+            if (!string.IsNullOrEmpty(mask))
+            {
                 var idx = 0;
-                foreach (var m in mask) {
-                    if (m != charMask) {
+                foreach (var m in mask)
+                {
+                    if (m != charMask)
                         retorno = retorno.Insert(idx, m.ToString());
-                    }
+
                     idx++;
                 }
-
             }
 
             return retorno;

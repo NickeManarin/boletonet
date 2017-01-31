@@ -17,7 +17,7 @@ namespace BoletoNet
 		private string _variacaoCarteira = string.Empty;
 		private string _nossoNumero = string.Empty;
 		private string _digitoNossoNumero = string.Empty;
-        private bool _apenasRegistrar = false;
+        //private bool _apenasRegistrar = false;
 		private DateTime _dataVencimento;
 		private DateTime _dataDocumento;
 		private DateTime _dataProcessamento;
@@ -286,7 +286,7 @@ namespace BoletoNet
 		}
 
         /// <summary> 
-        /// Retorna a numero de parcelas
+        /// Retorna o numero de parcelas
         /// </summary>        
         public int NumeroParcela
 		{
@@ -325,11 +325,11 @@ namespace BoletoNet
         /// Condição para Emissão da Papeleta de Cobrança
         /// 1 = Banco emite e Processa o registro. 2 = Cliente emite e o Banco somente processa o registro
         /// </summary>        
-        public bool ApenasRegistrar
-        {
-            get { return _apenasRegistrar; }
-            set { _apenasRegistrar = value; }
-        }
+        //public bool ApenasRegistrar
+        //{
+        //    get { return _apenasRegistrar; }
+        //    set { _apenasRegistrar = value; }
+        //}
 
 		/// <summary> 
 		/// Recupera o valor da moeda 
@@ -586,6 +586,16 @@ namespace BoletoNet
             get { return _numeroControle; }
             set { _numeroControle = value; }
         }
+
+        /// <summary>
+        /// Número da parcela atual.
+        /// </summary>
+        public int Parcela { get; set; }
+
+        /// <summary>
+        /// Total de parcelas. Se 1, será informado como parcela única no boleto.
+        /// </summary>
+        public int TotalParcelas { get; set; }
 
         public IBancoCarteira BancoCarteira { get; set; }
 

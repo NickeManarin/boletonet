@@ -38,7 +38,7 @@ namespace BoletoNet
                 throw new Exception("O código da instrução deve ser diferente de zero quando a descrição estiver vazia.");
         }
 
-        public virtual void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
+        public virtual void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual, DateTime? data = null)
         {}
 
         #endregion

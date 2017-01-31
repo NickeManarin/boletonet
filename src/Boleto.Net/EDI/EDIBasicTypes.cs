@@ -94,6 +94,7 @@ namespace BoletoNet
     public class TCampoRegistroEDI
     {
         #region Variáveis Privadas
+
         private string _DescricaoCampo;
         private TTiposDadoEDI _TipoCampo;
         private int _TamanhoCampo;
@@ -106,6 +107,7 @@ namespace BoletoNet
         private int _PosicaoInicial;
         private int _PosicaoFinal;
         private char _Preenchimento = ' ';
+
         #endregion
 
         #region Propriedades
@@ -329,25 +331,25 @@ namespace BoletoNet
                     {
                         if (_ValorNatural == null)
                         {
-                            string aux = "";
+                            var aux = "";
                             _ValorFormatado = aux.Trim().PadLeft(_TamanhoCampo, ' ');//Se o Número for NULL, preenche com espaços em branco
                         }
                         else
                         {
-                            string Formatacao = "{0:f" + _QtdDecimais + "}";
+                            var Formatacao = "{0:f" + _QtdDecimais + "}";
                             _ValorFormatado = string.Format(Formatacao, _ValorNatural).Replace(",", "").Replace(".", "").Trim().PadLeft(_TamanhoCampo, _Preenchimento); //'0'
                         }
                         break;
                     }
                 case TTiposDadoEDI.ediNumericoComPonto_____:
                     {
-                        string Formatacao = "{0:f" + _QtdDecimais + "}";
+                        var Formatacao = "{0:f" + _QtdDecimais + "}";
                         _ValorFormatado = string.Format(Formatacao, _ValorNatural).Replace(",", ".").Trim().PadLeft(_TamanhoCampo, _Preenchimento); //'0'
                         break;
                     }
                 case TTiposDadoEDI.ediNumericoComVirgula___:
                     {
-                        string Formatacao = "{0:f" + _QtdDecimais + "}";
+                        var Formatacao = "{0:f" + _QtdDecimais + "}";
                         _ValorFormatado = string.Format(Formatacao, _ValorNatural).Replace(".", ",").Trim().PadLeft(_TamanhoCampo, _Preenchimento); //'0'
                         break;
                     }
@@ -355,8 +357,8 @@ namespace BoletoNet
                     {
                         if ( (DateTime)_ValorNatural != DateTime.MinValue)
                         {
-                            string sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
-                            string Formatacao = "{0:yyyy" + sep + "MM" + sep + "dd}";
+                            var sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
+                            var Formatacao = "{0:yyyy" + sep + "MM" + sep + "dd}";
                             _ValorFormatado = string.Format(Formatacao, _ValorNatural);
                         }
                         else
@@ -370,8 +372,8 @@ namespace BoletoNet
                     {
                         if ((DateTime)_ValorNatural != DateTime.MinValue)
                         {
-                            string sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
-                            string Formatacao = "{0:dd" + sep + "MM}";
+                            var sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
+                            var Formatacao = "{0:dd" + sep + "MM}";
                             _ValorFormatado = string.Format(Formatacao, _ValorNatural);
                         }
                         else
@@ -385,8 +387,8 @@ namespace BoletoNet
                     {
                         if ((DateTime)_ValorNatural != DateTime.MinValue)
                         {
-                            string sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
-                            string Formatacao = "{0:dd" + sep + "MM" + sep + "yyyy}";
+                            var sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
+                            var Formatacao = "{0:dd" + sep + "MM" + sep + "yyyy}";
                             _ValorFormatado = string.Format(Formatacao, _ValorNatural);
                         }
                         else
@@ -400,8 +402,8 @@ namespace BoletoNet
                     {
                         if ((DateTime)_ValorNatural != DateTime.MinValue)
                         {
-                            string sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
-                            string Formatacao = "{0:dd" + sep + "MM" + sep + "yy}";
+                            var sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
+                            var Formatacao = "{0:dd" + sep + "MM" + sep + "yy}";
                             _ValorFormatado = string.Format(Formatacao, _ValorNatural);
                         }
                         else
@@ -415,8 +417,8 @@ namespace BoletoNet
                     {
                         if ((DateTime)_ValorNatural != DateTime.MinValue)
                         {
-                            string sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
-                            string Formatacao = "{0:MM" + sep + "yyyy}";
+                            var sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
+                            var Formatacao = "{0:MM" + sep + "yyyy}";
                             _ValorFormatado = string.Format(Formatacao, _ValorNatural);
                         }
                         else
@@ -430,8 +432,8 @@ namespace BoletoNet
                     {
                         if ((DateTime)_ValorNatural != DateTime.MinValue)
                         {
-                            string sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
-                            string Formatacao = "{0:MM" + sep + "dd}";
+                            var sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
+                            var Formatacao = "{0:MM" + sep + "dd}";
                             _ValorFormatado = string.Format(Formatacao, _ValorNatural);
                         }
                         else
@@ -443,24 +445,24 @@ namespace BoletoNet
                     }
                 case TTiposDadoEDI.ediHoraHHMM_____________:
                     {
-                        string sep = _SeparadorHora == null ? "" : _SeparadorHora;
-                        string Formatacao = "{0:HH" + sep + "mm}";
+                        var sep = _SeparadorHora == null ? "" : _SeparadorHora;
+                        var Formatacao = "{0:HH" + sep + "mm}";
                         _ValorFormatado = string.Format(Formatacao, _ValorNatural);
                         break;
                     }
                 case TTiposDadoEDI.ediHoraHHMMSS___________:
                     {
-                        string sep = _SeparadorHora == null ? "" : _SeparadorHora;
-                        string formatacao = "{0:HH" + sep + "mm" + sep + "ss}";
+                        var sep = _SeparadorHora == null ? "" : _SeparadorHora;
+                        var formatacao = "{0:HH" + sep + "mm" + sep + "ss}";
                         _ValorFormatado = string.Format(formatacao, _ValorNatural);
                         break;
                     }
                 case TTiposDadoEDI.ediDataDDMMAAAAWithZeros:
                     {
-                        string sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
+                        var sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
                         if (_ValorNatural != null || !ValorNatural.ToString().Trim().Equals(""))
                         {
-                            string formatacao = "{0:dd" + sep + "MM" + sep + "yyyy}";
+                            var formatacao = "{0:dd" + sep + "MM" + sep + "yyyy}";
                             _ValorFormatado = string.Format(formatacao, _ValorNatural);
                         }
                         else
@@ -475,7 +477,7 @@ namespace BoletoNet
 
                         if (_ValorNatural != null)
                         {
-                            string formatacao = "{0:yyyy" + sep + "MM" + sep + "dd}";
+                            var formatacao = "{0:yyyy" + sep + "MM" + sep + "dd}";
                             _ValorFormatado = string.Format(formatacao, _ValorNatural);
                         }
                         else
@@ -518,7 +520,7 @@ namespace BoletoNet
                         }
                     case TTiposDadoEDI.ediNumericoSemSeparador_:
                         {
-                            string s = _ValorFormatado.Substring(0, _ValorFormatado.Length - _QtdDecimais) + "," + _ValorFormatado.Substring(_ValorFormatado.Length - _QtdDecimais, _QtdDecimais);
+                            var s = _ValorFormatado.Substring(0, _ValorFormatado.Length - _QtdDecimais) + "," + _ValorFormatado.Substring(_ValorFormatado.Length - _QtdDecimais, _QtdDecimais);
                             _ValorNatural = double.Parse(s.Trim());
                             break;
                         }
@@ -542,7 +544,7 @@ namespace BoletoNet
 
                                 if (_SeparadorDatas != null)
                                 {
-                                    string[] split = _ValorFormatado.Split(_SeparadorDatas.ToCharArray());
+                                    var split = _ValorFormatado.Split(_SeparadorDatas.ToCharArray());
                                     cAno = split[0];
                                     cMes = split[1];
                                     cDia = split[2];
@@ -572,12 +574,12 @@ namespace BoletoNet
                         {
                             if (!_ValorFormatado.Trim().Equals(""))
                             {
-                                string cAno = "1900";
-                                string cMes = "";
-                                string cDia = "";
+                                var cAno = "1900";
+                                var cMes = "";
+                                var cDia = "";
                                 if (_SeparadorDatas != null)
                                 {
-                                    string[] split = _ValorFormatado.Split(_SeparadorDatas.ToCharArray());
+                                    var split = _ValorFormatado.Split(_SeparadorDatas.ToCharArray());
                                     cMes = split[1];
                                     cDia = split[0];
                                 }
@@ -596,12 +598,12 @@ namespace BoletoNet
                         }
                     case TTiposDadoEDI.ediDataDDMMAAAA_________:
                         {
-                            string cDia = "";
-                            string cMes = "";
-                            string cAno = "";
+                            var cDia = "";
+                            var cMes = "";
+                            var cAno = "";
                             if (_SeparadorDatas != null)
                             {
-                                string[] split = _ValorFormatado.Split(_SeparadorDatas.ToCharArray());
+                                var split = _ValorFormatado.Split(_SeparadorDatas.ToCharArray());
                                 cAno = split[2];
                                 cMes = split[1];
                                 cDia = split[0];
@@ -624,12 +626,12 @@ namespace BoletoNet
                         }
                     case TTiposDadoEDI.ediDataDDMMAA___________:
                         {
-                            string cDia = "";
-                            string cMes = "";
-                            string cAno = "";
+                            var cDia = "";
+                            var cMes = "";
+                            var cAno = "";
                             if (_SeparadorDatas != null)
                             {
-                                string[] split = _ValorFormatado.Split(_SeparadorDatas.ToCharArray());
+                                var split = _ValorFormatado.Split(_SeparadorDatas.ToCharArray());
                                 cAno = split[2];
                                 cMes = split[1];
                                 cDia = split[0];
@@ -645,12 +647,12 @@ namespace BoletoNet
                         }
                     case TTiposDadoEDI.ediDataMMAAAA___________:
                         {
-                            string cDia = "01";
-                            string cMes = "";
-                            string cAno = "";
+                            var cDia = "01";
+                            var cMes = "";
+                            var cAno = "";
                             if (_SeparadorDatas != null)
                             {
-                                string[] split = _ValorFormatado.Split(_SeparadorDatas.ToCharArray());
+                                var split = _ValorFormatado.Split(_SeparadorDatas.ToCharArray());
                                 cAno = split[1];
                                 cMes = split[0];
                             }
@@ -664,12 +666,12 @@ namespace BoletoNet
                         }
                     case TTiposDadoEDI.ediDataMMDD_____________:
                         {
-                            string cDia = "";
-                            string cMes = "";
-                            string cAno = "1900";
+                            var cDia = "";
+                            var cMes = "";
+                            var cAno = "1900";
                             if (_SeparadorDatas != null)
                             {
-                                string[] split = _ValorFormatado.Split(_SeparadorDatas.ToCharArray());
+                                var split = _ValorFormatado.Split(_SeparadorDatas.ToCharArray());
                                 cMes = split[0];
                                 cDia = split[1];
                             }
@@ -683,11 +685,11 @@ namespace BoletoNet
                         }
                     case TTiposDadoEDI.ediHoraHHMM_____________:
                         {
-                            string cHora = "";
-                            string cMinuto = "";
+                            var cHora = "";
+                            var cMinuto = "";
                             if (_SeparadorHora != null)
                             {
-                                string[] split = _ValorFormatado.Split(_SeparadorHora.ToCharArray());
+                                var split = _ValorFormatado.Split(_SeparadorHora.ToCharArray());
                                 cHora = split[0];
                                 cMinuto = split[1];
                             }
@@ -701,12 +703,12 @@ namespace BoletoNet
                         }
                     case TTiposDadoEDI.ediHoraHHMMSS___________:
                         {
-                            string cHora = "";
-                            string cMinuto = "";
-                            string cSegundo = "";
+                            var cHora = "";
+                            var cMinuto = "";
+                            var cSegundo = "";
                             if (_SeparadorHora != null)
                             {
-                                string[] split = _ValorFormatado.Split(_SeparadorHora.ToCharArray());
+                                var split = _ValorFormatado.Split(_SeparadorHora.ToCharArray());
                                 cHora = split[0];
                                 cMinuto = split[1];
                                 cSegundo = split[2];
@@ -731,10 +733,6 @@ namespace BoletoNet
                 }
             }
         }
-
-        #endregion
-
-        #region Métodos Privados e Protegidos
 
         #endregion
     }
@@ -813,7 +811,7 @@ namespace BoletoNet
         public virtual void CodificarLinha()
         {
             _LinhaRegistro = "";
-            foreach (TCampoRegistroEDI campos in _CamposEDI)
+            foreach (var campos in _CamposEDI)
             {
                 campos.CodificarNaturalParaEDI();
                 _LinhaRegistro += campos.ValorFormatado; 
@@ -825,7 +823,7 @@ namespace BoletoNet
         /// </summary>
         public virtual void DecodificarLinha()
         {
-            foreach (TCampoRegistroEDI campos in _CamposEDI)
+            foreach (var campos in _CamposEDI)
             {
                 if (_TamanhoMaximo > 0)
                 {

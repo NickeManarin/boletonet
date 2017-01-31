@@ -7,7 +7,7 @@ namespace BoletoNet
     {
         public static string ExtrairDaPosicao(string linha, int de, int ate)
         {
-            int inicio = de - 1;
+            var inicio = de - 1;
             return linha.Substring(inicio, ate - inicio);
         }
 
@@ -23,13 +23,13 @@ namespace BoletoNet
 
         public static DateTime ExtrairDataDaPosicao(string linha, int de, int ate)
         {
-            string valor = ExtrairDaPosicao(linha, de, ate);
+            var valor = ExtrairDaPosicao(linha, de, ate);
             return DateTime.ParseExact(valor, "ddMMyyyy", null);
         }
 
         public static int? ExtrairInt32OpcionalDaPosicao(string linha, int de, int ate)
         {
-            string valor = ExtrairDaPosicao(linha, de, ate);
+            var valor = ExtrairDaPosicao(linha, de, ate);
             int aux;
 
             if (int.TryParse(valor, out aux))
