@@ -939,13 +939,13 @@ namespace BoletoNet
                 _detalhe += new string('0', 13);
 
                 //Código de Inscrição ==>   219 - 220
-                if (boleto.Sacado.CPFCNPJ.Length <= 11)
+                if (boleto.Sacado.CpfCnpj.Length <= 11)
                     _detalhe += "01";  // CPF
                 else
                     _detalhe += "02"; // CNPJ
 
                 //Número de Inscrição ==> 221 - 234
-                _detalhe += Utils.FitStringLength(boleto.Sacado.CPFCNPJ, 14, 14, '0', 0, true, true, true).ToUpper();
+                _detalhe += Utils.FitStringLength(boleto.Sacado.CpfCnpj, 14, 14, '0', 0, true, true, true).ToUpper();
 
                 //Nome do Pagador ==> 235 - 274
                 _detalhe += Utils.FitStringLength(boleto.Sacado.Nome.TrimStart(' '), 40, 40, ' ', 0, true, true, false).ToUpper();

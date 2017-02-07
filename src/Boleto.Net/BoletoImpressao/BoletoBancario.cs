@@ -519,16 +519,16 @@ namespace BoletoNet
 
             //Flavio(fhlviana@hotmail.com) - adicionei a possibilidade de o boleto não ter, necessáriamente, que informar o CPF ou CNPJ do sacado.
             //Formata o CPF/CNPJ(se houver) e o Nome do Sacado para apresentação
-            if (Sacado.CPFCNPJ == string.Empty)
+            if (Sacado.CpfCnpj == string.Empty)
             {
                 sacado = Sacado.Nome;
             }
             else
             {
-                if (Sacado.CPFCNPJ.Length <= 11)
-                    sacado = string.Format("{0}<br/>CPF: {1}", Sacado.Nome, Utils.FormataCpf(Sacado.CPFCNPJ));
+                if (Sacado.CpfCnpj.Length <= 11)
+                    sacado = string.Format("{0}<br/>CPF: {1}", Sacado.Nome, Utils.FormataCpf(Sacado.CpfCnpj));
                 else
-                    sacado = string.Format("{0}<br/>CNPJ: {1}", Sacado.Nome, Utils.FormataCnpj(Sacado.CPFCNPJ));
+                    sacado = string.Format("{0}<br/>CNPJ: {1}", Sacado.Nome, Utils.FormataCnpj(Sacado.CpfCnpj));
             }
 
             var infoSacado = Sacado.InformacoesSacado.GeraHTML(false);

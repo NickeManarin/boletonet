@@ -909,12 +909,12 @@ namespace BoletoNet
                 _segmentoQ += " ";
 
                 _segmentoQ += ObterCodigoDaOcorrencia(boleto);
-                if (boleto.Sacado.CPFCNPJ.Length <= 11)
+                if (boleto.Sacado.CpfCnpj.Length <= 11)
                     _segmentoQ += "1";
                 else
                     _segmentoQ += "2";
 
-                _segmentoQ += Utils.FitStringLength(boleto.Sacado.CPFCNPJ, 15, 15, '0', 0, true, true, true);
+                _segmentoQ += Utils.FitStringLength(boleto.Sacado.CpfCnpj, 15, 15, '0', 0, true, true, true);
                 _segmentoQ += Utils.FitStringLength(boleto.Sacado.Nome.TrimStart(' '), 30, 30, ' ', 0, true, true, false).ToUpper();
                 _segmentoQ += "          ";
                 _segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.End.TrimStart(' '), 40, 40, ' ', 0, true, true, false).ToUpper();
@@ -922,12 +922,12 @@ namespace BoletoNet
                 _segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.CEP, 8, 8, ' ', 0, true, true, false).ToUpper(); ;
                 _segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.Cidade.TrimStart(' '), 15, 15, ' ', 0, true, true, false).ToUpper();
                 _segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.UF, 2, 2, ' ', 0, true, true, false).ToUpper();
-                if (boleto.Sacado.CPFCNPJ.Length <= 11)
+                if (boleto.Sacado.CpfCnpj.Length <= 11)
                     _segmentoQ += "1";
                 else
                     _segmentoQ += "2";
 
-                _segmentoQ += Utils.FitStringLength(boleto.Sacado.CPFCNPJ, 15, 15, '0', 0, true, true, true);
+                _segmentoQ += Utils.FitStringLength(boleto.Sacado.CpfCnpj, 15, 15, '0', 0, true, true, true);
                 _segmentoQ += Utils.FitStringLength(boleto.Sacado.Nome.TrimStart(' '), 30, 30, ' ', 0, true, true, false).ToUpper();
                 _segmentoQ += _brancos10;
                 _segmentoQ += "000";
@@ -1234,12 +1234,12 @@ namespace BoletoNet
                 _detalhe += "0000000000000"; // Valor do IOF
                 _detalhe += "0000000000000"; // Valor do Abatimento
 
-                if (boleto.Sacado.CPFCNPJ.Length <= 11)
+                if (boleto.Sacado.CpfCnpj.Length <= 11)
                     _detalhe += "01";  // CPF
                 else
                     _detalhe += "02"; // CNPJ
 
-                _detalhe += Utils.FitStringLength(boleto.Sacado.CPFCNPJ, 14, 14, '0', 0, true, true, true).ToUpper();
+                _detalhe += Utils.FitStringLength(boleto.Sacado.CpfCnpj, 14, 14, '0', 0, true, true, true).ToUpper();
                 _detalhe += Utils.FitStringLength(boleto.Sacado.Nome.TrimStart(' '), 30, 30, ' ', 0, true, true, false);
                 _detalhe += usoBanco;
                 _detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.End.TrimStart(' '), 40, 40, ' ', 0, true, true, false).ToUpper();

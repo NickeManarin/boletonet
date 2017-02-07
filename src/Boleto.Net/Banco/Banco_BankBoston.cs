@@ -280,11 +280,11 @@ namespace BoletoNet
                 _detalhe += Utils.FitStringLength(boleto.ValorDesconto.ApenasNumeros(), 13, 13, '0', 0, true, true, true);
                 _detalhe += Utils.FitStringLength(boleto.IOF.ApenasNumeros(), 13, 13, '0', 0, true, true, true);
                 _detalhe += Utils.FitStringLength(boleto.Abatimento.ApenasNumeros(), 13, 13, '0', 0, true, true, true);
-                if (boleto.Sacado.CPFCNPJ.Length > 11)
+                if (boleto.Sacado.CpfCnpj.Length > 11)
                     _detalhe += "01";  // CPF
                 else
                     _detalhe += "02"; // CNPJ
-                _detalhe += Utils.FitStringLength(boleto.Sacado.CPFCNPJ, 14, 14, '0', 0, true, true, true).ToUpper();
+                _detalhe += Utils.FitStringLength(boleto.Sacado.CpfCnpj, 14, 14, '0', 0, true, true, true).ToUpper();
                 _detalhe += Utils.FitStringLength(boleto.Sacado.Nome, 30, 30, ' ', 0, true, true, false);
                 _detalhe += Utils.FitStringLength((boleto.Sacado.Endereco.End + " " + boleto.Sacado.Endereco.Numero + " - " + boleto.Sacado.Endereco.Complemento + " " + boleto.Sacado.Endereco.Bairro), 37, 37, ' ', 0, true, true, true).ToUpper();
                 _detalhe += "               ";

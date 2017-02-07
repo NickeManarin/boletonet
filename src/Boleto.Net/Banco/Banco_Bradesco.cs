@@ -1026,13 +1026,13 @@ namespace BoletoNet
                 99-Outros 
                 00-Outros 
                 */
-                if (boleto.Sacado.CPFCNPJ.Length <= 11)
+                if (boleto.Sacado.CpfCnpj.Length <= 11)
                     detalhe += "01";  // CPF
                 else
                     detalhe += "02"; // CNPJ
 
                 //Nº Inscrição do Sacado (14, N)
-                var cpfCnpj = boleto.Sacado.CPFCNPJ.Replace("/", "").Replace(".", "").Replace("-", "");
+                var cpfCnpj = boleto.Sacado.CpfCnpj.Replace("/", "").Replace(".", "").Replace("-", "");
                 detalhe += Utils.FitStringLength(cpfCnpj, 14, 14, '0', 0, true, true, true);
 
                 //Nome do Sacado (40, A)

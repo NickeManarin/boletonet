@@ -921,7 +921,7 @@ namespace BoletoNet
                 //Código de movimento remessa ==> 016 - 017
                 _segmentoQ += ObterCodigoDaOcorrencia(boleto);
 
-                if (boleto.Sacado.CPFCNPJ.Length <= 11)
+                if (boleto.Sacado.CpfCnpj.Length <= 11)
                     //Tipo de inscrição do sacado ==> 018 - 018
                     _segmentoQ += "1";
                 else
@@ -929,7 +929,7 @@ namespace BoletoNet
                     _segmentoQ += "2";
 
                 //Número de inscrição do sacado ==> 019 - 033
-                _segmentoQ += Utils.FitStringLength(boleto.Sacado.CPFCNPJ, 15, 15, '0', 0, true, true, true);
+                _segmentoQ += Utils.FitStringLength(boleto.Sacado.CpfCnpj, 15, 15, '0', 0, true, true, true);
 
                 //Nome sacado ==> 034 - 073
                 _segmentoQ += Utils.FitStringLength(boleto.Sacado.Nome.TrimStart(' '), 40, 40, ' ', 0, true, true, false).ToUpper();
@@ -1418,13 +1418,13 @@ namespace BoletoNet
                 _detalhe += "0000000000000";
 
                 //Tipo de inscrição do sacado  ==> 219 - 220
-                if (boleto.Sacado.CPFCNPJ.Length <= 11)
+                if (boleto.Sacado.CpfCnpj.Length <= 11)
                     _detalhe += "01";  // CPF
                 else
                     _detalhe += "02"; // CNPJ
 
                 //CNPJ ou CPF do sacado ==> 221 - 234
-                _detalhe += Utils.FitStringLength(boleto.Sacado.CPFCNPJ, 14, 14, '0', 0, true, true, true).ToUpper();
+                _detalhe += Utils.FitStringLength(boleto.Sacado.CpfCnpj, 14, 14, '0', 0, true, true, true).ToUpper();
 
                 //Nome do sacado ==> 235 - 274
                 _detalhe += Utils.FitStringLength(boleto.Sacado.Nome.TrimStart(' '), 40, 40, ' ', 0, true, true, false).ToUpper();

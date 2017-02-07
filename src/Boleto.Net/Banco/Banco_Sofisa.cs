@@ -279,8 +279,8 @@ namespace BoletoNet
 			detalhe.Append(Utils.FitStringLength(boleto.IOF.ApenasNumeros(), 13, 13, '0', 0, true, true, true));
 			detalhe.Append(Utils.FitStringLength(boleto.Abatimento.ApenasNumeros(), 13, 13, '0', 0, true, true, true));
 
-			detalhe.Append(boleto.Sacado.CPFCNPJ.Length == 11 ? "01" : "02");
-			detalhe.Append(Utils.FitStringLength(boleto.Sacado.CPFCNPJ, 14, 14, '0', 0, true, true, true));
+			detalhe.Append(boleto.Sacado.CpfCnpj.Length == 11 ? "01" : "02");
+			detalhe.Append(Utils.FitStringLength(boleto.Sacado.CpfCnpj, 14, 14, '0', 0, true, true, true));
 			detalhe.Append(
 				Utils.SubstituiCaracteresEspeciais(Utils.FitStringLength(boleto.Sacado.Nome, 30, 30, ' ', 0, true, true, false)));
 			detalhe.Append(Utils.FitStringLength(string.Empty, 10, 10, ' ', 0, true, true, false));
