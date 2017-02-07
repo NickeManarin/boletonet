@@ -1,4 +1,6 @@
-﻿namespace BoletoNet
+﻿using BoletoNet.Enums;
+
+namespace BoletoNet
 {
     /// <summary>
     /// Contém informações que são pertinentes a um boleto, mas para geração da Remessa. Não são necessárias para impressão do Boleto

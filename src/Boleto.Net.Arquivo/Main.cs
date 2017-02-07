@@ -302,7 +302,7 @@ namespace BoletoNet.Arquivo
 
             //
             b.Sacado = new Sacado("Fulano de Silva");
-            b.Sacado.CPFCNPJ = "000.000.000-00";
+            b.Sacado.CpfCnpj = "000.000.000-00";
             b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
             b.Sacado.Endereco.Bairro = "Testando";
             b.Sacado.Endereco.Cidade = "Testelândia";
