@@ -139,7 +139,7 @@ namespace BoletoNet.Arquivo
             //
             var c = new Cedente();
             c.ContaBancaria = conta;
-            c.CPFCNPJ = "00.000.000/0000-00";
+            c.CpfCnpj = "00.000.000/0000-00";
             c.Nome = "Empresa de Atacado";
             //Na carteira 198 o código do Cedente é a conta bancária
             c.Codigo = "513035600299";//No Banrisul, esse código está no manual como 12 caracteres, por eu(sidneiklein) isso tive que alterar o tipo de int para string;
@@ -187,18 +187,18 @@ namespace BoletoNet.Arquivo
             conta.DigitoAgencia = "2";
             conta.Conta = "13000";
             conta.DigitoConta = "3";
-            //
+            
             var c = new Cedente();
             c.ContaBancaria = conta;
-            c.CPFCNPJ = "00000000000000";
+            c.CpfCnpj = "00000000000000";
             c.Nome = "Empresa de Atacado";
             //Na carteira 198 o código do Cedente é a conta bancária
             c.Codigo = "12345";//No Banrisul, esse código está no manual como 12 caracteres, por eu(sidneiklein) isso tive que alterar o tipo de int para string;
             c.Convenio = 124522;
-            //
+            
             var b = new Boleto();
             b.Cedente = c;
-            //
+            
             b.DataProcessamento = DateTime.Now;
             b.DataVencimento = DateTime.Now.AddDays(15);
             b.ValorBoleto = Convert.ToDecimal(2469.69);
@@ -206,7 +206,7 @@ namespace BoletoNet.Arquivo
             b.VariacaoCarteira = "02";
             b.NossoNumero = string.Empty; //"92082835"; //** Para o "Remessa.TipoDocumento = "06", não poderá ter NossoNúmero Gerado!
             b.NumeroDocumento = "1008073";
-            //
+            
             b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
             b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
             b.Sacado.Endereco.Bairro = "Testando";
@@ -219,17 +219,14 @@ namespace BoletoNet.Arquivo
             //b.Instrucoes.Add(item2);
             b.Banco = new Banco(748);
 
-            //
             var especiedocumento = new EspecieDocumento(748, "A");//(341, 1);
             b.EspecieDocumento = especiedocumento;
-
-
+            
             #region Dados para Remessa:
             b.Remessa = new Remessa();
             b.Remessa.TipoDocumento = "A"; //A = 'A' - SICREDI com Registro
             #endregion
 
-            //
             var boletos = new Boletos();
             boletos.Add(b);
 
@@ -286,7 +283,7 @@ namespace BoletoNet.Arquivo
             //
             var c = new Cedente();
             c.ContaBancaria = conta;
-            c.CPFCNPJ = "00.000.000/0000-00";
+            c.CpfCnpj = "00.000.000/0000-00";
             c.Nome = "Empresa de Atacado";
             //Na carteira 198 o código do Cedente é a conta bancária
             c.Codigo = String.Concat(conta.Agencia, conta.DigitoAgencia, conta.OperacaConta, conta.Conta, conta.DigitoConta); //Na Caixa, esse código está no manual como 16 caracteres AAAAOOOCCCCCCCCD;
@@ -340,7 +337,7 @@ namespace BoletoNet.Arquivo
 
             var c = new Cedente();
             c.ContaBancaria = conta;
-            c.CPFCNPJ = "00.000.000/0000-00";
+            c.CpfCnpj = "00.000.000/0000-00";
             c.Nome = "Empresa de Atacado";
 
             var b = new Boleto();
@@ -587,7 +584,9 @@ namespace BoletoNet.Arquivo
                 form.CodigoBanco = Convert.ToInt16(radioButtonCaixa.Tag);
             else if (radioButtonBNB.Checked)
                 form.CodigoBanco = Convert.ToInt16(radioButtonBNB.Tag);
-            
+            else if (radioButtonSicredi.Checked)
+                form.CodigoBanco = Convert.ToInt16(radioButtonSicredi.Tag);
+
             form.ShowDialog();
         }
 

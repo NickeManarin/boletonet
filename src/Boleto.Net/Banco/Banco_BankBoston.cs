@@ -244,11 +244,11 @@ namespace BoletoNet
                 // 02 - CNPJ DO CEDENTE
 
 
-                if (boleto.Cedente.CPFCNPJ.Length <= 11)
+                if (boleto.Cedente.CpfCnpj.Length <= 11)
                     _detalhe += "01";
                 else
                     _detalhe += "02";
-                _detalhe += Utils.FitStringLength(boleto.Cedente.CPFCNPJ.ToString(), 14, 14, '0', 0, true, true, true);
+                _detalhe += Utils.FitStringLength(boleto.Cedente.CpfCnpj.ToString(), 14, 14, '0', 0, true, true, true);
                 _detalhe += _brancos1;
                 _detalhe += _brancos1 + "     ";
                 _detalhe += "000000000";

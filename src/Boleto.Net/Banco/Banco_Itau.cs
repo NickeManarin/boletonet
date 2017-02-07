@@ -659,8 +659,8 @@ namespace BoletoNet
                 header += "0001";
                 header += "0";
                 header += Utils.FormatCode("", " ", 9);
-                header += (cedente.CPFCNPJ.Length == 11 ? "1" : "2");
-                header += Utils.FormatCode(cedente.CPFCNPJ, "0", 14, true);
+                header += (cedente.CpfCnpj.Length == 11 ? "1" : "2");
+                header += Utils.FormatCode(cedente.CpfCnpj, "0", 14, true);
                 header += Utils.FormatCode("", " ", 20);
                 header += "0";
                 header += Utils.FormatCode(cedente.ContaBancaria.Agencia, " ", 4, true);
@@ -798,8 +798,8 @@ namespace BoletoNet
                 header += "00";
                 header += "030";
                 header += " ";
-                header += (cedente.CPFCNPJ.Length == 11 ? "1" : "2");
-                header += Utils.FormatCode(cedente.CPFCNPJ, "0", 15, true);
+                header += (cedente.CpfCnpj.Length == 11 ? "1" : "2");
+                header += Utils.FormatCode(cedente.CpfCnpj, "0", 15, true);
                 header += Utils.FormatCode("", " ", 20);
                 header += "0";
                 header += Utils.FormatCode(cedente.ContaBancaria.Agencia, "0", 4, true);
@@ -1105,7 +1105,7 @@ namespace BoletoNet
                 detalhe += Utils.FormatCode("", "0", 17, true);
                 detalhe += Utils.FormatCode("", " ", 16);
                 detalhe += Utils.FormatCode("", " ", 4);
-                detalhe += Utils.FormatCode(boleto.Cedente.CPFCNPJ, "0", 14, true);
+                detalhe += Utils.FormatCode(boleto.Cedente.CpfCnpj, "0", 14, true);
                 detalhe += Utils.FormatCode("", " ", 10);
                 detalhe = Utils.SubstituiCaracteresEspeciais(detalhe);
                 return detalhe;
@@ -1142,11 +1142,11 @@ namespace BoletoNet
                 // 04 - CNPJ DO SACADOR
                 // O arquivo gerado pelo aplicativo do Banco ITAÚ, sempre atriubuiu 04 para o tipo de inscrição da empresa
 
-                if (boleto.Cedente.CPFCNPJ.Length <= 11)
+                if (boleto.Cedente.CpfCnpj.Length <= 11)
                     _detalhe += "01";
                 else
                     _detalhe += "02";
-                _detalhe += Utils.FitStringLength(boleto.Cedente.CPFCNPJ.ToString(), 14, 14, '0', 0, true, true, true);
+                _detalhe += Utils.FitStringLength(boleto.Cedente.CpfCnpj.ToString(), 14, 14, '0', 0, true, true, true);
                 _detalhe += Utils.FitStringLength(boleto.Cedente.ContaBancaria.Agencia.ToString(), 4, 4, '0', 0, true, true, true);
                 _detalhe += "00";
                 _detalhe += Utils.FitStringLength(boleto.Cedente.ContaBancaria.Conta.ToString(), 5, 5, '0', 0, true, true, true);

@@ -61,7 +61,7 @@ namespace BoletoNet
         private string CalcularNCNossoNumero(string nossoNumero)
         {
             var dv1 = Mod10Banri(nossoNumero);
-            var dv1e2 = Mod11Banri(nossoNumero, dv1); // O módulo 11 sempre devolve os dois Dígitos, pois, as vezes o dígito calculado no mod10 será incrementado em 1
+            var dv1e2 = Mod11Banri(nossoNumero, dv1); //O módulo 11 sempre devolve os dois Dígitos, pois, as vezes o dígito calculado no mod10 será incrementado em 1
             return nossoNumero + dv1e2.ToString("00");
         }
 

@@ -4,10 +4,10 @@ using System.ComponentModel;
 
 namespace BoletoNet
 {
-	[Serializable, Browsable(false)]
+    [Serializable, Browsable(false)]
     public class Cedente
     {
-        #region Variaveis
+        #region Variáveis
 
         private string _codigo = "0";
         private string _cpfcnpj;
@@ -21,51 +21,51 @@ namespace BoletoNet
         private string _carteira;
         private Endereco _endereco;
         private IList<IInstrucao> _instrucoes = new List<IInstrucao>();
-        private bool _mostrarCNPJnoBoleto = false;
+        private bool _mostrarCnpjNoBoleto = false;
 
         #endregion Variaveis
 
         public Cedente()
-        {}
+        { }
 
         public Cedente(ContaBancaria contaBancaria)
         {
             _contaBancaria = contaBancaria;
         }
 
-        public Cedente(string cpfcnpj, string nome)
+        public Cedente(string cpfCnpj, string nome)
         {
-            CPFCNPJ = cpfcnpj;
+            CpfCnpj = cpfCnpj;
             _nome = nome;
         }
 
-		public Cedente(string cpfcnpj, string nome, string agencia, string digitoAgencia, string conta, string digitoConta, string operacaoConta) :
-			this(cpfcnpj, nome, agencia, digitoAgencia, conta, digitoConta)
+        public Cedente(string cpfCnpj, string nome, string agencia, string digitoAgencia, string conta, string digitoConta, string operacaoConta) :
+            this(cpfCnpj, nome, agencia, digitoAgencia, conta, digitoConta)
         {
-			_contaBancaria = new ContaBancaria
-			{
-				Agencia = agencia,
-				DigitoAgencia = digitoAgencia,
-				Conta = conta,
-				DigitoConta = digitoConta,
-				OperacaConta = operacaoConta
-			};
+            _contaBancaria = new ContaBancaria
+            {
+                Agencia = agencia,
+                DigitoAgencia = digitoAgencia,
+                Conta = conta,
+                DigitoConta = digitoConta,
+                OperacaConta = operacaoConta
+            };
         }
 
-        public Cedente(string cpfcnpj, string nome, string agencia, string digitoAgencia, string conta, string digitoConta)
-			: this(cpfcnpj, nome)
-		{
-			_contaBancaria = new ContaBancaria
+        public Cedente(string cpfCnpj, string nome, string agencia, string digitoAgencia, string conta, string digitoConta)
+            : this(cpfCnpj, nome)
         {
-				Agencia = agencia,
-				DigitoAgencia = digitoAgencia,
-				Conta = conta,
-				DigitoConta = digitoConta
-			};
+            _contaBancaria = new ContaBancaria
+            {
+                Agencia = agencia,
+                DigitoAgencia = digitoAgencia,
+                Conta = conta,
+                DigitoConta = digitoConta
+            };
         }
 
-		public Cedente(string cpfcnpj, string nome, string agencia, string conta, string digitoConta) :
-			this(cpfcnpj, nome)
+        public Cedente(string cpfCnpj, string nome, string agencia, string conta, string digitoConta) :
+            this(cpfCnpj, nome)
         {
             _contaBancaria = new ContaBancaria();
             _contaBancaria.Agencia = agencia;
@@ -73,8 +73,8 @@ namespace BoletoNet
             _contaBancaria.DigitoConta = digitoConta;
         }
 
-        public Cedente(string cpfcnpj, string nome, string agencia, string conta)
-			: this(cpfcnpj, nome)
+        public Cedente(string cpfCnpj, string nome, string agencia, string conta)
+            : this(cpfCnpj, nome)
         {
             _contaBancaria = new ContaBancaria();
             _contaBancaria.Agencia = agencia;
@@ -88,33 +88,20 @@ namespace BoletoNet
         /// </summary>
         public string Codigo
         {
-            get
-            {
-                return _codigo;
-            }
-            set
-            {
-                _codigo = value;
-            }
+            get { return _codigo; }
+            set { _codigo = value; }
         }
 
         public int DigitoCedente
         {
-            get
-            {
-                return _digitoCedente;
-            }
-            set
-            {
-                _digitoCedente = value;
-            }
-            
+            get { return _digitoCedente; }
+            set { _digitoCedente = value; }
         }
 
         /// <summary>
         /// Retona o CPF ou CNPJ do Cedente
         /// </summary>
-        public string CPFCNPJ
+        public string CpfCnpj
         {
             get
             {
@@ -122,38 +109,30 @@ namespace BoletoNet
             }
             set
             {
-                string o = value.Replace(".", "").Replace("-", "").Replace("/", "");
+                var o = value.Replace(".", "").Replace("-", "").Replace("/", "");
+
                 if (o == null || (o.Length != 11 && o.Length != 14))
                     throw new ArgumentException("O CPF/CNPJ inválido. Utilize 11 dígitos para CPF ou 14 para CNPJ.");
 
                 _cpfcnpj = value;
             }
         }
-		
+
         /// <summary>
         /// Retona o CPF ou CNPJ do Cedente (com máscara)
         /// </summary>
-        public string CPFCNPJcomMascara
+        public string CpfCnpjComMascara
         {
-            get
-            {
-                return _cpfcnpj;
-            }
+            get { return _cpfcnpj; }
         }
-		
+
         /// <summary>
         /// Nome do Cedente
         /// </summary>
-        public String Nome
+        public string Nome
         {
-            get
-            {
-                return _nome;
-            }
-            set
-            {
-                _nome = value;
-            }
+            get { return _nome; }
+            set { _nome = value; }
         }
 
         /// <summary>
@@ -161,14 +140,8 @@ namespace BoletoNet
         /// </summary>
         public ContaBancaria ContaBancaria
         {
-            get
-            {
-                return _contaBancaria;
-            }
-            set
-            {
-                _contaBancaria = value;
-            }
+            get { return _contaBancaria; }
+            set { _contaBancaria = value; }
         }
 
         /// <summary>
@@ -176,14 +149,8 @@ namespace BoletoNet
         /// </summary>
         public long Convenio
         {
-            get
-            {
-                return _convenio;
-            }
-            set
-            {
-                _convenio = Convert.ToInt64(value);
-            }
+            get { return _convenio; }
+            set { _convenio = Convert.ToInt64(value); }
         }
 
         /// <summary>
@@ -191,14 +158,8 @@ namespace BoletoNet
         /// </summary>
         public int NumeroSequencial
         {
-            get
-            {
-                return _numeroSequencial;
-            }
-            set
-            {
-                _numeroSequencial = value;
-            }
+            get { return _numeroSequencial; }
+            set { _numeroSequencial = value; }
         }
 
         /// <summary>
@@ -206,14 +167,8 @@ namespace BoletoNet
         /// </summary>
         public string CodigoTransmissao
         {
-            get
-            {
-                return _codigoTransmissao;
-            }
-            set
-            {
-                _codigoTransmissao = value;
-            }
+            get { return _codigoTransmissao; }
+            set { _codigoTransmissao = value; }
         }
 
         /// <summary>
@@ -221,14 +176,8 @@ namespace BoletoNet
         /// </summary>
         public int NumeroBordero
         {
-            get
-            {
-                return _numeroBordero;
-            }
-            set
-            {
-                _numeroBordero = value;
-            }
+            get { return _numeroBordero; }
+            set { _numeroBordero = value; }
         }
 
         /// <summary>
@@ -236,55 +185,28 @@ namespace BoletoNet
         /// </summary>
         public string Carteira
         {
-            get
-            {
-                return _carteira;
-            }
-            set
-            {
-                _carteira = value;
-            }
+            get { return _carteira; }
+            set { _carteira = value; }
         }
 
         public Endereco Endereco
         {
-            get
-            {
-                return _endereco;
-            }
-            set
-            {
-                _endereco = value;
-            }
+            get { return _endereco; }
+            set { _endereco = value;}
         }
 
         public IList<IInstrucao> Instrucoes
         {
-            get
-            {
-                return _instrucoes;
-            }
-            set
-            {
-                _instrucoes = value;
-            }
+            get { return _instrucoes; }
+            set { _instrucoes = value; }
         }
 
-
-        public bool MostrarCNPJnoBoleto
+        public bool MostrarCnpjNoBoleto
         {
-            get
-            {
-                return _mostrarCNPJnoBoleto;
-            }
-            set
-            {
-                _mostrarCNPJnoBoleto = value;
-            }
+            get { return _mostrarCnpjNoBoleto; }
+            set { _mostrarCnpjNoBoleto = value;}
         }
 
-
-        
-        #endregion Propriedades
+        #endregion
     }
 }

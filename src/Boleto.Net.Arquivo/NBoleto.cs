@@ -402,7 +402,7 @@ namespace BoletoNet.Arquivo
 
             GeraLayout(boletos);
         }
-
+        
         public void GeraBoletoBradesco(int qtde)
         {
             // Cria o boleto, e passa os parâmetros usuais
@@ -466,7 +466,7 @@ namespace BoletoNet.Arquivo
 
                 var c = new Cedente();
                 c.ContaBancaria = conta;
-                c.CPFCNPJ = "00.000.000/0000-00";
+                c.CpfCnpj = "00.000.000/0000-00";
                 c.Nome = "Empresa de Atacado";
 
                 var b = new Boleto();
@@ -500,6 +500,46 @@ namespace BoletoNet.Arquivo
 
         }
 
+        public void GeraBoletoSicredi(int qtde)
+        {
+            // Cria o boleto, e passa os parâmetros usuais
+            var boletos = new List<BoletoBancario>();
+            for (var i = 0; i < qtde; i++)
+            {
+                var bb = new BoletoBancario();
+                bb.CodigoBanco = _codigoBanco;
+
+                var vencimento = DateTime.Now.AddDays(10);
+
+                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "1234", "5", "123456", "7");
+                c.Codigo = "13000";
+
+                var end = new Endereco();
+                end.Bairro = "Lago Sul";
+                end.CEP = "71666660";
+                end.Cidade = "Brasília- DF";
+                end.Complemento = "Quadra XX Conjunto XX Casa XX";
+                end.End = "Condominio de Brasilia - Quadra XX Conjunto XX Casa XX";
+                end.Logradouro = "Cond. Brasilia";
+                end.Numero = "55";
+                end.UF = "DF";
+
+                var b = new Boleto(vencimento, 1.01m, "02", "01000000001", c);
+                b.NumeroDocumento = "01000000001";
+
+                b.Sacado = new Sacado("000.000.000-00", "Eduardo Frare");
+                b.Sacado.Endereco = end;
+
+                b.NossoNumero = "17200002";
+
+                bb.Boleto = b;
+                bb.Boleto.Valida();
+
+                boletos.Add(bb);
+            }
+
+            GeraLayout(boletos);
+        }
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -542,6 +582,10 @@ namespace BoletoNet.Arquivo
                     break;
                 case 4: //BNB
                     GeraBoletoBNB((int)numericUpDown.Value);
+                    break;
+
+                case 748: //Sicredi.
+                    GeraBoletoSicredi((int)numericUpDown.Value);
                     break;
             }
 

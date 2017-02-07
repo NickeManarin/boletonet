@@ -806,13 +806,13 @@ namespace BoletoNet
                 _detalhe = "1";
 
                 //CNPJ ou CPF do cedente ==> 002 - 003
-                if (boleto.Cedente.CPFCNPJ.Length <= 11)
+                if (boleto.Cedente.CpfCnpj.Length <= 11)
                     _detalhe += "01";
                 else
                     _detalhe += "02";
 
                 //CNPJ ou CPF do cedente ==> 004 - 017
-                _detalhe += Utils.FitStringLength(boleto.Cedente.CPFCNPJ, 14, 14, '0', 0, true, true, true);
+                _detalhe += Utils.FitStringLength(boleto.Cedente.CpfCnpj, 14, 14, '0', 0, true, true, true);
 
                 //Zero ==> 018 - 018
                 _detalhe += "0";

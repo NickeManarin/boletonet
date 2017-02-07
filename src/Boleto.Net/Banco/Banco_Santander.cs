@@ -471,10 +471,10 @@ namespace BoletoNet
                 header += Utils.FormatCode("", " ", 8);
 
                 //Tipo de inscrição da empresa ==> 017 - 017
-                header += (cedente.CPFCNPJ.Length == 11 ? "1" : "2");
+                header += (cedente.CpfCnpj.Length == 11 ? "1" : "2");
 
                 //Nº de inscrição da empresa ==> 018 – 032
-                header += Utils.FormatCode(cedente.CPFCNPJ, "0", 15, true);
+                header += Utils.FormatCode(cedente.CpfCnpj, "0", 15, true);
 
                 //Código de Transmissão ==> 033 – 047
                 header += Utils.FormatCode(cedente.CodigoTransmissao, "0", 15, true);
@@ -657,10 +657,10 @@ namespace BoletoNet
                 header += " ";
 
                 //Tipo de inscrição da empresa ==> 018 - 018
-                header += (cedente.CPFCNPJ.Length == 11 ? "1" : "2");
+                header += (cedente.CpfCnpj.Length == 11 ? "1" : "2");
 
                 //Nº de inscrição da empresa ==> 019 - 033
-                header += Utils.FormatCode(cedente.CPFCNPJ, "0", 15, true);
+                header += Utils.FormatCode(cedente.CpfCnpj, "0", 15, true);
 
                 //Reservado (uso Banco) ==> 034 – 053
                 header += Utils.FormatCode("", " ", 20);
@@ -1234,13 +1234,13 @@ namespace BoletoNet
                 _detalhe = "1";
 
                 //CNPJ ou CPF do cedente ==> 002 - 003
-                if (boleto.Cedente.CPFCNPJ.Length <= 11)
+                if (boleto.Cedente.CpfCnpj.Length <= 11)
                     _detalhe += "01";
                 else
                     _detalhe += "02";
 
                 //CNPJ ou CPF do cedente ==> 004 - 017
-                _detalhe += Utils.FitStringLength(boleto.Cedente.CPFCNPJ, 14, 14, '0', 0, true, true, true);
+                _detalhe += Utils.FitStringLength(boleto.Cedente.CpfCnpj, 14, 14, '0', 0, true, true, true);
 
                 //Código da agência cedente ==> 018 - 021
                 _detalhe += Utils.FitStringLength(boleto.Cedente.ContaBancaria.Agencia, 4, 4, '0', 0, true, true, true);

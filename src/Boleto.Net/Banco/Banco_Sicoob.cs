@@ -423,8 +423,8 @@ namespace BoletoNet
             {
                 //Montagem do Detalhe
                 _detalhe.Append("1"); //Posição 001
-                _detalhe.Append(Utils.IdentificaTipoInscricaoSacado(boleto.Cedente.CPFCNPJ)); //Posição 002 a 003
-                _detalhe.Append(Utils.FitStringLength(boleto.Cedente.CPFCNPJ.Replace(".", "").Replace("-", "").Replace("/", ""), 14, 14, '0', 0, true, true, true)); //Posição 004 a 017
+                _detalhe.Append(Utils.IdentificaTipoInscricaoSacado(boleto.Cedente.CpfCnpj)); //Posição 002 a 003
+                _detalhe.Append(Utils.FitStringLength(boleto.Cedente.CpfCnpj.Replace(".", "").Replace("-", "").Replace("/", ""), 14, 14, '0', 0, true, true, true)); //Posição 004 a 017
                 _detalhe.Append(Utils.FitStringLength(boleto.Cedente.ContaBancaria.Agencia, 4, 4, '0', 0, true, true, true)); //Posição 018 a 021
                 _detalhe.Append(Utils.FitStringLength(boleto.Cedente.ContaBancaria.DigitoAgencia, 1, 1, '0', 0, true, true, true)); //Posição 022
                 _detalhe.Append(Utils.FitStringLength(boleto.Cedente.ContaBancaria.Conta, 8, 8, '0', 0, true, true, true)); //Posição 023 a 030

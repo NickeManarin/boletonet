@@ -638,7 +638,7 @@ namespace BoletoNet
                 .Replace("@LINHADIGITAVEL", Boleto.CodigoBarra.LinhaDigitavel)
                 .Replace("@LOCALPAGAMENTO", Boleto.LocalPagamento)
                 .Replace("@DATAVENCIMENTO", dataVencimento)
-                .Replace("@CEDENTE_BOLETO", !Cedente.MostrarCNPJnoBoleto ? Cedente.Nome : string.Format("{0}&nbsp;&nbsp;&nbsp;CNPJ: {1}", Cedente.Nome, Cedente.CPFCNPJcomMascara))
+                .Replace("@CEDENTE_BOLETO", !Cedente.MostrarCnpjNoBoleto ? Cedente.Nome : string.Format("{0}&nbsp;&nbsp;&nbsp;CNPJ: {1}", Cedente.Nome, Cedente.CpfCnpjComMascara))
                 .Replace("@CEDENTE", Cedente.Nome)
                 .Replace("@DATADOCUMENTO", Boleto.DataDocumento.ToString("dd/MM/yyyy"))
                 .Replace("@NUMERODOCUMENTO", Boleto.NumeroDocumento)
@@ -673,14 +673,14 @@ namespace BoletoNet
                 .Replace("@SACADO", sacado.Replace("<br/>", " - ")) //Com a quebra de linha apenas no recibo do sacado do carnê.
                 .Replace("@INFOSACADO", infoSacado)
                 .Replace("@AGENCIACODIGOCEDENTE", agenciaCodigoCedente)
-                .Replace("@CPFCNPJ", Cedente.CPFCNPJ)
+                .Replace("@CPFCNPJ", Cedente.CpfCnpj)
                 .Replace("@MORAMULTA", Boleto.ValorMulta == 0 ? "" : Boleto.ValorMulta.ToString("C", CultureInfo.GetCultureInfo("PT-BR")))
                 .Replace("@AUTENTICACAOMECANICA", "")
                 .Replace("@USODOBANCO", Boleto.UsoBanco)
                 .Replace("@IMAGEMCODIGOBARRA", imagemCodigoBarras)
                 .Replace("@ACEITE", Boleto.Aceite).ToString()
                 .Replace("@ENDERECOCEDENTE", MostrarEnderecoCedente ? enderecoCedente : "")
-                .Replace("@AVALISTA", string.Format("{0} - {1}", Boleto.Avalista != null ? Boleto.Avalista.Nome : "", Boleto.Avalista != null ? Boleto.Avalista.CPFCNPJ : ""))
+                .Replace("@AVALISTA", string.Format("{0} - {1}", Boleto.Avalista != null ? Boleto.Avalista.Nome : "", Boleto.Avalista != null ? Boleto.Avalista.CpfCnpj : ""))
                 .Replace("Ar\">R$", RemoveSimboloMoedaValorDocumento ? "Ar\">" : "Ar\">R$");
         }
 

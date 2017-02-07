@@ -231,10 +231,10 @@ namespace BoletoNet
 			// 02 - CNPJ do cedente
 			// 03 - CPF do Sacador
 			// 04 - CNPJ Sacador
-			detalhe.Append(boleto.Cedente.CPFCNPJ.Length == 11 ? "01" : "02");
+			detalhe.Append(boleto.Cedente.CpfCnpj.Length == 11 ? "01" : "02");
 
 			// CPF/CNPJ da empresa ou sacador
-			detalhe.Append(Utils.FitStringLength(boleto.Cedente.CPFCNPJ, 14, 14, '0', 0, true, true, true));
+			detalhe.Append(Utils.FitStringLength(boleto.Cedente.CpfCnpj, 14, 14, '0', 0, true, true, true));
 
 			// Código da empresea, fornecido pelo banco
 			detalhe.Append(Utils.FitStringLength(this._convenio, 20, 20, ' ', 0, true, true, false));

@@ -314,7 +314,7 @@ namespace BoletoNet
                 #endregion Campo 5
             }
 
-            //MONTA OS DADOS DA INHA DIGITÁVEL DE ACORDO COM OS DADOS OBTIDOS ACIMA
+            //MONTA OS DADOS DA LINHA DIGITÁVEL DE ACORDO COM OS DADOS OBTIDOS ACIMA
             boleto.CodigoBarra.LinhaDigitavel = grupo1 + grupo2 + grupo3 + grupo4 + grupo5;
         }
 
@@ -784,8 +784,8 @@ namespace BoletoNet
                 header += "0000";                                                                       // Lote de Serviço 
                 header += "0";                                                                          // Tipo de Registro 
                 header += Utils.FormatCode("", " ", 9);                                                 // Uso Exclusivo FEBRABAN/CNAB
-                header += (cedente.CPFCNPJ.Length == 11 ? "1" : "2");                                   // Tipo de Inscrição 
-                header += Utils.FormatCode(cedente.CPFCNPJ, "0", 15);                                   // CPF/CNPJ do cedente 
+                header += (cedente.CpfCnpj.Length == 11 ? "1" : "2");                                   // Tipo de Inscrição 
+                header += Utils.FormatCode(cedente.CpfCnpj, "0", 15);                                   // CPF/CNPJ do cedente 
                 header += Utils.FormatCode(cedente.Codigo + cedente.DigitoCedente, "0", 16); // Código do Convênio no Banco 
                 header += Utils.FormatCode("", "0", 4);                                                 // Uso Exclusivo CAIXA
                 header += Utils.FormatCode(cedente.ContaBancaria.Agencia, "0", 5);                      // Agência Mantenedora da Conta 
@@ -828,8 +828,8 @@ namespace BoletoNet
                 header += "  ";                                                                         // Uso Exclusivo FEBRABAN/CNAB
                 header += "020";                                                                        // Número da Versão do Layout do Arquivo 
                 header += " ";                                                                          // Uso Exclusivo FEBRABAN/CNAB
-                header += (cedente.CPFCNPJ.Length == 11 ? "1" : "2");                                   // Tipo de Inscrição 
-                header += Utils.FormatCode(cedente.CPFCNPJ, "0", 15);                                   // CPF/CNPJ do cedente
+                header += (cedente.CpfCnpj.Length == 11 ? "1" : "2");                                   // Tipo de Inscrição 
+                header += Utils.FormatCode(cedente.CpfCnpj, "0", 15);                                   // CPF/CNPJ do cedente
                 header += Utils.FormatCode(cedente.Codigo + cedente.DigitoCedente, "0", 16); // Código do Convênio no Banco 
                 header += Utils.FormatCode("", " ", 4);                                                 // Uso Exclusivo CAIXA
                 header += Utils.FormatCode(cedente.ContaBancaria.Agencia, "0", 5);                      // Agência Mantenedora da Conta 
@@ -1113,12 +1113,12 @@ namespace BoletoNet
 
                 #region Regra Tipo de Inscrição Cedente
                 var vCpfCnpjEmi = "0";//não informado
-                if (cedente.CPFCNPJ.Length.Equals(11)) vCpfCnpjEmi = "1"; //Cpf
-                else if (cedente.CPFCNPJ.Length.Equals(14)) vCpfCnpjEmi = "2"; //Cnpj
+                if (cedente.CpfCnpj.Length.Equals(11)) vCpfCnpjEmi = "1"; //Cpf
+                else if (cedente.CpfCnpj.Length.Equals(14)) vCpfCnpjEmi = "2"; //Cnpj
                 #endregion
 
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0018, 001, 0, vCpfCnpjEmi, '0'));                                  // posição 18 até 18   (1) - Tipo de Inscrição 
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0019, 014, 0, cedente.CPFCNPJ, '0'));                              // posição 19 até 32   (14)- Número de Inscrição da empresa
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0019, 014, 0, cedente.CpfCnpj, '0'));                              // posição 19 até 32   (14)- Número de Inscrição da empresa
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0033, 020, 0, "0", '0'));                                          // posição 33 até 52   (20)- Uso Exclusivo CAIXA
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0053, 005, 0, cedente.ContaBancaria.Agencia, '0'));                // posição 53 até 57   (5) - Agência Mantenedora da Conta
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0058, 001, 0, cedente.ContaBancaria.DigitoAgencia.ToUpper(), ' '));// posição 58 até 58   (1) - Dígito Verificador da Agência
@@ -1164,11 +1164,11 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0017, 001, 0, string.Empty, ' '));                                  // posição 17 até 17   (1) - Uso Exclusivo FEBRABAN/CNAB
                 #region Regra Tipo de Inscrição Cedente
                 var vCpfCnpjEmi = "0";//não informado
-                if (cedente.CPFCNPJ.Length.Equals(11)) vCpfCnpjEmi = "1"; //Cpf
-                else if (cedente.CPFCNPJ.Length.Equals(14)) vCpfCnpjEmi = "2"; //Cnpj
+                if (cedente.CpfCnpj.Length.Equals(11)) vCpfCnpjEmi = "1"; //Cpf
+                else if (cedente.CpfCnpj.Length.Equals(14)) vCpfCnpjEmi = "2"; //Cnpj
                 #endregion
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0018, 001, 0, vCpfCnpjEmi, '0'));                                   // posição 18 até 18   (1) - Tipo de Inscrição 
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0019, 015, 0, cedente.CPFCNPJ, '0'));                               // posição 19 até 33   (15)- Número de Inscrição da empresa
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0019, 015, 0, cedente.CpfCnpj, '0'));                               // posição 19 até 33   (15)- Número de Inscrição da empresa
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0034, 006, 0, cedente.Convenio, '0'));                              // posição 34 até 39   (6) - Código do Convênio no Banco
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0040, 014, 0, "0", '0'));                                           // posição 40 até 53   (14)- Uso Exclusivo CAIXA
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0054, 005, 0, cedente.ContaBancaria.Agencia, '0'));                 // posição 54 até 58   (5) - Agência Mantenedora da Conta
@@ -1666,15 +1666,15 @@ namespace BoletoNet
                 #region Regra Tipo de Inscrição Cedente
 
                 var vCpfCnpjEmi = "00";
-                if (boleto.Cedente.CPFCNPJ.Length.Equals(11))
+                if (boleto.Cedente.CpfCnpj.Length.Equals(11))
                     vCpfCnpjEmi = "01"; //Cpf é sempre 11;
-                else if (boleto.Cedente.CPFCNPJ.Length.Equals(14))
+                else if (boleto.Cedente.CpfCnpj.Length.Equals(14))
                     vCpfCnpjEmi = "02"; //Cnpj é sempre 14;
 
                 #endregion
 
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0002, 002, 0, vCpfCnpjEmi, '0'));                               //002-003
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0004, 014, 0, boleto.Cedente.CPFCNPJ, '0'));                    //004-017
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0004, 014, 0, boleto.Cedente.CpfCnpj, '0'));                    //004-017
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0018, 004, 0, boleto.Cedente.ContaBancaria.Agencia, '0'));      //018-021
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0022, 006, 0, boleto.Cedente.Codigo, ' '));                     //022-027
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0028, 001, 0, boleto.Postagem ? "1" : "2", ' '));               //028-028 '1' Banco emite, '2' Cliente emite.

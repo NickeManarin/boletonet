@@ -47,7 +47,6 @@ namespace BoletoNet
             {
                 boleto.DigitoNossoNumero = DigNossoNumeroSicredi(boleto);
                 boleto.NossoNumero += boleto.DigitoNossoNumero;
-                //boleto.DigitoNossoNumero += DigNossoNumeroSicredi(boleto);
             }
 
             //Verifica se data do processamento é valida
@@ -111,21 +110,36 @@ namespace BoletoNet
 
         public override void FormataCodigoBarra(Boleto boleto)
         {
-            var valorBoleto = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "");
-            valorBoleto = Utils.FormatCode(valorBoleto, 10);
+            var valor = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "").PadLeft(10, '0');
 
-            var cmpLivre = boleto.Carteira + "1" + boleto.NossoNumero + boleto.Cedente.ContaBancaria.Agencia + boleto.Cedente.ContaBancaria.OperacaConta + boleto.Cedente.Codigo + "10";
-            var dvCmpLivre = DigSicredi(cmpLivre).ToString();
+            //Campo livre:
+            //Tipo da cobranca     (1)  1-Com registro ou 3-Sem registro.
+            //Tipo da carteira     (1)  1-Simples, 2-Caucionada ou 3-Descontada.
+            //Nosso Número         (9)  Código do nosso número com 9 dígitos.
+            //Agência              (6)  Código da agência com 4 dígitos e posto com 2 dígitos.
+            //Cód. do beneficiário (5)  Número da conta do cliente sem o dígito de controle com 5 dígitos. Estava OperacaoConta ao invés de Conta.
+            //"00" ou "10"         (2)  Será "10" se houver valor expresso na barra, senão "00".
+            //Digito verificador   (1)  Dígito verificador calculado pelo módulo 11 para código de barras.
+            var campoLivre = "11" + boleto.NossoNumero + boleto.DigitoNossoNumero + boleto.Cedente.ContaBancaria.Agencia + 
+                boleto.Cedente.ContaBancaria.DigitoAgencia + boleto.Cedente.ContaBancaria.Conta + "10";
 
-            boleto.CodigoBarra.Codigo = string.Format("{0}{1}{2}{3}{4}{5}", Utils.FormatCode(Codigo.ToString(), 3), boleto.Moeda, FatorVencimento(boleto), valorBoleto, cmpLivre, DigSicredi(cmpLivre));
+            //Código de barras:
+            //Código do banco     (3)  Preenchido com zeros à esquerda.
+            //Código da moeda     (1)  Para Real, usar '9'.
+            //Dígito verificador  (1)  Dígito verificador do código de barras.
+            //Fator de vencimento (4)  Fator de vencimento com base no cálculo de data.
+            //Valor do título     (10) Preencher com zeros à esquerda.
+            //Campo livre         (25) União de outros valores, definidos acima.
+            boleto.CodigoBarra.Codigo = string.Format("{0}{1}{2}{3}{4}{5}", Codigo.ToString().PadLeft(3, '0'), boleto.Moeda, 
+                FatorVencimento(boleto), valor, campoLivre, DigSicredi(campoLivre));
 
-            var dacBoleto = DigSicredi(boleto.CodigoBarra.Codigo);
+            //Dígito de auto conferência.
+            var dac = DigSicredi(boleto.CodigoBarra.Codigo);
 
-            if (dacBoleto == 0 || dacBoleto > 9)
-                dacBoleto = 1;
-
-
-            boleto.CodigoBarra.Codigo = Strings.Left(boleto.CodigoBarra.Codigo, 4) + dacBoleto + Strings.Right(boleto.CodigoBarra.Codigo, 39);
+            if (dac == 0 || dac > 9)
+                dac = 1;
+            
+            boleto.CodigoBarra.Codigo = Strings.Left(boleto.CodigoBarra.Codigo, 4) + dac + Strings.Right(boleto.CodigoBarra.Codigo, 39);
         }
 
         public bool RegistroByCarteira(Boleto boleto)
@@ -302,8 +316,8 @@ namespace BoletoNet
                 header += "0000";
                 header += "0";
                 header += Utils.FormatCode("", " ", 9);
-                header += cedente.CPFCNPJ.Length == 11 ? "1" : "2";
-                header += Utils.FormatCode(cedente.CPFCNPJ, "0", 14, true);
+                header += cedente.CpfCnpj.Length == 11 ? "1" : "2";
+                header += Utils.FormatCode(cedente.CpfCnpj, "0", 14, true);
                 header += Utils.FormatCode(cedente.Convenio.ToString(), " ", 20);
                 header += Utils.FormatCode(cedente.ContaBancaria.Agencia, "0", 5, true);
                 header += " ";
@@ -498,20 +512,23 @@ namespace BoletoNet
              * r - Resto
              */
 
-            int d, s = 0, p = 2, b = 9;
+            int s = 0, p = 2, b = 9;
 
             for (var i = seq.Length - 1; i >= 0; i--)
             {
                 s = s + Convert.ToInt32(seq.Substring(i, 1)) * p;
+
                 if (p < b)
                     p = p + 1;
                 else
                     p = 2;
             }
 
-            d = 11 - s % 11;
+            var d = 11 - s % 11;
+
             if (d > 9)
                 d = 0;
+
             return d;
         }
 
@@ -707,7 +724,7 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0010, 002, 0, "01", ' '));                            //010-011
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0012, 015, 0, "COBRANCA", ' '));                      //012-026
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0027, 005, 0, cedente.Codigo, ' '));                  //027-031
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0032, 014, 0, cedente.CPFCNPJ, ' '));                 //032-045
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0032, 014, 0, cedente.CpfCnpj, ' '));                 //032-045
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0046, 031, 0, "", ' '));                              //046-076
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0077, 003, 0, "748", ' '));                           //077-079
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0080, 015, 0, "SICREDI", ' '));                       //080-094
@@ -779,7 +796,7 @@ namespace BoletoNet
 
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0057, 006, 0, string.Empty, ' '));                              //057-062
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataAAAAMMDD_________, 0063, 008, 0, boleto.DataProcessamento, ' '));                  //063-070
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0071, 001, 0, string.Empty, ' '));                              //071-071
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0071, 001, 0, boleto.OutrosDadosAlterados, ' '));               //071-071 Quando remessa = '31', alteração de outros dados.
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0072, 001, 0, boleto.Postagem ? "S" : "N", ' '));               //072-072 'S' Postar, 'N' - Não Postar e remeter para o beneficiário
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0073, 001, 0, string.Empty, ' '));                              //073-073
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0074, 001, 0, boleto.Postagem ? "A" : "B", ' '));               //074-074 'A' - Impressão feita pelo banco, 'B' – Impressão é feita pelo Beneficiário
@@ -789,7 +806,7 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0083, 010, 2, boleto.ValorDesconto, '0'));                      //083-092
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0093, 004, 2, boleto.PercMulta, '0'));                          //093-096
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0097, 012, 0, string.Empty, ' '));                              //097-108
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0109, 002, 0, boleto.Remessa.CodigoOcorrencia, ' '));           //109-110 01 - Cadastro de título;
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0109, 002, 0, boleto.Remessa.CodigoOcorrencia, ' '));           //109-110 01 - Cadastro de título, etc;
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0111, 010, 0, boleto.NumeroDocumento, ' '));                    //111-120
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataDDMMAA___________, 0121, 006, 0, boleto.DataVencimento, ' '));                     //121-126
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0127, 013, 2, boleto.ValorBoleto, '0'));                        //127-139

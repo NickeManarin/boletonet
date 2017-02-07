@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using BoletoNet.Util;
 
 namespace BoletoNet
@@ -479,6 +478,7 @@ namespace BoletoNet
         }
 
         #region Mod
+
         internal static int Mod10(string seq)
         {
             /* Variáveis

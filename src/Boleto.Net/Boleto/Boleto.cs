@@ -259,6 +259,17 @@ namespace BoletoNet
         public bool Postagem { get; set; }
 
         /// <summary> 
+        /// Campo utilizado pelo Sicredi, para indicar qual campo foi alterado.
+        /// A – Desconto; 
+        /// B - Juros por dia; 
+        /// C - Desconto por dia de antecipação; 
+        /// D - Data limite para concessão de desconto; 
+        /// E - Cancelamento de protesto automático; 
+        /// F - Carteira de cobrança - não disponível. 
+        /// </summary>
+        public string OutrosDadosAlterados { get; set; }
+
+        /// <summary> 
         /// Retorna o campo especie do documento que por padrao vem com DV
         /// </summary>
         public IEspecieDocumento EspecieDocumento

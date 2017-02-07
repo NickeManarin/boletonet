@@ -385,7 +385,7 @@ namespace BoletoNet {
 
                 // Empresa (Inscrição)
                 _header += "2";                                                                                         // 018-018 Tipo de inscrição da empresa 1=CPF 2=CNPJ
-                _header += Utils.FitStringLength(cedente.CPFCNPJ, 14, 14, '0', 0, true, true, true);                    // 019-032 Número de inscrição da empresa
+                _header += Utils.FitStringLength(cedente.CpfCnpj, 14, 14, '0', 0, true, true, true);                    // 019-032 Número de inscrição da empresa
                 // Empresa (Convênio)
                 _header += Utils.FitStringLength(cedente.Convenio.ToString(), 20, 20, ' ', 0, true, true, false);                    // 033-052 Código do convêncio no banco
                 // Empresa (Conta Corrente)
@@ -451,7 +451,7 @@ namespace BoletoNet {
 
                 // Empresa (Inscrição)
                 _headerLote += "2";                                                                                         // 09 018-018 Tipo de inscrição da empresa 1=CPF 2=CNPJ
-                _headerLote += Utils.FitStringLength(cedente.CPFCNPJ, 15, 15, '0', 0, true, true, true);                    // 10 019-033 Número de inscrição da empresa
+                _headerLote += Utils.FitStringLength(cedente.CpfCnpj, 15, 15, '0', 0, true, true, true);                    // 10 019-033 Número de inscrição da empresa
                 // Empresa (Convênio)
                 _headerLote += Utils.FitStringLength(numeroConvenio, 20, 20, ' ', 0, true, true, false);                    // 11 034-053 Código do convêncio no banco
                 // Empresa (Conta Corrente)
@@ -798,7 +798,7 @@ namespace BoletoNet {
 
                 string tipoInscricaoEmitente = "02";                                        // Padrão CNPJ
                 string tipoInscricaoSacado = "02";                                          // Padrão CNPJ
-                if (boleto.Cedente.CPFCNPJ.Length.Equals(11))
+                if (boleto.Cedente.CpfCnpj.Length.Equals(11))
                     tipoInscricaoEmitente = "01"; // CPF
 
                 if (boleto.Sacado.CPFCNPJ.Length.Equals(11))
@@ -809,7 +809,7 @@ namespace BoletoNet {
                 TRegistroEDI reg = new TRegistroEDI();
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0001, 001, 0, "7", '0'));                                       //001-001
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0002, 002, 0, tipoInscricaoEmitente, '0'));                     //002-003
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0004, 014, 0, boleto.Cedente.CPFCNPJ, '0'));                    //004-017
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0004, 014, 0, boleto.Cedente.CpfCnpj, '0'));                    //004-017
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0018, 004, 0, boleto.Cedente.ContaBancaria.Agencia, '0'));      //018-021
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0022, 001, 0, boleto.Cedente.ContaBancaria.DigitoAgencia, ' '));//022-022
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0023, 008, 0, boleto.Cedente.ContaBancaria.Conta, '0'));        //023-030

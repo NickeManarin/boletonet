@@ -24,19 +24,20 @@ namespace BoletoNet.Util
         {
             return (T)memberInfo.GetCustomAttributes(typeof(T), false).FirstOrDefault();
         }
-        
+
         public static IEnumerable<TResult> Zip<TFirst, TSecond, TResult>(this IEnumerable<TFirst> first, IEnumerable<TSecond> second, Func<TFirst, TSecond, TResult> resultSelector)
         {
             if (first == null) throw new ArgumentNullException("first");
             if (second == null) throw new ArgumentNullException("second");
             if (resultSelector == null) throw new ArgumentNullException("resultSelector");
+
             return ZipIterator(first, second, resultSelector);
         }
 
         static IEnumerable<TResult> ZipIterator<TFirst, TSecond, TResult>(IEnumerable<TFirst> first, IEnumerable<TSecond> second, Func<TFirst, TSecond, TResult> resultSelector)
         {
-            using (IEnumerator<TFirst> e1 = first.GetEnumerator())
-            using (IEnumerator<TSecond> e2 = second.GetEnumerator())
+            using (var e1 = first.GetEnumerator())
+            using (var e2 = second.GetEnumerator())
                 while (e1.MoveNext() && e2.MoveNext())
                     yield return resultSelector(e1.Current, e2.Current);
         }
@@ -59,13 +60,11 @@ namespace BoletoNet.Util
         public static string ApenasNumeros(this decimal? valor)
         {
             if (valor != null)
-            {
                 return valor.Value.ToString("0.00", CultureInfo.GetCultureInfo("pt-BR")).Replace(",", "");
-            }
 
             return string.Empty;
         }
-        
+
     }
 
     /// <summary>
@@ -78,7 +77,7 @@ namespace BoletoNet.Util
             if (!length.HasValue)
                 return str.Substring(start - 1);
 
-            return str.Substring(start -1, length.Value);
+            return str.Substring(start - 1, length.Value);
         }
 
         public static string Left(this string s, int length)

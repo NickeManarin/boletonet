@@ -6,12 +6,12 @@ namespace BoletoNet
     public class ContaBancaria
     {
         #region Constructors
+        
         /// <summary>
         /// Cria uma nova instância de conta bancária
         /// </summary>
         public ContaBancaria()
-        {
-        }
+        {}
 
         /// <summary>
         /// Cria uma nova instância de conta bancária
@@ -20,8 +20,8 @@ namespace BoletoNet
         /// <param name="conta">Número da Conta</param>
         public ContaBancaria(string agencia, string conta)
         {
-            this.Agencia = agencia;
-            this.Conta = conta;
+            Agencia = agencia;
+            Conta = conta;
         }
 
         /// <summary>
@@ -33,10 +33,10 @@ namespace BoletoNet
         /// <param name="digitoConta">Dígito da Conta</param>
         public ContaBancaria(string agencia, string digitoAgencia, string conta, string digitoConta)
         {
-            this.Agencia = agencia;
-            this.DigitoAgencia = digitoAgencia;
-            this.Conta = conta;
-            this.DigitoConta = digitoConta;
+            Agencia = agencia;
+            DigitoAgencia = digitoAgencia;
+            Conta = conta;
+            DigitoConta = digitoConta;
         }
 
         /// <summary>
@@ -49,15 +49,17 @@ namespace BoletoNet
         /// <param name="operacaoConta">Operação da Conta</param>
         public ContaBancaria(string agencia, string digitoAgencia, string conta, string digitoConta, string operacaoConta)
         {
-            this.Agencia = agencia;
-            this.DigitoAgencia = digitoAgencia;
-            this.Conta = conta;
-            this.DigitoConta = digitoConta;
-            this.OperacaConta = operacaoConta;
+            Agencia = agencia;
+            DigitoAgencia = digitoAgencia;
+            Conta = conta;
+            DigitoConta = digitoConta;
+            OperacaConta = operacaoConta;
         }
+
         #endregion Constructors
 
         #region Properties
+
         /// <summary>
         /// Retorna o numero da agência.
         /// <remarks>
@@ -82,9 +84,10 @@ namespace BoletoNet
         public string DigitoConta { get; set; }
         
         /// <summary>
-        /// Opreração da Conta Corrente
+        /// Operação da Conta Corrente
         /// </summary>
         public string OperacaConta { get; set; }
-        #endregion Properties
+
+        #endregion
     }
 }
