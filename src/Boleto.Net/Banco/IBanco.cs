@@ -155,5 +155,11 @@ namespace BoletoNet
         string ChaveASBACE { get; set; }
 
         bool ValidarRemessa(TipoArquivo tipoArquivo, string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem);
+
+        /// <summary>
+        /// Obtém nosso número sem DV e sem código do Convênio.
+        /// </summary>
+        /// <returns></returns>
+        long ObterNossoNumeroSemConvenioOuDigitoVerificador(long convenio, string nossoNumero);
     }
 }

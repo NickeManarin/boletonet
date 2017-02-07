@@ -531,6 +531,11 @@ namespace BoletoNet
             return _iBanco.LerHeaderRetornoCNAB400(registro);
         }
 
-		#endregion
-	}
+        public override long ObterNossoNumeroSemConvenioOuDigitoVerificador(long convenio, string nossoNumero)
+        {
+            return _iBanco.ObterNossoNumeroSemConvenioOuDigitoVerificador(convenio, nossoNumero);
+        }
+
+        #endregion
+    }
 }

@@ -39,5 +39,12 @@
 
         #endregion
 
+        public Remessa()
+        { }
+
+        public Remessa(TipoOcorrenciaRemessa ocorrencia)
+        {
+            CodigoOcorrencia = ocorrencia.Format();
+        }
     }
 }
