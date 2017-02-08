@@ -20,8 +20,7 @@ namespace BoletoNet
         #region Construtores
 
         protected AbstractArquivoRetorno()
-        {
-        }
+        {}
 
         public AbstractArquivoRetorno(TipoArquivo tipoArquivo)
         {
@@ -105,8 +104,8 @@ namespace BoletoNet
         {
             try
             {
-                if (this.LinhaDeArquivoLida != null)
-                    this.LinhaDeArquivoLida(this, new LinhaDeArquivoLidaArgs(detalheRetornoCNAB240, linha, tipoLinha));
+                if (LinhaDeArquivoLida != null)
+                    LinhaDeArquivoLida(this, new LinhaDeArquivoLidaArgs(detalheRetornoCNAB240, linha, tipoLinha));
             }
             catch (Exception ex)
             {
@@ -118,14 +117,15 @@ namespace BoletoNet
         {
             try
             {
-                if (this.LinhaDeArquivoLida != null)
-                    this.LinhaDeArquivoLida(this, new LinhaDeArquivoLidaArgs(detalheRetorno, linha));
+                if (LinhaDeArquivoLida != null)
+                    LinhaDeArquivoLida(this, new LinhaDeArquivoLidaArgs(detalheRetorno, linha));
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro ao gerar evento.", ex);
             }
         }
+
         #endregion
     }
 }

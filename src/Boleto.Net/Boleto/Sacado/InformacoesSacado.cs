@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace BoletoNet
 {
@@ -9,18 +7,19 @@ namespace BoletoNet
         /// <summary>
         /// Retorna HTML representativo de todo conteudo
         /// </summary>
-        public String GeraHTML(Boolean novaLinha)
+        public string GeraHtml(bool novaLinha)
         {   
-            String rtn = "";
+            var rtn = "";
 
-            if (this.Count > 0)
-            {
-                foreach (InfoSacado I in this)
-                {
-                    rtn += I.HTML;
-                }
-                if (!novaLinha) rtn = rtn.Substring(6);
-            }
+            if (Count <= 0)
+                return rtn;
+
+            foreach (InfoSacado I in this)
+                rtn += I.Html;
+                
+            if (!novaLinha)
+                rtn = rtn.Substring(6);
+
             return rtn;
         }
     }

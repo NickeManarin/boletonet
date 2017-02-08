@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace BoletoNet
 {
     public class CodigoTarifas : AbstractCodigoTarifas, ICodigoTarifas
     {
-
         #region Variaveis
 
         private ICodigoTarifas _ICodigoTarifas = null;
@@ -31,6 +26,5 @@ namespace BoletoNet
         }
 
         #endregion
-
     }
 }

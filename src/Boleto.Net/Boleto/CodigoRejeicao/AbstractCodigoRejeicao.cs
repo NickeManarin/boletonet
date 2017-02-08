@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace BoletoNet
 {
     public abstract class AbstractCodigoRejeicao : ICodigoRejeicao
     {
-
         #region Variaveis
 
         private IBanco _banco;
@@ -15,7 +10,7 @@ namespace BoletoNet
 
         #endregion
 
-        # region Propriedades
+        #region Propriedades
 
         public virtual IBanco Banco
         {
@@ -35,7 +30,6 @@ namespace BoletoNet
             set { _descricao = value; }
         }
 
-        # endregion
-
+        #endregion
     }
 }

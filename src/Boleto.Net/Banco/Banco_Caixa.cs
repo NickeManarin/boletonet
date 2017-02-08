@@ -716,7 +716,7 @@ namespace BoletoNet
                     vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe as diretrizes de remessa!", Environment.NewLine);
                     vRetorno = false;
                 }
-                else if (boleto.Remessa.TipoDocumento != null && boleto.Remessa.TipoDocumento.Equals("1") && string.IsNullOrEmpty(boleto.Sacado.Endereco.CEP)) //1 - SICGB - Com registro
+                else if (boleto.Remessa.TipoDocumento != null && boleto.Remessa.TipoDocumento.Equals("1") && string.IsNullOrEmpty(boleto.Sacado.Endereco.Cep)) //1 - SICGB - Com registro
                 {
                     //Para o "Remessa.TipoDocumento = "1", o CEP é Obrigatório!
                     vMsg += string.Concat("Para o Tipo Documento [1 - SIGCB - COM REGISTRO], o CEP do SACADO é Obrigatório!", Environment.NewLine);
@@ -931,9 +931,9 @@ namespace BoletoNet
                 header += Utils.FormatCode(boleto.Sacado.Nome, " ", 40);                                // Nome
                 header += Utils.FormatCode(boleto.Sacado.Endereco.End, " ", 40);                        // Endereço
                 header += Utils.FormatCode(boleto.Sacado.Endereco.Bairro, " ", 15);                     // Bairro 
-                header += boleto.Sacado.Endereco.CEP;                                                   // CEP + Sufixo do CEP
+                header += boleto.Sacado.Endereco.Cep;                                                   // CEP + Sufixo do CEP
                 header += Utils.FormatCode(boleto.Sacado.Endereco.Cidade, " ", 15);                     // Cidade 
-                header += boleto.Sacado.Endereco.UF;                                                    // Unidade da Federação
+                header += boleto.Sacado.Endereco.Uf;                                                    // Unidade da Federação
                 // Estes campos deverão estar preenchidos quando não for o Cedente original do título.
                 header += "0";                                                                          // Tipo de Inscrição 
                 header += Utils.FormatCode("", "0", 15);                                                // Número de Inscrição CPF/CNPJ
@@ -1344,10 +1344,10 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0034, 040, 0, sacado.Nome.ToUpper(), ' '));                        // posição 34 até 73   (40)- Nome
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0074, 040, 0, sacado.Endereco.End.ToUpper(), ' '));                // posição 74 até 113  (40)- Endereço
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0114, 015, 0, sacado.Endereco.Bairro.ToUpper(), ' '));             // posição 114 até 128 (15)- Bairro
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0129, 008, 0, sacado.Endereco.CEP, ' '));                          // posição 114 até 128 (40)- CEP                
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0129, 008, 0, sacado.Endereco.Cep, ' '));                          // posição 114 até 128 (40)- CEP                
                 // posição 134 até 136 (3) - sufixo cep** já incluso em CEP                                                                                                                                                                   
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0137, 015, 0, sacado.Endereco.Cidade.ToUpper(), ' '));             // posição 137 até 151 (15)- Cidade
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0152, 002, 0, sacado.Endereco.UF, ' '));                           // posição 152 até 153 (15)- UF
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0152, 002, 0, sacado.Endereco.Uf, ' '));                           // posição 152 até 153 (15)- UF
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0154, 001, 0, "0", '0'));                                          // posição 154 até 154 (1) - Tipo de Inscrição Sacador Avalialista
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0155, 015, 0, "0", '0'));                                          // posição 155 até 169 (15)- Inscrição Sacador Avalialista
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0170, 040, 0, string.Empty, ' '));                                 // posição 170 até 209 (40)- Nome do Sacador/Avalista
@@ -1574,7 +1574,7 @@ namespace BoletoNet
                             vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Endereço: Informe o Bairro do sacado!", Environment.NewLine);
                             vRetorno = false;
                         }
-                        if (boleto.Sacado.Endereco.CEP == null || boleto.Sacado.Endereco.CEP == "" || boleto.Sacado.Endereco.CEP == "00000000")
+                        if (boleto.Sacado.Endereco.Cep == null || boleto.Sacado.Endereco.Cep == "" || boleto.Sacado.Endereco.Cep == "00000000")
                         {
                             vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Endereço: Informe o CEP do sacado!", Environment.NewLine);
                             vRetorno = false;
@@ -1584,7 +1584,7 @@ namespace BoletoNet
                             vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Endereço: Informe a cidade do sacado!", Environment.NewLine);
                             vRetorno = false;
                         }
-                        if (boleto.Sacado.Endereco.UF == null || boleto.Sacado.Endereco.UF == "")
+                        if (boleto.Sacado.Endereco.Uf == null || boleto.Sacado.Endereco.Uf == "")
                         {
                             vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Endereço: Informe a UF do sacado!", Environment.NewLine);
                             vRetorno = false;
@@ -1769,9 +1769,9 @@ namespace BoletoNet
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0235, 040, 0, boleto.Sacado.Nome.ToUpper(), ' '));              //235-274
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0275, 040, 0, boleto.Sacado.Endereco.End.ToUpper(), ' '));      //275-314
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0315, 012, 0, boleto.Sacado.Endereco.Bairro.ToUpper(), ' '));   //315-326
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0327, 008, 0, boleto.Sacado.Endereco.CEP, '0'));                //327-334
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0327, 008, 0, boleto.Sacado.Endereco.Cep, '0'));                //327-334
                 reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0335, 015, 0, boleto.Sacado.Endereco.Cidade.ToUpper(), ' '));   //335-349
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0350, 002, 0, boleto.Sacado.Endereco.UF.ToUpper(), ' '));       //350-351
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0350, 002, 0, boleto.Sacado.Endereco.Uf.ToUpper(), ' '));       //350-351
 
                 #region DataMulta
 

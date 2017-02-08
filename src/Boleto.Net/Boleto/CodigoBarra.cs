@@ -1,6 +1,4 @@
-using System;
 using System.Drawing;
-using System.Globalization;
 using BoletoNet.Util;
 
 namespace BoletoNet
@@ -36,11 +34,11 @@ namespace BoletoNet
         public string CodigoBanco { get; set; }
 
         public int Moeda { get; set; }
-        
+
         public string CampoLivre { get; set; }
-        
+
         public long FatorVencimento { get; set; }
-        
+
         public string ValorDocumento { get; set; }
 
         public string DigitoVerificador
@@ -67,7 +65,7 @@ namespace BoletoNet
                 pt3 = (pt3 + mod10).Insert(5, ".");
 
                 var pt5 = FatorVencimento + ValorDocumento;
-                return string.Join(" ", new[] { pt1, pt2, pt3, DigitoVerificador, pt5 });
+                return string.Join(" ", pt1, pt2, pt3, DigitoVerificador, pt5);
             }
         }
 
@@ -79,12 +77,7 @@ namespace BoletoNet
             ValorDocumento = valorDocumento;
             CampoLivre = campoLivre;
 
-            Codigo = string.Format("{0}{1}{2}{3}{4}",
-                CodigoBanco,
-                Moeda,
-                FatorVencimento,
-                ValorDocumento,
-                CampoLivre);
+            Codigo = string.Format("{0}{1}{2}{3}{4}", CodigoBanco, Moeda, FatorVencimento, ValorDocumento, CampoLivre);
         }
     }
 }

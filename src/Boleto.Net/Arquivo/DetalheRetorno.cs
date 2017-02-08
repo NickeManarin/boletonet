@@ -100,6 +100,7 @@ namespace BoletoNet
             get { return _numeroInscricao; }
             set { _numeroInscricao = value; }
         }
+
         /// <summary>
         /// Agência com o Dígito Verificador, quando houver
         /// </summary>

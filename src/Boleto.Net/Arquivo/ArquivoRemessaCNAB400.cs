@@ -1,23 +1,22 @@
 using System;
 using System.IO;
-using System.Collections.Generic;
 using System.Text;
 
 namespace BoletoNet
 {
     internal class ArquivoRemessaCNAB400 : AbstractArquivoRemessa, IArquivoRemessa
     {
-
         #region Construtores
 
         public ArquivoRemessaCNAB400()
         {
-            this.TipoArquivo = TipoArquivo.CNAB400;
+            TipoArquivo = TipoArquivo.CNAB400;
         }
 
         #endregion
 
         #region Métodos de instância
+
         /// <summary>
         /// Método que fará a verificação se a classe está devidamente implementada para a geração da Remessa
         /// </summary>
@@ -25,20 +24,21 @@ namespace BoletoNet
         {
             try
             {
-                bool vRetorno = true;
-                string vMsg = string.Empty;
-                //
-                foreach (Boleto boleto in boletos)
+                var vRetorno = true;
+                var vMsg = string.Empty;
+                
+                foreach (var boleto in boletos)
                 {
-                    string vMsgBol = string.Empty;
-                    bool vRetBol = boleto.Banco.ValidarRemessa(this.TipoArquivo, numeroConvenio, banco, cedente, boletos, numeroArquivoRemessa, out vMsgBol);
-                    if (!vRetBol && !String.IsNullOrEmpty(vMsgBol))
+                    var vMsgBol = string.Empty;
+                    var vRetBol = boleto.Banco.ValidarRemessa(TipoArquivo, numeroConvenio, banco, cedente, boletos, numeroArquivoRemessa, out vMsgBol);
+
+                    if (!vRetBol && !string.IsNullOrEmpty(vMsgBol))
                     {
                         vMsg += vMsgBol;
                         vRetorno = vRetBol;
                     }
                 }
-                //
+                
                 mensagem = vMsg;
                 return vRetorno;
             }
@@ -47,20 +47,20 @@ namespace BoletoNet
                 throw ex;
             }
         }
+
         public override void GerarArquivoRemessa(string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, Stream arquivo, int numeroArquivoRemessa)
         {
             try
             {
-                int numeroRegistro = 2;
-                string strline;
+                var numeroRegistro = 2;
                 decimal vltitulostotal = 0;                 //Uso apenas no registro TRAILER do banco Santander - jsoda em 09/05/2012 - Add no registro TRAILER do banco Banrisul - sidneiklein em 08/08/2013
 
-                StreamWriter incluiLinha = new StreamWriter(arquivo, Encoding.GetEncoding("ISO-8859-1"));
+                var incluiLinha = new StreamWriter(arquivo, Encoding.GetEncoding("ISO-8859-1"));
                 cedente.Carteira = boletos[0].Carteira;
-                strline = banco.GerarHeaderRemessa(numeroConvenio, cedente, TipoArquivo.CNAB400, numeroArquivoRemessa);
+                var strline = banco.GerarHeaderRemessa(numeroConvenio, cedente, TipoArquivo.CNAB400, numeroArquivoRemessa);
                 incluiLinha.WriteLine(strline);
 
-                foreach (Boleto boleto in boletos)
+                foreach (var boleto in boletos)
                 {
                     boleto.Banco = banco;
                     strline = boleto.Banco.GerarDetalheRemessa(boleto, numeroRegistro, TipoArquivo.CNAB400);
@@ -70,9 +70,10 @@ namespace BoletoNet
 
                     // 85 - CECRED
                     if (banco.Codigo == 85) {
-                        if (boleto.PercMulta > 0 || boleto.ValorMulta > 0) {
-                            Banco_Cecred _banco = new Banco_Cecred();
-                            string linhaCECREDRegistroDetalhe5 = _banco.GerarRegistroDetalhe5(boleto, numeroRegistro, TipoArquivo.CNAB400);
+                        if (boleto.PercMulta > 0 || boleto.ValorMulta > 0)
+                        {
+                            var _banco = new Banco_Cecred();
+                            var linhaCECREDRegistroDetalhe5 = _banco.GerarRegistroDetalhe5(boleto, numeroRegistro, TipoArquivo.CNAB400);
                             incluiLinha.WriteLine(linhaCECREDRegistroDetalhe5);
                             numeroRegistro++;
                         }
@@ -83,12 +84,13 @@ namespace BoletoNet
                     {
                         if (boleto.PercMulta > 0 || boleto.ValorMulta > 0)
                         {
-                            Banco_Itau _banco = new Banco_Itau();
+                            var _banco = new Banco_Itau();
                             strline = _banco.GerarRegistroDetalhe5(boleto, numeroRegistro);
                             incluiLinha.WriteLine(strline);
                             numeroRegistro++;
                         }
                     }
+
                     if ((boleto.Instrucoes != null && boleto.Instrucoes.Count > 0) || (boleto.Sacado.Instrucoes != null && boleto.Sacado.Instrucoes.Count > 0))
                     {
                         strline = boleto.Banco.GerarMensagemVariavelRemessa(boleto, ref numeroRegistro, TipoArquivo.CNAB400);
@@ -112,6 +114,5 @@ namespace BoletoNet
         }
 
         #endregion
-
     }
 }

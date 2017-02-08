@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace BoletoNet
 {
     public class CodigoRejeicao : AbstractCodigoRejeicao, ICodigoRejeicao
     {
-
         #region Variaveis
 
         private ICodigoRejeicao _ICodigoRejeicao = null;
@@ -31,6 +26,5 @@ namespace BoletoNet
         }
 
         #endregion
-
     }
 }

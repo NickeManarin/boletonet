@@ -752,7 +752,7 @@ namespace BoletoNet
                 _detalhe += new string(' ', 6);
 
                 //CEP do pagador ==> 227 - 234
-                _detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.CEP, 8, 8, '0', 0, true, true, true).ToUpper();
+                _detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.Cep, 8, 8, '0', 0, true, true, true).ToUpper();
 
                 //Nome ==> 235 - 274
                 _detalhe += Utils.FitStringLength(boleto.Sacado.Nome.TrimStart(' '), 40, 40, ' ', 0, true, true, false).ToUpper();
@@ -770,7 +770,7 @@ namespace BoletoNet
                 _detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.Cidade.TrimStart(' '), 15, 15, ' ', 0, true, true, false).ToUpper();
 
                 //Estado ==> 350 - 351
-                _detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.UF, 2, 2, ' ', 0, true, true, false).ToUpper();
+                _detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.Uf, 2, 2, ' ', 0, true, true, false).ToUpper();
 
                 //Observação ==> 352 - 393
                 if (boleto.Instrucoes != null && boleto.Instrucoes.Count > 0)
@@ -960,13 +960,13 @@ namespace BoletoNet
                 _detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.Bairro.TrimStart(' '), 12, 12, ' ', 0, true, true, false).ToUpper();
 
                 //CEP do Pagador ==>  327 - 334
-                _detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.CEP, 8, 8, ' ', 0, true, true, true);
+                _detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.Cep, 8, 8, ' ', 0, true, true, true);
 
                 //Município do Pagador ==> 335 - 349
                 _detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.Cidade.TrimStart(' '), 15, 15, ' ', 0, true, true, false).ToUpper();
 
                 //UF Estado do Pagador ==> 350 - 351
-                _detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.UF, 2, 2, ' ', 0, true, true, false).ToUpper();
+                _detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.Uf, 2, 2, ' ', 0, true, true, false).ToUpper();
 
                 //Sacador / Avalista ==> 352 - 390
                 _detalhe += new string(' ', 39);

@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BoletoNet
 {
     // Códigos de tarifas de 1 a 11 associados ao código de movimento 28
-
     #region Enumerado
 
     public enum EnumCodigoTarifas_BancoBrasil
@@ -30,21 +27,13 @@ namespace BoletoNet
         #region Construtores 
 
 		public CodigoTarifas_BancoBrasil()
-		{
-			try
-			{
-			}
-			catch (Exception ex)
-			{
-                throw new Exception("Erro ao carregar objeto", ex);
-			}
-		}
+		{}
 
         public CodigoTarifas_BancoBrasil(int codigo)
         {
             try
             {
-                this.carregar(codigo);
+                carregar(codigo);
             }
             catch (Exception ex)
             {
@@ -122,6 +111,5 @@ namespace BoletoNet
         }
 
         #endregion
-
     }
 }

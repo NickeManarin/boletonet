@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace BoletoNet
 {
     public class DetalheRetornoCNAB240
     {
-
         #region Variáveis
 
         private DetalheSegmentoTRetornoCNAB240 _segmentoT = new DetalheSegmentoTRetornoCNAB240();
@@ -17,9 +12,9 @@ namespace BoletoNet
         #endregion
 
         #region Construtores
+
         public DetalheRetornoCNAB240()
-        {
-        }
+        {}
 
         public DetalheRetornoCNAB240(DetalheSegmentoTRetornoCNAB240 segmentoT)
         {
@@ -78,10 +73,5 @@ namespace BoletoNet
         }      
 
         #endregion
-
-        #region Métodos de Instância
-
-        #endregion
-
     }
 }

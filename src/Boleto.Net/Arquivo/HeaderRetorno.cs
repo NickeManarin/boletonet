@@ -4,7 +4,6 @@ namespace BoletoNet
 {
     public class HeaderRetorno
     {
-
         #region Variáveis
 
         private int _tipoRegistro = 0;
@@ -36,8 +35,7 @@ namespace BoletoNet
         #region Construtores
 
         public HeaderRetorno()
-        {
-        }
+        {}
 
         public HeaderRetorno(string registro)
         {
@@ -47,7 +45,6 @@ namespace BoletoNet
         #endregion
 
         #region Propriedades
-
 
         public int TipoRegistro
         {
@@ -95,9 +92,7 @@ namespace BoletoNet
             get { return _numeroSequencialArquivoRetorno; }
             set { _numeroSequencialArquivoRetorno = value; }
         }
-
-
-
+        
         /// <summary>
         /// Agência com o Dígito Verificador, quando houver
         /// </summary>
@@ -192,26 +187,26 @@ namespace BoletoNet
         {
             try
             {
-                this.TipoRegistro = Utils.ToInt32(registro.Substring(000, 1));
-                this.CodigoRetorno = Utils.ToInt32(registro.Substring(001, 1));
-                this.LiteralRetorno = registro.Substring(002, 7);
-                this.CodigoServico = Utils.ToInt32(registro.Substring(009, 2));
-                this.LiteralServico = registro.Substring(011, 15);
-                this.Agencia = Utils.ToInt32(registro.Substring(026, 4));
-                this.ComplementoRegistro1 = Utils.ToInt32(registro.Substring(030, 2));
-                this.Conta = Utils.ToInt32(registro.Substring(032, 5));
-                this.DACConta = Utils.ToInt32(registro.Substring(037, 1));
-                this.ComplementoRegistro2 = registro.Substring(038, 8);
-                this.NomeEmpresa = registro.Substring(046, 30);
-                this.CodigoBanco = Utils.ToInt32(registro.Substring(076, 3));
-                this.NomeBanco = registro.Substring(079, 15);
-                this.DataGeracao = Utils.ToDateTime(Utils.ToInt32(registro.Substring(094, 6)).ToString("##-##-##"));
-                this.Densidade = Utils.ToInt32(registro.Substring(100, 5));
-                this.UnidadeDensidade = registro.Substring(105, 3);
-                this.NumeroSequencialArquivoRetorno = Utils.ToInt32(registro.Substring(108, 5));
-                this.DataCredito = Utils.ToDateTime(Utils.ToInt32(registro.Substring(113, 6)).ToString("##-##-##"));
-                this.ComplementoRegistro3 = registro.Substring(119, 275);
-                this.NumeroSequencial = Utils.ToInt32(registro.Substring(394, 6));
+                TipoRegistro = Utils.ToInt32(registro.Substring(000, 1));
+                CodigoRetorno = Utils.ToInt32(registro.Substring(001, 1));
+                LiteralRetorno = registro.Substring(002, 7);
+                CodigoServico = Utils.ToInt32(registro.Substring(009, 2));
+                LiteralServico = registro.Substring(011, 15);
+                Agencia = Utils.ToInt32(registro.Substring(026, 4));
+                ComplementoRegistro1 = Utils.ToInt32(registro.Substring(030, 2));
+                Conta = Utils.ToInt32(registro.Substring(032, 5));
+                DACConta = Utils.ToInt32(registro.Substring(037, 1));
+                ComplementoRegistro2 = registro.Substring(038, 8);
+                NomeEmpresa = registro.Substring(046, 30);
+                CodigoBanco = Utils.ToInt32(registro.Substring(076, 3));
+                NomeBanco = registro.Substring(079, 15);
+                DataGeracao = Utils.ToDateTime(Utils.ToInt32(registro.Substring(094, 6)).ToString("##-##-##"));
+                Densidade = Utils.ToInt32(registro.Substring(100, 5));
+                UnidadeDensidade = registro.Substring(105, 3);
+                NumeroSequencialArquivoRetorno = Utils.ToInt32(registro.Substring(108, 5));
+                DataCredito = Utils.ToDateTime(Utils.ToInt32(registro.Substring(113, 6)).ToString("##-##-##"));
+                ComplementoRegistro3 = registro.Substring(119, 275);
+                NumeroSequencial = Utils.ToInt32(registro.Substring(394, 6));
             }
             catch (Exception ex)
             {
@@ -232,6 +227,5 @@ namespace BoletoNet
         }
 
         #endregion
-
     }
 }

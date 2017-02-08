@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BoletoNet
 {
@@ -12,40 +11,45 @@ namespace BoletoNet
         private List<DetalheRetornoCNAB240> _listaDetalhes = new List<DetalheRetornoCNAB240>();
 
         #region Propriedades
+
         //public string CaminhoArquivo
         //{
         //    get { return _caminhoArquivo; }
         //}
+
         public Stream StreamArquivo
         {
             get { return _streamArquivo; }
         }
+
         public List<DetalheRetornoCNAB240> ListaDetalhes
         {
             get { return _listaDetalhes; }
             set { _listaDetalhes = value; }
         }
+
         #endregion Propriedades
         
         #region Construtores
 
         public ArquivoRetornoCNAB240()
 		{
-            this.TipoArquivo = TipoArquivo.CNAB240;
+            TipoArquivo = TipoArquivo.CNAB240;
         }
 
         public ArquivoRetornoCNAB240(Stream streamArquivo)
         {
-            this.TipoArquivo = TipoArquivo.CNAB240;
+            TipoArquivo = TipoArquivo.CNAB240;
             _streamArquivo = streamArquivo;
         }
 
         public ArquivoRetornoCNAB240(string caminhoArquivo)
         {
-            this.TipoArquivo = TipoArquivo.CNAB240;
+            TipoArquivo = TipoArquivo.CNAB240;
 
             _streamArquivo = new StreamReader(caminhoArquivo).BaseStream;
         }
+
         #endregion
 
         #region Métodos de instância
@@ -59,15 +63,15 @@ namespace BoletoNet
         {
             try
              {
-                StreamReader stream = new StreamReader(arquivo, System.Text.Encoding.UTF8);
-                string linha = "";
+                var stream = new StreamReader(arquivo, System.Text.Encoding.UTF8);
+                var linha = "";
 
                 while ((linha = stream.ReadLine()) != null)
                 {
-                    if (!String.IsNullOrEmpty(linha))
+                    if (!string.IsNullOrEmpty(linha))
                     {
 
-                        DetalheRetornoCNAB240 detalheRetorno = new DetalheRetornoCNAB240();
+                        var detalheRetorno = new DetalheRetornoCNAB240();
 
                         switch (linha.Substring(7, 1))
                         {
@@ -108,10 +112,9 @@ namespace BoletoNet
                                 OnLinhaLida(null, linha, EnumTipodeLinhaLida.TraillerDeArquivo);
                                 break;
                         }
-
                     }
-
                 }
+
                 stream.Close();
             }
             catch (Exception ex)

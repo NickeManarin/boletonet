@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace BoletoNet
 {
     public abstract class AbstractCodigoMovimento : ICodigoMovimento
     {
-
         #region Variaveis
 
         private IBanco _banco;
@@ -36,6 +31,5 @@ namespace BoletoNet
         }
 
         # endregion
-
     }
 }

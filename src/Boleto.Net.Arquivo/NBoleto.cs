@@ -78,8 +78,8 @@ namespace BoletoNet.Arquivo
                 endCed.End = "Rua Testando o Boleto";
                 endCed.Bairro = "BairroTest";
                 endCed.Cidade = "CidadeTes";
-                endCed.CEP = "70000000";
-                endCed.UF = "MG";
+                endCed.Cep = "70000000";
+                endCed.Uf = "MG";
                 b.Cedente.Endereco = endCed;
 
                 b.NumeroDocumento = Convert.ToString(1000 + i);
@@ -88,8 +88,8 @@ namespace BoletoNet.Arquivo
                 b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23ddddddddddddddddddddddddddd";
                 b.Sacado.Endereco.Bairro = "Testando";
                 b.Sacado.Endereco.Cidade = "Testelândia";
-                b.Sacado.Endereco.CEP = "70000000";
-                b.Sacado.Endereco.UF = "DF";
+                b.Sacado.Endereco.Cep = "70000000";
+                b.Sacado.Endereco.Uf = "DF";
 
                 b.Instrucoes.Add(item1);
                 b.Instrucoes.Add(item2);
@@ -136,8 +136,8 @@ namespace BoletoNet.Arquivo
                 b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
                 b.Sacado.Endereco.Bairro = "Testando";
                 b.Sacado.Endereco.Cidade = "Testelândia";
-                b.Sacado.Endereco.CEP = "70000000";
-                b.Sacado.Endereco.UF = "DF";
+                b.Sacado.Endereco.Cep = "70000000";
+                b.Sacado.Endereco.Uf = "DF";
 
                 item2.Descricao += " " + item2.Dias + " dias corridos do vencimento.";
                 b.Instrucoes.Add(item1);
@@ -185,8 +185,8 @@ namespace BoletoNet.Arquivo
                 b.Sacado.Endereco.End = "Rua Dr. Henrique Portugal, XX";
                 b.Sacado.Endereco.Bairro = "São Francisco";
                 b.Sacado.Endereco.Cidade = "Niterói";
-                b.Sacado.Endereco.CEP = "24360080";
-                b.Sacado.Endereco.UF = "RJ";
+                b.Sacado.Endereco.Cep = "24360080";
+                b.Sacado.Endereco.Uf = "RJ";
                 b.Sacado.Endereco.Logradouro = "Rua Dr. Henrique Portugal";
                 b.Sacado.Endereco.Numero = "XX";
                 b.Sacado.Endereco.Complemento = "Casa";
@@ -231,8 +231,8 @@ namespace BoletoNet.Arquivo
                 b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
                 b.Sacado.Endereco.Bairro = "Testando";
                 b.Sacado.Endereco.Cidade = "Testelândia";
-                b.Sacado.Endereco.CEP = "70000000";
-                b.Sacado.Endereco.UF = "DF";
+                b.Sacado.Endereco.Cep = "70000000";
+                b.Sacado.Endereco.Uf = "DF";
 
                 instr.Descricao = "Não Receber após o vencimento";
                 b.Instrucoes.Add(instr);
@@ -268,8 +268,8 @@ namespace BoletoNet.Arquivo
                 b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
                 b.Sacado.Endereco.Bairro = "Testando";
                 b.Sacado.Endereco.Cidade = "Testelândia";
-                b.Sacado.Endereco.CEP = "70000000";
-                b.Sacado.Endereco.UF = "DF";
+                b.Sacado.Endereco.Cep = "70000000";
+                b.Sacado.Endereco.Uf = "DF";
 
                 instr.Descricao = "Não Receber após o vencimento";
                 b.Instrucoes.Add(instr);
@@ -303,8 +303,8 @@ namespace BoletoNet.Arquivo
                 b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
                 b.Sacado.Endereco.Bairro = "Testando";
                 b.Sacado.Endereco.Cidade = "Testelândia";
-                b.Sacado.Endereco.CEP = "70000000";
-                b.Sacado.Endereco.UF = "DF";
+                b.Sacado.Endereco.Cep = "70000000";
+                b.Sacado.Endereco.Uf = "DF";
 
                 instr.Descricao = "Não Receber após o vencimento";
                 b.Instrucoes.Add(instr);
@@ -340,8 +340,8 @@ namespace BoletoNet.Arquivo
                 b.Sacado.Endereco.End = "lala";
                 b.Sacado.Endereco.Bairro = "lala";
                 b.Sacado.Endereco.Cidade = "Curitiba";
-                b.Sacado.Endereco.CEP = "82000000";
-                b.Sacado.Endereco.UF = "PR";
+                b.Sacado.Endereco.Cep = "82000000";
+                b.Sacado.Endereco.Uf = "PR";
 
                 instr.Descricao = "Não Receber após o vencimento";
                 b.Instrucoes.Add(instr);
@@ -374,8 +374,8 @@ namespace BoletoNet.Arquivo
                 b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
                 b.Sacado.Endereco.Bairro = "Testando";
                 b.Sacado.Endereco.Cidade = "Testelândia";
-                b.Sacado.Endereco.CEP = "70000000";
-                b.Sacado.Endereco.UF = "DF";
+                b.Sacado.Endereco.Cep = "70000000";
+                b.Sacado.Endereco.Uf = "DF";
 
                 b.EspecieDocumento = new EspecieDocumento(Convert.ToInt16(1), "01");
 
@@ -420,13 +420,13 @@ namespace BoletoNet.Arquivo
 
                 var end = new Endereco();
                 end.Bairro = "Lago Sul";
-                end.CEP = "71666660";
+                end.Cep = "71666660";
                 end.Cidade = "Brasília- DF";
                 end.Complemento = "Quadra XX Conjunto XX Casa XX";
                 end.End = "Condominio de Brasilia - Quadra XX Conjunto XX Casa XX";
                 end.Logradouro = "Cond. Brasilia";
                 end.Numero = "55";
-                end.UF = "DF";
+                end.Uf = "DF";
 
                 var b = new Boleto(vencimento, 1.01m, "02", "01000000001", c);
                 b.NumeroDocumento = "01000000001";
@@ -483,8 +483,8 @@ namespace BoletoNet.Arquivo
                 b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
                 b.Sacado.Endereco.Bairro = "Testando";
                 b.Sacado.Endereco.Cidade = "Testelândia";
-                b.Sacado.Endereco.CEP = "70000000";
-                b.Sacado.Endereco.UF = "RS";
+                b.Sacado.Endereco.Cep = "70000000";
+                b.Sacado.Endereco.Uf = "RS";
 
                 b.Banco = new Banco(004);
 
@@ -516,13 +516,13 @@ namespace BoletoNet.Arquivo
 
                 var end = new Endereco();
                 end.Bairro = "Lago Sul";
-                end.CEP = "71666660";
+                end.Cep = "71666660";
                 end.Cidade = "Brasília- DF";
                 end.Complemento = "Quadra XX Conjunto XX Casa XX";
                 end.End = "Condominio de Brasilia - Quadra XX Conjunto XX Casa XX";
                 end.Logradouro = "Cond. Brasilia";
                 end.Numero = "55";
-                end.UF = "DF";
+                end.Uf = "DF";
 
                 var b = new Boleto(vencimento, 1.01m, "02", "01000000001", c);
                 b.NumeroDocumento = "01000000001";

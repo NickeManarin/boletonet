@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace BoletoNet
 {
     public abstract class AbstractEspecieDocumento : IEspecieDocumento
     {
-
         #region Variaveis
 
         private IBanco _banco;
@@ -43,6 +38,5 @@ namespace BoletoNet
         }
 
         # endregion
-
     }
 }

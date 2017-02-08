@@ -14,14 +14,14 @@ namespace Boleto.Net.Testes {
             cedente.Convenio = 0110041;
             cedente.Endereco = new Endereco() {
                 Bairro = "BAIRRO CEDENTE",
-                CEP = "88309-600",
+                Cep = "88309-600",
                 Cidade = "CIDADE CEDENTE",
                 Complemento = "CASA",
                 Email = "cedente@teste.com.br",
                 End = "Teste CEDENTE",
                 Logradouro = "Rua",
                 Numero = "999",
-                UF = "SC"
+                Uf = "SC"
             };
             cedente.Codigo = cedente.Convenio.ToString();
 
@@ -31,14 +31,14 @@ namespace Boleto.Net.Testes {
             var sacado = new Sacado("000.000.000-00", "Sacado Teste");
             sacado.Endereco = new Endereco() {
                 Bairro = "BAIRRO SACADO",
-                CEP = "88309-600",
+                Cep = "88309-600",
                 Cidade = "CIDADE SACADO",
                 Complemento = "CASA",
                 Email = "sacado@teste.com.br",
                 End = "Teste SACADO",
                 Logradouro = "Rua",
                 Numero = "999",
-                UF = "SC"
+                Uf = "SC"
             };
 
             BoletoNet.Boleto boleto = new BoletoNet.Boleto(vencimento, 10.99m, cedente.Carteira, nossoNumero, cedente);

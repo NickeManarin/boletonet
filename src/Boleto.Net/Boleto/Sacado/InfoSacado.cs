@@ -1,63 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BoletoNet
+﻿namespace BoletoNet
 {
     public class InfoSacado 
     {
-        String[] _data;
+        readonly string[] _data;
 
         /// <summary></summary>
         /// <param name="info">Texto da informação</param>
-        public InfoSacado(String info)
+        public InfoSacado(string info)
         {
-            _data = new String[] { info };
+            _data = new[] { info };
         }
         
         /// <summary></summary>
         /// <param name="linha1">Texto da primeira linha</param>
         /// <param name="linha2">Texto da segunda linha</param>
-        public InfoSacado(String linha1, String linha2)
+        public InfoSacado(string linha1, string linha2)
         {
-            _data = new String[]{linha1,linha2};
+            _data = new[]{linha1,linha2};
         }
 
         /// <summary></summary>
         /// <param name="linhas">Vetor com as infomaçoes do Sacado, onde cada posição é uma linha da informação no boleto</param>
-        public InfoSacado(String[] linhas) 
+        public InfoSacado(string[] linhas) 
         {
             _data = linhas;
         }
 
-        public String HTML
+        public string Html
         {
             get
             {
-                String rtn = "";
-                foreach (String S in _data)
-                {
-                    rtn += "<br />" + S; 
-                
-                }
+                var rtn = "";
+
+                foreach (var s in _data)
+                    rtn += "<br />" + s;
+
                 return rtn;
             }
         }
 
-        public static String Render(String linha1, String linha2, Boolean novaLinha)
+        public static string Render(string linha1, string linha2, bool novaLinha)
         {
-          return Render(new String[] { linha1, linha2 }, novaLinha);
+            return Render(new[] { linha1, linha2 }, novaLinha);
         }
 
-        public static String Render(String[] linhas, Boolean novaLinha)
+        public static string Render(string[] linhas, bool novaLinha)
         {
-            String rtn = "";
-            foreach (String S in linhas)
-            {
-                rtn += "<br />" + S;
-
-            }
+            var rtn = "";
+            foreach (var s in linhas)
+                rtn += "<br />" + s;
+            
             if (!novaLinha) rtn = rtn.Substring(6);
+
             return rtn;
         }
 

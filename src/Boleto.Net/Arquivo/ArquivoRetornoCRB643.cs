@@ -10,6 +10,7 @@ namespace BoletoNet.Arquivo
             var streamReader = new StreamReader(arquivo);
             var linha = streamReader.ReadLine();
             var textPosReader = new TextPosReader();
+
             while (!string.IsNullOrEmpty(linha))
             {
                 var linhaCbr643 = textPosReader.Read(linha);

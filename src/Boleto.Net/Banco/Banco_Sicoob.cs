@@ -574,9 +574,9 @@ namespace BoletoNet
                 detalhe.Append(Utils.FitStringLength(boleto.Sacado.Nome, 40, 40, ' ', 0, true, true, false)); //Posição 235 a 274
                 detalhe.Append(Utils.FitStringLength(boleto.Sacado.Endereco.End, 37, 37, ' ', 0, true, true, false)); //Posição 275 a 311
                 detalhe.Append(Utils.FitStringLength(boleto.Sacado.Endereco.Bairro, 15, 15, ' ', 0, true, true, false)); //Posição 312 a 326
-                detalhe.Append(Utils.FitStringLength(boleto.Sacado.Endereco.CEP, 8, 8, '0', 0, true, true, true)); //Posição 327 a 334
+                detalhe.Append(Utils.FitStringLength(boleto.Sacado.Endereco.Cep, 8, 8, '0', 0, true, true, true)); //Posição 327 a 334
                 detalhe.Append(Utils.FitStringLength(boleto.Sacado.Endereco.Cidade, 15, 15, ' ', 0, true, true, false)); //Posição 335 a 349
-                detalhe.Append(boleto.Sacado.Endereco.UF); //Posição 350 a 351
+                detalhe.Append(boleto.Sacado.Endereco.Uf); //Posição 350 a 351
                 detalhe.Append(new string(' ', 40)); //Posição 352 a 391 - OBSERVACOES
                 detalhe.Append("00"); //Posição 392 a 393 - DIAS PARA PROTESTO
                 detalhe.Append(" "); //Posição 394
@@ -687,9 +687,9 @@ namespace BoletoNet
                 detalhe += Utils.FormatCode(boleto.Sacado.Nome, " ", 40);  //Posição 034 a 73      Nome
                 detalhe += Utils.FormatCode(boleto.Sacado.Endereco.End, " ", 40);  //Posição 074 a 113      Endereço
                 detalhe += Utils.FormatCode(boleto.Sacado.Endereco.Bairro, " ", 15);                     // Bairro 
-                detalhe += Utils.FormatCode(boleto.Sacado.Endereco.CEP, 8);    //CEP (5, N) + Sufixo do CEP (3, N) Total (8, N)
+                detalhe += Utils.FormatCode(boleto.Sacado.Endereco.Cep, 8);    //CEP (5, N) + Sufixo do CEP (3, N) Total (8, N)
                 detalhe += Utils.FormatCode(boleto.Sacado.Endereco.Cidade, " ", 15);                     // Cidade 
-                detalhe += boleto.Sacado.Endereco.UF;                                                  // Unidade da Federação
+                detalhe += boleto.Sacado.Endereco.Uf;                                                  // Unidade da Federação
                 detalhe += (boleto.Cedente.CpfCnpj.Length == 11 ? "1" : "2");                             // Tipo de Inscrição Sacador avalista
                 detalhe += Utils.FormatCode(boleto.Cedente.CpfCnpj, "0", 15);                             // Número de Inscrição / Sacador avalista
                 detalhe += Utils.FormatCode(boleto.Cedente.Nome, " ", 40);                                // Nome / Sacador avalista

@@ -1,13 +1,10 @@
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BoletoNet
 {
     internal class ArquivoRemessaCNAB240 : AbstractArquivoRemessa, IArquivoRemessa
     {
-
         #region Construtores
 
         public ArquivoRemessaCNAB240()
@@ -18,24 +15,26 @@ namespace BoletoNet
         #endregion
 
         #region Métodos de instância
+
         public override bool ValidarArquivoRemessa(string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem)
         {
             try
             {
-                bool vRetorno = true;
-                string vMsg = string.Empty;
+                var vRetorno = true;
+                var vMsg = string.Empty;
                 
-                foreach (Boleto boleto in boletos)
+                foreach (var boleto in boletos)
                 {
-                    string vMsgBol = string.Empty;
-                    bool vRetBol = boleto.Banco.ValidarRemessa(this.TipoArquivo, numeroConvenio, banco, cedente, boletos, numeroArquivoRemessa, out vMsgBol);
-                    if (!vRetBol && !String.IsNullOrEmpty(vMsgBol))
+                    var vMsgBol = string.Empty;
+                    var vRetBol = boleto.Banco.ValidarRemessa(this.TipoArquivo, numeroConvenio, banco, cedente, boletos, numeroArquivoRemessa, out vMsgBol);
+
+                    if (!vRetBol && !string.IsNullOrEmpty(vMsgBol))
                     {
                         vMsg += vMsgBol;
                         vRetorno = vRetBol;
                     }
                 }
-                //
+                
                 mensagem = vMsg;
                 return vRetorno;
             }
@@ -49,20 +48,21 @@ namespace BoletoNet
         {
             try
             {
-                int numeroRegistro = 0;
-                int numeroRegistroDetalhe = 1;
+                var numeroRegistro = 0;
+                var numeroRegistroDetalhe = 1;
                 string strline;
-                StreamWriter incluiLinha = new StreamWriter(arquivo);
+                var incluiLinha = new StreamWriter(arquivo);
+
                 if (banco.Codigo == 104)//quando é caixa verifica o modelo de leiatue que é está em boletos.remssa.tipodocumento
                     strline = banco.GerarHeaderRemessa(numeroConvenio, cedente, TipoArquivo.CNAB240, numeroArquivoRemessa, boletos[0]);
                 else
                     strline = banco.GerarHeaderRemessa(numeroConvenio, cedente, TipoArquivo.CNAB240, numeroArquivoRemessa);
 
                 numeroRegistro++;
-
-                //
+                
                 incluiLinha.WriteLine(strline);
                 OnLinhaGerada(null, strline, EnumTipodeLinha.HeaderDeArquivo);
+
                 if (banco.Codigo == 104)//quando é caixa verifica o modelo de leiatue que é está em boletos.remssa.tipodocumento
                     strline = banco.GerarHeaderLoteRemessa(numeroConvenio, cedente, numeroArquivoRemessa, TipoArquivo.CNAB240, boletos[0]);
                 else
@@ -75,11 +75,11 @@ namespace BoletoNet
                     numeroRegistro++;
                 }
                 
-
                 if (banco.Codigo == 341)
                 {
                     #region se Banco Itau - 341
-                    foreach (Boleto boleto in boletos)
+
+                    foreach (var boleto in boletos)
                     {
                         boleto.Banco = banco;
 
@@ -124,14 +124,16 @@ namespace BoletoNet
                     OnLinhaGerada(null, strline, EnumTipodeLinha.TraillerDeArquivo);
 
                     incluiLinha.Close();
+
                     #endregion
                 }
                 else if (banco.Codigo == 104) // Só validar boleto.Remessa quando o banco for Caixa porque quando o banco for diferente de 104 a propriedade "Remessa" fica null
                 {                    
                     #region se Banco Caixa - 104 e tipo de arquivo da remessa SIGCB
-                    if ((boletos[0].Remessa.TipoDocumento.Equals("2")) || boletos[0].Remessa.TipoDocumento.Equals("1"))
+
+                    if (boletos[0].Remessa.TipoDocumento.Equals("2") || boletos[0].Remessa.TipoDocumento.Equals("1"))
                     {
-                        foreach (Boleto boleto in boletos)
+                        foreach (var boleto in boletos)
                         {
                             boleto.Banco = banco;
                             strline = boleto.Banco.GerarDetalheSegmentoPRemessa(boleto, numeroRegistroDetalhe, numeroConvenio, cedente);
@@ -170,12 +172,14 @@ namespace BoletoNet
 
                         incluiLinha.Close();
                     }
+
                     #endregion
                 }
                 else if (banco.Codigo == 33)
                 {
                     #region se Banco Santander - 33
-                    foreach (Boleto boleto in boletos)
+
+                    foreach (var boleto in boletos)
                     {
                         boleto.Banco = banco;
                         boleto.Remessa.NumeroLote = numeroArquivoRemessa;
@@ -221,12 +225,13 @@ namespace BoletoNet
                     OnLinhaGerada(null, strline, EnumTipodeLinha.TraillerDeArquivo);
 
                     incluiLinha.Close();
+
                     #endregion
                 }
                 else if (banco.Codigo == 237) // bradesco
                 {
                     decimal totalTitulos = 0;
-                    foreach (Boleto boleto in boletos)
+                    foreach (var boleto in boletos)
                     {
                         boleto.Banco = banco;
                         strline = boleto.Banco.GerarDetalheSegmentoARemessa(boleto, numeroRegistroDetalhe);
@@ -244,6 +249,7 @@ namespace BoletoNet
                         totalTitulos += boleto.ValorBoleto;
 
                     }
+
                     numeroRegistro++;
                 
                     strline = banco.GerarTrailerRemessaComDetalhes(numeroRegistro, boletos.Count,  TipoArquivo.CNAB240, cedente, totalTitulos);
@@ -251,12 +257,12 @@ namespace BoletoNet
                     OnLinhaGerada(null, strline, EnumTipodeLinha.TraillerDeArquivo);
 
                     incluiLinha.Close();
-
                 }
                 else //para qualquer outro banco, gera CNAB240 com segmentos abaixo
                 {
                     #region outros bancos
-                    foreach (Boleto boleto in boletos)
+
+                    foreach (var boleto in boletos)
                     {
                         boleto.Banco = banco;
                         strline = boleto.Banco.GerarDetalheSegmentoPRemessa(boleto, numeroRegistroDetalhe, numeroConvenio);
@@ -280,8 +286,7 @@ namespace BoletoNet
                             numeroRegistroDetalhe++;
                         }
                     }
-
-
+                    
                     numeroRegistro--;
                     strline = banco.GerarTrailerLoteRemessa(numeroRegistro);
                     incluiLinha.WriteLine(strline);
@@ -295,6 +300,7 @@ namespace BoletoNet
                     OnLinhaGerada(null, strline, EnumTipodeLinha.TraillerDeArquivo);
 
                     incluiLinha.Close();
+
                     #endregion
                 }
 
@@ -304,7 +310,7 @@ namespace BoletoNet
                 throw new Exception("Erro ao gerar arquivo remessa.", ex);
             }
         }
-        #endregion
 
+        #endregion
     }
 }

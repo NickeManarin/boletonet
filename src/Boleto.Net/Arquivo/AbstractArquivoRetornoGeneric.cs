@@ -17,7 +17,9 @@ namespace BoletoNet
         {
             Linhas.Add(obj);
             var handler = LinhaLida;
-            if (handler != null) handler(obj);
+
+            if (handler != null)
+                handler(obj);
         }
     }
 }

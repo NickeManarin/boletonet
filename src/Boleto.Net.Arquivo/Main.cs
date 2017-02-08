@@ -79,8 +79,8 @@ namespace BoletoNet.Arquivo
             b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
             b.Sacado.Endereco.Bairro = "Testando";
             b.Sacado.Endereco.Cidade = "Testelândia";
-            b.Sacado.Endereco.CEP = "70000000";
-            b.Sacado.Endereco.UF = "DF";
+            b.Sacado.Endereco.Cep = "70000000";
+            b.Sacado.Endereco.Uf = "DF";
 
             item2.Descricao += item2.Dias + " dias corridos do vencimento.";
             b.Instrucoes.Add(item1);
@@ -102,8 +102,8 @@ namespace BoletoNet.Arquivo
             b2.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
             b2.Sacado.Endereco.Bairro = "Testando";
             b2.Sacado.Endereco.Cidade = "Testelândia";
-            b2.Sacado.Endereco.CEP = "70000000";
-            b2.Sacado.Endereco.UF = "DF";
+            b2.Sacado.Endereco.Cep = "70000000";
+            b2.Sacado.Endereco.Uf = "DF";
 
             item2.Descricao += item2.Dias + " dias corridos do vencimento.";
             b2.Instrucoes.Add(item1);
@@ -160,8 +160,8 @@ namespace BoletoNet.Arquivo
             b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
             b.Sacado.Endereco.Bairro = "Testando";
             b.Sacado.Endereco.Cidade = "Testelândia";
-            b.Sacado.Endereco.CEP = "70000000";
-            b.Sacado.Endereco.UF = "RS";
+            b.Sacado.Endereco.Cep = "70000000";
+            b.Sacado.Endereco.Uf = "RS";
 
             var item1 = new Instrucao_Banrisul(9, null, 5, 0);
             b.Instrucoes.Add(item1);
@@ -211,8 +211,8 @@ namespace BoletoNet.Arquivo
             b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
             b.Sacado.Endereco.Bairro = "Testando";
             b.Sacado.Endereco.Cidade = "Testelândia";
-            b.Sacado.Endereco.CEP = "70000000";
-            b.Sacado.Endereco.UF = "RS";
+            b.Sacado.Endereco.Cep = "70000000";
+            b.Sacado.Endereco.Uf = "RS";
 
             var item1 = new Instrucao_Sicredi(9, null, 5);
             b.Instrucoes.Add(item1);
@@ -256,8 +256,8 @@ namespace BoletoNet.Arquivo
             b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
             b.Sacado.Endereco.Bairro = "Testando";
             b.Sacado.Endereco.Cidade = "Testelândia";
-            b.Sacado.Endereco.CEP = "70000000";
-            b.Sacado.Endereco.UF = "DF";
+            b.Sacado.Endereco.Cep = "70000000";
+            b.Sacado.Endereco.Uf = "DF";
 
             //b.Instrucoes.Add("Não Receber após o vencimento");
             //b.Instrucoes.Add("Após o Vencimento pague somente no Bradesco");
@@ -306,8 +306,8 @@ namespace BoletoNet.Arquivo
             b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
             b.Sacado.Endereco.Bairro = "Testando";
             b.Sacado.Endereco.Cidade = "Testelândia";
-            b.Sacado.Endereco.CEP = "70000000";
-            b.Sacado.Endereco.UF = "RS";
+            b.Sacado.Endereco.Cep = "70000000";
+            b.Sacado.Endereco.Uf = "RS";
 
             var item1 = new Instrucao_Caixa(9, null, 5);
             b.Instrucoes.Add(item1);
@@ -354,8 +354,8 @@ namespace BoletoNet.Arquivo
             b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
             b.Sacado.Endereco.Bairro = "Testando";
             b.Sacado.Endereco.Cidade = "Testelândia";
-            b.Sacado.Endereco.CEP = "70000000";
-            b.Sacado.Endereco.UF = "RS";
+            b.Sacado.Endereco.Cep = "70000000";
+            b.Sacado.Endereco.Uf = "RS";
 
             b.Banco = new Banco(004);
 

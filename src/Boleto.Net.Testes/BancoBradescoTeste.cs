@@ -152,8 +152,8 @@ namespace BoletoNet.Testes
             objBOLETO.Sacado.Endereco.End = "END SACADO";
             objBOLETO.Sacado.Endereco.Bairro = "BAIRRO SACADO";
             objBOLETO.Sacado.Endereco.Cidade = "CIDADE SACADO";
-            objBOLETO.Sacado.Endereco.CEP = "CEP SACADO";
-            objBOLETO.Sacado.Endereco.UF = "RR";
+            objBOLETO.Sacado.Endereco.Cep = "CEP SACADO";
+            objBOLETO.Sacado.Endereco.Uf = "RR";
 
             objBOLETO.PercMulta = 10;
             objBOLETO.JurosMora = 5;

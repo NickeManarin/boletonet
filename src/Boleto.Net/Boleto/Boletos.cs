@@ -5,12 +5,7 @@ namespace BoletoNet
 {
     public class Boletos : List<Boleto>
     {
-
-        # region Variáveis
-
-	    # endregion
-
-        # region Propriedades
+        #region Propriedades
 
 	    public Banco Banco { get; set; }
 
@@ -18,9 +13,9 @@ namespace BoletoNet
 
 	    public Cedente Cedente { get; set; }
 
-	    # endregion
+	    #endregion
 
-        # region Métodos
+        #region Métodos
 
         /// <summary>
         /// Verifica se já existe o arquivo relativo a remessa, caso não exista é criado um arquivo ".rem".
@@ -36,7 +31,6 @@ namespace BoletoNet
         /// Registro Trailer : Último registro indicando finalização do Arquivo
         /// Caracteres obrigatórios = 0D 0A (Final de Registro) 0D 0A 1A (Final de Arquivo)
         /// </summary>
-
         private new void Add(Boleto item)
         {
             if (item.Banco == null)
@@ -49,10 +43,9 @@ namespace BoletoNet
                 throw new Exception("Boleto não possui cedente.");
 
             item.Valida();
-            this.Add(item);
+            Add(item);
         }
 
-        # endregion
-
+        #endregion
     }
 }

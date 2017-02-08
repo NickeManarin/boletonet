@@ -2,7 +2,7 @@
 {
 	using System.Collections.ObjectModel;
 
-	using global::BoletoNet.RelatorioValoresBoleto;
+	using RelatorioValoresBoleto;
 
 	public class GrupoDemonstrativo
 	{
@@ -20,7 +20,7 @@
 		{
 			get
 			{
-				return this._itens ?? (this._itens = new ObservableCollection<ItemDemonstrativo>());
+				return _itens ?? (_itens = new ObservableCollection<ItemDemonstrativo>());
 			}
 		}
 

@@ -14,14 +14,13 @@ namespace BoletoNet
         #region Construtores
 
         internal EspecieDocumento()
-        {
-        }
+        {}
 
-        public EspecieDocumento(int CodigoBanco)
+        public EspecieDocumento(int codigoBanco)
         {
             try
             {
-                InstanciaEspecieDocumento(CodigoBanco, "0");
+                InstanciaEspecieDocumento(codigoBanco, "0");
             }
             catch (Exception ex)
             {

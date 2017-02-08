@@ -1,13 +1,11 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BoletoNet
 {
     public class ArquivoRetornoCNAB400 : AbstractArquivoRetorno, IArquivoRetorno
     {
-
         private HeaderRetorno _headerRetorno = new HeaderRetorno();
         private List<DetalheRetorno> _listaDetalhe = new List<DetalheRetorno>();
 
@@ -27,7 +25,7 @@ namespace BoletoNet
 
         public ArquivoRetornoCNAB400()
 		{
-            this.TipoArquivo = TipoArquivo.CNAB400;
+            TipoArquivo = TipoArquivo.CNAB400;
         }
 
         #endregion
@@ -38,14 +36,14 @@ namespace BoletoNet
         {
             try
             {
-                StreamReader stream = new StreamReader(arquivo, System.Text.Encoding.UTF8);
-                string linha = "";
+                var stream = new StreamReader(arquivo, System.Text.Encoding.UTF8);
+                var linha = "";
                 // Identificação do registro detalhe
-                List<string> IdsRegistroDetalhe = new List<string>();
+                var IdsRegistroDetalhe = new List<string>();
 
                 // Lendo o arquivo
                 linha = stream.ReadLine();
-                this.HeaderRetorno = banco.LerHeaderRetornoCNAB400(linha);
+                HeaderRetorno = banco.LerHeaderRetornoCNAB400(linha);
 
                 // Próxima linha (DETALHE)
                 linha = stream.ReadLine();
@@ -68,7 +66,7 @@ namespace BoletoNet
 
                 while (IdsRegistroDetalhe.Contains(DetalheRetorno.PrimeiroCaracter(linha)))
                 {
-                    DetalheRetorno detalhe = banco.LerDetalheRetornoCNAB400(linha);
+                    var detalhe = banco.LerDetalheRetornoCNAB400(linha);
                     ListaDetalhe.Add(detalhe);
                     OnLinhaLida(detalhe, linha);
                     linha = stream.ReadLine();

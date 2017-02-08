@@ -64,7 +64,7 @@ namespace BoletoNet
         /// *Utilizar apenas a sigla (UF)
         /// </remarks>
         /// </summary>
-        public string UF { get; set;}
+        public string Uf { get; set;}
 
         /// <summary>
         /// Define o número do CEP
@@ -72,7 +72,7 @@ namespace BoletoNet
         /// O número do CEP será formatado automaticamente para remover pontos e traços
         /// </remarks>
         /// </summary>
-        public string CEP
+        public string Cep
         {
             get
             {
@@ -83,7 +83,7 @@ namespace BoletoNet
             //Consistência para evitar NullPointerException. (MarcielTorres)
             set
             {
-                this._cep = !string.IsNullOrEmpty(value) ? value.Replace(".", "").Replace("-", "") : string.Empty;
+                _cep = !string.IsNullOrEmpty(value) ? value.Replace(".", "").Replace("-", "") : string.Empty;
             }
         }
 

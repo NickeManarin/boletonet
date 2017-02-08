@@ -282,11 +282,11 @@ namespace BoletoNet
 			detalhe.Append(
 				Utils.SubstituiCaracteresEspeciais(
 					Utils.FitStringLength(boleto.Sacado.Endereco.Bairro, 12, 12, ' ', 0, true, true, false)));
-			detalhe.Append(Utils.FitStringLength(boleto.Sacado.Endereco.CEP, 8, 8, '0', 0, true, true, true));
+			detalhe.Append(Utils.FitStringLength(boleto.Sacado.Endereco.Cep, 8, 8, '0', 0, true, true, true));
 			detalhe.Append(
 				Utils.SubstituiCaracteresEspeciais(
 					Utils.FitStringLength(boleto.Sacado.Endereco.Cidade, 15, 15, ' ', 0, true, true, false)));
-			detalhe.Append(Utils.FitStringLength(boleto.Sacado.Endereco.UF, 2, 2, ' ', 0, true, true, false));
+			detalhe.Append(Utils.FitStringLength(boleto.Sacado.Endereco.Uf, 2, 2, ' ', 0, true, true, false));
 			if (boleto.Avalista != null)
 			{
 				detalhe.Append(Utils.FitStringLength(boleto.Avalista.Nome, 30, 30, ' ', 0, true, true, false));

@@ -499,16 +499,16 @@ namespace BoletoNet
                         var numero = !string.IsNullOrEmpty(Cedente.Endereco.Numero) ? Cedente.Endereco.Numero + ", " : "";
                         enderecoCedente = string.Concat(Cedente.Endereco.End, " , ", numero);
 
-                        if (Cedente.Endereco.CEP == string.Empty)
+                        if (Cedente.Endereco.Cep == string.Empty)
                         {
                             enderecoCedente += string.Format("{0} - {1}/{2}", Cedente.Endereco.Bairro,
-                                                             Cedente.Endereco.Cidade, Cedente.Endereco.UF);
+                                                             Cedente.Endereco.Cidade, Cedente.Endereco.Uf);
                         }
                         else
                         {
                             enderecoCedente += string.Format("{0} - {1}/{2} - CEP: {3}", Cedente.Endereco.Bairro,
-                                                             Cedente.Endereco.Cidade, Cedente.Endereco.UF,
-                                                             Utils.FormataCep(Cedente.Endereco.CEP));
+                                                             Cedente.Endereco.Cidade, Cedente.Endereco.Uf,
+                                                             Utils.FormataCep(Cedente.Endereco.Cep));
                         }
 
                     }
@@ -531,18 +531,18 @@ namespace BoletoNet
                     sacado = string.Format("{0}<br/>CNPJ: {1}", Sacado.Nome, Utils.FormataCnpj(Sacado.CpfCnpj));
             }
 
-            var infoSacado = Sacado.InformacoesSacado.GeraHTML(false);
+            var infoSacado = Sacado.InformacoesSacado.GeraHtml(false);
 
             //Caso não oculte o Endereço do Sacado,
             if (!OcultarEnderecoSacado)
             {
                 var enderecoSacado = "";
 
-                if (Sacado.Endereco.CEP == string.Empty)
-                    enderecoSacado = string.Format("{0} - {1}/{2}", Sacado.Endereco.Bairro, Sacado.Endereco.Cidade, Sacado.Endereco.UF);
+                if (Sacado.Endereco.Cep == string.Empty)
+                    enderecoSacado = string.Format("{0} - {1}/{2}", Sacado.Endereco.Bairro, Sacado.Endereco.Cidade, Sacado.Endereco.Uf);
                 else
                     enderecoSacado = string.Format("{0} - {1}/{2} - CEP: {3}", Sacado.Endereco.Bairro,
-                    Sacado.Endereco.Cidade, Sacado.Endereco.UF, Utils.FormataCep(Sacado.Endereco.CEP));
+                    Sacado.Endereco.Cidade, Sacado.Endereco.Uf, Utils.FormataCep(Sacado.Endereco.Cep));
 
                 if (Sacado.Endereco.End != string.Empty && enderecoSacado != string.Empty)
                 {

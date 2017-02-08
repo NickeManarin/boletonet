@@ -1,12 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BoletoNet
 {
     public class Carteira : AbstractCarteira, ICarteira
     {
-
         #region Variaveis
 
         private ICarteira _ICarteira;
@@ -16,8 +13,7 @@ namespace BoletoNet
         #region Construtores
 
         internal Carteira() 
-        { 
-        }
+        {}
 
         public Carteira(int CodigoBanco)
         {
@@ -148,7 +144,6 @@ namespace BoletoNet
             }
         }
 
-        # endregion
-
+        #endregion
     }
 }

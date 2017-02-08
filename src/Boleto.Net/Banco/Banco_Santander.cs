@@ -941,16 +941,16 @@ namespace BoletoNet
                 _segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.Bairro.TrimStart(' '), 15, 15, ' ', 0, true, true, false).ToUpper();
 
                 //Cep sacado ==> 129 - 133
-                _segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.CEP.Substring(0, 5), 5, 5, ' ', 0, true, true, false).ToUpper();
+                _segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.Cep.Substring(0, 5), 5, 5, ' ', 0, true, true, false).ToUpper();
 
                 //Sufixo do Cep do sacado ==> 134 - 136
-                _segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.CEP.Substring(5, 3), 3, 3, ' ', 0, true, true, false).ToUpper();
+                _segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.Cep.Substring(5, 3), 3, 3, ' ', 0, true, true, false).ToUpper();
 
                 //Cidade do sacado ==> 137 - 151
                 _segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.Cidade.TrimStart(' '), 15, 15, ' ', 0, true, true, false).ToUpper();
 
                 //Unidade da federação do sacado ==> 152 - 153
-                _segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.UF, 2, 2, ' ', 0, true, true, false).ToUpper();
+                _segmentoQ += Utils.FitStringLength(boleto.Sacado.Endereco.Uf, 2, 2, ' ', 0, true, true, false).ToUpper();
 
                 //Tipo de inscrição sacador/avalista ==> 154 - 154
                 _segmentoQ += "0";
@@ -1436,13 +1436,13 @@ namespace BoletoNet
                 _detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.Bairro.TrimStart(' '), 12, 12, ' ', 0, true, true, false).ToUpper();
 
                 //CEP do sacado 327 - 334
-                _detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.CEP, 8, 8, ' ', 0, true, true, true);
+                _detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.Cep, 8, 8, ' ', 0, true, true, true);
 
                 //Município do sacado ==> 335 - 349
                 _detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.Cidade.TrimStart(' '), 15, 15, ' ', 0, true, true, false).ToUpper();
 
                 //UF Estado do sacado ==> 350 - 351
-                _detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.UF, 2, 2, ' ', 0, true, true, false).ToUpper();
+                _detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.Uf, 2, 2, ' ', 0, true, true, false).ToUpper();
 
                 //Nome do Sacador ou coobrigado ==> 352 - 381
                 _detalhe += sacador_aval;

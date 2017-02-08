@@ -1048,7 +1048,7 @@ namespace BoletoNet
                 detalhe += Utils.FitStringLength(mensagem, 12, 12, ' ', 0, true, true, false);
 
                 //CEP (5, N) + Sufixo do CEP (3, N) Total (8, N)
-                detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.CEP.Replace("-", ""), 8, 8, '0', 0, true, true, true);
+                detalhe += Utils.FitStringLength(boleto.Sacado.Endereco.Cep.Replace("-", ""), 8, 8, '0', 0, true, true, true);
 
                 //Sacador|Avalista ou 2ª Mensagem (60, A)
                 detalhe += Utils.FitStringLength(mensagem2, 60, 60, ' ', 0, true, true, false);
