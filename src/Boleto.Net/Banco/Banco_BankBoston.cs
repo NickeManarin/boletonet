@@ -278,7 +278,7 @@ namespace BoletoNet
                 _detalhe += Utils.FitStringLength(boleto.JurosMora.ApenasNumeros(), 13, 13, '0', 0, true, true, true);
                 _detalhe += boleto.DataVencimento.ToString("ddMMyy");
                 _detalhe += Utils.FitStringLength(boleto.ValorDesconto.ApenasNumeros(), 13, 13, '0', 0, true, true, true);
-                _detalhe += Utils.FitStringLength(boleto.IOF.ApenasNumeros(), 13, 13, '0', 0, true, true, true);
+                _detalhe += Utils.FitStringLength(boleto.Iof.ApenasNumeros(), 13, 13, '0', 0, true, true, true);
                 _detalhe += Utils.FitStringLength(boleto.Abatimento.ApenasNumeros(), 13, 13, '0', 0, true, true, true);
                 if (boleto.Sacado.CpfCnpj.Length > 11)
                     _detalhe += "01";  // CPF

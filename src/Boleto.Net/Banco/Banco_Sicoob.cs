@@ -567,7 +567,7 @@ namespace BoletoNet
                 detalhe.Append(" "); //Posição 173
                 detalhe.Append(Utils.FitStringLength((boleto.DataDesconto == DateTime.MinValue ? "0" : boleto.DataDesconto.ToString("ddMMyy")), 6, 6, '0', 0, true, true, true)); //Posição 174 a 179
                 detalhe.Append(Utils.FitStringLength(boleto.ValorDesconto.ApenasNumeros(), 13, 13, '0', 0, true, true, true)); //Posição 180 a 192
-                detalhe.Append("9" + Utils.FitStringLength(boleto.IOF.ApenasNumeros(), 12, 12, '0', 0, true, true, true)); //Posição 193 a 205
+                detalhe.Append("9" + Utils.FitStringLength(boleto.Iof.ApenasNumeros(), 12, 12, '0', 0, true, true, true)); //Posição 193 a 205
                 detalhe.Append(Utils.FitStringLength(boleto.Abatimento.ApenasNumeros(), 13, 13, '0', 0, true, true, true)); //Posição 206 a 218
                 detalhe.Append(Utils.IdentificaTipoInscricaoSacado(boleto.Sacado.CpfCnpj)); //Posição 219 a 220
                 detalhe.Append(Utils.FitStringLength(boleto.Sacado.CpfCnpj.Replace(".", "").Replace("-", "").Replace("/", ""), 14, 14, '0', 0, true, true, true)); //Posição 221 a 234
@@ -636,7 +636,7 @@ namespace BoletoNet
                 valorBoleto = boleto.ValorDesconto.ToString("f").Replace(",", "").Replace(".", "");
                 valorBoleto = Utils.FormatCode(valorBoleto, 15);  //Posição 151 a 165  - Valor/Percentual a ser Concedido
                 detalhe += valorBoleto;
-                detalhe += Utils.FormatCode(boleto.IOF.ToString(), 15);//Posição 166 a 180   -  Valor do IOF a ser Recolhido
+                detalhe += Utils.FormatCode(boleto.Iof.ToString(), 15);//Posição 166 a 180   -  Valor do IOF a ser Recolhido
                 detalhe += Utils.FormatCode(boleto.Abatimento.ToString(), 15);//Posição 181 a 195   - Valor do Abatimento
                 detalhe += Utils.FormatCode(boleto.NumeroDocumento, 25); //Posição 196 a 220  - Identificação do título
                 detalhe += "1"; //Posição 221  - Código do protesto

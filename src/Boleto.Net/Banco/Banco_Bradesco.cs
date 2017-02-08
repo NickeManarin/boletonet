@@ -1013,7 +1013,7 @@ namespace BoletoNet
                 detalhe += Utils.FitStringLength(boleto.ValorDesconto.ApenasNumeros(), 13, 13, '0', 0, true, true, true);
 
                 //Valor do IOF (13, N)
-                detalhe += Utils.FitStringLength(boleto.IOF.ApenasNumeros(), 13, 13, '0', 0, true, true, true);
+                detalhe += Utils.FitStringLength(boleto.Iof.ApenasNumeros(), 13, 13, '0', 0, true, true, true);
 
                 //Valor do Abatimento a ser concedido ou cancelado (13, N)
                 detalhe += Utils.FitStringLength(boleto.Abatimento.ApenasNumeros(), 13, 13, '0', 0, true, true, true);

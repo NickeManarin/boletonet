@@ -70,7 +70,7 @@ namespace BoletoNet
             string fixo = "9";//1
             string codigoCedente = Utils.FormatCode(boleto.Cedente.Codigo.ToString(), 7);//7
             string nossoNumero = Utils.FormatCode(boleto.NossoNumero, 12) + Mod11Santander(Utils.FormatCode(boleto.NossoNumero, 12), 9);//13
-            string IOS = boleto.PercentualIOS.ToString();//1
+            string IOS = boleto.PercentualIos.ToString();//1
             string tipoCarteira = boleto.Carteira;//3;
             boleto.CodigoBarra.Codigo = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}",
                 codigoBanco, codigoMoeda, fatorVencimento, valorNominal, fixo, codigoCedente, nossoNumero, IOS, tipoCarteira);
@@ -116,7 +116,7 @@ namespace BoletoNet
             string nossoNumero = Utils.FormatCode(boleto.NossoNumero, 12) + Mod11Santander(Utils.FormatCode(boleto.NossoNumero, 12), 9);//13
             string codigoCedente = Utils.FormatCode(boleto.Cedente.Codigo.ToString(), 7);
             string fatorVencimento = FatorVencimento(boleto).ToString();
-            string IOS = boleto.PercentualIOS.ToString();//1
+            string IOS = boleto.PercentualIos.ToString();//1
 
             #region Grupo1
 
@@ -233,7 +233,7 @@ namespace BoletoNet
             if (EspecieDocumento.ValidaSigla(boleto.EspecieDocumento) == "")
                 boleto.EspecieDocumento = new EspecieDocumento_Santander("2");
 
-            if (boleto.PercentualIOS > 10 & (this.Codigo == 8 || this.Codigo == 33 || this.Codigo == 353))
+            if (boleto.PercentualIos > 10 & (this.Codigo == 8 || this.Codigo == 33 || this.Codigo == 353))
                 throw new Exception("O percentual do IOS é limitado a 9% para o Banco Santander");
 
             boleto.FormataCampos();

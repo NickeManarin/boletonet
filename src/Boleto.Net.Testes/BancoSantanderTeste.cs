@@ -75,7 +75,7 @@ namespace BoletoNet.Testes
 
             Boleto boleto = new Boleto(vencimento, 1052.50m, "101", "000000252084", cedente);
 
-            boleto.PercentualIOS = 8;
+            boleto.PercentualIos = 8;
 
             boleto.DataProcessamento = new DateTime(2013, 4, 15);
 

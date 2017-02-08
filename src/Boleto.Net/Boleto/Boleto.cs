@@ -59,9 +59,9 @@ namespace BoletoNet
 		private DateTime _dataDesconto;
 		private DateTime _dataOutrosAcrescimos;
 		private DateTime _dataOutrosDescontos;
-		private short _percentualIOS;
-        private short _modalidadeCobranca = 0;
-        private short _numeroDiasBaixa = 0;
+		private short _percentualIos;
+        private short _modalidadeCobranca;
+        private short _numeroDiasBaixa;
 		private string _numeroControle;
 
 		private string _tipoModalidade = string.Empty;
@@ -448,7 +448,7 @@ namespace BoletoNet
 		/// <summary> 
 		/// IOF
 		/// </summary>  
-		public decimal IOF
+		public decimal Iof
 		{
 			get { return _iof; }
 			set { _iof = value; }
@@ -556,10 +556,10 @@ namespace BoletoNet
 		/// <summary> 
 		/// Retorna o percentual IOS para Seguradoras no caso do Banco Santander
 		/// </summary>
-		public short PercentualIOS
+		public short PercentualIos
 		{
-			get { return _percentualIOS; }
-			set { _percentualIOS = value; }
+			get { return _percentualIos; }
+			set { _percentualIos = value; }
 		}
 
         /// <summary> 

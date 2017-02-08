@@ -270,7 +270,7 @@ namespace BoletoNet
 			detalhe.Append(Utils.FitStringLength(boleto.JurosMora.ApenasNumeros(), 13, 13, '0', 0, true, true, true));
 			detalhe.Append(boleto.DataDesconto == DateTime.MinValue ? "000000" : boleto.DataDesconto.ToString("ddMMyy"));
 			detalhe.Append(Utils.FitStringLength(boleto.ValorDesconto.ApenasNumeros(), 13, 13, '0', 0, true, true, true));
-			detalhe.Append(Utils.FitStringLength(boleto.IOF.ApenasNumeros(), 26, 26, '0', 0, true, true, true));
+			detalhe.Append(Utils.FitStringLength(boleto.Iof.ApenasNumeros(), 26, 26, '0', 0, true, true, true));
 			detalhe.Append(boleto.Sacado.CpfCnpj.Length == 11 ? "01" : "02");
 			detalhe.Append(Utils.FitStringLength(boleto.Sacado.CpfCnpj, 14, 14, '0', 0, true, true, true));
 			detalhe.Append(
