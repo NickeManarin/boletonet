@@ -758,6 +758,7 @@ namespace BoletoNet
             //Retornando
             return result;
         }
+
         #endregion Mod
 
         /// <summary>

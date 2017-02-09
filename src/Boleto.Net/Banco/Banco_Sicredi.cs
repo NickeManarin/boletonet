@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Web.UI;
 using BoletoNet.Util;
 using BoletoNet.EDI.Banco;
@@ -43,12 +44,10 @@ namespace BoletoNet
                 boleto.DigitoNossoNumero = DigNossoNumeroSicredi(boleto);
                 boleto.NossoNumero += boleto.DigitoNossoNumero;
             }
-            else if (boleto.NossoNumero.Length == 8)
-            {
-                boleto.DigitoNossoNumero = DigNossoNumeroSicredi(boleto);
-                boleto.NossoNumero += boleto.DigitoNossoNumero;
-            }
 
+            if (string.IsNullOrWhiteSpace(boleto.DigitoNossoNumero))
+                boleto.DigitoNossoNumero = DigNossoNumeroSicredi(boleto);
+            
             //Verifica se data do processamento é valida
             if (boleto.DataProcessamento == DateTime.MinValue) // diegomodolo (diego.ribeiro@nectarnet.com.br)
                 boleto.DataProcessamento = DateTime.Now;
@@ -66,7 +65,7 @@ namespace BoletoNet
 
             FormataCodigoBarra(boleto);
             FormataLinhaDigitavel(boleto);
-            FormataNossoNumero(boleto);
+            //FormataNossoNumero(boleto);
         }
 
         public override void FormataNossoNumero(Boleto boleto)
@@ -534,10 +533,10 @@ namespace BoletoNet
 
         public string DigNossoNumeroSicredi(Boleto boleto)
         {
-            var agencia = boleto.Cedente.ContaBancaria.Agencia;    //código da cooperativa de crédito/agência beneficiária (aaaa)
-            var posto = boleto.Cedente.ContaBancaria.OperacaConta; //código do posto beneficiário (pp)
-            var cedente = boleto.Cedente.Codigo;                   //código do beneficiário (ccccc)
-            var nossoNumero = boleto.NossoNumero;                  //ano atual (yy), indicador de geração do nosso número (b) e o número seqüencial do beneficiário (nnnnn);
+            var agencia = boleto.Cedente.ContaBancaria.Agencia;     //código da cooperativa de crédito/agência beneficiária (aaaa)
+            var posto = boleto.Cedente.ContaBancaria.DigitoAgencia; //código do posto beneficiário (pp)
+            var cedente = boleto.Cedente.Codigo;                    //código do beneficiário (ccccc)
+            var nossoNumero = boleto.NossoNumero;                   //ano atual (yy), indicador de geração do nosso número (b) e o número seqüencial do beneficiário (nnnnn);
 
             var seq = string.Concat(agencia, posto, cedente, nossoNumero); // = aaaappcccccyybnnnnn
 
@@ -550,8 +549,8 @@ namespace BoletoNet
              * r - Resto
              */
 
-            int s = 0, p = 2, b = 9;
             //Atribui os pesos de {2..9}
+            int s = 0, p = 2, b = 9;
 
             for (var i = seq.Length - 1; i >= 0; i--)
             {
@@ -634,13 +633,12 @@ namespace BoletoNet
                     else
                     {
                         #region Validações da Remessa que deverão estar preenchidas quando SICREDI
-                        
-                        //Comentado porque ainda está fixado em 01
-                        //if (String.IsNullOrEmpty(boleto.Remessa.CodigoOcorrencia))
-                        //{
-                        //    vMsg += String.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o Código de Ocorrência!", Environment.NewLine);
-                        //    vRetorno = false;
-                        //}
+
+                        if (string.IsNullOrEmpty(boleto.Remessa.CodigoOcorrencia))
+                        {
+                            vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Informe o Código de Ocorrência!", Environment.NewLine);
+                            vRetorno = false;
+                        }
 
                         if (string.IsNullOrEmpty(boleto.NumeroDocumento))
                         {
@@ -678,7 +676,6 @@ namespace BoletoNet
                             !boleto.EspecieDocumento.Codigo.Equals("D") && //D - Nota Promissória Rural;
                             !boleto.EspecieDocumento.Codigo.Equals("E") && //E - Nota de Seguros;
                             !boleto.EspecieDocumento.Codigo.Equals("F") && //G – Recibo;
-
                             !boleto.EspecieDocumento.Codigo.Equals("H") && //H - Letra de Câmbio;
                             !boleto.EspecieDocumento.Codigo.Equals("I") && //I - Nota de Débito;
                             !boleto.EspecieDocumento.Codigo.Equals("J") && //J - Duplicata de Serviço por Indicação;
@@ -696,10 +693,11 @@ namespace BoletoNet
                             vRetorno = false;
                         }
 
-                        if (!boleto.NossoNumero.Length.Equals(8))
+                        if (boleto.NossoNumero.Length != 8)
                         {
-                            //sidnei.klein: Segundo definição recebida pelo Sicredi-RS, o Nosso Número sempre terá somente 8 caracteres sem o DV que está no boleto.DigitoNossoNumero
-                            vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: O Nosso Número diferente de 8 caracteres!", Environment.NewLine);
+                            //Apenas 8 caracteres sem boleto.DigitoNossoNumero.
+                            vMsg += "Boleto: " + boleto.NumeroDocumento + Environment.NewLine + "Remessa: O Nosso Número diferente de 8 caracteres: " + 
+                                boleto.NossoNumero + Environment.NewLine;
                             vRetorno = false;
                         }
 
@@ -757,14 +755,14 @@ namespace BoletoNet
             try
             {
                 var reg = new TRegistroEDI();
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0001, 001, 0, "1", ' '));                                       //001-001
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0002, 001, 0, "A", ' '));                                       //002-002  'A' - SICREDI com Registro
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0003, 001, 0, "A", ' '));                                       //003-003  'A' - Simples
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0004, 001, 0, "A", ' '));                                       //004-004  'A' – Normal
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0005, 012, 0, string.Empty, ' '));                              //005-016
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0017, 001, 0, "A", ' '));                                       //017-017  Tipo de moeda: 'A' - REAL
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0018, 001, 0, "A", ' '));                                       //018-018  Tipo de desconto: 'A' - VALOR
-                
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0001, 001, 0, "1", ' '));           //001-001
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0002, 001, 0, "A", ' '));           //002-002  'A' - SICREDI com Registro
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0003, 001, 0, "A", ' '));           //003-003  'A' - Simples
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0004, 001, 0, "A", ' '));           //004-004  'A' – Normal
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0005, 012, 0, string.Empty, ' '));  //005-016
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0017, 001, 0, "A", ' '));           //017-017  Tipo de moeda: 'A' - REAL
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0018, 001, 0, "A", ' '));           //018-018  Tipo de desconto: 'A' - VALOR
+                                                                                                                                    
                 #region Código de Juros
 
                 var codJuros = "A";
@@ -781,41 +779,34 @@ namespace BoletoNet
                     valorOuPercJuros = boleto.PercJurosMora;
                 }
 
-                #endregion
+                #endregion                                                                                                                                   
+                                                                                                                                    
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0019, 001, 0, codJuros, ' '));      //019-019  Tipo de juros: 'A' - VALOR / 'B' PERCENTUAL
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0020, 028, 0, string.Empty, ' '));  //020-047
 
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0019, 001, 0, codJuros, ' '));                                  //019-019  Tipo de juros: 'A' - VALOR / 'B' PERCENTUAL
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0020, 028, 0, string.Empty, ' '));                              //020-047
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0048, 009, 0, boleto.NossoNumero + boleto.DigitoNossoNumero, '0'));//048-056
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0057, 006, 0, string.Empty, ' '));                                 //057-062
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataAAAAMMDD_________, 0063, 008, 0, boleto.DataProcessamento, ' '));                     //063-070
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0071, 001, 0, boleto.OutrosDadosAlterados, ' '));                  //071-071 Quando remessa = '31', alteração de outros dados.
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0072, 001, 0, boleto.Postagem ? "S" : "N", ' '));                  //072-072 'S' Postar, 'N' - Não Postar e remeter para o beneficiário
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0073, 001, 0, string.Empty, ' '));                                 //073-073
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0074, 001, 0, boleto.Postagem ? "A" : "B", ' '));                  //074-074 'A' - Impressão feita pelo banco, 'B' – Impressão é feita pelo Beneficiário
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0075, 002, 0, 0, '0'));                                            //075-076
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0077, 002, 0, 0, '0'));                                            //077-078
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0079, 004, 0, string.Empty, ' '));                                 //079-082
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0083, 010, 2, boleto.ValorDesconto, '0'));                         //083-092
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0093, 004, 2, boleto.PercMulta, '0'));                             //093-096
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0097, 012, 0, string.Empty, ' '));                                 //097-108
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0109, 002, 0, boleto.Remessa.CodigoOcorrencia, ' '));              //109-110 01 - Cadastro de título, etc;
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0111, 010, 0, boleto.NumeroDocumento, ' '));                       //111-120
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataDDMMAA___________, 0121, 006, 0, boleto.DataVencimento, ' '));                        //121-126
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0127, 013, 2, boleto.ValorBoleto, '0'));                           //127-139
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0140, 009, 0, string.Empty, ' '));                                 //140-148
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0149, 001, 0, boleto.EspecieDocumento.Codigo, ' '));               //149-149
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0150, 001, 0, boleto.Aceite, ' '));                                //150-150
+                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataDDMMAA___________, 0151, 006, 0, boleto.DataProcessamento, ' '));                     //151-156
 
-                #region Nosso Número + DV
-
-                boleto.DigitoNossoNumero = DigNossoNumeroSicredi(boleto);
-                var vAuxNossoNumeroComDv = boleto.NossoNumero + boleto.DigitoNossoNumero;
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0048, 009, 0, vAuxNossoNumeroComDv, '0'));                      //048-056
-                
-                #endregion
-
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0057, 006, 0, string.Empty, ' '));                              //057-062
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataAAAAMMDD_________, 0063, 008, 0, boleto.DataProcessamento, ' '));                  //063-070
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0071, 001, 0, boleto.OutrosDadosAlterados, ' '));               //071-071 Quando remessa = '31', alteração de outros dados.
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0072, 001, 0, boleto.Postagem ? "S" : "N", ' '));               //072-072 'S' Postar, 'N' - Não Postar e remeter para o beneficiário
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0073, 001, 0, string.Empty, ' '));                              //073-073
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0074, 001, 0, boleto.Postagem ? "A" : "B", ' '));               //074-074 'A' - Impressão feita pelo banco, 'B' – Impressão é feita pelo Beneficiário
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0075, 002, 0, 0, '0'));                                         //075-076
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0077, 002, 0, 0, '0'));                                         //077-078
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0079, 004, 0, string.Empty, ' '));                              //079-082
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0083, 010, 2, boleto.ValorDesconto, '0'));                      //083-092
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0093, 004, 2, boleto.PercMulta, '0'));                          //093-096
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0097, 012, 0, string.Empty, ' '));                              //097-108
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0109, 002, 0, boleto.Remessa.CodigoOcorrencia, ' '));           //109-110 01 - Cadastro de título, etc;
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0111, 010, 0, boleto.NumeroDocumento, ' '));                    //111-120
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataDDMMAA___________, 0121, 006, 0, boleto.DataVencimento, ' '));                     //121-126
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediNumericoSemSeparador_, 0127, 013, 2, boleto.ValorBoleto, '0'));                        //127-139
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0140, 009, 0, string.Empty, ' '));                              //140-148
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0149, 001, 0, boleto.EspecieDocumento.Codigo, ' '));            //149-149
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0150, 001, 0, boleto.Aceite, ' '));                             //150-150
-                reg.CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediDataDDMMAA___________, 0151, 006, 0, boleto.DataProcessamento, ' '));                  //151-156
-
-                #region Instruções
+                #region Instruções de protesto
 
                 var vInstrucao1 = "00"; //1ª instrução (2, N) Caso Queira colocar um cod de uma instrução. ver no Manual caso nao coloca 00
                 var vInstrucao2 = "00"; //2ª instrução (2, N) Caso Queira colocar um cod de uma instrução. ver no Manual caso nao coloca 00
