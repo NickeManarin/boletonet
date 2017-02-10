@@ -737,10 +737,10 @@ namespace BoletoNet
                 switch (tipoArquivo)
                 {
 
-                    case TipoArquivo.CNAB240:
+                    case TipoArquivo.Cnab240:
                         header = GerarHeaderRemessaCNAB240();
                         break;
-                    case TipoArquivo.CNAB400:
+                    case TipoArquivo.Cnab400:
                         header = GerarHeaderRemessaCNAB400(int.Parse(numeroConvenio), cedente, numeroArquivoRemessa);
                         break;
                     case TipoArquivo.Outro:
@@ -807,10 +807,10 @@ namespace BoletoNet
 
                 switch (tipoArquivo)
                 {
-                    case TipoArquivo.CNAB240:
+                    case TipoArquivo.Cnab240:
                         detalhe = GerarDetalheRemessaCNAB240();
                         break;
-                    case TipoArquivo.CNAB400:
+                    case TipoArquivo.Cnab400:
                         detalhe = GerarDetalheRemessaCNAB400(boleto, numeroRegistro, tipoArquivo);
                         break;
                     case TipoArquivo.Outro:
@@ -1084,10 +1084,10 @@ namespace BoletoNet
 
                 switch (tipoArquivo)
                 {
-                    case TipoArquivo.CNAB240:
+                    case TipoArquivo.Cnab240:
                         trailer = GerarTrailerRemessa240();
                         break;
-                    case TipoArquivo.CNAB400:
+                    case TipoArquivo.Cnab400:
                         trailer = GerarTrailerRemessa400(numeroRegistro);
                         break;
                     case TipoArquivo.Outro:
@@ -1150,9 +1150,9 @@ namespace BoletoNet
 
                 switch (tipoArquivo)
                 {
-                    case TipoArquivo.CNAB240:
+                    case TipoArquivo.Cnab240:
                         throw new Exception("Mensagem Variavel nao existe para o tipo CNAB 240.");
-                    case TipoArquivo.CNAB400:
+                    case TipoArquivo.Cnab400:
                         detalhe = GerarMensagemVariavelRemessaCNAB400(boleto, ref numeroRegistro, tipoArquivo);
                         break;
                     case TipoArquivo.Outro:

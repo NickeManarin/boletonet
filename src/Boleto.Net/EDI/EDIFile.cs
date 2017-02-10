@@ -6,71 +6,74 @@ namespace BoletoNet
     /// <summary>
     /// Classe básica de um arquivo EDI
     /// </summary>
-    public class TEDIFile
+    public class EdiFile
     {
-        #region Variáveis Privadas e Protegidas
-        #endregion
-
         #region Propriedades
-        public List<TRegistroEDI> Lines = new List<TRegistroEDI>();
+
+        public List<RegistroEdi> Lines = new List<RegistroEdi>();
+
         #endregion
 
         #region Métodos Privados e Protegidos
+
         /// <summary>
         /// Decodifica a linha do registro EDI para os campos; O tipo de campo/registro EDI depende
         /// do layout da entidade.
         /// </summary>
-        /// <param name="Line">Linha do arquivo a ser decodificada</param>
-        protected virtual void DecodeLine(string Line)
-        { 
-        
-        }
+        /// <param name="line">Linha do arquivo a ser decodificada</param>
+        protected virtual void DecodeLine(string line)
+        { }
+
         #endregion
 
         #region Métodos Públicos
+
         /// <summary>
         /// Carrega um arquivo EDI
         /// </summary>
-        /// <param name="FileName">Nome do arquivo a ser carregado</param>
-        public virtual void LoadFromFile(string FileName)
+        /// <param name="fileName">Nome do arquivo a ser carregado</param>
+        public virtual void LoadFromFile(string fileName)
         {
-            StreamReader sr = new StreamReader(FileName);
-            this.Lines.Clear();
-            while (!sr.EndOfStream)
+            using (var sr = new StreamReader(fileName))
             {
-                this.DecodeLine(sr.ReadLine());
+                Lines.Clear();
+
+                while (!sr.EndOfStream)
+                {
+                    DecodeLine(sr.ReadLine());
+                }
             }
-            sr.Close();
-            sr.Dispose();
         }
 
         public virtual void LoadFromStream(Stream s)
         {
-            this.Lines.Clear();
-            StreamReader sr = new StreamReader(s);
-            while (!sr.EndOfStream)
+            Lines.Clear();
+
+            using (var sr = new StreamReader(s))
             {
-                this.DecodeLine(sr.ReadLine());
+                while (!sr.EndOfStream)
+                {
+                    DecodeLine(sr.ReadLine());
+                }
             }
-            sr.Close();
-            sr.Dispose();
         }
 
         /// <summary>
         /// Grava um arquivo EDI em disco
         /// </summary>
-        /// <param name="FileName">Nome do arquivo EDI a ser salvo</param>
-        public virtual void SaveToFile(string FileName)
+        /// <param name="fileName">Nome do arquivo EDI a ser salvo</param>
+        public virtual void SaveToFile(string fileName)
         {
-            StreamWriter sw = new StreamWriter(FileName);
-            foreach (TRegistroEDI linha in this.Lines)
+            using (var sw = new StreamWriter(fileName))
             {
-                linha.CodificarLinha();
-                sw.WriteLine(linha.LinhaRegistro);
+                foreach (var linha in Lines)
+                {
+                    linha.CodificarLinha();
+                    sw.WriteLine(linha.LinhaRegistro);
+                }
             }
-            sw.Close();
-            sw.Dispose();
         }
+
         #endregion
     }
 }

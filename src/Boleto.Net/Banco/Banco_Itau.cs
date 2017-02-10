@@ -604,10 +604,10 @@ namespace BoletoNet
                 switch (tipoArquivo)
                 {
 
-                    case TipoArquivo.CNAB240:
+                    case TipoArquivo.Cnab240:
                         _header = GerarHeaderRemessaCNAB240(cedente);
                         break;
-                    case TipoArquivo.CNAB400:
+                    case TipoArquivo.Cnab400:
                         _header = GerarHeaderRemessaCNAB400(0, cedente, numeroArquivoRemessa);
                         break;
                     case TipoArquivo.Outro:
@@ -734,10 +734,10 @@ namespace BoletoNet
                 switch (tipoArquivo)
                 {
 
-                    case TipoArquivo.CNAB240:
+                    case TipoArquivo.Cnab240:
                         header = GerarHeaderLoteRemessaCNAB240(cedente, numeroArquivoRemessa);
                         break;
-                    case TipoArquivo.CNAB400:
+                    case TipoArquivo.Cnab400:
                         header = GerarHeaderLoteRemessaCNAB400(0, cedente, numeroArquivoRemessa);
                         break;
                     case TipoArquivo.Outro:
@@ -1020,10 +1020,10 @@ namespace BoletoNet
 
                 switch (tipoArquivo)
                 {
-                    case TipoArquivo.CNAB240:
+                    case TipoArquivo.Cnab240:
                         _detalhe = GerarDetalheRemessaCNAB240(boleto, numeroRegistro, tipoArquivo);
                         break;
-                    case TipoArquivo.CNAB400:
+                    case TipoArquivo.Cnab400:
                         _detalhe = GerarDetalheRemessaCNAB400(boleto, numeroRegistro, tipoArquivo);
                         break;
                     case TipoArquivo.Outro:
@@ -1425,10 +1425,10 @@ namespace BoletoNet
 
                 switch (tipoArquivo)
                 {
-                    case TipoArquivo.CNAB240:
+                    case TipoArquivo.Cnab240:
                         _trailer = GerarTrailerRemessa240();
                         break;
-                    case TipoArquivo.CNAB400:
+                    case TipoArquivo.Cnab400:
                         _trailer = GerarTrailerRemessa400(numeroRegistro);
                         break;
                     case TipoArquivo.Outro:
@@ -1485,10 +1485,10 @@ namespace BoletoNet
 
                 switch (tipoArquivo)
                 {
-                    case TipoArquivo.CNAB240:
+                    case TipoArquivo.Cnab240:
                         throw new Exception("Mensagem Variavel nao existe para o tipo CNAB 240.");
                         break;
-                    case TipoArquivo.CNAB400:
+                    case TipoArquivo.Cnab400:
                         _detalhe = GerarMensagemVariavelRemessaCNAB400(boleto, ref numeroRegistro, tipoArquivo);
                         break;
                     case TipoArquivo.Outro:

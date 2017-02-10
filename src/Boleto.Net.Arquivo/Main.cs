@@ -22,7 +22,7 @@ namespace BoletoNet.Arquivo
                 if (saveFileDialog.ShowDialog() != DialogResult.OK)
                     return;
 
-                var arquivo = new ArquivoRemessa(TipoArquivo.CNAB400);
+                var arquivo = new ArquivoRemessa(TipoArquivo.Cnab400);
 
                 //Valida a Remessa Correspondentes antes de Gerar a mesma...
                 string vMsgRetorno;
@@ -52,7 +52,7 @@ namespace BoletoNet.Arquivo
             saveFileDialog.Filter = "Arquivos de Retorno (*.rem)|*.rem|Todos Arquivos (*.*)|*.*";
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                var arquivo = new ArquivoRemessa(TipoArquivo.CNAB240);
+                var arquivo = new ArquivoRemessa(TipoArquivo.Cnab240);
                 arquivo.GerarArquivoRemessa("1200303001417053", banco, cedente, boletos, saveFileDialog.OpenFile(), 1);
 
                 MessageBox.Show("Arquivo gerado com sucesso!", "Teste",
@@ -117,10 +117,10 @@ namespace BoletoNet.Arquivo
 
             switch (tipoArquivo)
             {
-                case TipoArquivo.CNAB240:
+                case TipoArquivo.Cnab240:
                     GeraArquivoCNAB240(b2.Banco, c, boletos);
                     break;
-                case TipoArquivo.CNAB400:
+                case TipoArquivo.Cnab400:
                     GeraArquivoCNAB400(b2.Banco, c, boletos);
                     break;             
                 default:
@@ -595,7 +595,7 @@ namespace BoletoNet.Arquivo
             if (radioButtonCNAB400.Checked)
             {
                 if (radioButtonItau.Checked)
-                    GeraDadosItau(TipoArquivo.CNAB400);
+                    GeraDadosItau(TipoArquivo.Cnab400);
                 else if (radioButtonBanrisul.Checked)
                     GeraDadosBanrisul();
                 else if (radioButtonCaixa.Checked)
@@ -608,7 +608,7 @@ namespace BoletoNet.Arquivo
             else if (radioButtonCNAB240.Checked)
             {
                 if (radioButtonItau.Checked)
-                    GeraDadosItau(TipoArquivo.CNAB240);
+                    GeraDadosItau(TipoArquivo.Cnab240);
                 else if (radioButtonSantander.Checked)
                     GeraDadosSantander();
                 else if (radioButtonBanrisul.Checked)

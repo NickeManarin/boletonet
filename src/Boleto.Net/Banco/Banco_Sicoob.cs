@@ -328,10 +328,10 @@ namespace BoletoNet
                 switch (tipoArquivo)
                 {
 
-                    case TipoArquivo.CNAB240:
+                    case TipoArquivo.Cnab240:
                         header = GerarHeaderRemessaCNAB240(int.Parse(numeroConvenio), cedente, numeroArquivoRemessa);
                         break;
-                    case TipoArquivo.CNAB400:
+                    case TipoArquivo.Cnab400:
                         header = GerarHeaderRemessaCNAB400(int.Parse(numeroConvenio), cedente, numeroArquivoRemessa);
                         break;
                     case TipoArquivo.Outro:
@@ -356,10 +356,10 @@ namespace BoletoNet
                 switch (tipoArquivo)
                 {
 
-                    case TipoArquivo.CNAB240:
+                    case TipoArquivo.Cnab240:
                         header = GerarHeaderLoteRemessaCNAB240(cedente, numeroArquivoRemessa);
                         break;
-                    case TipoArquivo.CNAB400:
+                    case TipoArquivo.Cnab400:
                         // não tem no CNAB 400 header = GerarHeaderLoteRemessaCNAB400(0, cedente, numeroArquivoRemessa);
                         break;
                     case TipoArquivo.Outro:
@@ -499,10 +499,10 @@ namespace BoletoNet
                 switch (tipoArquivo)
                 {
 
-                    case TipoArquivo.CNAB240:
+                    case TipoArquivo.Cnab240:
                         detalhe = GerarDetalheRemessaCNAB240(boleto, numeroRegistro, tipoArquivo);
                         break;
-                    case TipoArquivo.CNAB400:
+                    case TipoArquivo.Cnab400:
                         detalhe = GerarDetalheRemessaCNAB400(boleto, numeroRegistro, tipoArquivo);
                         break;
                     case TipoArquivo.Outro:

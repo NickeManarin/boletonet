@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace BoletoNet.EDI.Banco {
-    class TRegistroEDI_Cecred_Retorno : TRegistroEDI {
+    class TRegistroEDI_Cecred_Retorno : RegistroEdi {
 
         #region Atributos e Propriedades
         private string _Identificacao = String.Empty;
@@ -355,67 +352,67 @@ namespace BoletoNet.EDI.Banco {
         {
             /*
              * Aqui é que iremos informar as características de cada campo do arquivo
-             * Na classe base, TCampoRegistroEDI, temos a propriedade CamposEDI, que é uma coleção de objetos
-             * TCampoRegistroEDI.
+             * Na classe base, CampoRegistroEdi, temos a propriedade CamposEdi, que é uma coleção de objetos
+             * CampoRegistroEdi.
              */
             #region TODOS os Campos
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0001, 001, 0, string.Empty, ' ')); //001-001
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0002, 002, 0, string.Empty, ' ')); //002-003
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0004, 014, 0, string.Empty, ' ')); //004-017
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0018, 004, 0, string.Empty, ' ')); //018-021
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0022, 001, 0, string.Empty, ' ')); //022-022
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0023, 008, 0, string.Empty, ' ')); //023-030
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0031, 001, 0, string.Empty, ' ')); //031-031
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0032, 007, 0, string.Empty, ' ')); //032-038
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0039, 025, 0, string.Empty, ' ')); //039-063
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0064, 017, 0, string.Empty, ' ')); //064-080
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0081, 001, 0, string.Empty, ' ')); //081-081
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0082, 001, 0, string.Empty, ' ')); //082-082
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0083, 004, 0, string.Empty, ' ')); //083-086
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0087, 002, 0, string.Empty, ' ')); //087-088
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0089, 003, 0, string.Empty, ' ')); //089-091
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0092, 003, 0, string.Empty, ' ')); //092-094
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0095, 001, 0, string.Empty, ' ')); //095-095
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0096, 005, 0, string.Empty, ' ')); //096-100
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0101, 004, 0, string.Empty, ' ')); //101-105
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0106, 001, 0, string.Empty, ' ')); //106-106
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0107, 002, 0, string.Empty, ' ')); //107-108
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0109, 002, 0, string.Empty, ' ')); //109-110
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0111, 006, 0, string.Empty, ' ')); //111-116
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0117, 010, 0, string.Empty, ' ')); //117-126
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0127, 020, 0, string.Empty, ' ')); //127-146
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0147, 006, 0, string.Empty, ' ')); //147-152
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0153, 013, 0, string.Empty, ' ')); //153-165
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0166, 003, 0, string.Empty, ' ')); //166-168
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0169, 004, 0, string.Empty, ' ')); //169-172
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0173, 001, 0, string.Empty, ' ')); //173-173
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0174, 002, 0, string.Empty, ' ')); //174-175
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0176, 006, 0, string.Empty, ' ')); //176-181
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0182, 007, 0, string.Empty, ' ')); //182-188
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0189, 013, 0, string.Empty, ' ')); //189-201
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0202, 013, 0, string.Empty, ' ')); //202-214
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0215, 013, 0, string.Empty, ' ')); //215-227
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0228, 013, 0, string.Empty, ' ')); //228-240
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0241, 013, 0, string.Empty, ' ')); //241-253
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0254, 013, 0, string.Empty, ' ')); //254-266
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0267, 013, 0, string.Empty, ' ')); //267-279
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0280, 013, 0, string.Empty, ' ')); //280-292
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0293, 013, 0, string.Empty, ' ')); //293-305
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0306, 013, 0, string.Empty, ' ')); //306-318
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0319, 001, 0, string.Empty, ' ')); //319-319
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0320, 001, 0, string.Empty, ' ')); //320-320
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0321, 012, 0, string.Empty, ' ')); //321-332
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0333, 001, 0, string.Empty, ' ')); //333-333
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0334, 009, 0, string.Empty, ' ')); //334-342
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0343, 007, 0, string.Empty, ' ')); //343-349
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0350, 009, 0, string.Empty, ' ')); //350-358
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0359, 007, 0, string.Empty, ' ')); //359-365
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0366, 009, 0, string.Empty, ' ')); //366-374
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0375, 007, 0, string.Empty, ' ')); //375-381
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0382, 009, 0, string.Empty, ' ')); //382-390
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0391, 002, 0, string.Empty, ' ')); //391-392
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0393, 002, 0, string.Empty, ' ')); //393-394
-            this._CamposEDI.Add(new TCampoRegistroEDI(TTiposDadoEDI.ediAlphaAliEsquerda_____, 0395, 006, 0, string.Empty, ' ')); //395-400
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0001, 001, 0, string.Empty, ' ')); //001-001
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0002, 002, 0, string.Empty, ' ')); //002-003
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0004, 014, 0, string.Empty, ' ')); //004-017
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0018, 004, 0, string.Empty, ' ')); //018-021
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0022, 001, 0, string.Empty, ' ')); //022-022
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0023, 008, 0, string.Empty, ' ')); //023-030
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0031, 001, 0, string.Empty, ' ')); //031-031
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0032, 007, 0, string.Empty, ' ')); //032-038
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0039, 025, 0, string.Empty, ' ')); //039-063
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0064, 017, 0, string.Empty, ' ')); //064-080
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0081, 001, 0, string.Empty, ' ')); //081-081
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0082, 001, 0, string.Empty, ' ')); //082-082
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0083, 004, 0, string.Empty, ' ')); //083-086
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0087, 002, 0, string.Empty, ' ')); //087-088
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0089, 003, 0, string.Empty, ' ')); //089-091
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0092, 003, 0, string.Empty, ' ')); //092-094
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0095, 001, 0, string.Empty, ' ')); //095-095
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0096, 005, 0, string.Empty, ' ')); //096-100
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0101, 004, 0, string.Empty, ' ')); //101-105
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0106, 001, 0, string.Empty, ' ')); //106-106
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0107, 002, 0, string.Empty, ' ')); //107-108
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0109, 002, 0, string.Empty, ' ')); //109-110
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0111, 006, 0, string.Empty, ' ')); //111-116
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0117, 010, 0, string.Empty, ' ')); //117-126
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0127, 020, 0, string.Empty, ' ')); //127-146
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0147, 006, 0, string.Empty, ' ')); //147-152
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0153, 013, 0, string.Empty, ' ')); //153-165
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0166, 003, 0, string.Empty, ' ')); //166-168
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0169, 004, 0, string.Empty, ' ')); //169-172
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0173, 001, 0, string.Empty, ' ')); //173-173
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0174, 002, 0, string.Empty, ' ')); //174-175
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0176, 006, 0, string.Empty, ' ')); //176-181
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0182, 007, 0, string.Empty, ' ')); //182-188
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0189, 013, 0, string.Empty, ' ')); //189-201
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0202, 013, 0, string.Empty, ' ')); //202-214
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0215, 013, 0, string.Empty, ' ')); //215-227
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0228, 013, 0, string.Empty, ' ')); //228-240
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0241, 013, 0, string.Empty, ' ')); //241-253
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0254, 013, 0, string.Empty, ' ')); //254-266
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0267, 013, 0, string.Empty, ' ')); //267-279
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0280, 013, 0, string.Empty, ' ')); //280-292
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0293, 013, 0, string.Empty, ' ')); //293-305
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0306, 013, 0, string.Empty, ' ')); //306-318
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0319, 001, 0, string.Empty, ' ')); //319-319
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0320, 001, 0, string.Empty, ' ')); //320-320
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0321, 012, 0, string.Empty, ' ')); //321-332
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0333, 001, 0, string.Empty, ' ')); //333-333
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0334, 009, 0, string.Empty, ' ')); //334-342
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0343, 007, 0, string.Empty, ' ')); //343-349
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0350, 009, 0, string.Empty, ' ')); //350-358
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0359, 007, 0, string.Empty, ' ')); //359-365
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0366, 009, 0, string.Empty, ' ')); //366-374
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0375, 007, 0, string.Empty, ' ')); //375-381
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0382, 009, 0, string.Empty, ' ')); //382-390
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0391, 002, 0, string.Empty, ' ')); //391-392
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0393, 002, 0, string.Empty, ' ')); //393-394
+            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0395, 006, 0, string.Empty, ' ')); //395-400
             #endregion
         }
 
@@ -423,70 +420,70 @@ namespace BoletoNet.EDI.Banco {
             #region Todos os Campos
             //PARA LEITURA DO RETORNO BANCÁRIO NÃO PRECISAMOS IMPLEMENTAR ESSE MÉTODO           
             #endregion
-            //
+            
             base.CodificarLinha(); //Aqui que eu chamo efetivamente a rotina de codificação; o resultado será exibido na propriedade LinhaRegistro.
         }
 
         public override void DecodificarLinha() {
             base.DecodificarLinha();
-            //
-            this._Identificacao = (string)this._CamposEDI[0].ValorNatural;
-            this._Zeros1 = (string)this._CamposEDI[1].ValorNatural;
-            this._Zeros2 = (string)this._CamposEDI[2].ValorNatural;
-            this._PrefixoAgencia = (string)this._CamposEDI[3].ValorNatural;
-            this._DVPrefixoAgencia = (string)this._CamposEDI[4].ValorNatural;
-            this._ContaCorrente = (string)this._CamposEDI[5].ValorNatural;
-            this._DVContaCorrente = (string)this._CamposEDI[6].ValorNatural;
-            this._NumeroConvenioCobranca = (string)this._CamposEDI[7].ValorNatural;
-            this._NumeroControleParticipante = (string)this._CamposEDI[8].ValorNatural;
-            this._NossoNumero = (string)this._CamposEDI[9].ValorNatural;
-            this._TipoCobranca = (string)this._CamposEDI[10].ValorNatural;
-            this._TipoCobrancaEspecifico = (string)this._CamposEDI[11].ValorNatural;
-            this._DiasCalculo = (string)this._CamposEDI[12].ValorNatural;
-            this._NaturezaRecebimento = (string)this._CamposEDI[13].ValorNatural;
-            this._PrefixoTitulo = (string)this._CamposEDI[14].ValorNatural;
-            this._VariacaoCarteira = (string)this._CamposEDI[15].ValorNatural;
-            this._ContaCaucao = (string)this._CamposEDI[16].ValorNatural;
-            this._TaxaDesconto = (string)this._CamposEDI[17].ValorNatural;
-            this._TaxaIOF = (string)this._CamposEDI[18].ValorNatural;
-            this._Brancos1 = (string)this._CamposEDI[19].ValorNatural;
-            this._Carteira = (string)this._CamposEDI[20].ValorNatural;
-            this._Comando = (string)this._CamposEDI[21].ValorNatural;
-            this._DataLiquidacao = (string)this._CamposEDI[22].ValorNatural;
-            this._NumeroTituloCedente = (string)this._CamposEDI[23].ValorNatural;
-            this._Brancos2 = (string)this._CamposEDI[24].ValorNatural;
-            this._DataVencimento = (string)this._CamposEDI[25].ValorNatural;
-            this._ValorTitulo = (string)this._CamposEDI[26].ValorNatural;
-            this._CodigoBancoRecebedor = (string)this._CamposEDI[27].ValorNatural;
-            this._PrefixoAgenciaRecebedora = (string)this._CamposEDI[28].ValorNatural;
-            this._DVPrefixoRecebedora = (string)this._CamposEDI[29].ValorNatural;
-            this._EspecieTitulo = (string)this._CamposEDI[30].ValorNatural;
-            this._DataCredito = (string)this._CamposEDI[31].ValorNatural;
-            this._ValorTarifa = (string)this._CamposEDI[32].ValorNatural;
-            this._OutrasDespesas = (string)this._CamposEDI[33].ValorNatural;
-            this._JurosDesconto = (string)this._CamposEDI[34].ValorNatural;
-            this._IOFDesconto = (string)this._CamposEDI[35].ValorNatural;
-            this._ValorAbatimento = (string)this._CamposEDI[36].ValorNatural;
-            this._DescontoConcedido = (string)this._CamposEDI[37].ValorNatural;
-            this._ValorRecebido = (string)this._CamposEDI[38].ValorNatural;
-            this._JurosMora = (string)this._CamposEDI[39].ValorNatural;
-            this._OutrosRecebimentos = (string)this._CamposEDI[40].ValorNatural;
-            this._AbatimentoNaoAproveitado = (string)this._CamposEDI[41].ValorNatural;
-            this._ValorLancamento = (string)this._CamposEDI[42].ValorNatural;
-            this._IndicativoDebitoCredito = (string)this._CamposEDI[43].ValorNatural;
-            this._IndicadorValor = (string)this._CamposEDI[44].ValorNatural;
-            this._ValorAjuste = (string)this._CamposEDI[45].ValorNatural;
-            this._Brancos3 = (string)this._CamposEDI[46].ValorNatural;
-            this._Brancos4 = (string)this._CamposEDI[47].ValorNatural;
-            this._Zeros3 = (string)this._CamposEDI[48].ValorNatural;
-            this._Zeros4 = (string)this._CamposEDI[49].ValorNatural;
-            this._Zeros5 = (string)this._CamposEDI[50].ValorNatural;
-            this._Zeros6 = (string)this._CamposEDI[51].ValorNatural;
-            this._Zeros7 = (string)this._CamposEDI[52].ValorNatural;
-            this._Zeros8 = (string)this._CamposEDI[53].ValorNatural;
-            this._Brancos5 = (string)this._CamposEDI[54].ValorNatural;
-            this._CanalPagamento = (string)this._CamposEDI[55].ValorNatural;
-            this._NumeroSequenciaRegistro = (string)this._CamposEDI[56].ValorNatural;
+            
+            _Identificacao = (string)CamposEdi[0].ValorNatural;
+            _Zeros1 = (string)CamposEdi[1].ValorNatural;
+            _Zeros2 = (string)CamposEdi[2].ValorNatural;
+            _PrefixoAgencia = (string)CamposEdi[3].ValorNatural;
+            _DVPrefixoAgencia = (string)CamposEdi[4].ValorNatural;
+            _ContaCorrente = (string)CamposEdi[5].ValorNatural;
+            _DVContaCorrente = (string)CamposEdi[6].ValorNatural;
+            _NumeroConvenioCobranca = (string)CamposEdi[7].ValorNatural;
+            _NumeroControleParticipante = (string)CamposEdi[8].ValorNatural;
+            _NossoNumero = (string)CamposEdi[9].ValorNatural;
+            _TipoCobranca = (string)CamposEdi[10].ValorNatural;
+            _TipoCobrancaEspecifico = (string)CamposEdi[11].ValorNatural;
+            _DiasCalculo = (string)CamposEdi[12].ValorNatural;
+            _NaturezaRecebimento = (string)CamposEdi[13].ValorNatural;
+            _PrefixoTitulo = (string)CamposEdi[14].ValorNatural;
+            _VariacaoCarteira = (string)CamposEdi[15].ValorNatural;
+            _ContaCaucao = (string)CamposEdi[16].ValorNatural;
+            _TaxaDesconto = (string)CamposEdi[17].ValorNatural;
+            _TaxaIOF = (string)CamposEdi[18].ValorNatural;
+            _Brancos1 = (string)CamposEdi[19].ValorNatural;
+            _Carteira = (string)CamposEdi[20].ValorNatural;
+            _Comando = (string)CamposEdi[21].ValorNatural;
+            _DataLiquidacao = (string)CamposEdi[22].ValorNatural;
+            _NumeroTituloCedente = (string)CamposEdi[23].ValorNatural;
+            _Brancos2 = (string)CamposEdi[24].ValorNatural;
+            _DataVencimento = (string)CamposEdi[25].ValorNatural;
+            _ValorTitulo = (string)CamposEdi[26].ValorNatural;
+            _CodigoBancoRecebedor = (string)CamposEdi[27].ValorNatural;
+            _PrefixoAgenciaRecebedora = (string)CamposEdi[28].ValorNatural;
+            _DVPrefixoRecebedora = (string)CamposEdi[29].ValorNatural;
+            _EspecieTitulo = (string)CamposEdi[30].ValorNatural;
+            _DataCredito = (string)CamposEdi[31].ValorNatural;
+            _ValorTarifa = (string)CamposEdi[32].ValorNatural;
+            _OutrasDespesas = (string)CamposEdi[33].ValorNatural;
+            _JurosDesconto = (string)CamposEdi[34].ValorNatural;
+            _IOFDesconto = (string)CamposEdi[35].ValorNatural;
+            _ValorAbatimento = (string)CamposEdi[36].ValorNatural;
+            _DescontoConcedido = (string)CamposEdi[37].ValorNatural;
+            _ValorRecebido = (string)CamposEdi[38].ValorNatural;
+            _JurosMora = (string)CamposEdi[39].ValorNatural;
+            _OutrosRecebimentos = (string)CamposEdi[40].ValorNatural;
+            _AbatimentoNaoAproveitado = (string)CamposEdi[41].ValorNatural;
+            _ValorLancamento = (string)CamposEdi[42].ValorNatural;
+            _IndicativoDebitoCredito = (string)CamposEdi[43].ValorNatural;
+            _IndicadorValor = (string)CamposEdi[44].ValorNatural;
+            _ValorAjuste = (string)CamposEdi[45].ValorNatural;
+            _Brancos3 = (string)CamposEdi[46].ValorNatural;
+            _Brancos4 = (string)CamposEdi[47].ValorNatural;
+            _Zeros3 = (string)CamposEdi[48].ValorNatural;
+            _Zeros4 = (string)CamposEdi[49].ValorNatural;
+            _Zeros5 = (string)CamposEdi[50].ValorNatural;
+            _Zeros6 = (string)CamposEdi[51].ValorNatural;
+            _Zeros7 = (string)CamposEdi[52].ValorNatural;
+            _Zeros8 = (string)CamposEdi[53].ValorNatural;
+            _Brancos5 = (string)CamposEdi[54].ValorNatural;
+            _CanalPagamento = (string)CamposEdi[55].ValorNatural;
+            _NumeroSequenciaRegistro = (string)CamposEdi[56].ValorNatural;
             //
         }
 

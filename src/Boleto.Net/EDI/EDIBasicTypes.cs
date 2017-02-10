@@ -8,18 +8,18 @@ namespace BoletoNet
     /// <summary>
     /// Classe para ordenação pela propriedade Posição no Registro EDI
     /// </summary>
-    internal class OrdenacaoPorPosEDI : IComparer<TCampoRegistroEDI>
+    internal class OrdenacaoPorPosEdi : IComparer<CampoRegistroEdi>
     {
-        public int Compare(TCampoRegistroEDI x, TCampoRegistroEDI y)
+        public int Compare(CampoRegistroEdi x, CampoRegistroEdi y)
         {
-            return x.OrdemNoRegistroEDI.CompareTo(y.OrdemNoRegistroEDI);
+            return x.OrdemNoRegistroEdi.CompareTo(y.OrdemNoRegistroEdi);
         }
     }
     
     /// <summary>
     /// Representa cada tipo de dado possível em um arquivo EDI.
     /// </summary>
-    public enum TTiposDadoEDI
+    public enum TiposDadoEdi
     { 
         /// <summary>
         /// Representa um campo alfanumérico, alinhado à esquerda e com brancos à direita. A propriedade ValorNatural é do tipo String
@@ -91,22 +91,9 @@ namespace BoletoNet
         ediDataAAAAMMDDWithZeros
     }
     
-    public class TCampoRegistroEDI
+    public class CampoRegistroEdi
     {
         #region Variáveis Privadas
-
-        private string _DescricaoCampo;
-        private TTiposDadoEDI _TipoCampo;
-        private int _TamanhoCampo;
-        private int _QtdDecimais;
-        private object _ValorNatural;
-        private string _ValorFormatado;
-        private int _OrdemNoRegistroEDI;
-        private string _SeparadorDatas;
-        private string _SeparadorHora;
-        private int _PosicaoInicial;
-        private int _PosicaoFinal;
-        private char _Preenchimento = ' ';
 
         #endregion
 
@@ -115,50 +102,30 @@ namespace BoletoNet
         /// <summary>
         /// Descrição do campo no registro EDI (meramente descritivo)
         /// </summary>
-        public string DescricaoCampo
-        {
-            get { return _DescricaoCampo; }
-            set { _DescricaoCampo = value; }
-        }
+        public string DescricaoCampo { get; set; }
 
         /// <summary>
         /// Tipo de dado de ORIGEM das informações do campo EDI.
         /// </summary>
-        public TTiposDadoEDI TipoCampo
-        {
-            get { return _TipoCampo; }
-            set { _TipoCampo = value; }
-        }
+        public TiposDadoEdi TipoCampo { get; set; }
 
         /// <summary>
         /// Tamanho em caracteres do campo no arquivo EDI (DESTINO)
         /// </summary>
-        public int TamanhoCampo
-        {
-            get { return _TamanhoCampo; }
-            set { _TamanhoCampo = value; }
-        }
+        public int TamanhoCampo { get; set; }
 
         /// <summary>
         /// Quantidade de casas decimais do campo, caso ele seja do tipo numérico sem decimais. Caso
         /// não se aplique ao tipo de dado, o valor da propriedade será ignorado nas funções de formatação.
         /// </summary>
-        public int QtdDecimais
-        {
-            get { return _QtdDecimais; }
-            set { _QtdDecimais = value; }
-        }
+        public int QtdDecimais { get; set; }
 
         /// <summary>
         /// Valor de ORIGEM do campo, sem formatação, no tipo de dado adequado ao campo. O valor deve ser atribuido
         /// com o tipo de dado adequado ao seu proposto, por exemplo, Double para representar valor, DateTime para
         /// representar datas e/ou horas, etc.
         /// </summary>
-        public object ValorNatural
-        {
-            get { return _ValorNatural; }
-            set { _ValorNatural = value; }
-        }
+        public object ValorNatural { get; set; }
 
         /// <summary>
         /// Valor formatado do campo, pronto para ser utilizado no arquivo EDI. A formatação será de acordo
@@ -167,76 +134,54 @@ namespace BoletoNet
         /// Também pode receber o valor vindo do arquivo EDI, para ser decodificado e o resultado da decodificação na propriedade
         /// ValorNatural
         /// </summary>
-        public string ValorFormatado
-        {
-            get { return _ValorFormatado; }
-            set { _ValorFormatado = value; }
-        }
+        public string ValorFormatado { get; set; }
 
         /// <summary>
         /// Número de ordem do campo no registro EDI
         /// </summary>
-        public int OrdemNoRegistroEDI
-        {
-            get { return _OrdemNoRegistroEDI; }
-            set { _OrdemNoRegistroEDI = value; }
-        }
+        public int OrdemNoRegistroEdi { get; set; }
 
         /// <summary>
         /// Caractere separador dos elementos de campos com o tipo DATA. Colocar null caso esta propriedade
         /// não se aplique ao tipo de dado.
         /// </summary>
-        public string SeparadorDatas
-        {
-            get { return _SeparadorDatas; }
-            set { _SeparadorDatas = value; }
-        }
+        public string SeparadorDatas { get; set; }
 
         /// <summary>
         /// Caractere separador dos elementos de campos com o tipo HORA. Colocar null caso esta propriedade
         /// não se aplique ao tipo de dado.
         /// </summary>
-        public string SeparadorHora
-        {
-            get { return _SeparadorHora; }
-            set { _SeparadorHora = value; }
-        }
+        public string SeparadorHora { get; set; }
 
         /// <summary>
         /// Posição do caracter inicial do campo no arquivo EDI
         /// </summary>
-        public int PosicaoInicial
-        {
-            get { return _PosicaoInicial; }
-            set { _PosicaoInicial = value; }
-        }
+        public int PosicaoInicial { get; set; }
 
-        public int PosicaoFinal
-        {
-            get { return _PosicaoFinal; }
-            set { _PosicaoFinal = value; }
-        }
+        /// <summary>
+        /// Posição do caracter final do campo no arquivo EDI
+        /// </summary>
+        public int PosicaoFinal { get; set; }
+
         /// <summary>
         /// Caractere de Preenchimento do campo da posição inicial até a posição final
         /// </summary>
-        public char Preenchimento
-        {
-            get { return _Preenchimento; }
-            set { _Preenchimento = value; }
-        }
+        public char Preenchimento { get; set; }
 
         #endregion
 
         #region Construtores
 
         /// <summary>
-        /// Cria um objeto TCampoRegistroEDI
+        /// Cria um objeto CampoRegistroEdi
         /// </summary>
-        public TCampoRegistroEDI()
-        {}
+        public CampoRegistroEdi()
+        {
+            Preenchimento = ' ';
+        }
 
         /// <summary>
-        /// Cria um objeto do tipo TCampoRegistroEDI inicializando as propriedades básicas.
+        /// Cria um objeto do tipo CampoRegistroEdi inicializando as propriedades básicas.
         /// </summary>
         /// <param name="pTipoCampo">Tipo de dado de origem dos dados</param>
         /// <param name="pPosicaoInicial">Posição Inicial do Campo no Arquivo</param>
@@ -246,23 +191,23 @@ namespace BoletoNet
         /// <param name="pPreenchimento">Caractere de Preenchimento do campo caso o valor não ocupe todo o tamanho</param>
         /// <param name="pSeparadorHora">Separador de hora padrão; null para sem separador</param>
         /// <param name="pSeparadorData">Separador de data padrão; null para sem separador</param>
-        public TCampoRegistroEDI(TTiposDadoEDI pTipoCampo, int pPosicaoInicial, int pTamanho, int pDecimais, object pValor, char pPreenchimento, string pSeparadorHora, string pSeparadorData)
+        public CampoRegistroEdi(TiposDadoEdi pTipoCampo, int pPosicaoInicial, int pTamanho, int pDecimais, object pValor, char pPreenchimento, string pSeparadorHora, string pSeparadorData)
         {
-            _TipoCampo = pTipoCampo;
-            _TamanhoCampo = pTamanho;
-            _QtdDecimais = pDecimais;
-            _ValorNatural = pValor;
-            _SeparadorHora = pSeparadorHora;
-            _SeparadorDatas = pSeparadorData;
-            _OrdemNoRegistroEDI = 0;
-            _DescricaoCampo = "";
-            _PosicaoInicial = pPosicaoInicial - 1; //Compensa a indexação com base em zero
-            _PosicaoFinal = pPosicaoInicial + _TamanhoCampo;
-            _Preenchimento = pPreenchimento;
+            TipoCampo = pTipoCampo;
+            TamanhoCampo = pTamanho;
+            QtdDecimais = pDecimais;
+            ValorNatural = pValor;
+            SeparadorHora = pSeparadorHora;
+            SeparadorDatas = pSeparadorData;
+            OrdemNoRegistroEdi = 0;
+            DescricaoCampo = "";
+            PosicaoInicial = pPosicaoInicial - 1; //Compensa a indexação com base em zero
+            PosicaoFinal = pPosicaoInicial + TamanhoCampo;
+            Preenchimento = pPreenchimento;
         }
 
         /// <summary>
-        /// Cria um objeto do tipo TCampoRegistroEDI inicializando as propriedades básicas.
+        /// Cria um objeto do tipo CampoRegistroEdi inicializando as propriedades básicas.
         /// </summary>
         /// <param name="pTipoCampo">Tipo de dado de origem dos dados</param>
         /// <param name="pPosicaoInicial">Posição Inicial do Campo no Arquivo</param>
@@ -270,19 +215,19 @@ namespace BoletoNet
         /// <param name="pDecimais">Quantidade de decimais do campo (destino)</param>
         /// <param name="pValor">Valor do campo (Origem), no tipo de dado adequado ao propósito do campo</param>
         /// <param name="pPreenchimento">Caractere de Preenchimento do campo caso o valor não ocupe todo o tamanho</param>
-        public TCampoRegistroEDI(TTiposDadoEDI pTipoCampo, int pPosicaoInicial, int pTamanho, int pDecimais, object pValor, char pPreenchimento)
+        public CampoRegistroEdi(TiposDadoEdi pTipoCampo, int pPosicaoInicial, int pTamanho, int pDecimais, object pValor, char pPreenchimento)
         {
-            _TipoCampo = pTipoCampo;
-            _TamanhoCampo = pTamanho;
-            _QtdDecimais = pDecimais;
-            _ValorNatural = pValor;
-            _SeparadorHora = null;
-            _SeparadorDatas = null;
-            _OrdemNoRegistroEDI = 0;
-            _DescricaoCampo = "";
-            _PosicaoInicial = pPosicaoInicial - 1; //Compensa a indexação com base em zero
-            _PosicaoFinal = pPosicaoInicial + _TamanhoCampo;
-            _Preenchimento = pPreenchimento;
+            TipoCampo = pTipoCampo;
+            TamanhoCampo = pTamanho;
+            QtdDecimais = pDecimais;
+            ValorNatural = pValor;
+            SeparadorHora = null;
+            SeparadorDatas = null;
+            OrdemNoRegistroEdi = 0;
+            DescricaoCampo = "";
+            PosicaoInicial = pPosicaoInicial - 1; //Compensa a indexação com base em zero
+            PosicaoFinal = pPosicaoInicial + TamanhoCampo;
+            Preenchimento = pPreenchimento;
         }
 
         #endregion
@@ -292,197 +237,197 @@ namespace BoletoNet
         /// <summary>
         /// Aplica formatação ao valor do campo em ValorNatural, colocando o resultado na propriedade ValorFormatado
         /// </summary>
-        public void CodificarNaturalParaEDI()
+        public void CodificarNaturalParaEdi()
         {
-            switch (_TipoCampo)
+            switch (TipoCampo)
             {
-                case TTiposDadoEDI.ediAlphaAliEsquerda_____:
+                case TiposDadoEdi.ediAlphaAliEsquerda_____:
                     {
-                        if (_ValorNatural != null)
+                        if (ValorNatural != null)
                         {
-                            if (_ValorNatural.ToString().Trim().Length >= _TamanhoCampo)
-                                _ValorFormatado = _ValorNatural.ToString().Trim().Substring(0, _TamanhoCampo);
+                            if (ValorNatural.ToString().Trim().Length >= TamanhoCampo)
+                                ValorFormatado = ValorNatural.ToString().Trim().Substring(0, TamanhoCampo);
                             else
-                                _ValorFormatado = _ValorNatural.ToString().Trim().PadRight(_TamanhoCampo, _Preenchimento); //' '
+                                ValorFormatado = ValorNatural.ToString().Trim().PadRight(TamanhoCampo, Preenchimento); //' '
                         }
                         else
-                            _ValorFormatado = string.Empty.PadRight(_TamanhoCampo, _Preenchimento); //' '
+                            ValorFormatado = string.Empty.PadRight(TamanhoCampo, Preenchimento); //' '
                         break;
                     }
-                case TTiposDadoEDI.ediAlphaAliDireita______:
+                case TiposDadoEdi.ediAlphaAliDireita______:
                     {
-                        if (_ValorNatural != null)
+                        if (ValorNatural != null)
                         {
-                            if (_ValorNatural.ToString().Trim().Length >= _TamanhoCampo)
-                                _ValorFormatado = _ValorNatural.ToString().Trim().Substring(0, _TamanhoCampo);
+                            if (ValorNatural.ToString().Trim().Length >= TamanhoCampo)
+                                ValorFormatado = ValorNatural.ToString().Trim().Substring(0, TamanhoCampo);
                             else
-                                _ValorFormatado = _ValorNatural.ToString().Trim().PadLeft(_TamanhoCampo, _Preenchimento); //' '
+                                ValorFormatado = ValorNatural.ToString().Trim().PadLeft(TamanhoCampo, Preenchimento); //' '
                         }
                         else
-                            _ValorFormatado = string.Empty.PadLeft(_TamanhoCampo, _Preenchimento); //' '
+                            ValorFormatado = string.Empty.PadLeft(TamanhoCampo, Preenchimento); //' '
                         break;
                     }
-                case TTiposDadoEDI.ediInteiro______________:
+                case TiposDadoEdi.ediInteiro______________:
                     {
-                        _ValorFormatado = _ValorNatural.ToString().Trim().PadLeft(_TamanhoCampo, _Preenchimento); //'0'
+                        ValorFormatado = ValorNatural.ToString().Trim().PadLeft(TamanhoCampo, Preenchimento); //'0'
                         break;
                     }
-                case TTiposDadoEDI.ediNumericoSemSeparador_:
+                case TiposDadoEdi.ediNumericoSemSeparador_:
                     {
-                        if (_ValorNatural == null)
+                        if (ValorNatural == null)
                         {
                             var aux = "";
-                            _ValorFormatado = aux.Trim().PadLeft(_TamanhoCampo, ' ');//Se o Número for NULL, preenche com espaços em branco
+                            ValorFormatado = aux.Trim().PadLeft(TamanhoCampo, ' ');//Se o Número for NULL, preenche com espaços em branco
                         }
                         else
                         {
-                            var Formatacao = "{0:f" + _QtdDecimais + "}";
-                            _ValorFormatado = string.Format(Formatacao, _ValorNatural).Replace(",", "").Replace(".", "").Trim().PadLeft(_TamanhoCampo, _Preenchimento); //'0'
+                            var formatacao = "{0:f" + QtdDecimais + "}";
+                            ValorFormatado = string.Format(formatacao, ValorNatural).Replace(",", "").Replace(".", "").Trim().PadLeft(TamanhoCampo, Preenchimento); //'0'
                         }
                         break;
                     }
-                case TTiposDadoEDI.ediNumericoComPonto_____:
+                case TiposDadoEdi.ediNumericoComPonto_____:
                     {
-                        var Formatacao = "{0:f" + _QtdDecimais + "}";
-                        _ValorFormatado = string.Format(Formatacao, _ValorNatural).Replace(",", ".").Trim().PadLeft(_TamanhoCampo, _Preenchimento); //'0'
+                        var formatacao = "{0:f" + QtdDecimais + "}";
+                        ValorFormatado = string.Format(formatacao, ValorNatural).Replace(",", ".").Trim().PadLeft(TamanhoCampo, Preenchimento); //'0'
                         break;
                     }
-                case TTiposDadoEDI.ediNumericoComVirgula___:
+                case TiposDadoEdi.ediNumericoComVirgula___:
                     {
-                        var Formatacao = "{0:f" + _QtdDecimais + "}";
-                        _ValorFormatado = string.Format(Formatacao, _ValorNatural).Replace(".", ",").Trim().PadLeft(_TamanhoCampo, _Preenchimento); //'0'
+                        var formatacao = "{0:f" + QtdDecimais + "}";
+                        ValorFormatado = string.Format(formatacao, ValorNatural).Replace(".", ",").Trim().PadLeft(TamanhoCampo, Preenchimento); //'0'
                         break;
                     }
-                case TTiposDadoEDI.ediDataAAAAMMDD_________:
+                case TiposDadoEdi.ediDataAAAAMMDD_________:
                     {
-                        if ( (DateTime)_ValorNatural != DateTime.MinValue)
+                        if ( (DateTime)ValorNatural != DateTime.MinValue)
                         {
-                            var sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
-                            var Formatacao = "{0:yyyy" + sep + "MM" + sep + "dd}";
-                            _ValorFormatado = string.Format(Formatacao, _ValorNatural);
+                            var sep = SeparadorDatas ?? "";
+                            var formatacao = "{0:yyyy" + sep + "MM" + sep + "dd}";
+                            ValorFormatado = string.Format(formatacao, ValorNatural);
                         }
                         else
                         {
-                            _ValorNatural = "";
-                            goto case TTiposDadoEDI.ediAlphaAliEsquerda_____;
+                            ValorNatural = "";
+                            goto case TiposDadoEdi.ediAlphaAliEsquerda_____;
                         }
                         break;
                     }
-                case TTiposDadoEDI.ediDataDDMM_____________:
+                case TiposDadoEdi.ediDataDDMM_____________:
                     {
-                        if ((DateTime)_ValorNatural != DateTime.MinValue)
+                        if ((DateTime)ValorNatural != DateTime.MinValue)
                         {
-                            var sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
-                            var Formatacao = "{0:dd" + sep + "MM}";
-                            _ValorFormatado = string.Format(Formatacao, _ValorNatural);
+                            var sep = SeparadorDatas ?? "";
+                            var formatacao = "{0:dd" + sep + "MM}";
+                            ValorFormatado = string.Format(formatacao, ValorNatural);
                         }
                         else
                         {
-                            _ValorNatural = "";
-                            goto case TTiposDadoEDI.ediAlphaAliEsquerda_____;
+                            ValorNatural = "";
+                            goto case TiposDadoEdi.ediAlphaAliEsquerda_____;
                         }
                         break;
                     }
-                case TTiposDadoEDI.ediDataDDMMAAAA_________:
+                case TiposDadoEdi.ediDataDDMMAAAA_________:
                     {
-                        if ((DateTime)_ValorNatural != DateTime.MinValue)
+                        if ((DateTime)ValorNatural != DateTime.MinValue)
                         {
-                            var sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
-                            var Formatacao = "{0:dd" + sep + "MM" + sep + "yyyy}";
-                            _ValorFormatado = string.Format(Formatacao, _ValorNatural);
+                            var sep = SeparadorDatas ?? "";
+                            var formatacao = "{0:dd" + sep + "MM" + sep + "yyyy}";
+                            ValorFormatado = string.Format(formatacao, ValorNatural);
                         }
                         else
                         {
-                            _ValorNatural = "";
-                            goto case TTiposDadoEDI.ediAlphaAliEsquerda_____;
+                            ValorNatural = "";
+                            goto case TiposDadoEdi.ediAlphaAliEsquerda_____;
                         }
                         break;
                     }
-                case TTiposDadoEDI.ediDataDDMMAA___________:
+                case TiposDadoEdi.ediDataDDMMAA___________:
                     {
-                        if ((DateTime)_ValorNatural != DateTime.MinValue)
+                        if ((DateTime)ValorNatural != DateTime.MinValue)
                         {
-                            var sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
-                            var Formatacao = "{0:dd" + sep + "MM" + sep + "yy}";
-                            _ValorFormatado = string.Format(Formatacao, _ValorNatural);
+                            var sep = SeparadorDatas ?? "";
+                            var formatacao = "{0:dd" + sep + "MM" + sep + "yy}";
+                            ValorFormatado = string.Format(formatacao, ValorNatural);
                         }
                         else
                         {
-                            _ValorNatural = "";
-                            goto case TTiposDadoEDI.ediAlphaAliEsquerda_____;
+                            ValorNatural = "";
+                            goto case TiposDadoEdi.ediAlphaAliEsquerda_____;
                         }
                         break;
                     }
-                case TTiposDadoEDI.ediDataMMAAAA___________:
+                case TiposDadoEdi.ediDataMMAAAA___________:
                     {
-                        if ((DateTime)_ValorNatural != DateTime.MinValue)
+                        if ((DateTime)ValorNatural != DateTime.MinValue)
                         {
-                            var sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
-                            var Formatacao = "{0:MM" + sep + "yyyy}";
-                            _ValorFormatado = string.Format(Formatacao, _ValorNatural);
+                            var sep = SeparadorDatas ?? "";
+                            var formatacao = "{0:MM" + sep + "yyyy}";
+                            ValorFormatado = string.Format(formatacao, ValorNatural);
                         }
                         else
                         {
-                            _ValorNatural = "";
-                            goto case TTiposDadoEDI.ediAlphaAliEsquerda_____;
+                            ValorNatural = "";
+                            goto case TiposDadoEdi.ediAlphaAliEsquerda_____;
                         }
                         break;
                     }
-                case TTiposDadoEDI.ediDataMMDD_____________:
+                case TiposDadoEdi.ediDataMMDD_____________:
                     {
-                        if ((DateTime)_ValorNatural != DateTime.MinValue)
+                        if ((DateTime)ValorNatural != DateTime.MinValue)
                         {
-                            var sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
-                            var Formatacao = "{0:MM" + sep + "dd}";
-                            _ValorFormatado = string.Format(Formatacao, _ValorNatural);
+                            var sep = SeparadorDatas ?? "";
+                            var formatacao = "{0:MM" + sep + "dd}";
+                            ValorFormatado = string.Format(formatacao, ValorNatural);
                         }
                         else
                         {
-                            _ValorNatural = "";
-                            goto case TTiposDadoEDI.ediAlphaAliEsquerda_____;
+                            ValorNatural = "";
+                            goto case TiposDadoEdi.ediAlphaAliEsquerda_____;
                         }
                         break;
                     }
-                case TTiposDadoEDI.ediHoraHHMM_____________:
+                case TiposDadoEdi.ediHoraHHMM_____________:
                     {
-                        var sep = _SeparadorHora == null ? "" : _SeparadorHora;
-                        var Formatacao = "{0:HH" + sep + "mm}";
-                        _ValorFormatado = string.Format(Formatacao, _ValorNatural);
+                        var sep = SeparadorHora ?? "";
+                        var formatacao = "{0:HH" + sep + "mm}";
+                        ValorFormatado = string.Format(formatacao, ValorNatural);
                         break;
                     }
-                case TTiposDadoEDI.ediHoraHHMMSS___________:
+                case TiposDadoEdi.ediHoraHHMMSS___________:
                     {
-                        var sep = _SeparadorHora == null ? "" : _SeparadorHora;
+                        var sep = SeparadorHora ?? "";
                         var formatacao = "{0:HH" + sep + "mm" + sep + "ss}";
-                        _ValorFormatado = string.Format(formatacao, _ValorNatural);
+                        ValorFormatado = string.Format(formatacao, ValorNatural);
                         break;
                     }
-                case TTiposDadoEDI.ediDataDDMMAAAAWithZeros:
+                case TiposDadoEdi.ediDataDDMMAAAAWithZeros:
                     {
-                        var sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
-                        if (_ValorNatural != null || !ValorNatural.ToString().Trim().Equals(""))
+                        var sep = SeparadorDatas ?? "";
+                        if (ValorNatural != null || !ValorNatural.ToString().Trim().Equals(""))
                         {
                             var formatacao = "{0:dd" + sep + "MM" + sep + "yyyy}";
-                            _ValorFormatado = string.Format(formatacao, _ValorNatural);
+                            ValorFormatado = string.Format(formatacao, ValorNatural);
                         }
                         else
                         {
-                            _ValorFormatado = "00" + sep + "00" + sep + "0000";
+                            ValorFormatado = "00" + sep + "00" + sep + "0000";
                         }
                         break;
                     }
-                case TTiposDadoEDI.ediDataAAAAMMDDWithZeros:
+                case TiposDadoEdi.ediDataAAAAMMDDWithZeros:
                     {
-                        var sep = _SeparadorDatas == null ? "" : _SeparadorDatas;
+                        var sep = SeparadorDatas ?? "";
 
-                        if (_ValorNatural != null)
+                        if (ValorNatural != null)
                         {
                             var formatacao = "{0:yyyy" + sep + "MM" + sep + "dd}";
-                            _ValorFormatado = string.Format(formatacao, _ValorNatural);
+                            ValorFormatado = string.Format(formatacao, ValorNatural);
                         }
                         else
                         {
-                            _ValorFormatado = "00" + sep + "00" + sep + "0000";
+                            ValorFormatado = "00" + sep + "00" + sep + "0000";
                         }
                         break;
                     }
@@ -493,242 +438,242 @@ namespace BoletoNet
         /// Transforma o valor vindo do campo do registro EDI da propriedade ValorFormatado para o valor natural (com o tipo
         /// de dado adequado) na propriedade ValorNatural
         /// </summary>
-        public void DecodificarEDIParaNatural()
+        public void DecodificarEdiParaNatural()
         {
-            if (_ValorFormatado.Trim().Equals(""))
+            if (ValorFormatado.Trim().Equals(""))
             {
-                _ValorNatural = null;
+                ValorNatural = null;
             }
             else
             {
-                switch (_TipoCampo)
+                switch (TipoCampo)
                 {
-                    case TTiposDadoEDI.ediAlphaAliEsquerda_____:
+                    case TiposDadoEdi.ediAlphaAliEsquerda_____:
                         {
-                            _ValorNatural = _ValorFormatado.Trim();
+                            ValorNatural = ValorFormatado.Trim();
                             break;
                         }
-                    case TTiposDadoEDI.ediAlphaAliDireita______:
+                    case TiposDadoEdi.ediAlphaAliDireita______:
                         {
-                            _ValorNatural = _ValorFormatado.Trim();
+                            ValorNatural = ValorFormatado.Trim();
                             break;
                         }
-                    case TTiposDadoEDI.ediInteiro______________:
+                    case TiposDadoEdi.ediInteiro______________:
                         {
-                            _ValorNatural = long.Parse(_ValorFormatado.Trim());
+                            ValorNatural = long.Parse(ValorFormatado.Trim());
                             break;
                         }
-                    case TTiposDadoEDI.ediNumericoSemSeparador_:
+                    case TiposDadoEdi.ediNumericoSemSeparador_:
                         {
-                            var s = _ValorFormatado.Substring(0, _ValorFormatado.Length - _QtdDecimais) + "," + _ValorFormatado.Substring(_ValorFormatado.Length - _QtdDecimais, _QtdDecimais);
-                            _ValorNatural = double.Parse(s.Trim());
+                            var s = ValorFormatado.Substring(0, ValorFormatado.Length - QtdDecimais) + "," + ValorFormatado.Substring(ValorFormatado.Length - QtdDecimais, QtdDecimais);
+                            ValorNatural = double.Parse(s.Trim());
                             break;
                         }
-                    case TTiposDadoEDI.ediNumericoComPonto_____:
+                    case TiposDadoEdi.ediNumericoComPonto_____:
                         {
-                            _ValorNatural = double.Parse(_ValorFormatado.Replace(".", ",").Trim());
+                            ValorNatural = double.Parse(ValorFormatado.Replace(".", ",").Trim());
                             break;
                         }
-                    case TTiposDadoEDI.ediNumericoComVirgula___:
+                    case TiposDadoEdi.ediNumericoComVirgula___:
                         {
-                            _ValorNatural = double.Parse(_ValorFormatado.Trim().Replace(".", ","));
+                            ValorNatural = double.Parse(ValorFormatado.Trim().Replace(".", ","));
                             break;
                         }
-                    case TTiposDadoEDI.ediDataAAAAMMDD_________:
+                    case TiposDadoEdi.ediDataAAAAMMDD_________:
                         {
-                            if (!_ValorFormatado.Trim().Equals(""))
+                            if (!ValorFormatado.Trim().Equals(""))
                             {
                                 string cAno;
                                 string cMes;
                                 string cDia;
 
-                                if (_SeparadorDatas != null)
+                                if (SeparadorDatas != null)
                                 {
-                                    var split = _ValorFormatado.Split(_SeparadorDatas.ToCharArray());
+                                    var split = ValorFormatado.Split(SeparadorDatas.ToCharArray());
                                     cAno = split[0];
                                     cMes = split[1];
                                     cDia = split[2];
                                 }
                                 else
                                 {
-                                    cAno = _ValorFormatado.Substring(0, 4);
-                                    cMes = _ValorFormatado.Substring(4, 2);
-                                    cDia = _ValorFormatado.Substring(6, 2);
+                                    cAno = ValorFormatado.Substring(0, 4);
+                                    cMes = ValorFormatado.Substring(4, 2);
+                                    cDia = ValorFormatado.Substring(6, 2);
                                 }
                                 if (cDia.Equals("00") && cMes.Equals("00") && cAno.Equals("0000"))
                                 {
-                                    _ValorNatural = null;
+                                    ValorNatural = null;
                                 }
                                 else
                                 {
-                                    _ValorNatural = DateTime.Parse(cDia + "/" + cMes + "/" + cAno);
+                                    ValorNatural = DateTime.Parse(cDia + "/" + cMes + "/" + cAno);
                                 }
                             }
                             else
                             {
-                                _ValorNatural = null;
+                                ValorNatural = null;
                             }
                             break;
                         }
-                    case TTiposDadoEDI.ediDataDDMM_____________:
+                    case TiposDadoEdi.ediDataDDMM_____________:
                         {
-                            if (!_ValorFormatado.Trim().Equals(""))
+                            if (!ValorFormatado.Trim().Equals(""))
                             {
                                 var cAno = "1900";
                                 var cMes = "";
                                 var cDia = "";
-                                if (_SeparadorDatas != null)
+                                if (SeparadorDatas != null)
                                 {
-                                    var split = _ValorFormatado.Split(_SeparadorDatas.ToCharArray());
+                                    var split = ValorFormatado.Split(SeparadorDatas.ToCharArray());
                                     cMes = split[1];
                                     cDia = split[0];
                                 }
                                 else
                                 {
-                                    cMes = _ValorFormatado.Substring(2, 2);
-                                    cDia = _ValorFormatado.Substring(0, 2);
+                                    cMes = ValorFormatado.Substring(2, 2);
+                                    cDia = ValorFormatado.Substring(0, 2);
                                 }
-                                _ValorNatural = DateTime.Parse(cDia + "/" + cMes + "/" + cAno);
+                                ValorNatural = DateTime.Parse(cDia + "/" + cMes + "/" + cAno);
                             }
                             else
                             {
-                                _ValorNatural = null;
+                                ValorNatural = null;
                             }
                             break;
                         }
-                    case TTiposDadoEDI.ediDataDDMMAAAA_________:
+                    case TiposDadoEdi.ediDataDDMMAAAA_________:
                         {
                             var cDia = "";
                             var cMes = "";
                             var cAno = "";
-                            if (_SeparadorDatas != null)
+                            if (SeparadorDatas != null)
                             {
-                                var split = _ValorFormatado.Split(_SeparadorDatas.ToCharArray());
+                                var split = ValorFormatado.Split(SeparadorDatas.ToCharArray());
                                 cAno = split[2];
                                 cMes = split[1];
                                 cDia = split[0];
                             }
                             else
                             {
-                                cDia = _ValorFormatado.Substring(0, 2);
-                                cMes = _ValorFormatado.Substring(2, 2);
-                                cAno = _ValorFormatado.Substring(4, 4);
+                                cDia = ValorFormatado.Substring(0, 2);
+                                cMes = ValorFormatado.Substring(2, 2);
+                                cAno = ValorFormatado.Substring(4, 4);
                             }
-                            if (cDia.Equals("00") && cMes.Equals("00") && cAno.Equals("0000") || _ValorFormatado.Trim().Equals(""))
+                            if (cDia.Equals("00") && cMes.Equals("00") && cAno.Equals("0000") || ValorFormatado.Trim().Equals(""))
                             {
-                                _ValorNatural = DateTime.Parse("01/01/1900"); //data start
+                                ValorNatural = DateTime.Parse("01/01/1900"); //data start
                             }
                             else
                             {
-                                _ValorNatural = DateTime.Parse(cDia + "/" + cMes + "/" + cAno);
+                                ValorNatural = DateTime.Parse(cDia + "/" + cMes + "/" + cAno);
                             }
                             break;
                         }
-                    case TTiposDadoEDI.ediDataDDMMAA___________:
+                    case TiposDadoEdi.ediDataDDMMAA___________:
                         {
                             var cDia = "";
                             var cMes = "";
                             var cAno = "";
-                            if (_SeparadorDatas != null)
+                            if (SeparadorDatas != null)
                             {
-                                var split = _ValorFormatado.Split(_SeparadorDatas.ToCharArray());
+                                var split = ValorFormatado.Split(SeparadorDatas.ToCharArray());
                                 cAno = split[2];
                                 cMes = split[1];
                                 cDia = split[0];
                             }
                             else
                             {
-                                cDia = _ValorFormatado.Substring(0, 2);
-                                cMes = _ValorFormatado.Substring(2, 2);
-                                cAno = _ValorFormatado.Substring(4, 2);
+                                cDia = ValorFormatado.Substring(0, 2);
+                                cMes = ValorFormatado.Substring(2, 2);
+                                cAno = ValorFormatado.Substring(4, 2);
                             }
-                            _ValorNatural = DateTime.Parse(cDia + "/" + cMes + "/" + cAno);
+                            ValorNatural = DateTime.Parse(cDia + "/" + cMes + "/" + cAno);
                             break;
                         }
-                    case TTiposDadoEDI.ediDataMMAAAA___________:
+                    case TiposDadoEdi.ediDataMMAAAA___________:
                         {
                             var cDia = "01";
                             var cMes = "";
                             var cAno = "";
-                            if (_SeparadorDatas != null)
+                            if (SeparadorDatas != null)
                             {
-                                var split = _ValorFormatado.Split(_SeparadorDatas.ToCharArray());
+                                var split = ValorFormatado.Split(SeparadorDatas.ToCharArray());
                                 cAno = split[1];
                                 cMes = split[0];
                             }
                             else
                             {
-                                cMes = _ValorFormatado.Substring(0, 2);
-                                cAno = _ValorFormatado.Substring(2, 4);
+                                cMes = ValorFormatado.Substring(0, 2);
+                                cAno = ValorFormatado.Substring(2, 4);
                             }
-                            _ValorNatural = DateTime.Parse(cDia + "/" + cMes + "/" + cAno);
+                            ValorNatural = DateTime.Parse(cDia + "/" + cMes + "/" + cAno);
                             break;
                         }
-                    case TTiposDadoEDI.ediDataMMDD_____________:
+                    case TiposDadoEdi.ediDataMMDD_____________:
                         {
                             var cDia = "";
                             var cMes = "";
                             var cAno = "1900";
-                            if (_SeparadorDatas != null)
+                            if (SeparadorDatas != null)
                             {
-                                var split = _ValorFormatado.Split(_SeparadorDatas.ToCharArray());
+                                var split = ValorFormatado.Split(SeparadorDatas.ToCharArray());
                                 cMes = split[0];
                                 cDia = split[1];
                             }
                             else
                             {
-                                cDia = _ValorFormatado.Substring(2, 2);
-                                cMes = _ValorFormatado.Substring(0, 2);
+                                cDia = ValorFormatado.Substring(2, 2);
+                                cMes = ValorFormatado.Substring(0, 2);
                             }
-                            _ValorNatural = DateTime.Parse(cDia + "/" + cMes + "/" + cAno);
+                            ValorNatural = DateTime.Parse(cDia + "/" + cMes + "/" + cAno);
                             break;
                         }
-                    case TTiposDadoEDI.ediHoraHHMM_____________:
+                    case TiposDadoEdi.ediHoraHHMM_____________:
                         {
                             var cHora = "";
                             var cMinuto = "";
-                            if (_SeparadorHora != null)
+                            if (SeparadorHora != null)
                             {
-                                var split = _ValorFormatado.Split(_SeparadorHora.ToCharArray());
+                                var split = ValorFormatado.Split(SeparadorHora.ToCharArray());
                                 cHora = split[0];
                                 cMinuto = split[1];
                             }
                             else
                             {
-                                cHora = _ValorFormatado.Substring(0, 2);
-                                cMinuto = _ValorFormatado.Substring(2, 2);
+                                cHora = ValorFormatado.Substring(0, 2);
+                                cMinuto = ValorFormatado.Substring(2, 2);
                             }
-                            _ValorNatural = DateTime.Parse(cHora + ":" + cMinuto + ":00");
+                            ValorNatural = DateTime.Parse(cHora + ":" + cMinuto + ":00");
                             break;
                         }
-                    case TTiposDadoEDI.ediHoraHHMMSS___________:
+                    case TiposDadoEdi.ediHoraHHMMSS___________:
                         {
                             var cHora = "";
                             var cMinuto = "";
                             var cSegundo = "";
-                            if (_SeparadorHora != null)
+                            if (SeparadorHora != null)
                             {
-                                var split = _ValorFormatado.Split(_SeparadorHora.ToCharArray());
+                                var split = ValorFormatado.Split(SeparadorHora.ToCharArray());
                                 cHora = split[0];
                                 cMinuto = split[1];
                                 cSegundo = split[2];
                             }
                             else
                             {
-                                cHora = _ValorFormatado.Substring(0, 2);
-                                cMinuto = _ValorFormatado.Substring(2, 2);
-                                cSegundo = _ValorFormatado.Substring(4, 2);
+                                cHora = ValorFormatado.Substring(0, 2);
+                                cMinuto = ValorFormatado.Substring(2, 2);
+                                cSegundo = ValorFormatado.Substring(4, 2);
                             }
-                            _ValorNatural = DateTime.Parse(cHora + ":" + cMinuto + ":00");
+                            ValorNatural = DateTime.Parse(cHora + ":" + cMinuto + ":00");
                             break;
                         }
-                    case TTiposDadoEDI.ediDataDDMMAAAAWithZeros:
+                    case TiposDadoEdi.ediDataDDMMAAAAWithZeros:
                         {
-                            goto case TTiposDadoEDI.ediDataDDMMAAAA_________;
+                            goto case TiposDadoEdi.ediDataDDMMAAAA_________;
                         }
-                    case TTiposDadoEDI.ediDataAAAAMMDDWithZeros:
+                    case TiposDadoEdi.ediDataAAAAMMDDWithZeros:
                         {
-                            goto case TTiposDadoEDI.ediDataAAAAMMDD_________;
+                            goto case TiposDadoEdi.ediDataAAAAMMDD_________;
                         }
                 }
             }
@@ -740,66 +685,60 @@ namespace BoletoNet
     /// <summary>
     /// Indica os tipos de registro possíveis em um arquivo EDI
     /// </summary>
-    public enum TTipoRegistroEDI
+    public enum TipoRegistroEdi
     {
         /// <summary>
         /// Indicador de registro Header
         /// </summary>
-        treHeader,
+        Header,
         /// <summary>
         /// Indica um registro detalhe
         /// </summary>
-        treDetalhe,
+        Detalhe,
         /// <summary>
         /// Indica um registro Trailler
         /// </summary>
-        treTrailler,
+        Trailler,
         /// <summary>
         /// Indica um registro sem definições, utilizado para transmissão socket ou similar
         /// </summary>
-        treLinhaUnica
+        LinhaUnica
     }
 
     /// <summary>
     /// Classe representativa de um registro (linha) de um arquivo EDI
     /// </summary>
-    public class TRegistroEDI
+    public class RegistroEdi
     {
         #region Variáveis Privadas e Protegidas
-        protected TTipoRegistroEDI _TipoRegistro;
-        protected int _TamanhoMaximo = 0;
-        protected char _CaracterPreenchimento = ' ';
-        private string _LinhaRegistro;
-        protected List<TCampoRegistroEDI> _CamposEDI = new List<TCampoRegistroEDI>();
+
+        protected int TamanhoMaximo = 0;
+        protected char CaracterPreenchimento = ' ';
+
+        public RegistroEdi()
+        {
+            CamposEdi = new List<CampoRegistroEdi>();
+        }
+
         #endregion
 
         #region Propriedades
+
         /// <summary>
         /// Tipo de Registro da linha do arquivo EDI
         /// </summary>
-        public TTipoRegistroEDI TipoRegistro
-        {
-            get { return _TipoRegistro; }
-        }
+        public TipoRegistroEdi TipoRegistro { get; protected set; }
 
         /// <summary>
         /// Seta a linha do registro para a decodificação nos campos;
         /// Obtém a linha decodificada a partir dos campos.
         /// </summary>
-        public string LinhaRegistro
-        {
-            get { return _LinhaRegistro; }
-            set { _LinhaRegistro = value; }
-        }
+        public string LinhaRegistro { get; set; }
 
         /// <summary>
         /// Coleção dos campos do registro EDI
         /// </summary>
-        public List<TCampoRegistroEDI> CamposEDI
-        {
-            get { return _CamposEDI; }
-            set { _CamposEDI = value; }
-        }
+        public List<CampoRegistroEdi> CamposEdi { get; set; }
 
         #endregion
 
@@ -810,11 +749,11 @@ namespace BoletoNet
         /// </summary>
         public virtual void CodificarLinha()
         {
-            _LinhaRegistro = "";
-            foreach (var campos in _CamposEDI)
+            LinhaRegistro = "";
+            foreach (var campos in CamposEdi)
             {
-                campos.CodificarNaturalParaEDI();
-                _LinhaRegistro += campos.ValorFormatado; 
+                campos.CodificarNaturalParaEdi();
+                LinhaRegistro += campos.ValorFormatado; 
             }
         }
 
@@ -823,14 +762,13 @@ namespace BoletoNet
         /// </summary>
         public virtual void DecodificarLinha()
         {
-            foreach (var campos in _CamposEDI)
+            foreach (var campos in CamposEdi)
             {
-                if (_TamanhoMaximo > 0)
-                {
-                    _LinhaRegistro = _LinhaRegistro.PadRight(_TamanhoMaximo, _CaracterPreenchimento);
-                }
-                campos.ValorFormatado = _LinhaRegistro.Substring(campos.PosicaoInicial, campos.TamanhoCampo);
-                campos.DecodificarEDIParaNatural();
+                if (TamanhoMaximo > 0)
+                    LinhaRegistro = LinhaRegistro.PadRight(TamanhoMaximo, CaracterPreenchimento);
+                
+                campos.ValorFormatado = LinhaRegistro.Substring(campos.PosicaoInicial, campos.TamanhoCampo);
+                campos.DecodificarEdiParaNatural();
             }
         }
 

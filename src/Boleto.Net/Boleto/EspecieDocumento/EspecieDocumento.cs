@@ -4,7 +4,6 @@ namespace BoletoNet
 {
     public class EspecieDocumento : AbstractEspecieDocumento, IEspecieDocumento
     {
-
         #region Variaveis
 
         private IEspecieDocumento _IEspecieDocumento;
@@ -79,7 +78,7 @@ namespace BoletoNet
 
         #endregion
 
-        # region Métodos Privados
+        #region Métodos Privados
 
         private void InstanciaEspecieDocumento(int codigoBanco, string codigoEspecie)
         {
@@ -201,7 +200,7 @@ namespace BoletoNet
             }
         }
 
-        # endregion
+        #endregion
 
         public static string ValidaSigla(IEspecieDocumento especie)
         {

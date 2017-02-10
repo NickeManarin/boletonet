@@ -25,7 +25,7 @@ namespace BoletoNet
 
         public ArquivoRetornoCNAB400()
 		{
-            TipoArquivo = TipoArquivo.CNAB400;
+            TipoArquivo = TipoArquivo.Cnab400;
         }
 
         #endregion

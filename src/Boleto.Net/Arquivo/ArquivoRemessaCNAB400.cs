@@ -10,7 +10,7 @@ namespace BoletoNet
 
         public ArquivoRemessaCNAB400()
         {
-            TipoArquivo = TipoArquivo.CNAB400;
+            TipoArquivo = TipoArquivo.Cnab400;
         }
 
         #endregion
@@ -57,13 +57,13 @@ namespace BoletoNet
 
                 var incluiLinha = new StreamWriter(arquivo, Encoding.GetEncoding("ISO-8859-1"));
                 cedente.Carteira = boletos[0].Carteira;
-                var strline = banco.GerarHeaderRemessa(numeroConvenio, cedente, TipoArquivo.CNAB400, numeroArquivoRemessa);
+                var strline = banco.GerarHeaderRemessa(numeroConvenio, cedente, TipoArquivo.Cnab400, numeroArquivoRemessa);
                 incluiLinha.WriteLine(strline);
 
                 foreach (var boleto in boletos)
                 {
                     boleto.Banco = banco;
-                    strline = boleto.Banco.GerarDetalheRemessa(boleto, numeroRegistro, TipoArquivo.CNAB400);
+                    strline = boleto.Banco.GerarDetalheRemessa(boleto, numeroRegistro, TipoArquivo.Cnab400);
                     incluiLinha.WriteLine(strline);
                     vltitulostotal += boleto.ValorBoleto;   //Uso apenas no registro TRAILER do banco Santander - jsoda em 09/05/2012 - Add no registro TRAILER do banco Banrisul - sidneiklein em 08/08/2013
                     numeroRegistro++;
@@ -73,7 +73,7 @@ namespace BoletoNet
                         if (boleto.PercMulta > 0 || boleto.ValorMulta > 0)
                         {
                             var _banco = new Banco_Cecred();
-                            var linhaCECREDRegistroDetalhe5 = _banco.GerarRegistroDetalhe5(boleto, numeroRegistro, TipoArquivo.CNAB400);
+                            var linhaCECREDRegistroDetalhe5 = _banco.GerarRegistroDetalhe5(boleto, numeroRegistro, TipoArquivo.Cnab400);
                             incluiLinha.WriteLine(linhaCECREDRegistroDetalhe5);
                             numeroRegistro++;
                         }
@@ -93,13 +93,13 @@ namespace BoletoNet
 
                     if ((boleto.Instrucoes != null && boleto.Instrucoes.Count > 0) || (boleto.Sacado.Instrucoes != null && boleto.Sacado.Instrucoes.Count > 0))
                     {
-                        strline = boleto.Banco.GerarMensagemVariavelRemessa(boleto, ref numeroRegistro, TipoArquivo.CNAB400);
+                        strline = boleto.Banco.GerarMensagemVariavelRemessa(boleto, ref numeroRegistro, TipoArquivo.Cnab400);
                         if (!string.IsNullOrEmpty(strline) && !string.IsNullOrWhiteSpace(strline))
                             incluiLinha.WriteLine(strline);
                     }
                 }
 
-                strline = banco.GerarTrailerRemessa(numeroRegistro, TipoArquivo.CNAB400, cedente, vltitulostotal);
+                strline = banco.GerarTrailerRemessa(numeroRegistro, TipoArquivo.Cnab400, cedente, vltitulostotal);
 
                 incluiLinha.WriteLine(strline);
 
