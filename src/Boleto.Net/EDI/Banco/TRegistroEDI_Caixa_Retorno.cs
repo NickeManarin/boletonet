@@ -239,52 +239,52 @@ namespace BoletoNet.EDI.Banco
         {
             /*
              * Aqui é que iremos informar as características de cada campo do arquivo
-             * Na classe base, CampoRegistroEdi, temos a propriedade CamposEdi, que é uma coleção de objetos
-             * CampoRegistroEdi.
+             * Na classe base, CampoEdi, temos a propriedade CamposEdi, que é uma coleção de objetos
+             * CampoEdi.
              */
 
             #region TODOS os Campos
 
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0001, 001, 0, string.Empty, ' ')); //001-001
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0002, 002, 0, string.Empty, ' ')); //002-003
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0004, 014, 0, string.Empty, ' ')); //004-017
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0018, 004, 0, string.Empty, ' ')); //018-021
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0022, 006, 0, string.Empty, ' ')); //0022-027
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0028, 001, 0, string.Empty, ' ')); //0028-0028
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0029, 001, 0, string.Empty, ' ')); //0029-0029
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0030, 002, 0, string.Empty, ' ')); //0030-0031
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0032, 025, 0, string.Empty, ' ')); //0032-0056
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0057, 002, 0, string.Empty, ' ')); //0057-0058
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0059, 015, 0, string.Empty, ' ')); //0059-073
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0074, 006, 0, string.Empty, ' ')); //074-079
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0080, 003, 0, string.Empty, ' ')); //080-082
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0083, 024, 0, string.Empty, ' ')); //083-106
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0107, 002, 0, string.Empty, ' ')); //107-108
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0109, 002, 0, string.Empty, ' ')); //109-110
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0111, 006, 0, string.Empty, ' ')); //111-116
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0117, 010, 0, string.Empty, ' ')); //117-126
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0127, 020, 0, string.Empty, ' ')); //127-146
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0147, 006, 0, string.Empty, ' ')); //147-152
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0153, 013, 0, string.Empty, ' ')); //153-165
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0166, 003, 0, string.Empty, ' ')); //166-168
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0169, 005, 0, string.Empty, ' ')); //169-173
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0174, 002, 0, string.Empty, ' ')); //174-175
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0176, 013, 0, string.Empty, ' ')); //176-188
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0189, 003, 0, string.Empty, ' ')); //189-191
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0192, 001, 0, string.Empty, ' ')); //192-192
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0193, 002, 0, string.Empty, ' ')); //193-194
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0195, 006, 0, string.Empty, ' ')); //195-200
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0201, 014, 0, string.Empty, ' ')); //201-214
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0215, 013, 0, string.Empty, ' ')); //215-227
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0228, 013, 0, string.Empty, ' ')); //228-240
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0241, 013, 0, string.Empty, ' ')); //241-253
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0254, 013, 0, string.Empty, ' ')); //254-266
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0267, 013, 0, string.Empty, ' ')); //267-279
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0280, 013, 0, string.Empty, ' ')); //280-292
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0293, 001, 0, string.Empty, ' ')); //293-293
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0294, 006, 0, string.Empty, ' ')); //294-299
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0300, 095, 0, string.Empty, ' ')); //300-394
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0395, 006, 0, string.Empty, ' ')); //395-400
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0001, 001, 0, string.Empty, ' ')); //001-001
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0002, 002, 0, string.Empty, ' ')); //002-003
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0004, 014, 0, string.Empty, ' ')); //004-017
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0018, 004, 0, string.Empty, ' ')); //018-021
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0022, 006, 0, string.Empty, ' ')); //0022-027
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0028, 001, 0, string.Empty, ' ')); //0028-0028
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0029, 001, 0, string.Empty, ' ')); //0029-0029
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0030, 002, 0, string.Empty, ' ')); //0030-0031
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0032, 025, 0, string.Empty, ' ')); //0032-0056
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0057, 002, 0, string.Empty, ' ')); //0057-0058
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0059, 015, 0, string.Empty, ' ')); //0059-073
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0074, 006, 0, string.Empty, ' ')); //074-079
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0080, 003, 0, string.Empty, ' ')); //080-082
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0083, 024, 0, string.Empty, ' ')); //083-106
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0107, 002, 0, string.Empty, ' ')); //107-108
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0109, 002, 0, string.Empty, ' ')); //109-110
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0111, 006, 0, string.Empty, ' ')); //111-116
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0117, 010, 0, string.Empty, ' ')); //117-126
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0127, 020, 0, string.Empty, ' ')); //127-146
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0147, 006, 0, string.Empty, ' ')); //147-152
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0153, 013, 0, string.Empty, ' ')); //153-165
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0166, 003, 0, string.Empty, ' ')); //166-168
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0169, 005, 0, string.Empty, ' ')); //169-173
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0174, 002, 0, string.Empty, ' ')); //174-175
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0176, 013, 0, string.Empty, ' ')); //176-188
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0189, 003, 0, string.Empty, ' ')); //189-191
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0192, 001, 0, string.Empty, ' ')); //192-192
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0193, 002, 0, string.Empty, ' ')); //193-194
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0195, 006, 0, string.Empty, ' ')); //195-200
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0201, 014, 0, string.Empty, ' ')); //201-214
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0215, 013, 0, string.Empty, ' ')); //215-227
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0228, 013, 0, string.Empty, ' ')); //228-240
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0241, 013, 0, string.Empty, ' ')); //241-253
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0254, 013, 0, string.Empty, ' ')); //254-266
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0267, 013, 0, string.Empty, ' ')); //267-279
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0280, 013, 0, string.Empty, ' ')); //280-292
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0293, 001, 0, string.Empty, ' ')); //293-293
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0294, 006, 0, string.Empty, ' ')); //294-299
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0300, 095, 0, string.Empty, ' ')); //300-394
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0395, 006, 0, string.Empty, ' ')); //395-400
 
             #endregion
         }
@@ -292,7 +292,7 @@ namespace BoletoNet.EDI.Banco
 		/// <summary>
 		/// Aqui iremos atribuir os valores das propriedades em cada campo correspondente do Registro EDI
 		/// e codificaremos a linha para obter uma string formatada com o nosso layout.
-		/// Repare que declarei as propriedades em uma ordem tal que a adição dos objetos CampoRegistroEdi na propriedade
+		/// Repare que declarei as propriedades em uma ordem tal que a adição dos objetos CampoEdi na propriedade
 		/// _CamposEDI siga a mesma ordem. Portanto, utilizarei o índice na atribuição.
 		/// </summary>
         public override void CodificarLinha()

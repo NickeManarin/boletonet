@@ -8,9 +8,9 @@ namespace BoletoNet
     /// <summary>
     /// Classe para ordenação pela propriedade Posição no Registro EDI
     /// </summary>
-    internal class OrdenacaoPorPosEdi : IComparer<CampoRegistroEdi>
+    internal class OrdenacaoPorPosEdi : IComparer<CampoEdi>
     {
-        public int Compare(CampoRegistroEdi x, CampoRegistroEdi y)
+        public int Compare(CampoEdi x, CampoEdi y)
         {
             return x.OrdemNoRegistroEdi.CompareTo(y.OrdemNoRegistroEdi);
         }
@@ -19,84 +19,80 @@ namespace BoletoNet
     /// <summary>
     /// Representa cada tipo de dado possível em um arquivo EDI.
     /// </summary>
-    public enum TiposDadoEdi
+    public enum Dado
     { 
         /// <summary>
         /// Representa um campo alfanumérico, alinhado à esquerda e com brancos à direita. A propriedade ValorNatural é do tipo String
         /// </summary>
-        ediAlphaAliEsquerda_____,
+        AlphaAliEsquerda_____,
         /// <summary>
         /// Representa um campo alfanumérico, alinhado à direita e com brancos à esquerda. A propriedade ValorNatural é do tipo String
         /// </summary>
-        ediAlphaAliDireita______,
+        AlphaAliDireita______,
         /// <summary>
         /// Representa um campo numérico inteiro alinhado à direita com zeros à esquerda. A propriedade ValorNatural é do tipo Int ou derivados
         /// </summary>
-        ediInteiro______________,
+        Inteiro______________,
         /// <summary>
         /// Representa um campo numérico com decimais, sem o separador de decimal. A propriedade ValorNatural é do tipo Double
         /// </summary>
-        ediNumericoSemSeparador_,
+        NumericoSemSeparador_,
         /// <summary>
         /// Representa um campo numérico com decimais, com o caracter ponto (.) como separador decimal,
         /// alinhado à direita com zeros à esquerda. A propriedade ValorNatural é do tipo Double
         /// </summary>
-        ediNumericoComPonto_____,
+        NumericoComPonto_____,
         /// <summary>
         /// Representa um campo numérico com decimais, com o caracter vírgula (,) como separador decimal,
         /// alinhado à direita com zeros à esquerda. A propriedade ValorNatural é do tipo Double
         /// </summary>
-        ediNumericoComVirgula___,
+        NumericoComVirgula___,
         /// <summary>
         /// Representa um campo de data no formato ddm/mm/aaaa. A propriedade ValorNatural é do tipo DateTime
         /// </summary>
-        ediDataDDMMAAAA_________,
+        DataDDMMAAAA_________,
         /// <summary>
         /// Representa um campo de data no formato aaaa/mm/dd. A propriedade ValorNatural é do tipo DateTime
         /// </summary>
-        ediDataAAAAMMDD_________,
+        DataAAAAMMDD_________,
         /// <summary>
         /// Representa um campo de data no formato dd/mm. A propriedade ValorNatural é do tipo DateTime, com o ano igual a 1900
         /// </summary>
-        ediDataDDMM_____________,
+        DataDDMM_____________,
         /// <summary>
         /// Representa um campo de data no formato mm/aaaa. A propriedade ValorNatural é do tipo DateTime, com o dia igual a 01
         /// </summary>
-        ediDataMMAAAA___________,
+        DataMMAAAA___________,
         /// <summary>
         /// Representa um campo de data no formato mm/dd. A propriedade ValorNatural é do tipo DateTime com o ano igual a 1900
         /// </summary>
-        ediDataMMDD_____________,
+        DataMMDD_____________,
         /// <summary>
         /// Representa um campo de hora no formato HH:MM. A propriedade ValorNatural é do tipo DateTime, com a data igual a 01/01/1900
         /// </summary>
-        ediHoraHHMM_____________,
+        HoraHHMM_____________,
         /// <summary>
         /// Representa um campo de hora no formato HH:MM:SS. A propriedade ValorNatural é do tipo DateTime, com a data igual a 01/01/1900
         /// </summary>
-        ediHoraHHMMSS___________,
+        HoraHHMMSS___________,
         /// <summary>
         /// Representa um campo de data no formato DD/MM/AAAA. A propriedade ValorNatural é do tipo DateTime.
         /// </summary>
-        ediDataDDMMAA___________,
+        DataDDMMAA___________,
         /// <summary>
         /// Representa um campo de data no formato DD/MM/AAAA, porém colocando zeros no lugar de espaços no ValorFormatado. A propriedade
         /// ValorNatural é do tipo DateTime, e este deve ser nulo caso queira que a data seja zero.
         /// </summary>
-        ediDataDDMMAAAAWithZeros,
+        DataDDMMAAAAWithZeros,
         /// <summary>
         /// Representa um campo de data no formato AAAA/MM/DD, porém colocando zeros no lugar de espaços no ValorFormatado. A propriedade
         /// ValorNatural é do tipo DateTime, e este deve ser nulo caso queira que a data seja zero.
         /// </summary>
-        ediDataAAAAMMDDWithZeros
+        DataAAAAMMDDWithZeros
     }
     
-    public class CampoRegistroEdi
+    public class CampoEdi
     {
-        #region Variáveis Privadas
-
-        #endregion
-
         #region Propriedades
 
         /// <summary>
@@ -107,7 +103,7 @@ namespace BoletoNet
         /// <summary>
         /// Tipo de dado de ORIGEM das informações do campo EDI.
         /// </summary>
-        public TiposDadoEdi TipoCampo { get; set; }
+        public Dado Campo { get; set; }
 
         /// <summary>
         /// Tamanho em caracteres do campo no arquivo EDI (DESTINO)
@@ -129,7 +125,7 @@ namespace BoletoNet
 
         /// <summary>
         /// Valor formatado do campo, pronto para ser utilizado no arquivo EDI. A formatação será de acordo
-        /// com a especificada na propriedade TipoCampo, com numéricos alinhados à direita e zeros à esquerda
+        /// com a especificada na propriedade Campo, com numéricos alinhados à direita e zeros à esquerda
         /// e campos alfanuméricos alinhados à esquerda e com brancos à direita.
         /// Também pode receber o valor vindo do arquivo EDI, para ser decodificado e o resultado da decodificação na propriedade
         /// ValorNatural
@@ -173,17 +169,17 @@ namespace BoletoNet
         #region Construtores
 
         /// <summary>
-        /// Cria um objeto CampoRegistroEdi
+        /// Cria um objeto CampoEdi
         /// </summary>
-        public CampoRegistroEdi()
+        public CampoEdi()
         {
             Preenchimento = ' ';
         }
 
         /// <summary>
-        /// Cria um objeto do tipo CampoRegistroEdi inicializando as propriedades básicas.
+        /// Cria um objeto do tipo CampoEdi inicializando as propriedades básicas.
         /// </summary>
-        /// <param name="pTipoCampo">Tipo de dado de origem dos dados</param>
+        /// <param name="pCampo">Tipo de dado de origem dos dados</param>
         /// <param name="pPosicaoInicial">Posição Inicial do Campo no Arquivo</param>
         /// <param name="pTamanho">Tamanho em caracteres do campo (destino)</param>
         /// <param name="pDecimais">Quantidade de decimais do campo (destino)</param>
@@ -191,9 +187,9 @@ namespace BoletoNet
         /// <param name="pPreenchimento">Caractere de Preenchimento do campo caso o valor não ocupe todo o tamanho</param>
         /// <param name="pSeparadorHora">Separador de hora padrão; null para sem separador</param>
         /// <param name="pSeparadorData">Separador de data padrão; null para sem separador</param>
-        public CampoRegistroEdi(TiposDadoEdi pTipoCampo, int pPosicaoInicial, int pTamanho, int pDecimais, object pValor, char pPreenchimento, string pSeparadorHora, string pSeparadorData)
+        public CampoEdi(Dado pCampo, int pPosicaoInicial, int pTamanho, int pDecimais, object pValor, char pPreenchimento, string pSeparadorHora, string pSeparadorData)
         {
-            TipoCampo = pTipoCampo;
+            Campo = pCampo;
             TamanhoCampo = pTamanho;
             QtdDecimais = pDecimais;
             ValorNatural = pValor;
@@ -207,17 +203,17 @@ namespace BoletoNet
         }
 
         /// <summary>
-        /// Cria um objeto do tipo CampoRegistroEdi inicializando as propriedades básicas.
+        /// Cria um objeto do tipo CampoEdi inicializando as propriedades básicas.
         /// </summary>
-        /// <param name="pTipoCampo">Tipo de dado de origem dos dados</param>
+        /// <param name="pCampo">Tipo de dado de origem dos dados</param>
         /// <param name="pPosicaoInicial">Posição Inicial do Campo no Arquivo</param>
         /// <param name="pTamanho">Tamanho em caracteres do campo (destino)</param>
         /// <param name="pDecimais">Quantidade de decimais do campo (destino)</param>
         /// <param name="pValor">Valor do campo (Origem), no tipo de dado adequado ao propósito do campo</param>
         /// <param name="pPreenchimento">Caractere de Preenchimento do campo caso o valor não ocupe todo o tamanho</param>
-        public CampoRegistroEdi(TiposDadoEdi pTipoCampo, int pPosicaoInicial, int pTamanho, int pDecimais, object pValor, char pPreenchimento)
+        public CampoEdi(Dado pCampo, int pPosicaoInicial, int pTamanho, int pDecimais, object pValor, char pPreenchimento)
         {
-            TipoCampo = pTipoCampo;
+            Campo = pCampo;
             TamanhoCampo = pTamanho;
             QtdDecimais = pDecimais;
             ValorNatural = pValor;
@@ -239,9 +235,9 @@ namespace BoletoNet
         /// </summary>
         public void CodificarNaturalParaEdi()
         {
-            switch (TipoCampo)
+            switch (Campo)
             {
-                case TiposDadoEdi.ediAlphaAliEsquerda_____:
+                case Dado.AlphaAliEsquerda_____:
                     {
                         if (ValorNatural != null)
                         {
@@ -254,7 +250,7 @@ namespace BoletoNet
                             ValorFormatado = string.Empty.PadRight(TamanhoCampo, Preenchimento); //' '
                         break;
                     }
-                case TiposDadoEdi.ediAlphaAliDireita______:
+                case Dado.AlphaAliDireita______:
                     {
                         if (ValorNatural != null)
                         {
@@ -267,12 +263,12 @@ namespace BoletoNet
                             ValorFormatado = string.Empty.PadLeft(TamanhoCampo, Preenchimento); //' '
                         break;
                     }
-                case TiposDadoEdi.ediInteiro______________:
+                case Dado.Inteiro______________:
                     {
                         ValorFormatado = ValorNatural.ToString().Trim().PadLeft(TamanhoCampo, Preenchimento); //'0'
                         break;
                     }
-                case TiposDadoEdi.ediNumericoSemSeparador_:
+                case Dado.NumericoSemSeparador_:
                     {
                         if (ValorNatural == null)
                         {
@@ -286,19 +282,19 @@ namespace BoletoNet
                         }
                         break;
                     }
-                case TiposDadoEdi.ediNumericoComPonto_____:
+                case Dado.NumericoComPonto_____:
                     {
                         var formatacao = "{0:f" + QtdDecimais + "}";
                         ValorFormatado = string.Format(formatacao, ValorNatural).Replace(",", ".").Trim().PadLeft(TamanhoCampo, Preenchimento); //'0'
                         break;
                     }
-                case TiposDadoEdi.ediNumericoComVirgula___:
+                case Dado.NumericoComVirgula___:
                     {
                         var formatacao = "{0:f" + QtdDecimais + "}";
                         ValorFormatado = string.Format(formatacao, ValorNatural).Replace(".", ",").Trim().PadLeft(TamanhoCampo, Preenchimento); //'0'
                         break;
                     }
-                case TiposDadoEdi.ediDataAAAAMMDD_________:
+                case Dado.DataAAAAMMDD_________:
                     {
                         if ( (DateTime)ValorNatural != DateTime.MinValue)
                         {
@@ -309,11 +305,11 @@ namespace BoletoNet
                         else
                         {
                             ValorNatural = "";
-                            goto case TiposDadoEdi.ediAlphaAliEsquerda_____;
+                            goto case Dado.AlphaAliEsquerda_____;
                         }
                         break;
                     }
-                case TiposDadoEdi.ediDataDDMM_____________:
+                case Dado.DataDDMM_____________:
                     {
                         if ((DateTime)ValorNatural != DateTime.MinValue)
                         {
@@ -324,11 +320,11 @@ namespace BoletoNet
                         else
                         {
                             ValorNatural = "";
-                            goto case TiposDadoEdi.ediAlphaAliEsquerda_____;
+                            goto case Dado.AlphaAliEsquerda_____;
                         }
                         break;
                     }
-                case TiposDadoEdi.ediDataDDMMAAAA_________:
+                case Dado.DataDDMMAAAA_________:
                     {
                         if ((DateTime)ValorNatural != DateTime.MinValue)
                         {
@@ -339,11 +335,11 @@ namespace BoletoNet
                         else
                         {
                             ValorNatural = "";
-                            goto case TiposDadoEdi.ediAlphaAliEsquerda_____;
+                            goto case Dado.AlphaAliEsquerda_____;
                         }
                         break;
                     }
-                case TiposDadoEdi.ediDataDDMMAA___________:
+                case Dado.DataDDMMAA___________:
                     {
                         if ((DateTime)ValorNatural != DateTime.MinValue)
                         {
@@ -354,11 +350,11 @@ namespace BoletoNet
                         else
                         {
                             ValorNatural = "";
-                            goto case TiposDadoEdi.ediAlphaAliEsquerda_____;
+                            goto case Dado.AlphaAliEsquerda_____;
                         }
                         break;
                     }
-                case TiposDadoEdi.ediDataMMAAAA___________:
+                case Dado.DataMMAAAA___________:
                     {
                         if ((DateTime)ValorNatural != DateTime.MinValue)
                         {
@@ -369,11 +365,11 @@ namespace BoletoNet
                         else
                         {
                             ValorNatural = "";
-                            goto case TiposDadoEdi.ediAlphaAliEsquerda_____;
+                            goto case Dado.AlphaAliEsquerda_____;
                         }
                         break;
                     }
-                case TiposDadoEdi.ediDataMMDD_____________:
+                case Dado.DataMMDD_____________:
                     {
                         if ((DateTime)ValorNatural != DateTime.MinValue)
                         {
@@ -384,25 +380,25 @@ namespace BoletoNet
                         else
                         {
                             ValorNatural = "";
-                            goto case TiposDadoEdi.ediAlphaAliEsquerda_____;
+                            goto case Dado.AlphaAliEsquerda_____;
                         }
                         break;
                     }
-                case TiposDadoEdi.ediHoraHHMM_____________:
+                case Dado.HoraHHMM_____________:
                     {
                         var sep = SeparadorHora ?? "";
                         var formatacao = "{0:HH" + sep + "mm}";
                         ValorFormatado = string.Format(formatacao, ValorNatural);
                         break;
                     }
-                case TiposDadoEdi.ediHoraHHMMSS___________:
+                case Dado.HoraHHMMSS___________:
                     {
                         var sep = SeparadorHora ?? "";
                         var formatacao = "{0:HH" + sep + "mm" + sep + "ss}";
                         ValorFormatado = string.Format(formatacao, ValorNatural);
                         break;
                     }
-                case TiposDadoEdi.ediDataDDMMAAAAWithZeros:
+                case Dado.DataDDMMAAAAWithZeros:
                     {
                         var sep = SeparadorDatas ?? "";
                         if (ValorNatural != null || !ValorNatural.ToString().Trim().Equals(""))
@@ -416,7 +412,7 @@ namespace BoletoNet
                         }
                         break;
                     }
-                case TiposDadoEdi.ediDataAAAAMMDDWithZeros:
+                case Dado.DataAAAAMMDDWithZeros:
                     {
                         var sep = SeparadorDatas ?? "";
 
@@ -446,40 +442,40 @@ namespace BoletoNet
             }
             else
             {
-                switch (TipoCampo)
+                switch (Campo)
                 {
-                    case TiposDadoEdi.ediAlphaAliEsquerda_____:
+                    case Dado.AlphaAliEsquerda_____:
                         {
                             ValorNatural = ValorFormatado.Trim();
                             break;
                         }
-                    case TiposDadoEdi.ediAlphaAliDireita______:
+                    case Dado.AlphaAliDireita______:
                         {
                             ValorNatural = ValorFormatado.Trim();
                             break;
                         }
-                    case TiposDadoEdi.ediInteiro______________:
+                    case Dado.Inteiro______________:
                         {
                             ValorNatural = long.Parse(ValorFormatado.Trim());
                             break;
                         }
-                    case TiposDadoEdi.ediNumericoSemSeparador_:
+                    case Dado.NumericoSemSeparador_:
                         {
                             var s = ValorFormatado.Substring(0, ValorFormatado.Length - QtdDecimais) + "," + ValorFormatado.Substring(ValorFormatado.Length - QtdDecimais, QtdDecimais);
                             ValorNatural = double.Parse(s.Trim());
                             break;
                         }
-                    case TiposDadoEdi.ediNumericoComPonto_____:
+                    case Dado.NumericoComPonto_____:
                         {
                             ValorNatural = double.Parse(ValorFormatado.Replace(".", ",").Trim());
                             break;
                         }
-                    case TiposDadoEdi.ediNumericoComVirgula___:
+                    case Dado.NumericoComVirgula___:
                         {
                             ValorNatural = double.Parse(ValorFormatado.Trim().Replace(".", ","));
                             break;
                         }
-                    case TiposDadoEdi.ediDataAAAAMMDD_________:
+                    case Dado.DataAAAAMMDD_________:
                         {
                             if (!ValorFormatado.Trim().Equals(""))
                             {
@@ -515,7 +511,7 @@ namespace BoletoNet
                             }
                             break;
                         }
-                    case TiposDadoEdi.ediDataDDMM_____________:
+                    case Dado.DataDDMM_____________:
                         {
                             if (!ValorFormatado.Trim().Equals(""))
                             {
@@ -541,7 +537,7 @@ namespace BoletoNet
                             }
                             break;
                         }
-                    case TiposDadoEdi.ediDataDDMMAAAA_________:
+                    case Dado.DataDDMMAAAA_________:
                         {
                             var cDia = "";
                             var cMes = "";
@@ -569,7 +565,7 @@ namespace BoletoNet
                             }
                             break;
                         }
-                    case TiposDadoEdi.ediDataDDMMAA___________:
+                    case Dado.DataDDMMAA___________:
                         {
                             var cDia = "";
                             var cMes = "";
@@ -590,7 +586,7 @@ namespace BoletoNet
                             ValorNatural = DateTime.Parse(cDia + "/" + cMes + "/" + cAno);
                             break;
                         }
-                    case TiposDadoEdi.ediDataMMAAAA___________:
+                    case Dado.DataMMAAAA___________:
                         {
                             var cDia = "01";
                             var cMes = "";
@@ -609,7 +605,7 @@ namespace BoletoNet
                             ValorNatural = DateTime.Parse(cDia + "/" + cMes + "/" + cAno);
                             break;
                         }
-                    case TiposDadoEdi.ediDataMMDD_____________:
+                    case Dado.DataMMDD_____________:
                         {
                             var cDia = "";
                             var cMes = "";
@@ -628,7 +624,7 @@ namespace BoletoNet
                             ValorNatural = DateTime.Parse(cDia + "/" + cMes + "/" + cAno);
                             break;
                         }
-                    case TiposDadoEdi.ediHoraHHMM_____________:
+                    case Dado.HoraHHMM_____________:
                         {
                             var cHora = "";
                             var cMinuto = "";
@@ -646,7 +642,7 @@ namespace BoletoNet
                             ValorNatural = DateTime.Parse(cHora + ":" + cMinuto + ":00");
                             break;
                         }
-                    case TiposDadoEdi.ediHoraHHMMSS___________:
+                    case Dado.HoraHHMMSS___________:
                         {
                             var cHora = "";
                             var cMinuto = "";
@@ -667,13 +663,13 @@ namespace BoletoNet
                             ValorNatural = DateTime.Parse(cHora + ":" + cMinuto + ":00");
                             break;
                         }
-                    case TiposDadoEdi.ediDataDDMMAAAAWithZeros:
+                    case Dado.DataDDMMAAAAWithZeros:
                         {
-                            goto case TiposDadoEdi.ediDataDDMMAAAA_________;
+                            goto case Dado.DataDDMMAAAA_________;
                         }
-                    case TiposDadoEdi.ediDataAAAAMMDDWithZeros:
+                    case Dado.DataAAAAMMDDWithZeros:
                         {
-                            goto case TiposDadoEdi.ediDataAAAAMMDD_________;
+                            goto case Dado.DataAAAAMMDD_________;
                         }
                 }
             }
@@ -717,7 +713,7 @@ namespace BoletoNet
 
         public RegistroEdi()
         {
-            CamposEdi = new List<CampoRegistroEdi>();
+            CamposEdi = new List<CampoEdi>();
         }
 
         #endregion
@@ -738,7 +734,7 @@ namespace BoletoNet
         /// <summary>
         /// Coleção dos campos do registro EDI
         /// </summary>
-        public List<CampoRegistroEdi> CamposEdi { get; set; }
+        public List<CampoEdi> CamposEdi { get; set; }
 
         #endregion
 

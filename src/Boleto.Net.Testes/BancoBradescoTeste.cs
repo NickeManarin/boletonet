@@ -161,7 +161,7 @@ namespace BoletoNet.Testes
             // nao precisa desta parte no boleto do brasdesco.
             /*objBOLETO.Remessa = new Remessa()
             {
-                Ambiente = Remessa.TipoAmbiemte.Producao,
+                Ambiente = Remessa.TipoAmbiente.Producao,
                 CodigoOcorrencia = "01",
             };*/
 

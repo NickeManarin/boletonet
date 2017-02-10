@@ -6,7 +6,6 @@ namespace BoletoNet
 {
     public abstract class AbstractBanco
     {
-
         #region Variaveis
 
         private int _codigo = 0;
@@ -29,7 +28,7 @@ namespace BoletoNet
         }
 
         /// <summary>
-        /// Dígito do Banco
+        /// Dígito do banco.
         /// </summary>
         public virtual string Digito
         {

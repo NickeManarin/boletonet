@@ -191,42 +191,42 @@ namespace BoletoNet.EDI.Banco
 
             #region TODOS os Campos
 
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0001, 001, 0, string.Empty, ' ')); //001-001 Preenchido com o número “1”
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0002, 002, 0, string.Empty, ' ')); //002-003 Preenchido com o tipo de inscrição do Cedente
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0004, 014, 0, string.Empty, ' ')); //004-017 Preenchido com o CGC ou CPF
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0018, 004, 0, string.Empty, ' ')); //018-021 Preenchido com o código da Agência na qual o Cliente opera
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0022, 002, 0, string.Empty, ' ')); //022-023 Zeros
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0024, 007, 0, string.Empty, ' ')); //024-030 Preenchido com o número da Conta Corrente do Cliente cadastrado na cobrança como cedente
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0031, 001, 0, string.Empty, ' ')); //031-031 Preenchido com o Dígito da Conta do Cliente
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0032, 006, 0, string.Empty, ' ')); //032-037 Brancos
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0038, 025, 0, string.Empty, ' ')); //038-062 Número Controle
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0063, 007, 0, string.Empty, ' ')); //063-069 Nosso Número
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0070, 001, 0, string.Empty, ' ')); //070-070 Dígito do Nosso Número
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0071, 010, 0, string.Empty, ' ')); //071-080 Número do Contrato
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0081, 027, 0, string.Empty, ' ')); //081-107 Brancos 
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0108, 001, 0, string.Empty, ' ')); //108-108 Carteira
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0109, 002, 0, string.Empty, ' ')); //109-010 Código de Serviço. 
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0111, 006, 0, string.Empty, ' ')); //111-116 Data de Ocorrência
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0117, 010, 0, string.Empty, ' ')); //117-126 Seu Número
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0127, 007, 0, string.Empty, ' ')); //127-133 Confirmação do Nosso Número
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0134, 001, 0, string.Empty, ' ')); //134-134 Confirmação do Dígito do Nosso Número
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0135, 012, 0, string.Empty, ' ')); //135-146 Brancos
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0147, 006, 0, string.Empty, ' ')); //147-152 Data de Vencimento
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0153, 013, 0, string.Empty, ' ')); //153-165 Valor Nominal do Título
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0166, 003, 0, string.Empty, ' ')); //166-168 Número do Banco.
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0169, 004, 0, string.Empty, ' ')); //169-172 Agência Cobradora. 
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0173, 001, 0, string.Empty, ' ')); //173-173 Branco
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0174, 002, 0, string.Empty, ' ')); //174-175 Espécie
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0176, 013, 0, string.Empty, ' ')); //176-188 Tarifa de Cobrança
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0189, 013, 0, string.Empty, ' ')); //189-201 Outras 
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0202, 011, 0, string.Empty, ' ')); //202-214 Juros
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0215, 013, 0, string.Empty, ' ')); //215-227 IOC de Operações de Seguro
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0228, 013, 0, string.Empty, ' ')); //228-240 Abatimento Concedido
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0241, 013, 0, string.Empty, ' ')); //241-253 Desconto Concedido
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0254, 013, 0, string.Empty, ' ')); //254-266 Valor Recebido
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0267, 013, 0, string.Empty, ' ')); //267-279 Juros de Mora
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0280, 115, 0, string.Empty, ' ')); //280-394 Tabela de Erros
-            CamposEdi.Add(new CampoRegistroEdi(TiposDadoEdi.ediAlphaAliEsquerda_____, 0395, 006, 0, string.Empty, ' ')); //395-400 Sequencial do Registro
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0001, 001, 0, string.Empty, ' ')); //001-001 Preenchido com o número “1”
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0002, 002, 0, string.Empty, ' ')); //002-003 Preenchido com o tipo de inscrição do Cedente
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0004, 014, 0, string.Empty, ' ')); //004-017 Preenchido com o CGC ou CPF
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0018, 004, 0, string.Empty, ' ')); //018-021 Preenchido com o código da Agência na qual o Cliente opera
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0022, 002, 0, string.Empty, ' ')); //022-023 Zeros
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0024, 007, 0, string.Empty, ' ')); //024-030 Preenchido com o número da Conta Corrente do Cliente cadastrado na cobrança como cedente
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0031, 001, 0, string.Empty, ' ')); //031-031 Preenchido com o Dígito da Conta do Cliente
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0032, 006, 0, string.Empty, ' ')); //032-037 Brancos
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0038, 025, 0, string.Empty, ' ')); //038-062 Número Controle
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0063, 007, 0, string.Empty, ' ')); //063-069 Nosso Número
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0070, 001, 0, string.Empty, ' ')); //070-070 Dígito do Nosso Número
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0071, 010, 0, string.Empty, ' ')); //071-080 Número do Contrato
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0081, 027, 0, string.Empty, ' ')); //081-107 Brancos 
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0108, 001, 0, string.Empty, ' ')); //108-108 Carteira
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0109, 002, 0, string.Empty, ' ')); //109-010 Código de Serviço. 
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0111, 006, 0, string.Empty, ' ')); //111-116 Data de Ocorrência
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0117, 010, 0, string.Empty, ' ')); //117-126 Seu Número
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0127, 007, 0, string.Empty, ' ')); //127-133 Confirmação do Nosso Número
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0134, 001, 0, string.Empty, ' ')); //134-134 Confirmação do Dígito do Nosso Número
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0135, 012, 0, string.Empty, ' ')); //135-146 Brancos
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0147, 006, 0, string.Empty, ' ')); //147-152 Data de Vencimento
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0153, 013, 0, string.Empty, ' ')); //153-165 Valor Nominal do Título
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0166, 003, 0, string.Empty, ' ')); //166-168 Número do Banco.
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0169, 004, 0, string.Empty, ' ')); //169-172 Agência Cobradora. 
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0173, 001, 0, string.Empty, ' ')); //173-173 Branco
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0174, 002, 0, string.Empty, ' ')); //174-175 Espécie
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0176, 013, 0, string.Empty, ' ')); //176-188 Tarifa de Cobrança
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0189, 013, 0, string.Empty, ' ')); //189-201 Outras 
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0202, 011, 0, string.Empty, ' ')); //202-214 Juros
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0215, 013, 0, string.Empty, ' ')); //215-227 IOC de Operações de Seguro
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0228, 013, 0, string.Empty, ' ')); //228-240 Abatimento Concedido
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0241, 013, 0, string.Empty, ' ')); //241-253 Desconto Concedido
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0254, 013, 0, string.Empty, ' ')); //254-266 Valor Recebido
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0267, 013, 0, string.Empty, ' ')); //267-279 Juros de Mora
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0280, 115, 0, string.Empty, ' ')); //280-394 Tabela de Erros
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0395, 006, 0, string.Empty, ' ')); //395-400 Sequencial do Registro
 
             #endregion
         }
@@ -234,7 +234,7 @@ namespace BoletoNet.EDI.Banco
 		/// <summary>
 		/// Aqui iremos atribuir os valores das propriedades em cada campo correspondente do Registro EDI
 		/// e codificaremos a linha para obter uma string formatada com o nosso layout.
-		/// Repare que declarei as propriedades em uma ordem tal que a adição dos objetos CampoRegistroEdi na propriedade
+		/// Repare que declarei as propriedades em uma ordem tal que a adição dos objetos CampoEdi na propriedade
 		/// _CamposEDI siga a mesma ordem. Portanto, utilizarei o índice na atribuição.
 		/// </summary>
         public override void CodificarLinha()

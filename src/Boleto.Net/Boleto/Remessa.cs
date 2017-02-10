@@ -7,7 +7,7 @@ namespace BoletoNet
     /// </summary>
     public class Remessa
     {
-        public enum TipoAmbiemte
+        public enum TipoAmbiente
         {
             Homologacao,
             Producao
@@ -18,7 +18,7 @@ namespace BoletoNet
         /// <summary>
         /// Variável que define se a Remessa é para Testes ou Produção
         /// </summary>
-        public TipoAmbiemte Ambiente { get; set; }
+        public TipoAmbiente Ambiente { get; set; }
 
         /// <summary>
         /// Tipo Documento Utilizado na geração da remessa. |Identificado no Banrisul by sidneiklein|
