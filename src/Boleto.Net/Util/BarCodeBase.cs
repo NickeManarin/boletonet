@@ -78,14 +78,14 @@ namespace BoletoNet
                 {
                     var temp = value;
                     _thin = temp;
-                    //					_half = temp * 2;
+                    //_half = temp * 2;
                     _full = temp * 3;
                 }
                 catch
                 {
                     var temp = 1;
                     _thin = temp;
-                    //					_half = temp * 2;
+                    //_half = temp * 2;
                     _full = temp * 3;
                 }
             }

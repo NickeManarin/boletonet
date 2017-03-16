@@ -20,37 +20,29 @@ using System.Linq;
 
 namespace BoletoNet
 {
-    [Serializable, Designer(typeof(BoletoBancarioDesigner)), ToolboxBitmap(typeof(BoletoBancario)),
-        ToolboxData("<{0}:BoletoBancario Runat=\"server\"></{0}:BoletoBancario>")]
+    [Serializable, Designer(typeof(BoletoBancarioDesigner)), ToolboxBitmap(typeof(BoletoBancario)), ToolboxData("<{0}:BoletoBancario Runat=\"server\"></{0}:BoletoBancario>")]
     public class BoletoBancario : Control
     {
-        #region Variaveis
+        #region Variáveis
 
-        string _vLocalLogoCedente = string.Empty;
-
-        private Banco _ibanco = null;
-        private short _codigoBanco = 0;
+        private Banco _ibanco;
+        private short _codigoBanco;
         private Boleto _boleto;
-        private Cedente _cedente;
-        private Sacado _sacado;
-        private readonly List<IInstrucao> _instrucoes = new List<IInstrucao>();
         private string _instrucoesHtml = string.Empty;
-        private bool _mostrarCodigoCarteira = false;
-        private bool _formatoCarne = false;
-        private bool _ajustaTamanhoFonte = false;
-        private bool _removeSimboloMoedaValorDocumento = false;
+        private bool _ajustaTamanhoFonte;
         private string _ajustaTamanhoFonteHtml;
+
+        public BoletoBancario()
+        {
+            Instrucoes = new List<IInstrucao>();
+        }
 
         #endregion Variaveis
 
         #region Propriedades
 
         [Browsable(true), Description("Remove o símbolo R$ do Valor do Documento")]
-        public bool RemoveSimboloMoedaValorDocumento
-        {
-            get { return _removeSimboloMoedaValorDocumento; }
-            set { _removeSimboloMoedaValorDocumento = value; }
-        }
+        public bool RemoveSimboloMoedaValorDocumento { get; set; }
 
         [Browsable(true), Description("Código do banco em que será gerado o boleto. Ex. 341-Itaú, 237-Bradesco")]
         public short CodigoBanco
@@ -63,11 +55,8 @@ namespace BoletoNet
         /// Mostra o código da carteira
         /// </summary>
         [Browsable(true), Description("Mostra a descrição da carteira")]
-        public bool MostrarCodigoCarteira
-        {
-            get { return _mostrarCodigoCarteira; }
-            set { _mostrarCodigoCarteira = value; }
-        }
+        public bool MostrarCodigoCarteira { get; set; }
+
 
         [Browsable(true), Description("Gera um relatório com os valores que deram origem ao boleto")]
         public bool ExibirDemonstrativo { get; set; }
@@ -76,11 +65,13 @@ namespace BoletoNet
         /// Mostra o código da carteira
         /// </summary>
         [Browsable(true), Description("Formata o boleto no layout de carnê")]
-        public bool FormatoCarne
-        {
-            get { return _formatoCarne; }
-            set { _formatoCarne = value; }
-        }
+        public bool FormatoCarne { get; set; }
+
+        /// <summary>
+        /// Logo de terceiros.
+        /// </summary>
+        [Browsable(true), Description("Logo de terceiros.")]
+        public string Logo { get; set; }
 
         [Browsable(false)]
         public Boleto Boleto
@@ -96,22 +87,16 @@ namespace BoletoNet
                     _boleto.BancoCarteira = BancoCarteiraFactory.Fabrica(_boleto.Carteira, Banco.Codigo);
                 }
 
-                _cedente = _boleto.Cedente;
-                _sacado = _boleto.Sacado;
+                Cedente = _boleto.Cedente;
+                Sacado = _boleto.Sacado;
             }
         }
 
         [Browsable(false)]
-        public Sacado Sacado
-        {
-            get { return _sacado; }
-        }
+        public Sacado Sacado { get; private set; }
 
         [Browsable(false)]
-        public Cedente Cedente
-        {
-            get { return _cedente; }
-        }
+        public Cedente Cedente { get; private set; }
 
         [Browsable(false)]
         public Banco Banco
@@ -204,10 +189,7 @@ namespace BoletoNet
         /// <summary> 
         /// Instruções disponíveis no Boleto
         /// </summary>
-        public List<IInstrucao> Instrucoes
-        {
-            get { return _instrucoes; }
-        }
+        public List<IInstrucao> Instrucoes { get; private set; }
 
         #endregion Propriedades
 
@@ -405,21 +387,19 @@ namespace BoletoNet
             if (!string.IsNullOrEmpty(_instrucoesHtml))
                 _instrucoesHtml = string.Concat(_instrucoesHtml, "<br />");
 
-            if (instrucoes.Count > 0)
+            if (instrucoes.Count <= 0)
+                return;
+
+            //_instrucoesHtml = string.Empty;
+            foreach (var instrucao in instrucoes)
             {
-                //_instrucoesHtml = string.Empty;
-                //Flavio(fhlviana@hotmail.com) - retirei a tag <span> de cada instrução por não ser mais necessáras desde que dentro
-                //da div que contem as instruções a classe cpN se aplica, que é a mesma, em conteudo, da classe cp
-                foreach (var instrucao in instrucoes)
-                {
-                    _instrucoesHtml += string.Format("{0}<br />", instrucao.Descricao);
+                _instrucoesHtml += string.Format("{0}<br />", instrucao.Descricao);
 
-                    //Adiciona a instrução as instruções disponíveis no Boleto
-                    Instrucoes.Add(instrucao);
-                }
-
-                _instrucoesHtml = Strings.Left(_instrucoesHtml, _instrucoesHtml.Length - 6);
+                //Adiciona a instrução as instruções disponíveis no Boleto
+                Instrucoes.Add(instrucao);
             }
+
+            _instrucoesHtml = Strings.Left(_instrucoesHtml, _instrucoesHtml.Length - 6);
         }
 
         private string MontaHtml(string urlImagemLogo, string urlImagemBarra, string imagemCodigoBarras)
@@ -515,7 +495,7 @@ namespace BoletoNet
                 }
             }
 
-            var sacado = "";
+            string sacado;
 
             //Flavio(fhlviana@hotmail.com) - adicionei a possibilidade de o boleto não ter, necessáriamente, que informar o CPF ou CNPJ do sacado.
             //Formata o CPF/CNPJ(se houver) e o Nome do Sacado para apresentação
@@ -536,7 +516,7 @@ namespace BoletoNet
             //Caso não oculte o Endereço do Sacado,
             if (!OcultarEnderecoSacado)
             {
-                var enderecoSacado = "";
+                string enderecoSacado;
 
                 if (Sacado.Endereco.Cep == string.Empty)
                     enderecoSacado = string.Format("{0} - {1}/{2}", Sacado.Endereco.Bairro, Sacado.Endereco.Cidade, Sacado.Endereco.Uf);
@@ -581,7 +561,7 @@ namespace BoletoNet
                 switch (Boleto.Banco.Codigo)
                 {
                     case 748:
-                        agenciaCodigoCedente = string.Format("{0}.{1}.{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.OperacaConta, Cedente.Codigo);
+                        agenciaCodigoCedente = string.Format("{0}.{1}.{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Cedente.Codigo);
                         break;
                     case 41:
                         agenciaCodigoCedente = string.Format("{0}.{1}/{2}.{3}.{4}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Cedente.Codigo.Substring(4, 6), Cedente.Codigo.Substring(10, 1), Cedente.DigitoCedente);
@@ -610,7 +590,7 @@ namespace BoletoNet
                     //agenciaCodigoCedente = Utils.FormatCode(Cedente.Codigo.ToString(), 7); -> para Banco HSBC mostra apenas código Cedente - por Ponce em 08/06/2012
                     agenciaCodigoCedente = string.Format("{0}/{1}", Cedente.ContaBancaria.Agencia, Utils.FormatCode(Cedente.Codigo, 7)); //Solicitação do HSBC que mostrasse agencia/Conta - por Transis em 24/02/15
                 else if (Boleto.Banco.Codigo == 748)
-                    agenciaCodigoCedente = string.Format("{0}.{1}.{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.OperacaConta, Cedente.Codigo);
+                    agenciaCodigoCedente = string.Format("{0}.{1}.{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Cedente.Codigo);
                 else
                     agenciaCodigoCedente = agenciaConta;
             }
@@ -622,8 +602,8 @@ namespace BoletoNet
             if (MostrarContraApresentacaoNaDataVencimento)
                 dataVencimento = "Contra Apresentação";
 
-            if (string.IsNullOrEmpty(_vLocalLogoCedente))
-                _vLocalLogoCedente = urlImagemLogo;
+            if (string.IsNullOrWhiteSpace(Logo) || !File.Exists(Logo))
+                Logo = urlImagemLogo;
 
             var valorBoleto = Boleto.ValorBoleto == 0 ? "" : Boleto.ValorBoleto.ToString("C", CultureInfo.GetCultureInfo("PT-BR"));
 
@@ -633,7 +613,7 @@ namespace BoletoNet
                 //.Replace("@URLIMAGEMCORTE", urlImagemCorte)
                 //.Replace("@URLIMAGEMPONTO", urlImagemPonto)
                 .Replace("@URLIMAGEMLOGO", urlImagemLogo)
-                .Replace("@URLIMGCEDENTE", _vLocalLogoCedente)
+                .Replace("@URLIMGCEDENTE", Logo)
                 .Replace("@URLIMAGEMBARRA", urlImagemBarra)
                 .Replace("@LINHADIGITAVEL", Boleto.CodigoBarra.LinhaDigitavel)
                 .Replace("@LOCALPAGAMENTO", Boleto.LocalPagamento)
@@ -641,7 +621,7 @@ namespace BoletoNet
                 .Replace("@CEDENTE_BOLETO", !Cedente.MostrarCnpjNoBoleto ? Cedente.Nome : string.Format("{0}&nbsp;&nbsp;&nbsp;CNPJ: {1}", Cedente.Nome, Cedente.CpfCnpjComMascara))
                 .Replace("@CEDENTE", Cedente.Nome)
                 .Replace("@DATADOCUMENTO", Boleto.DataDocumento.ToString("dd/MM/yyyy"))
-                .Replace("@NUMERODOCUMENTO", Boleto.NumeroDocumento)
+                .Replace("@NUMERODOCUMENTO", Boleto.NumeroDocumentoImpressao)
                 .Replace("@ESPECIEDOCUMENTO", EspecieDocumento.ValidaSigla(Boleto.EspecieDocumento))
                 .Replace("@DATAPROCESSAMENTO", Boleto.DataProcessamento.ToString("dd/MM/yyyy"))
 
@@ -657,7 +637,7 @@ namespace BoletoNet
 
             #endregion
 
-                .Replace("@NOSSONUMERO", Boleto.NossoNumero)
+                .Replace("@NOSSONUMERO", string.IsNullOrWhiteSpace(Boleto.DigitoNossoNumero) ? Boleto.NossoNumero : (Boleto.NossoNumero + "-" + Boleto.DigitoNossoNumero))
                 .Replace("@CARTEIRA", FormataDescricaoCarteira())
                 .Replace("@PARCELAS", Boleto.TotalParcelas <= 1 ? "ÚNICA" : string.Format("{0} de {1}", Boleto.Parcela, Boleto.TotalParcelas))
                 .Replace("@ESPECIE", Boleto.Especie)
@@ -711,7 +691,7 @@ namespace BoletoNet
 
                 default:
                     throw new Exception(string.Format("A descrição para o banco {0} não foi implementada.", Boleto.Banco));
-                //throw new Exception(string.Format("A descrição da carteira {0} / banco {1} não foi implementada (marque false na propriedade MostrarCodigoCarteira)", carteira, Banco.Codigo));
+                    //throw new Exception(string.Format("A descrição da carteira {0} / banco {1} não foi implementada (marque false na propriedade MostrarCodigoCarteira)", carteira, Banco.Codigo));
             }
 
             if (string.IsNullOrEmpty(descricaoCarteira))
@@ -943,7 +923,7 @@ namespace BoletoNet
                 fileName = Path.GetTempPath();
 
             if (logoCedente != null)
-                _vLocalLogoCedente = logoCedente;
+                Logo = logoCedente;
 
             OnLoad(EventArgs.Empty);
 
@@ -1217,10 +1197,14 @@ namespace BoletoNet
         /// Obtem o array de bytes da logo do banco.
         /// </summary>
         /// <returns>bytes da logo</returns>
-        public static byte[] ObterLogoDoBanco(short codigoBanco)
+        public byte[] ObterLogoDoBanco(short codigoBanco)
         {
+            if (!string.IsNullOrWhiteSpace(Logo) && File.Exists(Logo))
+                return File.ReadAllBytes(Logo);
+
             var assembly = Assembly.GetExecutingAssembly();
-            var streamLogo = assembly.GetManifestResourceStream(string.Format("BoletoNet.Imagens.{0}.jpg", codigoBanco.ToString("000")));
+            var streamLogo = assembly.GetManifestResourceStream(string.Format("BoletoNet.Imagens.{0:000}.jpg", codigoBanco));
+
             return new BinaryReader(streamLogo).ReadBytes((int)streamLogo.Length);
         }
 

@@ -58,6 +58,7 @@ namespace BoletoNet
         /// Permitir a comunicação entre bancos comerciais estaduais agindo como chave comum na troca de informações entre eles
         /// </summary>
         public string ChaveASBACE { get; set; }
+
         #endregion Propriedades
 
         # region Métodos

@@ -1,5 +1,7 @@
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 
 namespace BoletoNet
 {
@@ -16,35 +18,38 @@ namespace BoletoNet
         #endregion
 
         #region Constructor
+
         public C2of5i()
-        {
-        }
+        {}
+
         /// <summary>
         /// Code 2 of 5 intrelaced Constructor
         /// </summary>
-        /// <param name="Code">The string that contents the numeric code</param>
-        /// <param name="BarWidth">The Width of each bar</param>
-        /// <param name="Height">The Height of each bar</param>
-        public C2of5i(string Code, int BarWidth, int Height)
+        /// <param name="code">The string that contents the numeric code</param>
+        /// <param name="barWidth">The Width of each bar</param>
+        /// <param name="height">The Height of each bar</param>
+        public C2of5i(string code, int barWidth, int height)
         {
-            this.Code = Code;
-            this.Height = Height;
-            Width = BarWidth;
+            Code = code;
+            Height = height;
+            Width = barWidth;
         }
+
         /// <summary>
         /// Code 2 of 5 intrelaced Constructor
         /// </summary>
-        /// <param name="Code">The string that contents the numeric code</param>
-        /// <param name="BarWidth">The Width of each bar</param>
-        /// <param name="Height">The Height of each bar</param>
-        /// <param name="Digits">Number of digits of code</param>
-        public C2of5i(string Code, int BarWidth, int Height, int Digits)
+        /// <param name="code">The string that contents the numeric code</param>
+        /// <param name="barWidth">The Width of each bar</param>
+        /// <param name="height">The Height of each bar</param>
+        /// <param name="digits">Number of digits of code</param>
+        public C2of5i(string code, int barWidth, int height, int digits)
         {
-            this.Code = Code;
-            this.Height = Height;
-            Width = BarWidth;
-            this.Digits = Digits;
+            Code = code;
+            Height = height;
+            Width = barWidth;
+            Digits = digits;
         }
+
         #endregion
 
         private void FillPatern()
@@ -91,10 +96,8 @@ namespace BoletoNet
             yPos = 0;
 
             if (Digits == 0)
-            {
                 Digits = Code.Length;
-            }
-
+            
             if (Digits % 2 > 0) Digits++;
 
             while (Code.Length < Digits || Code.Length % 2 > 0)
@@ -125,7 +128,7 @@ namespace BoletoNet
             //Stop Patern
             DrawPattern(ref _g, Stop);
 
-            return _bitmap;
+            return ResizeImage(_bitmap, (int)(width * 1.5), Height);
         }
 
         /// <summary>
@@ -135,6 +138,38 @@ namespace BoletoNet
         public byte[] ToByte()
         {
             return base.ToByte(ToBitmap());
+        }
+
+        /// <summary>
+        /// Resize the image to the specified width and height.
+        /// </summary>
+        /// <param name="image">The image to resize.</param>
+        /// <param name="width">The width to resize to.</param>
+        /// <param name="height">The height to resize to.</param>
+        /// <returns>The resized image.</returns>
+        public static Bitmap ResizeImage(Image image, int width, int height)
+        {
+            var destRect = new Rectangle(0, 0, width, height);
+            var destImage = new Bitmap(width, height);
+
+            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+            using (var graphics = Graphics.FromImage(destImage))
+            {
+                graphics.CompositingMode = CompositingMode.SourceCopy;
+                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
+                graphics.SmoothingMode = SmoothingMode.None;
+                graphics.PixelOffsetMode = PixelOffsetMode.None;
+
+                using (var wrapMode = new ImageAttributes())
+                {
+                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+                }
+            }
+
+            return destImage;
         }
     }
 }

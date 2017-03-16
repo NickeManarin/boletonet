@@ -8,8 +8,8 @@ namespace BoletoNet
 {
     internal sealed class Banco_Banrisul : AbstractBanco, IBanco
     {
-        private int _primDigito;
-        private int _segDigito;
+        private int _firstDigit;
+        private int _secondDigit;
 
         internal Banco_Banrisul()
         {
@@ -36,7 +36,7 @@ namespace BoletoNet
             else if (boleto.NossoNumero.Length > 8)
                 throw new NotSupportedException("Para o banco Banrisul, o nosso número deve ter 08 posições e 02 dígitos verificadores (calculados automaticamente).");
 
-            boleto.NossoNumero = CalcularNCNossoNumero(boleto.NossoNumero);
+            boleto.NossoNumero = CalcularDigitosNossoNumero(boleto.NossoNumero);
 
             //Atribui o nome do banco ao local de pagamento
             if (boleto.LocalPagamento == "Até o vencimento, preferencialmente no ")
@@ -55,30 +55,30 @@ namespace BoletoNet
             FormataNossoNumero(boleto);
         }
 
-        private string CalcularNCNossoNumero(string nossoNumero)
+        private string CalcularDigitosNossoNumero(string nossoNumero)
         {
             var dv1 = Mod10Banri(nossoNumero);
-            var dv1e2 = Mod11Banri(nossoNumero, dv1); //O módulo 11 sempre devolve os dois Dígitos, pois, as vezes o dígito calculado no mod10 será incrementado em 1
+            var dv1e2 = Mod11Banri(nossoNumero, dv1);
+            //O módulo 11 sempre devolve os dois Dígitos, pois, as vezes o dígito calculado no mod10 será incrementado em 1
+
             return nossoNumero + dv1e2.ToString("00");
         }
 
-        private string CalcularNCCodBarras(string seq)
+        private string CalcularDigitosCodBarras(string seq)
         {
             var dv1 = Mod10Banri(seq);
-            var dv2 = Mod11Banri(seq, dv1);// O módulo 11 sempre devolve os dois Dígitos, pois, as vezes, o dígito calculado no mod10 será incrementado em 1
+            var dv2 = Mod11Banri(seq, dv1);
+            //O módulo 11 sempre devolve os dois gígitos, pois, as vezes, o dígito calculado no mod10 será incrementado em 1
+
             return dv2.ToString("00");
         }
 
         public override void FormataNossoNumero(Boleto boleto)
         {
             if (boleto.NossoNumero.Length == 10)
-            {
                 boleto.NossoNumero = boleto.NossoNumero.Substring(0, 8) + "-" + boleto.NossoNumero.Substring(8, 2);
-            }
             else
-            {
                 throw new Exception("Erro ao tentar formatar nosso número, verifique o tamanho do campo");
-            }
         }
 
         public override void FormataNumeroDocumento(Boleto boleto)
@@ -88,70 +88,75 @@ namespace BoletoNet
 
         public override void FormataLinhaDigitavel(Boleto boleto)
         {
-            //041M2.1AAAd1 CCCCC.CCNNNd2 NNNNN.041XXd3 V FFFF9999999999
-            //OU 
-            //041M2.1AAAd1 ACCCCC.CCNNd2 NNNNN.N40XXd3 V FFFF9999999999
-            //(Isso depende da constante que usar) no caso de cima "041" no de baixo "40" antes do "XX"
+            //041M2.1AAAd1  ACCCCC.CCNNd2  NNNNN.N40XXd3  V FFFF9999999999 
 
-            var cedente = boleto.Cedente.Codigo.Substring(4); //Os quatro primeiros digitos do código do cedente é sempre a agência
-            var nossoNumero = boleto.NossoNumero.Substring(0, 8);
+            #region Campo 1 - 041M2.1AAAd1
 
-            //Campo 1
-            var moeda = boleto.Moeda.ToString();
-            var agencia = boleto.Cedente.ContaBancaria.Agencia.Substring(1, 3);
-            var metade1 = "041" + moeda + "2";
-            var metade2 = "1" + agencia;
+            var metade1 = "041" + boleto.Moeda + "2";
+            var metade2 = "1" + boleto.Cedente.ContaBancaria.Agencia.PadLeft(4, '0').Substring(0, 3);
+
             var d1 = Mod10Banri(metade1 + metade2).ToString();
             var campo1 = metade1 + "." + metade2 + d1;
 
-            //Campo 2
-            metade1 = cedente.Substring(0, 5);
-            //Metade2 = Cedente.Substring(5, 2) + NossoNumero.Substring(0, 2);
-            metade2 = cedente.Substring(5, 2) + nossoNumero.Substring(0, 3);
+            #endregion
+
+            #region Campo 2 - ACCCCC.CCNNd2
+
+            metade1 = boleto.Cedente.ContaBancaria.Agencia.PadLeft(4, '0').Substring(3, 1) + boleto.Cedente.Codigo.Substring(0, 5);
+            metade2 = boleto.Cedente.Codigo.Substring(5, 2) + boleto.NossoNumero.Substring(0, 2);
+
             var d2 = Mod10Banri(metade1 + metade2).ToString();
             var campo2 = metade1 + "." + metade2 + d2;
 
-            //Campo 3
-            var xx = _primDigito + _segDigito.ToString();
-            //Metade1 = NossoNumero.Substring(2, 5);
-            metade1 = nossoNumero.Substring(3, 5);
-            //Metade2 = NossoNumero.Substring(7, 1) + "041" + XX;
-            metade2 = "041" + xx;
+            #endregion
+
+            #region Campo 3 - NNNNN.N40XXd3
+
+            metade1 = boleto.NossoNumero.Substring(2, 5);
+            metade2 = boleto.NossoNumero.Substring(7, 1) + "40" + _firstDigit + _secondDigit;
+
             var d3 = Mod10Banri(metade1 + metade2).ToString();
             var campo3 = metade1 + "." + metade2 + d3;
 
-            //Campo 4
+            #endregion
+
+            //Campo 4 - V (Dígito de auto conferência do código de barras)
             var campo4 = boleto.CodigoBarra.Codigo.Substring(4, 1);
 
-            //Campo 5
+            #region Campo 5 - FFFF9999999999
+
             var fatorVenc = FatorVencimento(boleto).ToString("0000");
-            var valor = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "");
-            valor = Utils.FormatCode(valor, 10);
+            var valor = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "").PadLeft(10, '0');
+
             var campo5 = fatorVenc + valor;
 
-            boleto.CodigoBarra.LinhaDigitavel = campo1 + "  " + campo2 + "  " + campo3 + "  " + campo4 + "  " + campo5;
+            #endregion
+
+            boleto.CodigoBarra.LinhaDigitavel = campo1 + "  " + campo2 + "  " + campo3 + "  " + campo4 + " " + campo5;
         }
 
         public override void FormataCodigoBarra(Boleto boleto)
         {
             var campo1 = "041" + boleto.Moeda;
+
             var fatorVenc = FatorVencimento(boleto).ToString("0000");
-            var valor = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "");
-            valor = Utils.FormatCode(valor, 10);
+            var valor = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "").PadLeft(10, '0');
             var campo2 = fatorVenc + valor;
 
-            var nossoNumero = boleto.NossoNumero.Replace(".", "").Replace("-", "");
-            nossoNumero = nossoNumero.Substring(0, 8);
-            //campoLivre = "21" + boleto.Cedente.ContaBancaria.Agencia.Substring(1, 3) + boleto.Cedente.ContaBancaria.Conta + nossoNumero + "041";
-            var codCedente = boleto.Cedente.Codigo.Substring(4, 7);// Os quatro primeiros digitos do código do cedente é sempre a agência
-            var campoLivre = "21" + boleto.Cedente.ContaBancaria.Agencia.Substring(1, 3) + codCedente + nossoNumero + "041";
-            var ncCodBarra = CalcularNCCodBarras(campoLivre);
-            int.TryParse(ncCodBarra.Substring(0, 1), out _primDigito);
-            int.TryParse(ncCodBarra.Substring(1, 1), out _segDigito);
-            campoLivre = campoLivre + ncCodBarra;
+            var nossoNumero = boleto.NossoNumero.Replace(".", "").Replace("-", "").Substring(0, 8);
+            var campoLivre = (boleto.Postagem ? "1" : "2") + "1" +
+                boleto.Cedente.ContaBancaria.Agencia.Substring(0, 4) + boleto.Cedente.Codigo.Substring(0, 7) + nossoNumero + "40";
+            //"1" Cobrança Normal, Fichário emitido pelo BANRISUL.
+            //"2" Cobrança Direta, Fichário emitido pelo CLIENTE
+
+            var digitBarra = CalcularDigitosCodBarras(campoLivre);
+
+            int.TryParse(digitBarra.Substring(0, 1), out _firstDigit);
+            int.TryParse(digitBarra.Substring(1, 1), out _secondDigit);
+
+            campoLivre += digitBarra;
 
             var dacCodBarras = Mod11Peso2a9Banri(campo1 + campo2 + campoLivre);
-
             boleto.CodigoBarra.Codigo = campo1 + dacCodBarras + campo2 + campoLivre;
         }
 
@@ -340,7 +345,7 @@ namespace BoletoNet
             return resto;
         }
 
-        #region Métodos de validação e geração do arquivo remessa - sidneiklein
+        #region Métodos de validação e geração do arquivo remessa
 
         /// <summary>
         /// Efetua as Validações dentro da classe Boleto, para garantir a geração da remessa
@@ -613,7 +618,7 @@ namespace BoletoNet
                 var reg = new RegistroEdi();
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 001, 01, 0, "1", ' '));                              //001-001
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 002, 16, 0, string.Empty, ' '));                     //002-017
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 018, 13, 0, boleto.Cedente.Codigo, ' '));            //018-030 (sidnei.klein 22/11/2013: No Banrisul, o Código do Cedente não é a concatenação de Número da Conta com o Dígito Verificador.)
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 018, 13, 0, boleto.Cedente.ContaBancaria.Agencia.PadLeft(4, '0') + boleto.Cedente.Codigo, ' ')); //018-030 (sidnei.klein 22/11/2013: No Banrisul, o Código do Cedente não é a concatenação de Número da Conta com o Dígito Verificador.)
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 031, 07, 0, string.Empty, ' '));                     //031-037
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 038, 25, 0, boleto.NumeroDocumento, ' '));           //038-062
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 063, 10, 0, boleto.NossoNumero, '0'));               //063-072
@@ -823,7 +828,7 @@ namespace BoletoNet
                 //detalhe. = reg.Brancos6;
                 detalhe.NumeroSequencial = Utils.ToInt32(reg.NumeroSequenciaRegistro);
 
-                #region NAO RETORNADOS PELO BANRISUL
+                #region Não retornados pelo Banrisul
 
                 detalhe.IOF = 0;
                 //Motivos das Rejeições para os Códigos de Ocorrência

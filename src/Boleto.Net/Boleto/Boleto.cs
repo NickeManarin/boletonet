@@ -314,6 +314,11 @@ namespace BoletoNet
 			set { _numeroDocumento = value; }
 		}
 
+        /// <summary>
+        /// Informações do documento utilizado apenas para a impressão.
+        /// </summary>
+        public string NumeroDocumentoImpressao { get; set; }
+
 		/// <summary> 
 		/// Recupera o digito nosso número 
 		/// </summary>        
