@@ -3,9 +3,6 @@ using System.Web.UI;
 using BoletoNet.Util;
 using BoletoNet.EDI.Banco;
 using BoletoNet.Excecoes;
-using System.Collections.Generic;
-using System.Linq;
-using BoletoNet.Enums;
 
 [assembly: WebResource("BoletoNet.Imagens.748.jpg", "image/jpg")]
 namespace BoletoNet
@@ -138,14 +135,6 @@ namespace BoletoNet
                 dac = 1;
             
             boleto.CodigoBarra.Codigo = Strings.Left(boleto.CodigoBarra.Codigo, 4) + dac + Strings.Right(boleto.CodigoBarra.Codigo, 39);
-        }
-
-        private string GerarCodigoDeBarras(Boleto boleto, string valorBoleto, string cmp_livre, string dv_cmpLivre, int? dv_geral = null)
-        {
-            var valida = boleto.Carteira == "112" || boleto.Carteira == "115" || boleto.Carteira == "104" || boleto.Carteira == "147"
-                || boleto.Carteira == "188" || boleto.Carteira == "108" || boleto.Carteira == "109" || boleto.Carteira == "150" || boleto.Carteira == "121";
-
-            return valida;
         }
 
         //public bool RegistroByCarteira(Boleto boleto)
@@ -1062,9 +1051,8 @@ namespace BoletoNet
         {
             long num;
             if (nossoNumero.Length >= 8 && long.TryParse(nossoNumero.Substring(0, 8), out num))
-            {
                 return num;
-            }
+            
             throw new BoletoNetException("Nosso número é inválido!");
         }
     }

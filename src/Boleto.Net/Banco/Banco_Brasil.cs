@@ -35,6 +35,7 @@ namespace BoletoNet
                 throw new Exception("Erro ao instanciar objeto.", ex);
             }
         }
+
         #endregion
 
         #region Métodos de Instância
@@ -528,20 +529,20 @@ namespace BoletoNet
                 }
             }
             #endregion Carteira 31
-
-
+            
             #region Agência e Conta Corrente
             //Verificar se a Agencia esta correta
             if (boleto.Cedente.ContaBancaria.Agencia.Length > 4)
-                throw new NotImplementedException("A quantidade de dígitos da Agência " + boleto.Cedente.ContaBancaria.Agencia + ", são de 4 números.");
-            else if (boleto.Cedente.ContaBancaria.Agencia.Length < 4)
+                throw new Exception("A quantidade de dígitos da Agência " + boleto.Cedente.ContaBancaria.Agencia + ", são de 4 números.");
+            if (boleto.Cedente.ContaBancaria.Agencia.Length < 4)
                 boleto.Cedente.ContaBancaria.Agencia = Utils.FormatCode(boleto.Cedente.ContaBancaria.Agencia, 4);
 
             //Verificar se a Conta esta correta
             if (boleto.Cedente.ContaBancaria.Conta.Length > 8)
-                throw new NotImplementedException("A quantidade de dígitos da Conta " + boleto.Cedente.ContaBancaria.Conta + ", são de 8 números.");
-            else if (boleto.Cedente.ContaBancaria.Conta.Length < 8)
+                throw new Exception("A quantidade de dígitos da Conta " + boleto.Cedente.ContaBancaria.Conta + ", são de 8 números.");
+            if (boleto.Cedente.ContaBancaria.Conta.Length < 8)
                 boleto.Cedente.ContaBancaria.Conta = Utils.FormatCode(boleto.Cedente.ContaBancaria.Conta, 8);
+
             #endregion Agência e Conta Corrente
 
             //Atribui o nome do banco ao local de pagamento
@@ -566,7 +567,7 @@ namespace BoletoNet
             FormataNossoNumero(boleto);
         }
 
-        # endregion
+        #endregion
 
         private string LimparCarteira(string carteira)
         {
@@ -1333,7 +1334,7 @@ namespace BoletoNet
                 switch (tipoArquivo)
                 {
                     case TipoArquivo.Cnab240:
-                        _header = GerarHeaderRemessaCNAB240(cedente, numeroArquivoRemessa);
+                        _header = GerarHeaderRemessaCnab240(cedente, numeroArquivoRemessa);
                         break;
                     case TipoArquivo.Cnab400:
                         _header = GerarHeaderRemessaCnab400(cedente, numeroArquivoRemessa);
@@ -1362,7 +1363,7 @@ namespace BoletoNet
             switch (tipoArquivo)
             {
                 case TipoArquivo.Cnab240:
-                    vRetorno = ValidarRemessaCNAB240(numeroConvenio, banco, cedente, boletos, numeroArquivoRemessa, out vMsg);
+                    vRetorno = ValidarRemessaCnab240(numeroConvenio, banco, cedente, boletos, numeroArquivoRemessa, out vMsg);
                     break;
                 case TipoArquivo.Cnab400:
                     vRetorno = ValidarRemessaCnab400(numeroConvenio, banco, cedente, boletos, numeroArquivoRemessa, out vMsg);
@@ -1390,7 +1391,7 @@ namespace BoletoNet
                 switch (tipoArquivo)
                 {
                     case TipoArquivo.Cnab240:
-                        detalhe = GerarDetalheRemessaCNAB240(boleto, numeroRegistro, tipoArquivo);
+                        detalhe = GerarDetalheRemessaCnab240(boleto, numeroRegistro, tipoArquivo);
                         break;
                     case TipoArquivo.Cnab400:
                         detalhe = GerarDetalheRemessaCnab400(boleto, numeroRegistro, tipoArquivo);
@@ -1642,6 +1643,7 @@ namespace BoletoNet
                 throw new Exception("Erro durante a geração do SEGMENTO Q DO DETALHE do arquivo de REMESSA.", ex);
             }
         }
+
         public override string GerarDetalheSegmentoRRemessa(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
         {
             try
@@ -1791,7 +1793,7 @@ namespace BoletoNet
 
         #region CNAB240 - Específicos
 
-        public bool ValidarRemessaCNAB240(string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem)
+        public bool ValidarRemessaCnab240(string numeroConvenio, IBanco banco, Cedente cedente, Boletos boletos, int numeroArquivoRemessa, out string mensagem)
         {
             var vMsg = string.Empty;
             mensagem = vMsg;
@@ -1860,7 +1862,7 @@ namespace BoletoNet
             }
         }
 
-        public string GerarHeaderRemessaCNAB240(Cedente cedente, int numeroArquivoRemessa)
+        public string GerarHeaderRemessaCnab240(Cedente cedente, int numeroArquivoRemessa)
         {
             try
             {
@@ -1917,7 +1919,7 @@ namespace BoletoNet
             }
         }
 
-        public string GerarDetalheRemessaCNAB240(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
+        public string GerarDetalheRemessaCnab240(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
         {
             throw new NotImplementedException("Função não implementada.");
         }
@@ -1965,9 +1967,8 @@ namespace BoletoNet
             {
                 /* 05 */
                 if (!registro.Substring(13, 1).Equals(@"T"))
-                {
                     throw new Exception("Registro inválida. O detalhe não possuí as características do segmento T.");
-                }
+
                 var segmentoT = new DetalheSegmentoTRetornoCNAB240(registro);
                 segmentoT.CodigoBanco = Convert.ToInt32(registro.Substring(0, 3)); //01
                 segmentoT.idCodigoMovimento = Convert.ToInt32(registro.Substring(15, 2)); //07
@@ -1998,6 +1999,7 @@ namespace BoletoNet
                 throw new Exception("Erro ao processar arquivo de RETORNO - SEGMENTO T.", ex);
             }
         }
+
         public override DetalheSegmentoURetornoCNAB240 LerDetalheSegmentoURetornoCNAB240(string registro)
         {
             var _Controle_numBanco = registro.Substring(0, 3); //01
@@ -2020,15 +2022,11 @@ namespace BoletoNet
             var _outDataCredito = registro.Substring(145, 8); //18
             var _cnab19 = registro.Substring(153, 87); //19
 
-
             try
             {
-
                 if (!registro.Substring(13, 1).Equals(@"U"))
-                {
                     throw new Exception("Registro inválida. O detalhe não possuí as características do segmento U.");
-                }
-
+                
                 var segmentoU = new DetalheSegmentoURetornoCNAB240(registro);
                 segmentoU.Servico_Codigo_Movimento_Retorno = Convert.ToDecimal(registro.Substring(15, 2)); //07.3U|Serviço|Cód. Mov.|Código de Movimento Retorno
                 segmentoU.JurosMultaEncargos = Convert.ToDecimal(registro.Substring(17, 15)) / 100;
@@ -2051,6 +2049,7 @@ namespace BoletoNet
                 throw new Exception("Erro ao processar arquivo de RETORNO - SEGMENTO U.", ex);
             }
         }
+
         #endregion
 
         internal static string Mod11BancoBrasil(string value)
@@ -2103,11 +2102,6 @@ namespace BoletoNet
 
             return d;
         }
-
-        #region Métodos de processamento do arquivo retorno CNAB400
-
-
-        #endregion
 
         #region CNAB 400 - Específicos sidneiklein
 
@@ -2184,7 +2178,7 @@ namespace BoletoNet
                 reg.CamposEdi.Add(new CampoEdi(Dado.DataDDMMAA___________, 0095, 006, 0, DateTime.Now, ' '));                          //095-100
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0101, 007, 0, numeroArquivoRemessa, '0'));                  //101-107
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0108, 022, 0, string.Empty, ' '));                          //108-129
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0130, 007, 0, cedente.Convenio, '0'));                      //130-136
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0130, 007, 0, "0", '0'));                                   //130-136 Convênio líder, apenas adicionado quando existe mais de um convênio declarado nessa remessa. cedente.Convenio
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0137, 258, 0, string.Empty, ' '));                          //137-394
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0395, 006, 0, "000001", ' '));                              //395-400
                 
@@ -2223,7 +2217,7 @@ namespace BoletoNet
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0022, 001, 0, boleto.Cedente.ContaBancaria.DigitoAgencia, ' '));//022-022
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0023, 008, 0, boleto.Cedente.ContaBancaria.Conta, '0'));        //023-030
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0031, 001, 0, boleto.Cedente.ContaBancaria.DigitoConta, ' '));  //031-031
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0032, 007, 0, boleto.Cedente.Convenio, ' '));                   //032-038
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0032, 007, 0, boleto.Cedente.Convenio, '0'));                   //032-038
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0039, 025, 0, boleto.NumeroDocumento, ' '));                    //039-063
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0064, 017, 0, boleto.NossoNumero, '0'));                        //064-080
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0081, 002, 0, "00", '0'));                                      //081-082
@@ -2283,6 +2277,7 @@ namespace BoletoNet
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0161, 013, 2, boleto.JurosMora, '0'));                          //161-173
 
                 #region Instruções Conforme Código de Ocorrência...
+
                 if (boleto.Remessa.CodigoOcorrencia.Equals("35") || boleto.Remessa.CodigoOcorrencia.Equals("36"))   //“35” – Cobrar Multa – ou “36” - Dispensar Multa 
                 {
                     #region Código de Multa e Valor/Percentual Multa
@@ -2314,14 +2309,18 @@ namespace BoletoNet
                 else
                 {
                     #region DataDesconto
+
                     var vDataDesconto = "000000";
                     if (!boleto.DataDesconto.Equals(DateTime.MinValue))
                         vDataDesconto = boleto.DataDesconto.ToString("ddMMyy");
+                    
                     #endregion
+
                     reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0174, 006, 0, vDataDesconto, '0'));                             //174-179                
                     reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0180, 013, 2, boleto.ValorDesconto, '0'));                      //180-192                
                     reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0193, 013, 2, boleto.Iof, '0'));                                //193-205
                 }
+
                 #endregion
                 
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0206, 013, 2, boleto.Abatimento, '0'));                         //206-218
@@ -2342,7 +2341,7 @@ namespace BoletoNet
                 if (!string.IsNullOrEmpty(boleto.Sacado.Endereco.Numero))
                     enderecoSacadoComNumero += " " + boleto.Sacado.Endereco.Numero;
 
-                reg.CamposEDI.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0275, 040, 0, enderecoSacadoComNumero.ToUpper(), ' '));         //275-314
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0275, 040, 0, enderecoSacadoComNumero.ToUpper(), ' '));         //275-314
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0315, 012, 0, boleto.Sacado.Endereco.Bairro.ToUpper(), ' '));   //315-326
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0327, 008, 0, boleto.Sacado.Endereco.Cep, '0'));                //327-334
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0335, 015, 0, boleto.Sacado.Endereco.Cidade.ToUpper(), ' '));   //335-349
@@ -2480,6 +2479,7 @@ namespace BoletoNet
                 throw new Exception("Erro ao ler detalhe do arquivo de RETORNO / CNAB 400.", ex);
             }
         }
+
         #endregion
 
         public override long ObterNossoNumeroSemConvenioOuDigitoVerificador(long convenio, string nossoNumero)

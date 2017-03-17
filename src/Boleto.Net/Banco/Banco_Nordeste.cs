@@ -230,7 +230,6 @@ namespace BoletoNet
             {
                 case TipoArquivo.Cnab240:
                     throw new NotImplementedException("CNAB240 não implementado!");
-                    break;
                 case TipoArquivo.Cnab400:
                     vRetorno = ValidarRemessaCNAB400(numeroConvenio, banco, cedente, boletos, numeroArquivoRemessa, out vMsg);
                     break;

@@ -12,6 +12,8 @@ namespace BoletoNet
 
         public virtual string Especie { get; set; }
 
+        public abstract IEspecieDocumento DuplicataMercantil();
+
         #endregion
     }
 }

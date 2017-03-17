@@ -798,32 +798,6 @@ namespace BoletoNet
         /// Gera o DETALHE do arquivo remessa de acordo com o lay-out informado
         /// </summary>
 
-        public override string GerarMensagemVariavelRemessa(Boleto boleto, ref int numeroRegistro, TipoArquivo tipoArquivo)
-        {
-            try
-            {
-                string _detalhe = "";
-
-                switch (tipoArquivo)
-                {
-                    case TipoArquivo.CNAB240:
-                        throw new Exception("Mensagem Variavel nao existe para o tipo CNAB 240.");
-                    case TipoArquivo.CNAB400:
-                        _detalhe = GerarMensagemVariavelRemessaCNAB400(boleto, ref numeroRegistro, tipoArquivo);
-                        break;
-                    case TipoArquivo.Outro:
-                        throw new Exception("Tipo de arquivo inexistente.");
-                }
-
-                return _detalhe;
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Erro durante a geração do DETALHE arquivo de REMESSA.", ex);
-            }
-        }
-
         public override string GerarDetalheRemessa(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
         {
             try
