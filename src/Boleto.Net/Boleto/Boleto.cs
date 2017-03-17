@@ -28,7 +28,7 @@ namespace BoletoNet
 		private int _quantidadeMoeda = 1;
 		private string _valorMoeda = string.Empty;
 		private IList<IInstrucao> _instrucoes = new List<IInstrucao>();
-		private IEspecieDocumento _especieDocumento = new EspecieDocumento();
+        private IEspecieDocumento _especieDocumento;
 		private string _aceite = "N";
 		private string _numeroDocumento = string.Empty;
 		private string _especie = "R$";

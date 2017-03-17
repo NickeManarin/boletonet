@@ -178,7 +178,9 @@ namespace BoletoNet
             get { return _nomeBanco; }
             set { _nomeBanco = value; }
         }
-       
+
+        public string Versao { get; set; }
+
         #endregion
 
         #region Métodos de Instância

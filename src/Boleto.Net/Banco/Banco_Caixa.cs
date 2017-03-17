@@ -1245,7 +1245,7 @@ namespace BoletoNet
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0009, 005, 0, numeroRegistro, '0'));                                // posição 9 até 13    (5) - Nº Sequencial do Registro no Lote
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0014, 001, 0, "P", '0'));                                           // posição 14 até 14   (1) - Cód. Segmento do Registro Detalhe
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0015, 001, 0, string.Empty, ' '));                                  // posição 15 até 15   (1) - Uso Exclusivo FEBRABAN/CNAB
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0016, 002, 0, "01", '0'));                                          // posição 16 até 17   (2) - Código de Movimento Remessa
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0016, 002, 0, ObterCodigoDaOcorrencia(boleto), '0'));                                          // posição 16 até 17   (2) - Código de Movimento Remessa
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0018, 005, 0, cedente.ContaBancaria.Agencia, '0'));                 // posição 18 até 22   (5) - Agência Mantenedora da Conta
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0023, 001, 0, cedente.ContaBancaria.DigitoAgencia.ToUpper(), ' ')); // posição 23 até 23   (1) - Dígito Verificador da Agência
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0024, 006, 0, cedente.Convenio, '0'));                              // posição 24 até 29   (6) - Código do Convênio no Banco
@@ -1844,6 +1844,7 @@ namespace BoletoNet
                 //reg.IdentificacaoOperacao;
                 detalhe.Carteira = reg.CodigoCarteira;
                 detalhe.CodigoOcorrencia = Utils.ToInt32(reg.CodigoOcorrencia);
+                detalhe.DescricaoOcorrencia = Ocorrencia(registro.Substring(108, 2));
 
                 var dataOcorrencia = Utils.ToInt32(reg.DataOcorrencia);
                 detalhe.DataOcorrencia = Utils.ToDateTime(dataOcorrencia.ToString("##-##-##"));
@@ -1895,6 +1896,22 @@ namespace BoletoNet
             {
                 throw new Exception("Erro ao ler detalhe do arquivo de RETORNO / CNAB 400.", ex);
             }
+        }
+
+
+        public string Ocorrencia(string codigo)
+        {
+            int codigoMovimento = 0;
+
+            if (int.TryParse(codigo, out codigoMovimento)) { 
+                CodigoMovimento_Caixa movimento = new CodigoMovimento_Caixa(codigoMovimento);
+                return movimento.Descricao;
+            } else
+            {
+                return string.Format("Erro ao retornar descrição para a ocorrência {0}", codigo);
+            }
+
+            
         }
 
         #endregion

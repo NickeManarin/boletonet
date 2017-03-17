@@ -2,6 +2,10 @@ using System;
 using System.Web.UI;
 using BoletoNet.Util;
 using BoletoNet.EDI.Banco;
+using BoletoNet.Excecoes;
+using System.Collections.Generic;
+using System.Linq;
+using BoletoNet.Enums;
 
 [assembly: WebResource("BoletoNet.Imagens.748.jpg", "image/jpg")]
 namespace BoletoNet
@@ -56,6 +60,9 @@ namespace BoletoNet
                 boleto.DataDocumento = DateTime.Now;
 
             FormataCodigoBarra(boleto);
+            if (boleto.CodigoBarra.Codigo.Length != 44)
+                throw new BoletoNetException("Código de barras é inválido");
+
             FormataLinhaDigitavel(boleto);
             //FormataNossoNumero(boleto);
         }
@@ -133,13 +140,29 @@ namespace BoletoNet
             boleto.CodigoBarra.Codigo = Strings.Left(boleto.CodigoBarra.Codigo, 4) + dac + Strings.Right(boleto.CodigoBarra.Codigo, 39);
         }
 
-        public bool RegistroByCarteira(Boleto boleto)
+        private string GerarCodigoDeBarras(Boleto boleto, string valorBoleto, string cmp_livre, string dv_cmpLivre, int? dv_geral = null)
         {
             var valida = boleto.Carteira == "112" || boleto.Carteira == "115" || boleto.Carteira == "104" || boleto.Carteira == "147"
                 || boleto.Carteira == "188" || boleto.Carteira == "108" || boleto.Carteira == "109" || boleto.Carteira == "150" || boleto.Carteira == "121";
 
             return valida;
         }
+
+        //public bool RegistroByCarteira(Boleto boleto)
+        //{
+        //    bool valida = false;
+        //    if (boleto.Carteira == "112"
+        //        || boleto.Carteira == "115"
+        //        || boleto.Carteira == "104"
+        //        || boleto.Carteira == "147"
+        //        || boleto.Carteira == "188"
+        //        || boleto.Carteira == "108"
+        //        || boleto.Carteira == "109"
+        //        || boleto.Carteira == "150"
+        //        || boleto.Carteira == "121")
+        //        valida = true;
+        //    return valida;
+        //}
 
         #region Métodos de Geração do Arquivo de Remessa
 
@@ -874,15 +897,7 @@ namespace BoletoNet
             }
         }
 
-        public string GerarDetalheRemessaCnab400_C(Boleto boleto, int numeroRegistro, TipoArquivo tipoArquivo)
-        {
-            //TODO
-            var detalhe = string.Empty;
-            
-            return detalhe;
-        }
-
-        public string GerarTrailerRemessa400(int numeroRegistro, Cedente cedente)
+        public string GerarTrailerRemessa400(int numeroRegistro,  Cedente cedente)
         {
             try
             {
@@ -1014,6 +1029,43 @@ namespace BoletoNet
             }
         }
 
+        public override HeaderRetorno LerHeaderRetornoCNAB400(string registro)
+        {
+            try
+            {
+                HeaderRetorno header = new HeaderRetorno(registro);
+                header.TipoRegistro = Utils.ToInt32(registro.Substring(000, 1));
+                header.CodigoRetorno = Utils.ToInt32(registro.Substring(001, 1));
+                header.LiteralRetorno = registro.Substring(002, 7);
+                header.CodigoServico = Utils.ToInt32(registro.Substring(009, 2));
+                header.LiteralServico = registro.Substring(011, 15);
+                header.Agencia = Utils.ToInt32(registro.Substring(026, 5));
+                header.ComplementoRegistro2 = registro.Substring(031, 14);
+                header.CodigoBanco = Utils.ToInt32(registro.Substring(076, 3));
+                header.NomeBanco = registro.Substring(079, 15);
+                header.DataGeracao = Utils.ToDateTime(Utils.ToInt32(registro.Substring(094, 8)).ToString("##-##-##"));
+                header.NumeroSequencialArquivoRetorno = Utils.ToInt32(registro.Substring(110, 7));
+                header.Versao = registro.Substring(390, 5);
+                header.NumeroSequencial = Utils.ToInt32(registro.Substring(394, 6));
+
+                return header;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao ler header do arquivo de RETORNO / CNAB 400.", ex);
+            }
+        }
+
         #endregion
+
+        public override long ObterNossoNumeroSemConvenioOuDigitoVerificador(long convenio, string nossoNumero)
+        {
+            long num;
+            if (nossoNumero.Length >= 8 && long.TryParse(nossoNumero.Substring(0, 8), out num))
+            {
+                return num;
+            }
+            throw new BoletoNetException("Nosso número é inválido!");
+        }
     }
 }

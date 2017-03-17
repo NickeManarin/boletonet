@@ -2336,7 +2336,13 @@ namespace BoletoNet
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0221, 014, 0, boleto.Sacado.CpfCnpj, '0'));                     //221-234
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0235, 037, 0, boleto.Sacado.Nome.ToUpper(), ' '));              //235-271
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0272, 003, 0, string.Empty, ' '));                              //272-274
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0275, 040, 0, boleto.Sacado.Endereco.End.ToUpper(), ' '));      //275-314
+
+
+                var enderecoSacadoComNumero = boleto.Sacado.Endereco.End;
+                if (!string.IsNullOrEmpty(boleto.Sacado.Endereco.Numero))
+                    enderecoSacadoComNumero += " " + boleto.Sacado.Endereco.Numero;
+
+                reg.CamposEDI.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0275, 040, 0, enderecoSacadoComNumero.ToUpper(), ' '));         //275-314
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0315, 012, 0, boleto.Sacado.Endereco.Bairro.ToUpper(), ' '));   //315-326
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0327, 008, 0, boleto.Sacado.Endereco.Cep, '0'));                //327-334
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0335, 015, 0, boleto.Sacado.Endereco.Cidade.ToUpper(), ' '));   //335-349

@@ -110,9 +110,6 @@ namespace BoletoNet
             var valorDocumento = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "");
             valorDocumento = Utils.FormatCode(valorDocumento, 10);
 
-
-            string CampoZerado = "000";
-
             boleto.CodigoBarra.Codigo = string.Format("{0}{1}{2}{3}{4}",
                banco,
                moeda,
@@ -260,7 +257,6 @@ namespace BoletoNet
                 {
                     case TipoArquivo.Cnab240:
                         throw new NotImplementedException("Remessa não implementada!");
-                        break;
                     case TipoArquivo.Cnab400:
                         _detalhe = GerarDetalheRemessaCNAB400(boleto, numeroRegistro, tipoArquivo);
                         break;
@@ -304,7 +300,6 @@ namespace BoletoNet
                 {
                     case TipoArquivo.Cnab240:
                         throw new NotImplementedException("Remessa não implementada!");
-                        break;
                     case TipoArquivo.Cnab400:
                         _trailer = GerarTrailerRemessa400(numeroRegistro, 0);
                         break;
@@ -490,7 +485,7 @@ namespace BoletoNet
                 reg.CamposEdi.Add(new CampoEdi(Dado.DataDDMMAA___________, 0151, 006, 0, boleto.DataProcessamento, ' '));                  //151-156
 
                 string vInstrucao = "00";
-                if (!(boleto.Instrucoes == null || boleto.Instrucoes.Count == 0 || boleto.Instrucoes[0].Codigo == null))
+                if (!(boleto.Instrucoes == null || boleto.Instrucoes.Count == 0))
                     vInstrucao = boleto.Instrucoes[0].Codigo.ToString();
 
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0157, 004, 0, vInstrucao, '0'));                               //157-160
