@@ -29,6 +29,9 @@ namespace BoletoNet
             if (boleto.Cedente.ContaBancaria.Conta.Length < 5)
                 boleto.Cedente.ContaBancaria.Conta = Utils.FormatCode(boleto.Cedente.ContaBancaria.Conta, 5);
 
+            if (boleto.Cedente.ContaBancaria.Conta.Length > 5)
+                throw new Exception("Conta bancária com mais de 5 dígitos");
+
             //Atribui o nome do banco ao local de pagamento
             if (boleto.LocalPagamento == "Até o vencimento, preferencialmente no ")
                 boleto.LocalPagamento += Nome;
@@ -36,7 +39,7 @@ namespace BoletoNet
 
             //Verifica se o nosso número é válido
             if (Utils.ToInt64(boleto.NossoNumero) == 0 || boleto.NossoNumero.Length > 8)
-                throw new NotImplementedException("Nosso número inválido");
+                throw new Exception("Nosso número inválido");
 
             if (boleto.NossoNumero.Length == 6)
             {
@@ -115,8 +118,10 @@ namespace BoletoNet
             //Cód. do beneficiário (5)  Número da conta do cliente sem o dígito de controle com 5 dígitos. Estava OperacaoConta ao invés de Conta.
             //"00" ou "10"         (2)  Será "10" se houver valor expresso na barra, senão "00".
             //Digito verificador   (1)  Dígito verificador calculado pelo módulo 11 para código de barras.
-            var campoLivre = "11" + boleto.NossoNumero + boleto.DigitoNossoNumero + boleto.Cedente.ContaBancaria.Agencia + 
-                boleto.Cedente.ContaBancaria.DigitoAgencia + boleto.Cedente.ContaBancaria.Conta + "10";
+            var campoLivre = "11" + boleto.NossoNumero.PadLeft(8, '0') + boleto.DigitoNossoNumero.PadLeft(1, '0') 
+                + boleto.Cedente.ContaBancaria.Agencia.PadLeft(4, '0') 
+                + boleto.Cedente.ContaBancaria.DigitoAgencia.PadLeft(2, '0')
+                + boleto.Cedente.ContaBancaria.Conta.PadLeft(5, '0') + "10";
 
             //Código de barras:
             //Código do banco     (3)  Preenchido com zeros à esquerda.

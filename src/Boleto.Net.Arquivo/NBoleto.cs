@@ -511,8 +511,8 @@ namespace BoletoNet.Arquivo
 
                 var vencimento = DateTime.Now.AddDays(10);
 
-                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "1234", "5", "123456", "7");
-                c.Codigo = "13000";
+                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "1234", "5", "12345", "7");
+                //c.Codigo = "13000";
 
                 var end = new Endereco();
                 end.Bairro = "Lago Sul";
