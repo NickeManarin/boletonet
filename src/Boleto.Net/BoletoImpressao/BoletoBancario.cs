@@ -1,3 +1,4 @@
+using BoletoNet.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -593,6 +594,8 @@ namespace BoletoNet
                     agenciaCodigoCedente = string.Format("{0}.{1}.{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Cedente.Codigo);
                 else
                     agenciaCodigoCedente = agenciaConta;
+
+                //Verificar se é a mesma coisa que Utils.FormatCode(Cedente.ContaBancaria.Conta, 5)
             }
 
             html.Append(!FormatoCarne ? GeraHtmlReciboCedente() : GeraHtmlCarne("", GeraHtmlReciboCedente()));
@@ -662,6 +665,45 @@ namespace BoletoNet
                 .Replace("@ENDERECOCEDENTE", MostrarEnderecoCedente ? enderecoCedente : "")
                 .Replace("@AVALISTA", string.Format("{0} - {1}", Boleto.Avalista != null ? Boleto.Avalista.Nome : "", Boleto.Avalista != null ? Boleto.Avalista.CpfCnpj : ""))
                 .Replace("Ar\">R$", RemoveSimboloMoedaValorDocumento ? "Ar\">" : "Ar\">R$");
+
+            /*
+                             .Replace("@NOSSONUMERO", Boleto.NossoNumero)
+                .Replace("@CARTEIRA", FormataDescricaoCarteira())
+                .Replace("@ESPECIE", Boleto.Especie)
+                .Replace("@QUANTIDADE", (Boleto.QuantidadeMoeda == 0 ? "" : Boleto.QuantidadeMoeda.ToString()))
+                .Replace("@VALORDOCUMENTO", Boleto.ValorMoeda)
+                .Replace("@=VALORDOCUMENTO", valorBoleto)
+                .Replace(
+                    "@VALORCOBRADO",
+                    (Boleto.ValorCobrado == 0 ? "" : Boleto.ValorCobrado.ToString("C", CultureInfo.GetCultureInfo("PT-BR"))))
+                .Replace("@OUTROSACRESCIMOS", "")
+                .Replace("@OUTRASDEDUCOES", "")
+                .Replace(
+                    "@DESCONTOS",
+                    (Boleto.ValorDesconto == 0 ? "" : Boleto.ValorDesconto.ToString("C", CultureInfo.GetCultureInfo("PT-BR"))))
+                .Replace("@AGENCIACONTA", agenciaCodigoCedente)
+                .Replace("@SACADO", sacado)
+                .Replace("@INFOSACADO", infoSacado)
+                .Replace("@AGENCIACODIGOCEDENTE", agenciaCodigoCedente)
+                .Replace("@CPFCNPJ", Cedente.CPFCNPJ)
+                .Replace(
+                    "@MORAMULTA",
+                    (Boleto.ValorMulta == 0 ? "" : Boleto.ValorMulta.ToString("C", CultureInfo.GetCultureInfo("PT-BR"))))
+                .Replace("@AUTENTICACAOMECANICA", "")
+                .Replace("@USODOBANCO", Boleto.UsoBanco)
+                .Replace("@IMAGEMCODIGOBARRA", imagemCodigoBarras)
+                .Replace("@ACEITE", Boleto.Aceite)
+                .ToString()
+                .Replace("@ENDERECOCEDENTE", MostrarEnderecoCedente ? enderecoCedente : "")
+                .Replace(
+                    "@AVALISTA",
+                    string.Format(
+                        "{0} - {1}",
+                        Boleto.Avalista != null ? Boleto.Avalista.Nome : string.Empty,
+                        Boleto.Avalista != null ? Boleto.Avalista.CPFCNPJ : string.Empty))
+                .Replace("Ar\">R$", RemoveSimboloMoedaValorDocumento ? "Ar\">" : "Ar\">R$");
+
+             */
         }
 
         private string FormataDescricaoCarteira()

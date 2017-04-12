@@ -26,9 +26,11 @@ namespace BoletoNet
             {
                 var vRetorno = true;
                 var vMsg = string.Empty;
-                
-                foreach (var boleto in boletos)
+
+                if (boletos != null && boletos.Count > 0)
                 {
+                    var boleto = boletos[0];
+
                     var vMsgBol = string.Empty;
                     var vRetBol = boleto.Banco.ValidarRemessa(TipoArquivo, numeroConvenio, banco, cedente, boletos, numeroArquivoRemessa, out vMsgBol);
 
