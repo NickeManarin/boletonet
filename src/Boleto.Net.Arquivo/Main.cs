@@ -586,6 +586,8 @@ namespace BoletoNet.Arquivo
                 form.CodigoBanco = Convert.ToInt16(radioButtonBNB.Tag);
             else if (radioButtonSicredi.Checked)
                 form.CodigoBanco = Convert.ToInt16(radioButtonSicredi.Tag);
+            else if (radioButtonBanrisul.Checked)
+                form.CodigoBanco = Convert.ToInt16(radioButtonBanrisul.Tag);
 
             form.ShowDialog();
         }

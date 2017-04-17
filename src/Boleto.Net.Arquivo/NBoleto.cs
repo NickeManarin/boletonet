@@ -448,7 +448,7 @@ namespace BoletoNet.Arquivo
             GeraLayout(boletos);
         }
 
-        public void GeraBoletoBNB(int qtde)
+        public void GeraBoletoBnb(int qtde)
         {
             // Cria o boleto, e passa os parâmetros usuais
 
@@ -541,12 +541,60 @@ namespace BoletoNet.Arquivo
             GeraLayout(boletos);
         }
 
+        public void GeraBoletoBanrisul(int qtde)
+        {
+            // Cria o boleto, e passa os parâmetros usuais
+            var boletos = new List<BoletoBancario>();
+            for (var i = 0; i < qtde; i++)
+            {
+                var bb = new BoletoBancario();
+                bb.CodigoBanco = _codigoBanco;
+
+                var item = new Instrucao_Bradesco(9, null, 5);
+
+                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "1102", "48", "9000150", "46");
+                c.Codigo = "9000150";
+                
+                var end = new Endereco();
+                end.Bairro = "Lago Sul";
+                end.Cep = "71666660";
+                end.Cidade = "Brasília- DF";
+                end.Complemento = "Quadra XX Conjunto XX Casa XX";
+                end.End = "Condominio de Brasilia - Quadra XX Conjunto XX Casa XX";
+                end.Logradouro = "Cond. Brasilia";
+                end.Numero = "55";
+                end.Uf = "DF";
+
+                var b = new Boleto(new DateTime(2010, 07, 04), 550m, "01", "22832563", c);
+                b.DigitoNossoNumero = "51";
+
+                b.Sacado = new Sacado("000.000.000-00", "Eduardo Frare");
+                b.Sacado.Endereco = end;
+
+                item.Descricao += " após " + item.Dias + " dias corridos do vencimento.";
+                b.Instrucoes.Add(item); //"Não Receber após o vencimento");
+
+                bb.FormatoCarne = true;
+                bb.OcultarInstrucoes = true;
+                bb.Boleto = b;
+                bb.Boleto.Valida();
+
+                boletos.Add(bb);
+            }
+
+            GeraLayout(boletos);
+        }
+        
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             switch (CodigoBanco)
             {
                 case 1: // Banco do Brasil
                     GeraBoletoBancoBrasil((int)numericUpDown.Value);
+                    break;
+
+                case 041: // Banrisul
+                    GeraBoletoBanrisul((int)numericUpDown.Value);
                     break;
 
                 case 409: // Unibanco
@@ -581,7 +629,7 @@ namespace BoletoNet.Arquivo
                     GeraBoletoCaixa((int)numericUpDown.Value);
                     break;
                 case 4: //BNB
-                    GeraBoletoBNB((int)numericUpDown.Value);
+                    GeraBoletoBnb((int)numericUpDown.Value);
                     break;
 
                 case 748: //Sicredi.

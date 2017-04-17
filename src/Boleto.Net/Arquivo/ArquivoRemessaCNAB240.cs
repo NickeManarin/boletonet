@@ -252,7 +252,6 @@ namespace BoletoNet
                         numeroRegistroDetalhe++;
 
                         totalTitulos += boleto.ValorBoleto;
-
                     }
 
                     numeroRegistro++;

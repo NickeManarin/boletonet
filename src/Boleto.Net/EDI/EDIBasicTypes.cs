@@ -15,12 +15,12 @@ namespace BoletoNet
             return x.OrdemNoRegistroEdi.CompareTo(y.OrdemNoRegistroEdi);
         }
     }
-    
+
     /// <summary>
     /// Representa cada tipo de dado possível em um arquivo EDI.
     /// </summary>
     public enum Dado
-    { 
+    {
         /// <summary>
         /// Representa um campo alfanumérico, alinhado à esquerda e com brancos à direita. A propriedade ValorNatural é do tipo String
         /// </summary>
@@ -90,7 +90,7 @@ namespace BoletoNet
         /// </summary>
         DataAAAAMMDDWithZeros
     }
-    
+
     public class CampoEdi
     {
         #region Propriedades
@@ -272,13 +272,15 @@ namespace BoletoNet
                     {
                         if (ValorNatural == null)
                         {
-                            var aux = "";
-                            ValorFormatado = aux.Trim().PadLeft(TamanhoCampo, ' ');//Se o Número for NULL, preenche com espaços em branco
+                            ValorFormatado = "".Trim().PadLeft(TamanhoCampo, ' '); //Se o Número for NULL, preenche com espaços em branco
                         }
                         else
                         {
                             var formatacao = "{0:f" + QtdDecimais + "}";
                             ValorFormatado = string.Format(formatacao, ValorNatural).Replace(",", "").Replace(".", "").Trim().PadLeft(TamanhoCampo, Preenchimento); //'0'
+
+                            if (ValorFormatado.Length > TamanhoCampo)
+                                throw new Exception("Tamanho do campo (" + ValorFormatado + ") superior ao definido: " + ValorFormatado.Length + " para o máximo de: " + TamanhoCampo);
                         }
                         break;
                     }
@@ -296,7 +298,7 @@ namespace BoletoNet
                     }
                 case Dado.DataAAAAMMDD_________:
                     {
-                        if ( (DateTime)ValorNatural != DateTime.MinValue)
+                        if ((DateTime)ValorNatural != DateTime.MinValue)
                         {
                             var sep = SeparadorDatas ?? "";
                             var formatacao = "{0:yyyy" + sep + "MM" + sep + "dd}";
@@ -749,7 +751,7 @@ namespace BoletoNet
             foreach (var campos in CamposEdi)
             {
                 campos.CodificarNaturalParaEdi();
-                LinhaRegistro += campos.ValorFormatado; 
+                LinhaRegistro += campos.ValorFormatado;
             }
         }
 
@@ -762,7 +764,7 @@ namespace BoletoNet
             {
                 if (TamanhoMaximo > 0)
                     LinhaRegistro = LinhaRegistro.PadRight(TamanhoMaximo, CaracterPreenchimento);
-                
+
                 campos.ValorFormatado = LinhaRegistro.Substring(campos.PosicaoInicial, campos.TamanhoCampo);
                 campos.DecodificarEdiParaNatural();
             }

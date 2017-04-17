@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Text;
 using System.Web.UI;
-using BoletoNet.Util;
 using System.IO;
 using System.Net.Mail;
 using System.Net.Mime;
@@ -562,7 +561,7 @@ namespace BoletoNet
                 switch (Boleto.Banco.Codigo)
                 {
                     case 748:
-                        agenciaCodigoCedente = string.Format("{0}.{1}.{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Cedente.Codigo);
+                        agenciaCodigoCedente = string.Format("{0}.{1}.{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Utils.FormatCode(Cedente.ContaBancaria.Conta, 5));
                         break;
                     case 41:
                         agenciaCodigoCedente = string.Format("{0}.{1}/{2}.{3}.{4}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Cedente.Codigo.Substring(4, 6), Cedente.Codigo.Substring(10, 1), Cedente.DigitoCedente);
@@ -591,11 +590,11 @@ namespace BoletoNet
                     //agenciaCodigoCedente = Utils.FormatCode(Cedente.Codigo.ToString(), 7); -> para Banco HSBC mostra apenas código Cedente - por Ponce em 08/06/2012
                     agenciaCodigoCedente = string.Format("{0}/{1}", Cedente.ContaBancaria.Agencia, Utils.FormatCode(Cedente.Codigo, 7)); //Solicitação do HSBC que mostrasse agencia/Conta - por Transis em 24/02/15
                 else if (Boleto.Banco.Codigo == 748)
-                    agenciaCodigoCedente = string.Format("{0}.{1}.{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Cedente.Codigo);
+                    agenciaCodigoCedente = string.Format("{0}.{1}.{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Utils.FormatCode(Cedente.ContaBancaria.Conta, 5));
                 else
                     agenciaCodigoCedente = agenciaConta;
 
-                //Verificar se é a mesma coisa que Utils.FormatCode(Cedente.ContaBancaria.Conta, 5)
+                //Verificar se é a mesma coisa que Utils.FormatCode(Cedente.ContaBancaria.Conta, 5) e Cedente.Codigo
             }
 
             html.Append(!FormatoCarne ? GeraHtmlReciboCedente() : GeraHtmlCarne("", GeraHtmlReciboCedente()));
@@ -665,45 +664,6 @@ namespace BoletoNet
                 .Replace("@ENDERECOCEDENTE", MostrarEnderecoCedente ? enderecoCedente : "")
                 .Replace("@AVALISTA", string.Format("{0} - {1}", Boleto.Avalista != null ? Boleto.Avalista.Nome : "", Boleto.Avalista != null ? Boleto.Avalista.CpfCnpj : ""))
                 .Replace("Ar\">R$", RemoveSimboloMoedaValorDocumento ? "Ar\">" : "Ar\">R$");
-
-            /*
-                             .Replace("@NOSSONUMERO", Boleto.NossoNumero)
-                .Replace("@CARTEIRA", FormataDescricaoCarteira())
-                .Replace("@ESPECIE", Boleto.Especie)
-                .Replace("@QUANTIDADE", (Boleto.QuantidadeMoeda == 0 ? "" : Boleto.QuantidadeMoeda.ToString()))
-                .Replace("@VALORDOCUMENTO", Boleto.ValorMoeda)
-                .Replace("@=VALORDOCUMENTO", valorBoleto)
-                .Replace(
-                    "@VALORCOBRADO",
-                    (Boleto.ValorCobrado == 0 ? "" : Boleto.ValorCobrado.ToString("C", CultureInfo.GetCultureInfo("PT-BR"))))
-                .Replace("@OUTROSACRESCIMOS", "")
-                .Replace("@OUTRASDEDUCOES", "")
-                .Replace(
-                    "@DESCONTOS",
-                    (Boleto.ValorDesconto == 0 ? "" : Boleto.ValorDesconto.ToString("C", CultureInfo.GetCultureInfo("PT-BR"))))
-                .Replace("@AGENCIACONTA", agenciaCodigoCedente)
-                .Replace("@SACADO", sacado)
-                .Replace("@INFOSACADO", infoSacado)
-                .Replace("@AGENCIACODIGOCEDENTE", agenciaCodigoCedente)
-                .Replace("@CPFCNPJ", Cedente.CPFCNPJ)
-                .Replace(
-                    "@MORAMULTA",
-                    (Boleto.ValorMulta == 0 ? "" : Boleto.ValorMulta.ToString("C", CultureInfo.GetCultureInfo("PT-BR"))))
-                .Replace("@AUTENTICACAOMECANICA", "")
-                .Replace("@USODOBANCO", Boleto.UsoBanco)
-                .Replace("@IMAGEMCODIGOBARRA", imagemCodigoBarras)
-                .Replace("@ACEITE", Boleto.Aceite)
-                .ToString()
-                .Replace("@ENDERECOCEDENTE", MostrarEnderecoCedente ? enderecoCedente : "")
-                .Replace(
-                    "@AVALISTA",
-                    string.Format(
-                        "{0} - {1}",
-                        Boleto.Avalista != null ? Boleto.Avalista.Nome : string.Empty,
-                        Boleto.Avalista != null ? Boleto.Avalista.CPFCNPJ : string.Empty))
-                .Replace("Ar\">R$", RemoveSimboloMoedaValorDocumento ? "Ar\">" : "Ar\">R$");
-
-             */
         }
 
         private string FormataDescricaoCarteira()

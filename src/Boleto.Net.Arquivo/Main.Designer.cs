@@ -179,7 +179,7 @@ namespace BoletoNet.Arquivo
             // cNABToolStripMenuItem
             // 
             this.cNABToolStripMenuItem.Name = "cNABToolStripMenuItem";
-            this.cNABToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.cNABToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.cNABToolStripMenuItem.Text = "&Remessa";
             this.cNABToolStripMenuItem.Click += new System.EventHandler(this.cNABToolStripMenuItem_Click);
             // 
@@ -189,20 +189,20 @@ namespace BoletoNet.Arquivo
             this.lerToolStripMenuItem1,
             this.gerarToolStripMenuItem1});
             this.retornoToolStripMenuItem1.Name = "retornoToolStripMenuItem1";
-            this.retornoToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.retornoToolStripMenuItem1.Size = new System.Drawing.Size(120, 22);
             this.retornoToolStripMenuItem1.Text = "R&etorno";
             // 
             // lerToolStripMenuItem1
             // 
             this.lerToolStripMenuItem1.Name = "lerToolStripMenuItem1";
-            this.lerToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.lerToolStripMenuItem1.Size = new System.Drawing.Size(102, 22);
             this.lerToolStripMenuItem1.Text = "&Ler";
             this.lerToolStripMenuItem1.Click += new System.EventHandler(this.lerToolStripMenuItem1_Click);
             // 
             // gerarToolStripMenuItem1
             // 
             this.gerarToolStripMenuItem1.Name = "gerarToolStripMenuItem1";
-            this.gerarToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.gerarToolStripMenuItem1.Size = new System.Drawing.Size(102, 22);
             this.gerarToolStripMenuItem1.Text = "&Gerar";
             this.gerarToolStripMenuItem1.Click += new System.EventHandler(this.gerarToolStripMenuItem1_Click);
             // 
@@ -256,7 +256,7 @@ namespace BoletoNet.Arquivo
             this.radioButtonBanrisul.Name = "radioButtonBanrisul";
             this.radioButtonBanrisul.Size = new System.Drawing.Size(62, 17);
             this.radioButtonBanrisul.TabIndex = 30;
-            this.radioButtonBanrisul.Tag = "41";
+            this.radioButtonBanrisul.Tag = "041";
             this.radioButtonBanrisul.Text = "Banrisul";
             this.radioButtonBanrisul.UseVisualStyleBackColor = true;
             // 
