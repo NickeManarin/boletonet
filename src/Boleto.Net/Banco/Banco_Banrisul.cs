@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Web.UI;
 using BoletoNet.Util;
 using BoletoNet.EDI.Banco;
@@ -29,6 +30,9 @@ namespace BoletoNet
             //Formata o tamanho do número da conta corrente
             if (boleto.Cedente.ContaBancaria.Conta.Length != 7)
                 boleto.Cedente.ContaBancaria.Conta = Utils.FormatCode(boleto.Cedente.ContaBancaria.Conta, 7);
+
+            if (boleto.Instrucoes.Count(x => x.Codigo != 0) > 2)
+                throw new Exception("Máximo de duas instruções permitidas por boleto.");
 
             //Formata o tamanho do número de nosso número.
             if (boleto.NossoNumero.Length < 8)
@@ -528,9 +532,9 @@ namespace BoletoNet
                 vRetorno = false;
             }
 
-            if (cedente != null && (string.IsNullOrWhiteSpace(cedente.Codigo) || cedente.Codigo.Length != 9))
+            if (cedente != null && (string.IsNullOrWhiteSpace(cedente.Codigo) || cedente.Codigo.Length != 7))
             {
-                vMsg += string.Concat("Remessa: O código do cedente deve ser de 9 posições.", Environment.NewLine);
+                vMsg += string.Concat("Remessa: O código do cedente deve ser de 7 posições.", Environment.NewLine);
                 vRetorno = false;
             }
 
@@ -570,6 +574,12 @@ namespace BoletoNet
                     #endregion
                 }
 
+                if (boleto.Instrucoes.Count(x => x.Codigo != 0) > 2)
+                {
+                    vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Apenas 2 instruções são permitidas no boleto!", Environment.NewLine);
+                    vRetorno = false;
+                }
+
                 #endregion
             }
             
@@ -584,7 +594,8 @@ namespace BoletoNet
                 var reg = new RegistroEdi();
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0001, 010, 0, "01REMESSA", ' '));            //001-009
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0010, 016, 0, "", ' '));                     //010-026
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0027, 013, 0, cedente.ContaBancaria.Agencia.PadLeft(4, '0') + cedente.Codigo, ' ')); //027-039
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0027, 013, 0, 
+                    cedente.ContaBancaria.Agencia.PadLeft(4, '0') + cedente.Codigo.PadLeft(7, '0') + cedente.ContaBancaria.DigitoConta.PadLeft(2, '0'), ' ')); //027-039
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0040, 007, 0, "", ' '));                     //040-046
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0047, 030, 0, cedente.Nome.ToUpper(), ' ')); //047-076
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0077, 011, 0, "041BANRISUL", ' '));          //077-087
@@ -618,7 +629,8 @@ namespace BoletoNet
                 var reg = new RegistroEdi();
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 001, 01, 0, "1", ' '));                              //001-001 Literal '1'
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 002, 16, 0, string.Empty, ' '));                     //002-017 Brancos
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 018, 13, 0, boleto.Cedente.ContaBancaria.Agencia.PadLeft(4, '0') + boleto.Cedente.Codigo, ' ')); //018-030 Agência + Código do Cedente
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 018, 13, 0, boleto.Cedente.ContaBancaria.Agencia.PadLeft(4, '0') + 
+                    boleto.Cedente.Codigo.PadLeft(7, '0') + boleto.ContaBancaria.DigitoConta.PadLeft(2, '0'), ' ')); //018-030 Agência + Código do Cedente.
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 031, 07, 0, string.Empty, ' '));                     //031-037 Brancos
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 038, 25, 0, boleto.NumeroDocumento, ' '));           //038-062 Identificação de Título (Alfanumérico opcional)
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 063, 10, 0, boleto.NossoNumero + boleto.DigitoNossoNumero, '0')); //063-072 Nosso Número (2 dígitos verificadores);
@@ -637,34 +649,64 @@ namespace BoletoNet
 
                 #region Instruções
 
-                var vQtdeDiasCodigo9Ou15 = "0";
-                var vInstrucao1 = string.Empty;
-                var vInstrucao2 = string.Empty;
+                var diasProtestoDevolução = 0;
+                var diasJurosMulta = 0;
+                var percJurosMulta = 0m;
 
-                switch (boleto.Instrucoes.Count)
+                var vInstrucao1 = "";
+                var vInstrucao2 = "";
+
+                var instList = boleto.Instrucoes.Where(x => x.Codigo != 0).ToList();
+
+                if (instList.Any())
                 {
-                    case 1:
-                        vInstrucao1 = boleto.Instrucoes[0].Codigo.ToString().PadLeft(2, '0');
-                        vInstrucao2 = string.Empty;
+                    vInstrucao1 = instList[0].Codigo.ToString().PadLeft(2, '0');
 
-                        //valida se é código 9 ou 15, para adicionar os dias na posição 370-371
-                        if (boleto.Instrucoes[0].Codigo == 9 || boleto.Instrucoes[0].Codigo == 15)
-                            vQtdeDiasCodigo9Ou15 = boleto.Instrucoes[0].Dias.ToString();
-                        
-                        break;
-                    case 2:
-                        vInstrucao1 += boleto.Instrucoes[0].Codigo.ToString().PadLeft(2, '0');
-                        //valida se é código 9 ou 15, para adicionar os dias na posição 370-371
-                        if (boleto.Instrucoes[0].Codigo == 9 || boleto.Instrucoes[0].Codigo == 15)
-                            vQtdeDiasCodigo9Ou15 = boleto.Instrucoes[0].Dias.ToString();
-                        
-                        vInstrucao2 += boleto.Instrucoes[1].Codigo.ToString().PadLeft(2, '0');
-                        //valida se é código 9 ou 15, para adicionar os dias na posição 370-371
-                        if (boleto.Instrucoes[1].Codigo == 9 || boleto.Instrucoes[1].Codigo == 15)
-                            vQtdeDiasCodigo9Ou15 = boleto.Instrucoes[1].Dias.ToString();
-                        
-                        break;
+                    if (instList[0].Codigo == 9 || instList[0].Codigo == 15)
+                        diasProtestoDevolução = instList[0].Dias;
+
+                    if (instList[0].Codigo == 18 || instList[0].Codigo == 20)
+                    {
+                        diasJurosMulta = instList[0].Dias;
+                        percJurosMulta = instList[0].Valor;
+                    }
+
+                    if (instList.Count > 1)
+                    {
+                        vInstrucao2 = instList[1].Codigo.ToString().PadLeft(2, '0');
+
+                        if (instList[1].Codigo == 9 || instList[1].Codigo == 15)
+                            diasProtestoDevolução = instList[1].Dias;
+
+                        if (instList[1].Codigo == 18 || instList[1].Codigo == 20)
+                        {
+                            diasJurosMulta = instList[1].Dias;
+                            percJurosMulta = instList[1].Valor;
+                        }
+                    }
                 }
+
+                //switch (boleto.Instrucoes.Count)
+                //{
+                //    case 1:
+                //        vInstrucao1 = boleto.Instrucoes[0].Codigo.ToString().PadLeft(2, '0');
+                //        vInstrucao2 = string.Empty;
+
+                //        if (boleto.Instrucoes[0].Codigo == 9 || boleto.Instrucoes[0].Codigo == 15)
+                //            diasProtestoDevolução = boleto.Instrucoes[0].Dias;               
+                //        break;
+                //    case 2:
+                //        vInstrucao1 += boleto.Instrucoes[0].Codigo.ToString().PadLeft(2, '0');
+                        
+                //        if (boleto.Instrucoes[0].Codigo == 9 || boleto.Instrucoes[0].Codigo == 15)
+                //            diasProtestoDevolução = boleto.Instrucoes[0].Dias;
+                        
+                //        vInstrucao2 += boleto.Instrucoes[1].Codigo.ToString().PadLeft(2, '0');
+                        
+                //        if (boleto.Instrucoes[1].Codigo == 9 || boleto.Instrucoes[1].Codigo == 15)
+                //            diasProtestoDevolução = boleto.Instrucoes[1].Dias;                    
+                //        break;
+                //}
                 
                 #endregion
                 
@@ -702,15 +744,15 @@ namespace BoletoNet
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 270, 05, 0, string.Empty, ' '));                            //270-274 Brancos.
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 275, 40, 0, boleto.Sacado.Endereco.EndComNumero.ToUpper(), ' '));    //275-314 Endereço.
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 315, 07, 0, string.Empty, ' '));                            //315-321 Brancos.
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 322, 03, 0, 0, '0'));                                       //322-324 Percentual de juros após o vencimento.
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 325, 02, 0, 0, '0'));                                       //325-326 Dias para juros.
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 322, 03, 0, percJurosMulta, '0'));                          //322-324 Percentual de juros após o vencimento.
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 325, 02, 0, diasJurosMulta, '0'));                          //325-326 Dias para juros.
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 327, 08, 0, boleto.Sacado.Endereco.Cep, '0'));              //327-334 Cep.
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 335, 15, 0, boleto.Sacado.Endereco.Cidade.ToUpper(), ' ')); //335-349 Cidade.
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 350, 02, 0, boleto.Sacado.Endereco.Uf.ToUpper(), ' '));     //350-351 Uf.
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 352, 04, 1, 0, '0'));                                       //352-355 Taxa de desconto ao dia de antecipação.
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 356, 01, 0, string.Empty, ' '));                            //356-356 Brancos.
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 357, 13, 2, 0, '0'));                                       //357-369 Valor para cáuculo do desconto.
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 370, 02, 0, vQtdeDiasCodigo9Ou15, '0'));                    //370-371 Números de dia para protesto ou devolução automática.
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 357, 13, 2, 0, '0'));                                       //357-369 Valor para cálculo do desconto.
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 370, 02, 0, diasProtestoDevolução, '0'));                   //370-371 Números de dia para protesto ou devolução automática.
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 372, 23, 0, string.Empty, ' '));                            //372-394 Brancos.
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 395, 06, 0, numeroRegistro, '0'));                          //395-400 Número do registro.
 

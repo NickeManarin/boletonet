@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace BoletoNet
 {
 	using System;
@@ -623,13 +625,16 @@ namespace BoletoNet
 			if (Cedente == null)
 				throw new Exception("Cedente não cadastrado.");
 
-			// Atribui o nome do banco ao local de pagamento
-			// Comentada por duplicidade no nome do banco
-			////this.LocalPagamento += this.Banco.Nome + string.Empty;
+            // Atribui o nome do banco ao local de pagamento
+            // Comentada por duplicidade no nome do banco
+            ////this.LocalPagamento += this.Banco.Nome + string.Empty;
 
-			// Verifica se data do processamento é valida
-			// if (this.DataProcessamento.ToString("dd/MM/yyyy") == "01/01/0001")
-			if (DataProcessamento == DateTime.MinValue) // diegomodolo (diego.ribeiro@nectarnet.com.br)
+		    if (Instrucoes.GroupBy(x => x.Codigo).Any(w => w.Skip(1).Any()))
+		        throw new Exception("Instrução repetida, informe apenas uma vez a instrução que está repetida.");
+
+            // Verifica se data do processamento é valida
+            // if (this.DataProcessamento.ToString("dd/MM/yyyy") == "01/01/0001")
+            if (DataProcessamento == DateTime.MinValue) // diegomodolo (diego.ribeiro@nectarnet.com.br)
 				DataProcessamento = DateTime.Now;
 
 			// Verifica se data do documento é valida

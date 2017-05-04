@@ -1014,7 +1014,7 @@ namespace BoletoNet
                 //Agência Cobradora
                 detalhe.AgenciaCobradora = 0;
                 #endregion
-                //
+                
                 return detalhe;
             }
             catch (Exception ex)
@@ -1027,7 +1027,7 @@ namespace BoletoNet
         {
             try
             {
-                HeaderRetorno header = new HeaderRetorno(registro);
+                var header = new HeaderRetorno(registro);
                 header.TipoRegistro = Utils.ToInt32(registro.Substring(000, 1));
                 header.CodigoRetorno = Utils.ToInt32(registro.Substring(001, 1));
                 header.LiteralRetorno = registro.Substring(002, 7);

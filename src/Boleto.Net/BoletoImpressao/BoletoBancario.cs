@@ -563,9 +563,6 @@ namespace BoletoNet
                     case 748:
                         agenciaCodigoCedente = string.Format("{0}.{1}.{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Utils.FormatCode(Cedente.ContaBancaria.Conta, 5));
                         break;
-                    case 41:
-                        agenciaCodigoCedente = string.Format("{0}.{1}/{2}.{3}.{4}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Cedente.Codigo.Substring(4, 6), Cedente.Codigo.Substring(10, 1), Cedente.DigitoCedente);
-                        break;
                     case 1:
                         agenciaCodigoCedente = string.Format("{0}-{1}/{2}-{3}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Utils.FormatCode(Cedente.ContaBancaria.Conta, 6), Cedente.ContaBancaria.DigitoConta);
                         break;
@@ -579,20 +576,30 @@ namespace BoletoNet
             }
             else
             {
-                //Para banco SANTANDER, a formatação do campo "Agencia/Identif.Cedente" - por jsoda em 07/05/2012
-                if (Boleto.Banco.Codigo == 33)
+                switch (Boleto.Banco.Codigo)
                 {
-                    agenciaCodigoCedente = string.Format("{0}-{1}/{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Utils.FormatCode(Cedente.Codigo, 6));
-                    if (string.IsNullOrEmpty(Cedente.ContaBancaria.DigitoAgencia))
-                        agenciaCodigoCedente = string.Format("{0}/{1}", Cedente.ContaBancaria.Agencia, Utils.FormatCode(Cedente.Codigo, 6));
+                    case 33:
+                        agenciaCodigoCedente = string.Format("{0}-{1}/{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, 
+                            Utils.FormatCode(Cedente.Codigo, 6));
+
+                        if (string.IsNullOrEmpty(Cedente.ContaBancaria.DigitoAgencia))
+                            agenciaCodigoCedente = string.Format("{0}/{1}", Cedente.ContaBancaria.Agencia, Utils.FormatCode(Cedente.Codigo, 6));
+                        break;
+                    case 41:
+                        agenciaCodigoCedente = string.Format("{0}.{1}/{2}.{3}.{4}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, 
+                            Cedente.ContaBancaria.Conta.Substring(0, 6), Cedente.ContaBancaria.Conta.Substring(6, 1), Cedente.ContaBancaria.DigitoConta);
+                        break;
+                    case 399:
+                        agenciaCodigoCedente = string.Format("{0}/{1}", Cedente.ContaBancaria.Agencia, Utils.FormatCode(Cedente.Codigo, 7));
+                        break;
+                    case 748:
+                        agenciaCodigoCedente = string.Format("{0}.{1}.{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, 
+                            Utils.FormatCode(Cedente.ContaBancaria.Conta, 5));
+                        break;
+                    default:
+                        agenciaCodigoCedente = agenciaConta;
+                        break;
                 }
-                else if (Boleto.Banco.Codigo == 399)
-                    //agenciaCodigoCedente = Utils.FormatCode(Cedente.Codigo.ToString(), 7); -> para Banco HSBC mostra apenas código Cedente - por Ponce em 08/06/2012
-                    agenciaCodigoCedente = string.Format("{0}/{1}", Cedente.ContaBancaria.Agencia, Utils.FormatCode(Cedente.Codigo, 7)); //Solicitação do HSBC que mostrasse agencia/Conta - por Transis em 24/02/15
-                else if (Boleto.Banco.Codigo == 748)
-                    agenciaCodigoCedente = string.Format("{0}.{1}.{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Utils.FormatCode(Cedente.ContaBancaria.Conta, 5));
-                else
-                    agenciaCodigoCedente = agenciaConta;
 
                 //Verificar se é a mesma coisa que Utils.FormatCode(Cedente.ContaBancaria.Conta, 5) e Cedente.Codigo
             }
@@ -655,7 +662,7 @@ namespace BoletoNet
                 .Replace("@SACADO", sacado.Replace("<br/>", " - ")) //Com a quebra de linha apenas no recibo do sacado do carnê.
                 .Replace("@INFOSACADO", infoSacado)
                 .Replace("@AGENCIACODIGOCEDENTE", agenciaCodigoCedente)
-                .Replace("@CPFCNPJ", Cedente.CpfCnpj)
+                .Replace("@CPFCNPJ", Cedente.CpfCnpjComMascara)
                 .Replace("@MORAMULTA", Boleto.ValorMulta == 0 ? "" : Boleto.ValorMulta.ToString("C", CultureInfo.GetCultureInfo("PT-BR")))
                 .Replace("@AUTENTICACAOMECANICA", "")
                 .Replace("@USODOBANCO", Boleto.UsoBanco)

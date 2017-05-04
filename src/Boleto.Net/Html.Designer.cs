@@ -174,7 +174,7 @@ namespace BoletoNet {
         ///        &lt;td class=&quot;w106&quot;&gt;Nº do Documento&lt;/td&gt;
         ///    &lt;/tr&gt;
         ///    &lt;tr class=&quot;cp h12 rBb&quot;&gt;
-        ///        &lt;td&gt;@CEDENTE&lt;/td&gt;
+        ///        &lt;td&gt;@CEDENTE_BOLETO&lt;/td&gt;
         ///        &lt;td&gt;@AGENCIACODIGOCEDENTE&lt;/td&gt;
         ///        &lt;td&gt;@DATAVENCIMENTO&lt;/td&gt;
         ///        &lt;td class=&quot;Ar&quot;&gt;@NUMERODOCUMENTO&lt;/td&gt;
@@ -490,7 +490,7 @@ namespace BoletoNet {
                 return ResourceManager.GetString("ReciboCedenteParte4", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to &lt;table class=&quot;w666&quot;&gt;
         ///    &lt;tr class=&quot;ct h13&quot;&gt;
@@ -502,12 +502,12 @@ namespace BoletoNet {
         ///        &lt;td class=&quot;w180&quot;&gt;(=) Valor do documento&lt;/td&gt;
         ///    &lt;/tr&gt;
         ///    &lt;tr class=&quot;cp h12 rBb&quot;&gt;
-        ///		   &lt;td&gt;@USODOBANCO&lt;/td&gt;
+        ///				&lt;td&gt;@USODOBANCO&lt;/td&gt;
         ///        &lt;td class=&quot;Al&quot;&gt;@CARTEIRA&lt;/td&gt;
         ///        &lt;td class=&quot;Al&quot;&gt;@ESPECIE&lt;/td&gt;
         ///        &lt;td&gt;@QUANTIDADE&lt;/td&gt;
         ///        &lt;td&gt;@VALORDOCUMENTO&lt;/td&gt;
-        ///   [rest of string was truncated]&quot;;.
+        ///  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ReciboCedenteParte5 {
             get {

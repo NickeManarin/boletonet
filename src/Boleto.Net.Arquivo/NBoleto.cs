@@ -543,7 +543,7 @@ namespace BoletoNet.Arquivo
 
         public void GeraBoletoBanrisul(int qtde)
         {
-            // Cria o boleto, e passa os parâmetros usuais
+            //Cria o boleto, e passa os parâmetros usuais.
             var boletos = new List<BoletoBancario>();
             for (var i = 0; i < qtde; i++)
             {
@@ -552,8 +552,9 @@ namespace BoletoNet.Arquivo
 
                 var item = new Instrucao_Bradesco(9, null, 5);
 
-                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "1102", "48", "9000150", "46");
+                var c = new Cedente("11.111.111/1111-11", "Empresa de Atacado", "1102", "48", "9000150", "46");
                 c.Codigo = "9000150";
+                c.MostrarCnpjNoBoleto = true;
                 
                 var end = new Endereco();
                 end.Bairro = "Lago Sul";
@@ -574,8 +575,10 @@ namespace BoletoNet.Arquivo
                 item.Descricao += " após " + item.Dias + " dias corridos do vencimento.";
                 b.Instrucoes.Add(item); //"Não Receber após o vencimento");
 
-                bb.FormatoCarne = true;
+                bb.FormatoCarne = false;
                 bb.OcultarInstrucoes = true;
+                bb.ExibirDemonstrativo = true;
+                bb.MostrarComprovanteEntrega = true;
                 bb.Boleto = b;
                 bb.Boleto.Valida();
 
@@ -585,7 +588,7 @@ namespace BoletoNet.Arquivo
             GeraLayout(boletos);
         }
         
-        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             switch (CodigoBanco)
             {
@@ -661,7 +664,7 @@ namespace BoletoNet.Arquivo
                 MessageBox.Show("O exemplo de envio do boleto bancário como imagem só está implementado para somente um boleto por vez.", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             var backgroundWorker = new BackgroundWorker();
-            backgroundWorker.DoWork += backgroundWorker_DoWork;
+            backgroundWorker.DoWork += BackgroundWorker_DoWork;
             backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
             backgroundWorker.RunWorkerAsync();
             _progresso = new Progresso();

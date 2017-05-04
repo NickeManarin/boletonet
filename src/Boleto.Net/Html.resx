@@ -151,7 +151,7 @@
         &lt;td class="w106"&gt;Nº do Documento&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr class="cp h12 rBb"&gt;
-        &lt;td&gt;@CEDENTE&lt;/td&gt;
+        &lt;td&gt;@CEDENTE_BOLETO&lt;/td&gt;
         &lt;td&gt;@AGENCIACODIGOCEDENTE&lt;/td&gt;
         &lt;td&gt;@DATAVENCIMENTO&lt;/td&gt;
         &lt;td class="Ar"&gt;@NUMERODOCUMENTO&lt;/td&gt;
@@ -285,7 +285,7 @@
         &lt;td class="w180"&gt;Agência / Código do beneficiário&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr class="cp h12 rBb"&gt;
-        &lt;td&gt;@CEDENTE&lt;/td&gt;
+        &lt;td&gt;@CEDENTE_BOLETO&lt;/td&gt;
         &lt;td class="Ar"&gt;@AGENCIACONTA&lt;/td&gt;
     &lt;/tr&gt;
 &lt;/table&gt;</value>
