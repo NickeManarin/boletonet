@@ -550,8 +550,6 @@ namespace BoletoNet.Arquivo
                 var bb = new BoletoBancario();
                 bb.CodigoBanco = _codigoBanco;
 
-                var item = new Instrucao_Bradesco(9, null, 5);
-
                 var c = new Cedente("11.111.111/1111-11", "Empresa de Atacado", "1102", "48", "9000150", "46");
                 c.Codigo = "9000150";
                 c.MostrarCnpjNoBoleto = true;
@@ -572,8 +570,9 @@ namespace BoletoNet.Arquivo
                 b.Sacado = new Sacado("000.000.000-00", "Eduardo Frare");
                 b.Sacado.Endereco = end;
 
-                item.Descricao += " após " + item.Dias + " dias corridos do vencimento.";
-                b.Instrucoes.Add(item); //"Não Receber após o vencimento");
+                b.Instrucoes.Add(new Instrucao_Banrisul(18, null, 10, 3.1m, EnumTipoValor.Percentual)); //"Não Receber após o vencimento");
+                b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 3.1m, EnumTipoValor.Percentual));
+                b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 3.1m, EnumTipoValor.Percentual)); 
 
                 bb.FormatoCarne = false;
                 bb.OcultarInstrucoes = true;

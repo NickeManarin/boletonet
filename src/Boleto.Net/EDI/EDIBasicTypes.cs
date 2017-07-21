@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace BoletoNet
 {
@@ -88,7 +89,7 @@ namespace BoletoNet
         /// Representa um campo de data no formato AAAA/MM/DD, porém colocando zeros no lugar de espaços no ValorFormatado. A propriedade
         /// ValorNatural é do tipo DateTime, e este deve ser nulo caso queira que a data seja zero.
         /// </summary>
-        DataAAAAMMDDWithZeros
+        DataAAAAMMDDWithZeros,
     }
 
     public class CampoEdi
@@ -276,8 +277,7 @@ namespace BoletoNet
                         }
                         else
                         {
-                            var formatacao = "{0:f" + QtdDecimais + "}";
-                            ValorFormatado = string.Format(formatacao, ValorNatural).Replace(",", "").Replace(".", "").Trim().PadLeft(TamanhoCampo, Preenchimento); //'0'
+                            ValorFormatado = string.Format(new CultureInfo("pt-BR"), "{0:f" + QtdDecimais + "}", ValorNatural).Replace(",", "").Replace(".", "").Trim().PadLeft(TamanhoCampo, Preenchimento);
 
                             if (ValorFormatado.Length > TamanhoCampo)
                                 throw new Exception("Tamanho do campo (" + ValorFormatado + ") superior ao definido: " + ValorFormatado.Length + " para o máximo de: " + TamanhoCampo);

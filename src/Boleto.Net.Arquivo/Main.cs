@@ -132,30 +132,28 @@ namespace BoletoNet.Arquivo
         public void GeraDadosBanrisul()
         {
             var conta = new ContaBancaria();
-            conta.Agencia = "051";
-            conta.DigitoAgencia = "2";
-            conta.Conta = "13000";
-            conta.DigitoConta = "3";
-            //
+            conta.Agencia = "0510";
+            conta.DigitoAgencia = "02";
+            conta.Conta = "0013000";
+            conta.DigitoConta = "30";
+            
             var c = new Cedente();
             c.ContaBancaria = conta;
-            c.CpfCnpj = "00.000.000/0000-00";
+            c.CpfCnpj = "12.345.678/0001-11";
             c.Nome = "Empresa de Atacado";
-            //Na carteira 198 o código do Cedente é a conta bancária
-            c.Codigo = "513035600299";//No Banrisul, esse código está no manual como 12 caracteres, por eu(sidneiklein) isso tive que alterar o tipo de int para string;
+            c.Codigo = "3560029";
             c.Convenio = 124522;
-            //
+            
             var b = new Boleto();
             b.Cedente = c;
-            //
+            b.ContaBancaria = conta;
             b.DataProcessamento = DateTime.Now;
             b.DataVencimento = DateTime.Now.AddDays(15);
             b.ValorBoleto = Convert.ToDecimal(2469.69);
             b.Carteira = "1";
-            b.VariacaoCarteira = "02";
-            b.NossoNumero = string.Empty; //"92082835"; //** Para o "Remessa.TipoDocumento = "06", não poderá ter NossoNúmero Gerado!
+            b.NossoNumero = "92082835";
             b.NumeroDocumento = "1008073";
-            //
+            
             b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
             b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
             b.Sacado.Endereco.Bairro = "Testando";
@@ -163,17 +161,21 @@ namespace BoletoNet.Arquivo
             b.Sacado.Endereco.Cep = "70000000";
             b.Sacado.Endereco.Uf = "RS";
 
-            var item1 = new Instrucao_Banrisul(9, null, 5, 0);
-            b.Instrucoes.Add(item1);
-            //b.Instrucoes.Add(item2);
+            var item = new Instrucao_Banrisul(18, null, 10, 3.1m);
+            b.Instrucoes.Add(item);
+
             b.Banco = new Banco(041);
 
             #region Dados para Remessa:
-            b.Remessa = new Remessa();
-            b.Remessa.TipoDocumento = "06"; //06 - COBRANÇA ESCRITURAL
+
+            b.EspecieDocumento = new EspecieDocumento(41, "01");
+            b.Remessa = new Remessa
+            {
+                CodigoOcorrencia = "01",
+            };
+
             #endregion
 
-            //
             var boletos = new Boletos();
             boletos.Add(b);
 

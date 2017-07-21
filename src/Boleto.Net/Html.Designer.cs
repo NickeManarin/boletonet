@@ -619,7 +619,7 @@ namespace BoletoNet {
         /// <summary>
         ///   Looks up a localized string similar to &lt;table class=&quot;w666&quot;&gt;
         ///    &lt;tr class=&quot;ct h13&quot;&gt;
-        ///        &lt;td class=&quot;w659&quot;&gt;Beneficiário Endereço / Sacador Avalista: @AVALISTA&lt;/td&gt;
+        ///        &lt;td class=&quot;w659&quot;&gt;Beneficiário Endereço @AVALISTA&lt;/td&gt;
         ///    &lt;/tr&gt;
         ///    &lt;tr class=&quot;cp h12 rBb&quot;&gt;
         ///        &lt;td class=&quot;At&quot;&gt;@ENDERECOCEDENTE&lt;/td&gt;
@@ -743,7 +743,7 @@ namespace BoletoNet {
         ///        &lt;td class=&quot;w180 Ar&quot;&gt;Autenticação mecânica&lt;/td&gt;
         ///    &lt;/tr&gt;
         ///    &lt;tr class=&quot;cpN h12&quot;&gt;
-        ///        &lt;td class=&quot;pL6 it&quot;&gt;@INSTRUCOES&lt;/td&gt;
+        ///        &lt;td class=&quot;pL6 it&quot;&gt;@INSTRUCOES@SACBANRISUL&lt;/td&gt;
         ///        &lt;td class=&quot;pL6 Ar&quot;&gt;@AUTENTICACAOMECANICA&lt;/td&gt;
         ///    &lt;/tr&gt;
         ///&lt;/table&gt;.

@@ -46,7 +46,8 @@ namespace BoletoNet
         public override void ValidaBoleto(Boleto boleto)
         {
             if (string.IsNullOrEmpty(boleto.Carteira))
-                throw new NotImplementedException("Carteira não informada. Utilize a carteira 11, 16, 17, 17-019, 17-027, 18, 18-019, 18-027, 18-035, 18-140, 17-159, 17-140, 17-067 ou 31.");
+                throw new NotImplementedException("Carteira não informada. Utilize a carteira 11, 16, 17, 17-019, 17-027, 18, " +
+                                                  "18-019, 18-027, 18-035, 18-140, 17-159, 17-140, 17-067 ou 31.");
 
             //Verifica as carteiras implementadas
             if (!boleto.Carteira.Equals("11") &
@@ -66,7 +67,8 @@ namespace BoletoNet
                 !boleto.Carteira.Equals("18-140") &
                 !boleto.Carteira.Equals("31"))
 
-                throw new NotImplementedException("Carteira não informada. Utilize a carteira 11, 16, 17, 17-019, 17-027, 18, 18-019, 18-027, 18-035, 18-140, 17-159, 17-140, 17-067 ou 31.");
+                throw new NotImplementedException("Carteira não informada. Utilize a carteira 11, 16, 17, 17-019, 17-027, 18, 18-019, 18-027, " +
+                                                  "18-035, 18-140, 17-159, 17-140, 17-067 ou 31.");
 
             //Verifica se o nosso número é válido
             if (Utils.ToString(boleto.NossoNumero) == string.Empty)
@@ -144,6 +146,7 @@ namespace BoletoNet
             #endregion Carteira 17
 
             #region Carteira 17-019, 17-067 e 17-167
+
             //Carteira 17, com variação 019
             if (boleto.Carteira.Equals("17-019") || boleto.Carteira.Equals("17-067") || boleto.Carteira.Equals("17-167"))
             {
@@ -158,6 +161,7 @@ namespace BoletoNet
 
                     boleto.NossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 10));
                 }
+
                 /*
                  * Convênio de 6 posições
                  * Nosso Número com 11 posições
@@ -170,23 +174,27 @@ namespace BoletoNet
 
                     boleto.NossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 5));
                 }
+
                 /*
-                  * Convênio de 4 posições
-                  * Nosso Número com 11 posições
-                  */
+                 * Convênio de 4 posições
+                 * Nosso Número com 11 posições
+                 */
                 else if (boleto.Cedente.Convenio.ToString().Length == 4)
                 {
                     if (boleto.NossoNumero.Length > 7)
-                        throw new NotImplementedException(string.Format("Para a carteira {0}, a quantidade máxima são de 7 de posições para o nosso número [{1}]", boleto.Carteira, boleto.NossoNumero));
+                        throw new NotImplementedException(string.Format("Para a carteira {0}, a quantidade máxima são de 7 de posições para o nosso número [{1}]", 
+                            boleto.Carteira, boleto.NossoNumero));
 
                     boleto.NossoNumero = string.Format("{0}{1}", boleto.Cedente.Convenio, Utils.FormatCode(boleto.NossoNumero, 7));
                 }
                 else
                     boleto.NossoNumero = Utils.FormatCode(boleto.NossoNumero, 11);
             }
-            #endregion Carteira 17-019, 17-067 e 17-167
+
+            #endregion
 
             #region Carteira 17-027
+
             //Carteira 17, com variação 027, 129 e 140
             if (boleto.Carteira.Equals("17-027") || boleto.Carteira.Equals("17-159") || boleto.Carteira.Equals("17-140"))
             {
@@ -230,6 +238,7 @@ namespace BoletoNet
             #endregion Carteira 17-027
 
             #region Carteira 17-035
+
             //Carteira 17, com variação 035
             if (boleto.Carteira.Equals("17-035"))
             {
@@ -286,6 +295,7 @@ namespace BoletoNet
             #endregion Carteira 18
 
             #region Carteira 18-019
+
             //Carteira 18, com variação 019
             if (boleto.Carteira.Equals("18-019"))
             {
@@ -586,6 +596,7 @@ namespace BoletoNet
 
             //Criada por AFK
             #region Carteira 11
+
             if (boleto.Carteira.Equals("11"))
             {
                 if (boleto.Cedente.Convenio.ToString().Length == 6)
@@ -613,9 +624,11 @@ namespace BoletoNet
                         boleto.Carteira);
                 }
             }
+
             #endregion Carteira 11
 
             #region Carteira 16
+
             if (boleto.Carteira.Equals("16"))
             {
                 if (boleto.Cedente.Convenio.ToString().Length == 6 && boleto.TipoModalidade.Equals("21"))
@@ -643,7 +656,8 @@ namespace BoletoNet
                         boleto.Carteira);
                 }
             }
-            #endregion Carteira 16
+
+            #endregion
 
             #region Carteira 17
             if (boleto.Carteira.Equals("17"))
@@ -808,8 +822,8 @@ namespace BoletoNet
             }
             #endregion Carteira 17-027, 17-140 e 17-159
 
-
             #region Carteira 17-035
+
             if (boleto.Carteira.Equals("17-035"))
             {
                 if (boleto.Cedente.Convenio.ToString().Length == 7)
@@ -868,15 +882,20 @@ namespace BoletoNet
                     throw new Exception("Código do convênio informado é inválido. O código do convenio deve ter 4, 6, ou 7 dígitos.");
                 }
             }
-            #endregion Carteira 17-035
+
+            #endregion
+            
             #region Carteira 18
+
             if (boleto.Carteira.Equals("18"))
             {
                 boleto.BancoCarteira.FormataCodigoBarra(boleto);
             }
+            
             #endregion Carteira 18
 
             #region Carteira 18-019
+
             if (boleto.Carteira.Equals("18-019"))
             {
                 if (boleto.Cedente.Convenio.ToString().Length == 7)
@@ -946,10 +965,12 @@ namespace BoletoNet
                 }
 
             }
+
             #endregion Carteira 18-019
 
             //Para atender o cliente Fiemg foi adptado no código na variação 18-027 as variações 18-035 e 18-140
             #region Carteira 18-027
+
             if (boleto.Carteira.Equals("18-027"))
             {
                 if (boleto.Cedente.Convenio.ToString().Length == 7)
@@ -1018,9 +1039,11 @@ namespace BoletoNet
                     throw new Exception("Código do convênio informado é inválido. O código do convenio deve ter 4, 6, ou 7 dígitos.");
                 }
             }
-            #endregion Carteira 18-027
+
+            #endregion
 
             #region Carteira 18-035
+
             if (boleto.Carteira.Equals("18-035"))
             {
                 if (boleto.Cedente.Convenio.ToString().Length == 7)
@@ -1089,9 +1112,11 @@ namespace BoletoNet
                     throw new Exception("Código do convênio informado é inválido. O código do convenio deve ter 4, 6, ou 7 dígitos.");
                 }
             }
-            #endregion Carteira 18-035
+
+            #endregion
 
             #region Carteira 18-140
+
             if (boleto.Carteira.Equals("18-140"))
             {
                 if (boleto.Cedente.Convenio.ToString().Length == 7)
@@ -1160,9 +1185,11 @@ namespace BoletoNet
                     throw new Exception("Código do convênio informado é inválido. O código do convenio deve ter 4, 6, ou 7 dígitos.");
                 }
             }
-            #endregion Carteira 18-140
+
+            #endregion
 
             #region Carteira 31
+
             if (boleto.Carteira.Equals("31"))
             {
                 boleto.CodigoBarra.Codigo = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}",
@@ -1175,6 +1202,7 @@ namespace BoletoNet
                     boleto.Cedente.ContaBancaria.Conta,
                     boleto.Carteira);
             }
+
             #endregion Carteira 31
 
             _dacBoleto = Mod11(boleto.CodigoBarra.Codigo, 9);
@@ -1201,6 +1229,7 @@ namespace BoletoNet
             digitoMod = Mod10(campo1);
             campo1 = campo1 + digitoMod;
             campo1 = Strings.Mid(campo1, 1, 5) + "." + Strings.Mid(campo1, 6, 5);
+            
             /*
             Campo 2 (DDDDD.DDDDDY)
             D = Posição 25 a 34 do código de barras
@@ -1210,8 +1239,7 @@ namespace BoletoNet
             digitoMod = Mod10(campo2);
             campo2 = campo2 + digitoMod;
             campo2 = Strings.Mid(campo2, 1, 5) + "." + Strings.Mid(campo2, 6, 6);
-
-
+            
             /*
             Campo 3 (EEEEE.EEEEEZ)
             E = Posição 35 a 44 do código de barras
@@ -1330,23 +1358,23 @@ namespace BoletoNet
         {
             try
             {
-                var _header = " ";
+                var header = " ";
 
                 base.GerarHeaderRemessa(numeroConvenio, cedente, tipoArquivo, numeroArquivoRemessa);
 
                 switch (tipoArquivo)
                 {
                     case TipoArquivo.Cnab240:
-                        _header = GerarHeaderRemessaCnab240(cedente, numeroArquivoRemessa);
+                        header = GerarHeaderRemessaCnab240(cedente, numeroArquivoRemessa);
                         break;
                     case TipoArquivo.Cnab400:
-                        _header = GerarHeaderRemessaCnab400(cedente, numeroArquivoRemessa);
+                        header = GerarHeaderRemessaCnab400(cedente, numeroArquivoRemessa);
                         break;
                     case TipoArquivo.Outro:
                         throw new Exception("Tipo de arquivo inexistente.");
                 }
 
-                return _header;
+                return header;
 
             }
             catch (Exception ex)
@@ -1362,7 +1390,7 @@ namespace BoletoNet
         {
             var vRetorno = true;
             var vMsg = string.Empty;
-            //            
+                     
             switch (tipoArquivo)
             {
                 case TipoArquivo.Cnab240:
@@ -1374,7 +1402,7 @@ namespace BoletoNet
                 case TipoArquivo.Outro:
                     throw new Exception("Tipo de arquivo inexistente.");
             }
-            //
+            
             mensagem = vMsg;
             return vRetorno;
         }
@@ -1682,11 +1710,10 @@ namespace BoletoNet
                 segmentoR += Utils.FitStringLength(boleto.DataMulta.ToString("ddMMyyyy"), 8, 8, '0', 0, true, true, false);
 
                 // Multa em Percentual (%), Valor (R$)
-                if (boleto.PercMulta > 0) {
+                if (boleto.PercMulta > 0)
                     segmentoR += Utils.FitStringLength(boleto.PercMulta.ApenasNumeros(), 15, 15, '0', 0, true, true, true);
-                } else {
+                else
                     segmentoR += Utils.FitStringLength(boleto.ValorMulta.ApenasNumeros(), 15, 15, '0', 0, true, true, true);
-                }
 
                 segmentoR += brancos110;
                 segmentoR += "0000000000000000"; //16 zeros
@@ -1748,12 +1775,13 @@ namespace BoletoNet
                 trailer += "5";
                 trailer += Utils.FormatCode("", " ", 9);
 
-                #region Pega o Numero de Registros + 1(HeaderLote) + 1(TrailerLote)
+                #region Pega o número de registros + 1 (HeaderLote) + 1 (TrailerLote)
+
                 var vQtdeRegLote = numeroRegistro; // (numeroRegistro + 2);
                 trailer += Utils.FitStringLength(vQtdeRegLote.ToString(), 6, 6, '0', 0, true, true, true);  //posição 18 até 23   (6) - Quantidade de Registros no Lote
-                //deve considerar 1 registro a mais - Header
+                //Deve considerar 1 registro a mais - Header
+                
                 #endregion
-
 
                 trailer += Utils.FormatCode("", "0", 92, true);
                 trailer += Utils.FormatCode("", " ", 125);
@@ -2058,22 +2086,24 @@ namespace BoletoNet
         internal static string Mod11BancoBrasil(string value)
         {
             #region Trecho do manual DVMD11.doc
+
             /* 
-            Multiplicar cada algarismo que compõe o número pelo seu respectivo multiplicador (PESO).
-            Os multiplicadores(PESOS) variam de 9 a 2.
-            O primeiro dígito da direita para a esquerda deverá ser multiplicado por 9, o segundo por 8 e assim sucessivamente.
-            O resultados das multiplicações devem ser somados:
-            72+35+24+27+4+9+8=179
-            O total da soma deverá ser dividido por 11:
-            179 / 11=16
-            RESTO=3
+                Multiplicar cada algarismo que compõe o número pelo seu respectivo multiplicador (PESO).
+                Os multiplicadores(PESOS) variam de 9 a 2.
+                O primeiro dígito da direita para a esquerda deverá ser multiplicado por 9, o segundo por 8 e assim sucessivamente.
+                O resultados das multiplicações devem ser somados:
+                72+35+24+27+4+9+8=179
+                O total da soma deverá ser dividido por 11:
+                179 / 11=16
+                RESTO=3
 
-            Se o resto da divisão for igual a 10 o D.V. será igual a X. 
-            Se o resto da divisão for igual a 0 o D.V. será igual a 0.
-            Se o resto for menor que 10, o D.V.  será igual ao resto.
+                Se o resto da divisão for igual a 10 o D.V. será igual a X. 
+                Se o resto da divisão for igual a 0 o D.V. será igual a 0.
+                Se o resto for menor que 10, o D.V.  será igual ao resto.
 
-            No exemplo acima, o dígito verificador será igual a 3
+                No exemplo acima, o dígito verificador será igual a 3
             */
+
             #endregion
 
             /* d - Dígito
@@ -2095,7 +2125,7 @@ namespace BoletoNet
                     p--;
             }
 
-            var r = (s % 11);
+            var r = s % 11;
             if (r == 10)
                 d = "X";
             else if (r == 0)
@@ -2114,21 +2144,25 @@ namespace BoletoNet
             var vMsg = string.Empty;
             
             #region Pré Validações
+
             if (banco == null)
             {
                 vMsg += string.Concat("Remessa: O Banco é Obrigatório!", Environment.NewLine);
                 vRetorno = false;
             }
+
             if (cedente == null)
             {
                 vMsg += string.Concat("Remessa: O Cedente/Beneficiário é Obrigatório!", Environment.NewLine);
                 vRetorno = false;
             }
+
             if (boletos == null || boletos.Count.Equals(0))
             {
                 vMsg += string.Concat("Remessa: Deverá existir ao menos 1 boleto para geração da remessa!", Environment.NewLine);
                 vRetorno = false;
             }
+
             #endregion
             
             foreach (var boleto in boletos)
@@ -2165,25 +2199,25 @@ namespace BoletoNet
             try
             {
                 var reg = new RegistroEdi();
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0001, 001, 0, "0", '0'));                                   //001-001
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0002, 001, 0, "1", '0'));                                   //002-002
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0003, 007, 0, "REMESSA", ' '));                             //003-009 "TESTE"
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0010, 002, 0, "01", '0'));                                  //010-011
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0012, 008, 0, "COBRANCA", ' '));                            //012-019
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0020, 007, 0, string.Empty, ' '));                          //020-026
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0027, 004, 0, cedente.ContaBancaria.Agencia, '0'));         //027-030
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0031, 001, 0, cedente.ContaBancaria.DigitoAgencia, ' '));   //031-031
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0032, 008, 0, cedente.ContaBancaria.Conta, '0'));           //032-039
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0040, 001, 0, cedente.ContaBancaria.DigitoConta, ' '));     //040-040
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0041, 006, 0, "000000", '0'));                              //041-046
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0047, 030, 0, cedente.Nome.ToUpper(), ' '));                //047-076
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0077, 018, 0, "001BANCODOBRASIL", ' '));                    //077-094
-                reg.CamposEdi.Add(new CampoEdi(Dado.DataDDMMAA___________, 0095, 006, 0, DateTime.Now, ' '));                          //095-100
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0101, 007, 0, numeroArquivoRemessa, '0'));                  //101-107
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0108, 022, 0, string.Empty, ' '));                          //108-129
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0130, 007, 0, "0", '0'));                                   //130-136 Convênio líder, apenas adicionado quando existe mais de um convênio declarado nessa remessa. cedente.Convenio
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0137, 258, 0, string.Empty, ' '));                          //137-394
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0395, 006, 0, "000001", ' '));                              //395-400
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0001, 001, 0, "0", '0'));                                 //001-001
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0002, 001, 0, "1", '0'));                                 //002-002
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0003, 007, 0, "REMESSA", ' '));                           //003-009 "TESTE"
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0010, 002, 0, "01", '0'));                                //010-011
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0012, 008, 0, "COBRANCA", ' '));                          //012-019
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0020, 007, 0, string.Empty, ' '));                        //020-026
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0027, 004, 0, cedente.ContaBancaria.Agencia, '0'));       //027-030
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0031, 001, 0, cedente.ContaBancaria.DigitoAgencia, ' ')); //031-031
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0032, 008, 0, cedente.ContaBancaria.Conta, '0'));         //032-039
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0040, 001, 0, cedente.ContaBancaria.DigitoConta, ' '));   //040-040
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0041, 006, 0, "000000", '0'));                            //041-046
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0047, 030, 0, cedente.Nome.ToUpper(), ' '));              //047-076
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0077, 018, 0, "001BANCODOBRASIL", ' '));                  //077-094
+                reg.CamposEdi.Add(new CampoEdi(Dado.DataDDMMAA___________, 0095, 006, 0, DateTime.Now, ' '));                        //095-100
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0101, 007, 0, numeroArquivoRemessa, '0'));                //101-107
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0108, 022, 0, string.Empty, ' '));                        //108-129
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0130, 007, 0, "0", '0'));                                 //130-136 Convênio líder, apenas adicionado quando existe mais de um convênio declarado nessa remessa. cedente.Convenio
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0137, 258, 0, string.Empty, ' '));                        //137-394
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0395, 006, 0, "000001", ' '));                            //395-400
                 
                 reg.CodificarLinha();
                 
@@ -2284,6 +2318,7 @@ namespace BoletoNet
                 if (boleto.Remessa.CodigoOcorrencia.Equals("35") || boleto.Remessa.CodigoOcorrencia.Equals("36"))   //“35” – Cobrar Multa – ou “36” - Dispensar Multa 
                 {
                     #region Código de Multa e Valor/Percentual Multa
+
                     var vCodigoMulta = "9"; //“9” = Dispensar Multa
                     decimal vMulta = 0;
 
@@ -2297,17 +2332,20 @@ namespace BoletoNet
                         vCodigoMulta = "2";   //“2” = Percentual
                         vMulta = boleto.PercMulta;
                     }
+                    
                     #endregion
 
                     #region DataVencimento
+
                     var vDataVencimento = "000000";
                     if (!boleto.DataVencimento.Equals(DateTime.MinValue))
                         vDataVencimento = boleto.DataVencimento.ToString("ddMMyy");
+                    
                     #endregion
 
-                    reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0174, 001, 0, vCodigoMulta, '0'));                          //174 a 174      Código da Multa 1=Valor 
-                    reg.CamposEdi.Add(new CampoEdi(Dado.DataDDMMAA___________, 0175, 006, 0, vDataVencimento, ' '));                       //175 a 180      Data de inicio para Cobrança da Multa 
-                    reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0180, 013, 2, vMulta, '0'));                                //181 a 192      Valor de Multa 
+                    reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0174, 001, 0, vCodigoMulta, '0'));           //174 a 174      Código da Multa 1=Valor 
+                    reg.CamposEdi.Add(new CampoEdi(Dado.DataDDMMAA___________, 0175, 006, 0, vDataVencimento, ' '));        //175 a 180      Data de inicio para Cobrança da Multa 
+                    reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0180, 013, 2, vMulta, '0'));                 //181 a 192      Valor de Multa 
                 }
                 else
                 {
@@ -2319,25 +2357,27 @@ namespace BoletoNet
                     
                     #endregion
 
-                    reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0174, 006, 0, vDataDesconto, '0'));                             //174-179                
-                    reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0180, 013, 2, boleto.ValorDesconto, '0'));                      //180-192                
-                    reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0193, 013, 2, boleto.Iof, '0'));                                //193-205
+                    reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0174, 006, 0, vDataDesconto, '0'));           //174-179                
+                    reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0180, 013, 2, boleto.ValorDesconto, '0'));    //180-192                
+                    reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0193, 013, 2, boleto.Iof, '0'));              //193-205
                 }
 
                 #endregion
                 
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0206, 013, 2, boleto.Abatimento, '0'));                         //206-218
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0206, 013, 2, boleto.Abatimento, '0'));           //206-218
                 
                 #region Regra Tipo de Inscrição Sacado
+
                 var vCpfCnpjSac = "00";
                 if (boleto.Sacado.CpfCnpj.Length.Equals(11)) vCpfCnpjSac = "01"; //Cpf é sempre 11;
                 else if (boleto.Sacado.CpfCnpj.Length.Equals(14)) vCpfCnpjSac = "02"; //Cnpj é sempre 14;
+                
                 #endregion
 
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0219, 002, 0, vCpfCnpjSac, '0'));                               //219-220
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0221, 014, 0, boleto.Sacado.CpfCnpj, '0'));                     //221-234
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0235, 037, 0, boleto.Sacado.Nome.ToUpper(), ' '));              //235-271
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0272, 003, 0, string.Empty, ' '));                              //272-274
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0219, 002, 0, vCpfCnpjSac, '0'));                    //219-220
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0221, 014, 0, boleto.Sacado.CpfCnpj, '0'));          //221-234
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0235, 037, 0, boleto.Sacado.Nome.ToUpper(), ' '));   //235-271
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0272, 003, 0, string.Empty, ' '));                   //272-274
 
 
                 var enderecoSacadoComNumero = boleto.Sacado.Endereco.End;

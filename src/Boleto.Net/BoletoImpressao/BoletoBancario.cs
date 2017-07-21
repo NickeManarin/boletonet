@@ -393,7 +393,15 @@ namespace BoletoNet
             //_instrucoesHtml = string.Empty;
             foreach (var instrucao in instrucoes)
             {
-                _instrucoesHtml += string.Format("{0}<br />", instrucao.Descricao);
+                var pieces = (instrucao.Descricao ?? "").Split(new []{';'}, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var piece in pieces)
+                {
+                    var aux = ChunksUpto(piece, 100);
+
+                    foreach (var aux1 in aux)
+                        _instrucoesHtml += string.Format("{0}<br />", aux1);
+                }
 
                 //Adiciona a instrução as instruções disponíveis no Boleto
                 Instrucoes.Add(instrucao);
@@ -579,21 +587,21 @@ namespace BoletoNet
                 switch (Boleto.Banco.Codigo)
                 {
                     case 33:
-                        agenciaCodigoCedente = string.Format("{0}-{1}/{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, 
+                        agenciaCodigoCedente = string.Format("{0}-{1}/{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia,
                             Utils.FormatCode(Cedente.Codigo, 6));
 
                         if (string.IsNullOrEmpty(Cedente.ContaBancaria.DigitoAgencia))
                             agenciaCodigoCedente = string.Format("{0}/{1}", Cedente.ContaBancaria.Agencia, Utils.FormatCode(Cedente.Codigo, 6));
                         break;
                     case 41:
-                        agenciaCodigoCedente = string.Format("{0}.{1}/{2}.{3}.{4}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, 
+                        agenciaCodigoCedente = string.Format("{0}.{1}/{2}.{3}.{4}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia,
                             Cedente.ContaBancaria.Conta.Substring(0, 6), Cedente.ContaBancaria.Conta.Substring(6, 1), Cedente.ContaBancaria.DigitoConta);
                         break;
                     case 399:
                         agenciaCodigoCedente = string.Format("{0}/{1}", Cedente.ContaBancaria.Agencia, Utils.FormatCode(Cedente.Codigo, 7));
                         break;
                     case 748:
-                        agenciaCodigoCedente = string.Format("{0}.{1}.{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, 
+                        agenciaCodigoCedente = string.Format("{0}.{1}.{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia,
                             Utils.FormatCode(Cedente.ContaBancaria.Conta, 5));
                         break;
                     default:
@@ -640,8 +648,8 @@ namespace BoletoNet
                 //apenas para a ficha de compensação.
                 //Como a variável não existirá se não forem as carteiras "17-019", "17-027", "17-019", "17-035", "17-140", "17-159", "17-067", 
                 //"17-167" e "18-019", não foi colocado o [if].
-                .Replace("@NOSSONUMEROBB", Boleto.Banco.Codigo == 1 & (Boleto.Carteira.Equals("17-019") | Boleto.Carteira.Equals("17-027") | 
-                    Boleto.Carteira.Equals("17-035") | Boleto.Carteira.Equals("18-019") | Boleto.Carteira.Equals("17-140") | Boleto.Carteira.Equals("17-159") | 
+                .Replace("@NOSSONUMEROBB", Boleto.Banco.Codigo == 1 & (Boleto.Carteira.Equals("17-019") | Boleto.Carteira.Equals("17-027") |
+                    Boleto.Carteira.Equals("17-035") | Boleto.Carteira.Equals("18-019") | Boleto.Carteira.Equals("17-140") | Boleto.Carteira.Equals("17-159") |
                     Boleto.Carteira.Equals("17-067") | Boleto.Carteira.Equals("17-167")) ? Boleto.NossoNumero.Substring(3) : string.Empty)
 
             #endregion
@@ -669,8 +677,9 @@ namespace BoletoNet
                 .Replace("@IMAGEMCODIGOBARRA", imagemCodigoBarras)
                 .Replace("@ACEITE", Boleto.Aceite).ToString()
                 .Replace("@ENDERECOCEDENTE", MostrarEnderecoCedente ? enderecoCedente : "")
-                .Replace("@AVALISTA", string.Format("{0} - {1}", Boleto.Avalista != null ? Boleto.Avalista.Nome : "", Boleto.Avalista != null ? Boleto.Avalista.CpfCnpj : ""))
-                .Replace("Ar\">R$", RemoveSimboloMoedaValorDocumento ? "Ar\">" : "Ar\">R$");
+                .Replace("@AVALISTA", string.Format("{0} - {1}", Boleto.Avalista != null ? "/ Sacador Avalista: " + Boleto.Avalista.Nome : "", Boleto.Avalista != null ? Boleto.Avalista.CpfCnpj : ""))
+                .Replace("Ar\">R$", RemoveSimboloMoedaValorDocumento ? "Ar\">" : "Ar\">R$")
+                .Replace("@SACBANRISUL", Boleto.Banco.Codigo == 41 ? "</br>SAC 0800 646 1515 / OUVIDORIA BANRISUL 0800 644 2200" : "");
         }
 
         private string FormataDescricaoCarteira()
@@ -707,6 +716,12 @@ namespace BoletoNet
                 throw new Exception("O código da carteira não foi implementado.");
 
             return string.Format("{0} - {1}", Boleto.Carteira, descricaoCarteira);
+        }
+
+        private static IEnumerable<string> ChunksUpto(string str, int maxChunkSize)
+        {
+            for (int i = 0; i < str.Length; i += maxChunkSize)
+                yield return str.Substring(i, Math.Min(maxChunkSize, str.Length - i));
         }
 
         #endregion Html
@@ -792,12 +807,12 @@ namespace BoletoNet
             return GeraHtmlDeVariosBoletosParaEmail(null, arrayDeBoletos);
         }
 
-        /// <summary>
-        /// Junta varios boletos em uma unica AlternateView, para todos serem mandados juntos no mesmo email
-        /// </summary>
-        /// <param name="textoNoComecoDoEmail">Texto em HTML a ser adicionado no comeco do email</param>
-        /// <param name="arrayDeBoletos">Array contendo os boletos a serem mesclados</param>
-        /// <returns>AlternateView com os dados de todos os boleto.</returns>
+        ///<summary>
+        ///Junta vários boletos em uma unica AlternateView, para todos serem mandados juntos no mesmo email.
+        ///</summary>
+        ///<param name="textoNoComecoDoEmail">Texto em HTML a ser adicionado no comeco do email.</param>
+        ///<param name="arrayDeBoletos">Array contendo os boletos a serem mesclados.</param>
+        ///<returns>AlternateView com os dados de todos os boleto.</returns>
         public static AlternateView GeraHtmlDeVariosBoletosParaEmail(string textoNoComecoDoEmail, BoletoBancario[] arrayDeBoletos)
         {
             var corpoDoEmail = new StringBuilder();
@@ -808,32 +823,29 @@ namespace BoletoNet
             if (!string.IsNullOrEmpty(textoNoComecoDoEmail))
                 corpoDoEmail.Append(textoNoComecoDoEmail);
 
-            foreach (var umBoleto in arrayDeBoletos)
+            foreach (var umBoleto in arrayDeBoletos.Where(umBoleto => umBoleto != null))
             {
-                if (umBoleto != null)
-                {
-                    LinkedResource lrImagemLogo;
-                    LinkedResource lrImagemBarra;
-                    LinkedResource lrImagemCodigoBarra;
-                    umBoleto.GeraGraficosParaEmailOffLine(out lrImagemLogo, out lrImagemBarra, out lrImagemCodigoBarra);
+                LinkedResource lrImagemLogo;
+                LinkedResource lrImagemBarra;
+                LinkedResource lrImagemCodigoBarra;
+                umBoleto.GeraGraficosParaEmailOffLine(out lrImagemLogo, out lrImagemBarra, out lrImagemCodigoBarra);
 
-                    var theOutput = umBoleto.MontaHtml("cid:" + lrImagemLogo.ContentId, "cid:" + lrImagemBarra.ContentId,
-                        "<img src=\"cid:" + lrImagemCodigoBarra.ContentId + "\" alt=\"Código de Barras\" />");
+                var theOutput = umBoleto.MontaHtml("cid:" + lrImagemLogo.ContentId, "cid:" + lrImagemBarra.ContentId,
+                    "<img src=\"cid:" + lrImagemCodigoBarra.ContentId + "\" alt=\"Código de Barras\" />");
 
-                    corpoDoEmail.Append(theOutput);
+                corpoDoEmail.Append(theOutput);
 
-                    linkedResources.Add(lrImagemLogo);
-                    linkedResources.Add(lrImagemBarra);
-                    linkedResources.Add(lrImagemCodigoBarra);
-                }
+                linkedResources.Add(lrImagemLogo);
+                linkedResources.Add(lrImagemBarra);
+                linkedResources.Add(lrImagemCodigoBarra);
             }
+
             HtmlOfflineFooter(corpoDoEmail);
 
             var av = AlternateView.CreateAlternateViewFromString(corpoDoEmail.ToString(), Encoding.Default, "text/html");
+
             foreach (var theResource in linkedResources)
-            {
                 av.LinkedResources.Add(theResource);
-            }
 
             return av;
         }
@@ -941,6 +953,7 @@ namespace BoletoNet
             if (!File.Exists(fnLogo))
             {
                 var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("BoletoNet.Imagens." + Utils.FormatCode(_ibanco.Codigo.ToString(), 3) + ".jpg");
+
                 using (Stream file = File.Create(fnLogo))
                 {
                     CopiarStream(stream, file);
@@ -948,6 +961,7 @@ namespace BoletoNet
             }
 
             var fnBarra = fileName + @"BoletoNetBarra.gif";
+
             if (!File.Exists(fnBarra))
             {
                 var imgConverter = new ImageConverter();
@@ -1007,6 +1021,7 @@ namespace BoletoNet
                 //Verifica se o usuário usou barras no início e no final da url
                 if (url.Substring(url.Length - 1, 1) != "/")
                     url = url + "/";
+
                 if (url.Substring(0, 1) != "/")
                     url = url + "/";
                 //Mapeia o caminho físico dos arquivos
@@ -1033,10 +1048,9 @@ namespace BoletoNet
             if (!File.Exists(fnLogo))
             {
                 var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("BoletoNet.Imagens." + Utils.FormatCode(_ibanco.Codigo.ToString(), 3) + ".jpg");
+
                 using (Stream file = File.Create(fnLogo))
-                {
                     CopiarStream(stream, file);
-                }
             }
 
             //Prepara o arquivo da barra para ser salvo

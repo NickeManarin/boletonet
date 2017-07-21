@@ -19,14 +19,13 @@ namespace BoletoNet
 
     public class Carteira_BancoBrasil: AbstractCarteira, ICarteira
     {
-
         #region Construtores 
 
 		public Carteira_BancoBrasil()
 		{
 			try
 			{
-                this.Banco = new Banco(1);
+                Banco = new Banco(1);
 			}
 			catch (Exception ex)
 			{
@@ -38,7 +37,7 @@ namespace BoletoNet
         {
             try
             {
-                this.carregar(carteira);
+                carregar(carteira);
             }
             catch (Exception ex)
             {
@@ -54,45 +53,45 @@ namespace BoletoNet
         {
             try
             {
-                this.Banco = new Banco_Brasil();
+                Banco = new Banco_Brasil();
 
                 switch ((EnumCarteiras_BancoBrasil)carteira)
                 {
                     case EnumCarteiras_BancoBrasil.CobrancaSimples:
-                        this.NumeroCarteira = (int)EnumCarteiras_BancoBrasil.CobrancaSimples;
-                        this.Codigo = "S";
-                        this.Tipo = "S";
-                        this.Descricao = "Cobrança simples";
+                        NumeroCarteira = (int)EnumCarteiras_BancoBrasil.CobrancaSimples;
+                        Codigo = "S";
+                        Tipo = "S";
+                        Descricao = "Cobrança simples";
                         break;
                     case EnumCarteiras_BancoBrasil.CobrancaVinculada:
-                        this.NumeroCarteira = (int)EnumCarteiras_BancoBrasil.CobrancaVinculada;
-                        this.Codigo = "S";
-                        this.Tipo = "S";
-                        this.Descricao = "Cobrança vincluada";
+                        NumeroCarteira = (int)EnumCarteiras_BancoBrasil.CobrancaVinculada;
+                        Codigo = "S";
+                        Tipo = "S";
+                        Descricao = "Cobrança vincluada";
                         break;
                     case EnumCarteiras_BancoBrasil.CobrancaCaucionada:
-                        this.NumeroCarteira = (int)EnumCarteiras_BancoBrasil.CobrancaCaucionada;
-                        this.Codigo = "S";
-                        this.Tipo = "S";
-                        this.Descricao = "Cobrança caucionada";
+                        NumeroCarteira = (int)EnumCarteiras_BancoBrasil.CobrancaCaucionada;
+                        Codigo = "S";
+                        Tipo = "S";
+                        Descricao = "Cobrança caucionada";
                         break;
                     case EnumCarteiras_BancoBrasil.CobrancaDescontada:
-                        this.NumeroCarteira = (int)EnumCarteiras_BancoBrasil.CobrancaDescontada;
-                        this.Codigo = "S";
-                        this.Tipo = "S";
-                        this.Descricao = "Cobrança descontada";
+                        NumeroCarteira = (int)EnumCarteiras_BancoBrasil.CobrancaDescontada;
+                        Codigo = "S";
+                        Tipo = "S";
+                        Descricao = "Cobrança descontada";
                         break;
                     case EnumCarteiras_BancoBrasil.CobrançaDiretaEspecialCarteira17:
-                        this.NumeroCarteira = (int)EnumCarteiras_BancoBrasil.CobrançaDiretaEspecialCarteira17;
-                        this.Codigo = "S";
-                        this.Tipo = "S";
-                        this.Descricao = "Cobrança direta especial - Carteira 17";
+                        NumeroCarteira = (int)EnumCarteiras_BancoBrasil.CobrançaDiretaEspecialCarteira17;
+                        Codigo = "S";
+                        Tipo = "S";
+                        Descricao = "Cobrança direta especial - Carteira 17";
                         break;                    
                     default:
-                        this.NumeroCarteira = 0;
-                        this.Codigo = " ";
-                        this.Tipo = " ";
-                        this.Descricao = "( Selecione )";
+                        NumeroCarteira = 0;
+                        Codigo = " ";
+                        Tipo = " ";
+                        Descricao = "( Selecione )";
                         break;
                 }
             }
@@ -136,6 +135,5 @@ namespace BoletoNet
 
 
         #endregion
-
     }
 }

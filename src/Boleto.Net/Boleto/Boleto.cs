@@ -629,7 +629,7 @@ namespace BoletoNet
             // Comentada por duplicidade no nome do banco
             ////this.LocalPagamento += this.Banco.Nome + string.Empty;
 
-		    if (Instrucoes.GroupBy(x => x.Codigo).Any(w => w.Skip(1).Any()))
+		    if (Instrucoes.GroupBy(x => x.Codigo).Any(w => w.Key != 0 && w.Skip(1).Any()))
 		        throw new Exception("Instrução repetida, informe apenas uma vez a instrução que está repetida.");
 
             // Verifica se data do processamento é valida

@@ -6,6 +6,7 @@
         {
             return carteira.Split('-')[0];
         }
+
         public abstract void FormataCodigoBarra(Boleto boleto);
         public abstract void FormataLinhaDigitavel(Boleto boleto);
         public abstract void FormataNossoNumero(Boleto boleto);
