@@ -26,9 +26,9 @@ namespace BoletoNet.Arquivo
 
                 //Valida a Remessa Correspondentes antes de Gerar a mesma...
                 string vMsgRetorno;
-                var vValouOk = arquivo.ValidarArquivoRemessa(cedente.Convenio.ToString(), banco, cedente, boletos, 1, out vMsgRetorno);
+                var sit = arquivo.ValidarArquivoRemessa(cedente.Convenio.ToString(), banco, cedente, boletos, 1, out vMsgRetorno);
 
-                if (!vValouOk)
+                if (!sit)
                 {
                     MessageBox.Show(String.Concat("Foram localizados inconsistências na validação da remessa!", Environment.NewLine, vMsgRetorno),
                         "Teste", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -50,13 +50,13 @@ namespace BoletoNet.Arquivo
         public void GeraArquivoCNAB240(IBanco banco, Cedente cedente, Boletos boletos)
         {
             saveFileDialog.Filter = "Arquivos de Retorno (*.rem)|*.rem|Todos Arquivos (*.*)|*.*";
+
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 var arquivo = new ArquivoRemessa(TipoArquivo.Cnab240);
                 arquivo.GerarArquivoRemessa("1200303001417053", banco, cedente, boletos, saveFileDialog.OpenFile(), 1);
 
-                MessageBox.Show("Arquivo gerado com sucesso!", "Teste",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Arquivo gerado com sucesso!", "Teste", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
         
@@ -178,6 +178,63 @@ namespace BoletoNet.Arquivo
 
             var boletos = new Boletos();
             boletos.Add(b);
+
+            GeraArquivoCNAB400(b.Banco, c, boletos);
+        }
+
+        public void GeraDadosBancoDoBrasil()
+        {
+            var conta = new ContaBancaria();
+            conta.Agencia = "2768";
+            conta.DigitoAgencia = "5";
+            conta.Conta = "51249369";
+            conta.DigitoConta = "3";
+
+            var c = new Cedente();
+            c.ContaBancaria = conta;
+            c.CpfCnpj = "12.345.678/0001-11";
+            c.Nome = "Empresa de Atacado";
+            c.Codigo = "51249369";
+            c.DigitoCedente = 3;
+            c.Convenio = 2650829;
+            
+            var b = new Boleto();
+            b.Cedente = c;
+            b.ContaBancaria = conta;
+            b.DataProcessamento = DateTime.Now;
+            b.DataVencimento = DateTime.Now.AddDays(15);
+            b.ValorBoleto = Convert.ToDecimal(2469.69);
+            b.Carteira = "17";
+            b.VariacaoCarteira = "019";
+            b.NossoNumero = "92082835";
+            b.NumeroDocumento = "1008073";
+
+            b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
+            b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
+            b.Sacado.Endereco.Bairro = "Testando";
+            b.Sacado.Endereco.Cidade = "Testelândia";
+            b.Sacado.Endereco.Cep = "70000000";
+            b.Sacado.Endereco.Uf = "RS";
+
+            var item = new Instrucao_BancoBrasil(82, null, 10, 3.1m);
+            b.Instrucoes.Add(item);
+
+            b.Banco = new Banco(001);
+
+            #region Dados para Remessa:
+
+            b.EspecieDocumento = new EspecieDocumento(1, "01");
+            b.Remessa = new Remessa
+            {
+                CodigoOcorrencia = "01",
+                TipoDocumento = b.NossoNumero
+            };
+
+            #endregion
+
+            var boletos = new Boletos();
+            boletos.Add(b);
+            b.Valida();
 
             GeraArquivoCNAB400(b.Banco, c, boletos);
         }
@@ -600,6 +657,8 @@ namespace BoletoNet.Arquivo
             {
                 if (radioButtonItau.Checked)
                     GeraDadosItau(TipoArquivo.Cnab400);
+                else if (radioButtonBancoBrasil.Checked)
+                    GeraDadosBancoDoBrasil();
                 else if (radioButtonBanrisul.Checked)
                     GeraDadosBanrisul();
                 else if (radioButtonCaixa.Checked)

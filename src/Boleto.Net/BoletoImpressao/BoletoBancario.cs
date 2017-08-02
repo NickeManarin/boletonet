@@ -276,9 +276,7 @@ namespace BoletoNet
                 html.Append(Html.ReciboSacadoParte3);
 
                 if (MostrarEnderecoCedente)
-                {
                     html.Append(Html.ReciboSacadoParte10);
-                }
 
                 html.Append(Html.ReciboSacadoParte4);
                 html.Append(Html.ReciboSacadoParte5);
@@ -326,25 +324,7 @@ namespace BoletoNet
                 //Para Banco Itaú, o texto "(Texto de responsabilidade do cedente)" deve ser
                 //"(Todas as informações deste bloqueto são de exclusiva responsabilidade do cedente)".
                 if (Boleto.Banco.Codigo == 341)
-                {
                     html.Replace("(Texto de responsabilidade do cedente)", "(Todas as informações deste bloqueto são de exclusiva responsabilidade do cedente)");
-                }
-
-                //Para carteiras "17-019" e "18-019" do Banco do Brasil, a ficha de compensação não possui código da carteira
-                //na formatação do campo.
-                if (Boleto.Banco.Codigo == 1 & (Boleto.Carteira.Equals("17-019") | Boleto.Carteira.Equals("17-027") | Boleto.Carteira.Equals("18-019") | Boleto.Carteira.Equals("17-159") | Boleto.Carteira.Equals("17-140") | Boleto.Carteira.Equals("17-067")))
-                {
-                    html.Replace("Carteira /", "");
-                    html.Replace("@NOSSONUMERO", "@NOSSONUMEROBB");
-                }
-                else
-                {
-                    //Para SANTANDER, a ficha de compensação não possui código da carteira - por jsoda em 08/12/2012
-                    if (Boleto.Banco.Codigo == 33)
-                    {
-                        html.Replace("Carteira /", "");
-                    }
-                }
 
                 //Limpa as intruções para o Cedente
                 _instrucoesHtml = "";
@@ -489,14 +469,12 @@ namespace BoletoNet
 
                         if (Cedente.Endereco.Cep == string.Empty)
                         {
-                            enderecoCedente += string.Format("{0} - {1}/{2}", Cedente.Endereco.Bairro,
-                                                             Cedente.Endereco.Cidade, Cedente.Endereco.Uf);
+                            enderecoCedente += string.Format("{0} - {1}/{2}", Cedente.Endereco.Bairro, Cedente.Endereco.Cidade, Cedente.Endereco.Uf);
                         }
                         else
                         {
-                            enderecoCedente += string.Format("{0} - {1}/{2} - CEP: {3}", Cedente.Endereco.Bairro,
-                                                             Cedente.Endereco.Cidade, Cedente.Endereco.Uf,
-                                                             Utils.FormataCep(Cedente.Endereco.Cep));
+                            enderecoCedente += string.Format("{0} - {1}/{2} - CEP: {3}", Cedente.Endereco.Bairro, Cedente.Endereco.Cidade, 
+                                Cedente.Endereco.Uf, Utils.FormataCep(Cedente.Endereco.Cep));
                         }
 
                     }
@@ -548,7 +526,8 @@ namespace BoletoNet
                 //de acordo com a flag "OcultarEnderecoSacado"
             }
 
-            var agenciaConta = Utils.FormataAgenciaConta(Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Cedente.ContaBancaria.Conta, Cedente.ContaBancaria.DigitoConta);
+            var agenciaConta = Utils.FormataAgenciaConta(Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Cedente.ContaBancaria.Conta, 
+                Cedente.ContaBancaria.DigitoConta);
 
             // Trecho adicionado por Fabrício Nogueira de Almeida :fna - fnalmeida@gmail.com - 09/12/2008
             /* Esse código foi inserido pq no campo Agência/Cod Cedente, estava sendo impresso sempre a agência / número da conta
@@ -613,6 +592,28 @@ namespace BoletoNet
             }
 
             html.Append(!FormatoCarne ? GeraHtmlReciboCedente() : GeraHtmlCarne("", GeraHtmlReciboCedente()));
+            
+            //Para carteiras "17-019" e "18-019" do Banco do Brasil, a ficha de compensação não possui código da carteira na formatação do campo.
+            if (Boleto.Banco.Codigo == 1)
+            {
+                if (Boleto.CarteiraEVariacao.Equals("17-019") | Boleto.CarteiraEVariacao.Equals("17-027") |
+                    Boleto.CarteiraEVariacao.Equals("18-019") | Boleto.CarteiraEVariacao.Equals("17-159") | Boleto.CarteiraEVariacao.Equals("17-140") |
+                    Boleto.CarteiraEVariacao.Equals("17-067"))
+                {
+                    html.Replace("Carteira / ", "");
+                }
+                else
+                {
+                    html.Replace("@NOSSONUMERO", "@NOSSONUMEROBB");
+                }
+            }
+            else
+            {
+                //Para SANTANDER, a ficha de compensação não possui código da carteira - por jsoda em 08/12/2012
+                if (Boleto.Banco.Codigo == 33)
+                    html.Replace("Carteira /", "");
+            }
+
 
             var dataVencimento = Boleto.DataVencimento.ToString("dd/MM/yyyy");
 
@@ -643,14 +644,8 @@ namespace BoletoNet
                 .Replace("@DATAPROCESSAMENTO", Boleto.DataProcessamento.ToString("dd/MM/yyyy"))
 
             #region Implementação para o Banco do Brasil
-
-                //Variável inserida para atender às especificações das carteiras "17-019", "17-027" e "18-019" do Banco do Brasil
-                //apenas para a ficha de compensação.
-                //Como a variável não existirá se não forem as carteiras "17-019", "17-027", "17-019", "17-035", "17-140", "17-159", "17-067", 
-                //"17-167" e "18-019", não foi colocado o [if].
-                .Replace("@NOSSONUMEROBB", Boleto.Banco.Codigo == 1 & (Boleto.Carteira.Equals("17-019") | Boleto.Carteira.Equals("17-027") |
-                    Boleto.Carteira.Equals("17-035") | Boleto.Carteira.Equals("18-019") | Boleto.Carteira.Equals("17-140") | Boleto.Carteira.Equals("17-159") |
-                    Boleto.Carteira.Equals("17-067") | Boleto.Carteira.Equals("17-167")) ? Boleto.NossoNumero.Substring(3) : string.Empty)
+               
+                .Replace("@NOSSONUMEROBB", Boleto.Carteira + "/" + Boleto.NossoNumero)
 
             #endregion
 

@@ -174,10 +174,18 @@ namespace BoletoNet
 			set { _variacaoCarteira = value; }
 		}
 
-		/// <summary> 
-		/// Retorna a data do vencimento do titulo.
-		/// </summary>
-		public DateTime DataVencimento
+	    /// <summary> 
+	    /// Retorna a carteira com a Variação da carteira.
+	    /// </summary>
+	    public string CarteiraEVariacao
+        {
+	        get { return _carteira + (string.IsNullOrWhiteSpace(_variacaoCarteira) ? "" : "-" + _variacaoCarteira); }
+	    }
+
+        /// <summary> 
+        /// Retorna a data do vencimento do titulo.
+        /// </summary>
+        public DateTime DataVencimento
 		{
 			get { return _dataVencimento; }
 			set { _dataVencimento = value; }

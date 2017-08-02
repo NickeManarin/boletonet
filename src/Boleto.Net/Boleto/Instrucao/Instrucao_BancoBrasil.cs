@@ -6,8 +6,8 @@ namespace BoletoNet
 
     public enum EnumInstrucoes_BancoBrasil
     {
-        Protestar = 9,                      // Emite aviso ao sacado após N dias do vencto, e envia ao cartório após 5 dias úteis
-        NaoProtestar = 10,                  // Inibe protesto, quando houver instrução permanente na conta corrente
+        Protestar = 9,               //Emite aviso ao sacado após N dias do vencto, e envia ao cartório após 5 dias úteis
+        NaoProtestar = 10,           //Inibe protesto, quando houver instrução permanente na conta corrente
         ImportanciaporDiaDesconto = 30,
         Multa = 35,
         ProtestoFinsFalimentares = 42,
@@ -15,6 +15,7 @@ namespace BoletoNet
         ProtestarAposNDiasUteis = 82,
         NaoReceberAposNDias = 91,
         DevolverAposNDias = 92,
+
         JurosdeMora = 998,
         DescontoporDia = 999,
     }
@@ -87,6 +88,7 @@ namespace BoletoNet
                     case EnumInstrucoes_BancoBrasil.DevolverAposNDias:
                         Descricao = "Devolver após " + dias + " dias do vencimento";
                         break;
+
                     case EnumInstrucoes_BancoBrasil.DescontoporDia:
                         Descricao = string.Format("Conceder desconto de {0} {1} por dia de antecipação",
                             tipo.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2"),

@@ -365,11 +365,12 @@ namespace BoletoNet.Arquivo
                 bb.CodigoBanco = _codigoBanco;
 
                 var vencimento = DateTime.Now.AddDays(10);
-                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "1234", "5", "12345678", "9");
+                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "2768", "5", "25832", "6");
 
-                c.Codigo = "00000000504";
-                var b = new Boleto(vencimento, 45.50m, "11", "12345678901", c);                
-                
+                c.Convenio = 2650829;
+                c.Codigo = "512493695";
+                var b = new Boleto(vencimento, 45.50m, "17", "1234567890", c) { VariacaoCarteira = "019" };
+
                 b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
                 b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
                 b.Sacado.Endereco.Bairro = "Testando";
@@ -402,7 +403,7 @@ namespace BoletoNet.Arquivo
 
             GeraLayout(boletos);
         }
-        
+
         public void GeraBoletoBradesco(int qtde)
         {
             // Cria o boleto, e passa os parâmetros usuais
@@ -553,7 +554,7 @@ namespace BoletoNet.Arquivo
                 var c = new Cedente("11.111.111/1111-11", "Empresa de Atacado", "1102", "48", "9000150", "46");
                 c.Codigo = "9000150";
                 c.MostrarCnpjNoBoleto = true;
-                
+
                 var end = new Endereco();
                 end.Bairro = "Lago Sul";
                 end.Cep = "71666660";
@@ -572,7 +573,7 @@ namespace BoletoNet.Arquivo
 
                 b.Instrucoes.Add(new Instrucao_Banrisul(18, null, 10, 3.1m, EnumTipoValor.Percentual)); //"Não Receber após o vencimento");
                 b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 3.1m, EnumTipoValor.Percentual));
-                b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 3.1m, EnumTipoValor.Percentual)); 
+                b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 3.1m, EnumTipoValor.Percentual));
 
                 bb.FormatoCarne = false;
                 bb.OcultarInstrucoes = true;
@@ -586,7 +587,7 @@ namespace BoletoNet.Arquivo
 
             GeraLayout(boletos);
         }
-        
+
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             switch (CodigoBanco)
