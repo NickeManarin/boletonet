@@ -1,5 +1,7 @@
 using System;
 using System.Globalization;
+using System.Linq;
+using System.Text;
 using System.Web.UI;
 using BoletoNet.Util;
 using BoletoNet.EDI.Banco;
@@ -45,7 +47,7 @@ namespace BoletoNet
         /// </summary>
         public override void ValidaBoleto(Boleto boleto)
         {
-            switch (boleto.Carteira + "-" + boleto.VariacaoCarteira)
+            switch (boleto.CarteiraEVariacao)
             {
                 case "11":
                 case "16":
@@ -249,7 +251,7 @@ namespace BoletoNet
                     }
                     else
                         boleto.NossoNumero = Utils.FormatCode(boleto.NossoNumero, 11);
-                }                
+                }
             }
 
             #endregion
@@ -267,7 +269,7 @@ namespace BoletoNet
                         boleto.BancoCarteira = BancoCarteiraFactory.Fabrica(boleto.Carteira, boleto.Banco.Codigo);
 
                     boleto.BancoCarteira.ValidaBoleto(boleto);
-                    boleto.BancoCarteira.FormataNossoNumero(boleto);
+                    boleto.BancoCarteira.FormataNossoNumero(boleto); //TODO? Ta certo isso?
                 }
                 else if (boleto.VariacaoCarteira.Equals("019"))
                 {
@@ -1373,6 +1375,17 @@ namespace BoletoNet
                         break;
                     case TipoArquivo.Cnab400:
                         detalhe = GerarDetalheRemessaCnab400(boleto, numeroRegistro, tipoArquivo);
+
+                        /*
+                         wLinha:= wLinha + sLineBreak                              +
+                              '5'                                              + //Tipo Registro
+                              '99'                                             + //Tipo de Serviço (Cobrança de Multa)
+                              IfThen(PercentualMulta > 0, '2','9')             + //Cod. Multa 2- Percentual 9-Sem Multa
+                              IfThen(PercentualMulta > 0, FormatDateTime('ddmmyy', DataMoraJuros), '000000') + //Data Multa
+                              IntToStrZero( round( PercentualMulta * 100), 12) + //Perc. Multa
+                              Space(372)                                       + //Brancos
+                              IntToStrZero(aRemessa.Count + 2 ,6);
+                         */
                         break;
                     case TipoArquivo.Outro:
                         throw new Exception("Tipo de arquivo inexistente.");
@@ -1540,16 +1553,16 @@ namespace BoletoNet
                 {
                     switch ((EnumInstrucoes_BancoBrasil)instrucao.Codigo)
                     {
-                        case EnumInstrucoes_BancoBrasil.ProtestarAposNDiasCorridos:
-                            codigoProtesto = "1";
-                            diasProtesto = Utils.FitStringLength(instrucao.Dias.ToString(), 2, 2, '0', 0, true, true, true);
-                            //Para código '1' – é possível, de 6 a 29 dias
-                            break;
-                        case EnumInstrucoes_BancoBrasil.ProtestarAposNDiasUteis:
-                            codigoProtesto = "2";
-                            diasProtesto = Utils.FitStringLength(instrucao.Dias.ToString(), 2, 2, '0', 0, true, true, true);
-                            //Para código '2' – é possível, 3º, 4º ou 5º dia útil
-                            break;
+                        //case EnumInstrucoes_BancoBrasil.ProtestarAposNDiasCorridos:
+                        //    codigoProtesto = "1";
+                        //    diasProtesto = Utils.FitStringLength(instrucao.Dias.ToString(), 2, 2, '0', 0, true, true, true);
+                        //    //Para código '1' – é possível, de 6 a 29 dias
+                        //    break;
+                        //case EnumInstrucoes_BancoBrasil.ProtestarAposNDiasUteis:
+                        //    codigoProtesto = "2";
+                        //    diasProtesto = Utils.FitStringLength(instrucao.Dias.ToString(), 2, 2, '0', 0, true, true, true);
+                        //    //Para código '2' – é possível, 3º, 4º ou 5º dia útil
+                        //    break;
                         case EnumInstrucoes_BancoBrasil.NaoProtestar:
                             codigoProtesto = "3";
                             diasProtesto = "00";
@@ -1963,6 +1976,7 @@ namespace BoletoNet
                 segmentoT.NumeroInscricao = registro.Substring(133, 15); //26
                 segmentoT.NomeSacado = registro.Substring(148, 40); //27
                 segmentoT.ValorTarifas = Convert.ToDecimal(registro.Substring(198, 15)) / 100; //29
+
                 //Jéferson (jefhtavares) em 12/12/2013 - O campo Valor Tarifas é composto de 15 posições (199-213) e não de 13
                 segmentoT.CodigoRejeicao = registro.Substring(213, 1) == "A" ? registro.Substring(214, 9) : registro.Substring(213, 10); //30
                 segmentoT.UsoFebraban = _cnab31;
@@ -2211,9 +2225,9 @@ namespace BoletoNet
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0095, 001, 0, "0", '0'));                                       //095-095
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0096, 006, 0, "0", '0'));                                       //096-101
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0102, 005, 0, string.Empty, ' '));                              //102-106
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0107, 002, 0, boleto.Cedente.Carteira, '0'));                   //107-108
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0107, 002, 0, boleto.Carteira, '0'));                           //107-108
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0109, 002, 0, ObterCodigoDaOcorrencia(boleto), ' '));           //109-110
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0111, 010, 0, boleto.NumeroControle ?? boleto.NumeroDocumento, '0')); //111-120
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliDireita______, 0111, 010, 0, boleto.NumeroControle ?? boleto.NumeroDocumento, ' ')); //111-120
                 reg.CamposEdi.Add(new CampoEdi(Dado.DataDDMMAA___________, 0121, 006, 0, boleto.DataVencimento, ' '));                     //121-126
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0127, 013, 2, boleto.ValorBoleto, '0'));                        //127-139
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0140, 003, 0, "001", '0'));                                     //140-142   
@@ -2223,49 +2237,82 @@ namespace BoletoNet
                 var especie = boleto.Especie;
                 if (boleto.EspecieDocumento.Sigla == "DM") //Conforme nota 7 explicativa do banco.
                     especie = "01";
+                /*
+                          else if trim(EspecieDoc) = 'NP' then
+                             ATipoEspecieDoc:= '02'
+                          else if trim(EspecieDoc) = 'NS' then
+                             ATipoEspecieDoc:= '03'
+                          else if trim(EspecieDoc) = 'ME' then
+                             ATipoEspecieDoc:= '04'
+                          else if trim(EspecieDoc) = 'RC' then
+                             ATipoEspecieDoc:= '05'
+                          else if trim(EspecieDoc) = 'CT' then
+                             ATipoEspecieDoc:= '06'
+                          else if trim(EspecieDoc) = 'CS' then
+                             ATipoEspecieDoc:= '07'
+                          else if trim(EspecieDoc) = 'DS' then
+                             ATipoEspecieDoc:= '08'
+                          else if trim(EspecieDoc) = 'LC' then
+                             ATipoEspecieDoc:= '09'
+                          else if trim(EspecieDoc) = 'ND' then
+                             ATipoEspecieDoc:= '13'
+                          else if trim(EspecieDoc) = 'DD' then
+                             ATipoEspecieDoc:= '15'
+                          else if trim(EspecieDoc) = 'EC' then
+                             ATipoEspecieDoc:= '16'
+                          else if trim(EspecieDoc) = 'PS' then
+                             ATipoEspecieDoc:= '17'
+                          else if trim(EspecieDoc) = 'DV' then
+                             ATipoEspecieDoc:= '99';*/
 
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0148, 002, 0, especie, '0'));                                   //148-149
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0150, 001, 0, boleto.Aceite, ' '));                             //150-150
-                reg.CamposEdi.Add(new CampoEdi(Dado.DataDDMMAA___________, 0151, 006, 0, boleto.DataProcessamento, ' '));                  //151-156
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0148, 002, 0, especie, '0'));                  //148-149
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0150, 001, 0, boleto.Aceite, ' '));            //150-150
+                reg.CamposEdi.Add(new CampoEdi(Dado.DataDDMMAA___________, 0151, 006, 0, boleto.DataProcessamento, ' ')); //151-156
 
                 #region Instruções
 
+                var list = boleto.Instrucoes.ToList();
+
                 var vInstrucao1 = "0";
                 var vInstrucao2 = "0";
-                var diasProtesto = String.Empty;
-                var juros = 0m;
+                var diasProtesto = "";
 
-                switch (boleto.Instrucoes.Count)
+                //Se for 998 - Juros de mora, não vai na instrução, apenas aplica o juros de mora.
+                //Se vier 3, divide por 100 para ficar 0,03, daí multiplica pelo valor. R$ 200,00 * (3 / 100) = R$ 6,00
+                var juros = boleto.ValorBoleto * (list.Where(x => x.Codigo == 998).Select(x => x.Valor).FirstOrDefault() / 100m);
+
+                //Apenas instruções:
+                //03 - Protestar no 3º dia útil após vencido.
+                //04 - Protestar no 4º dia útil após vencido.
+                //05 - Protestar no 5º dia útil após vencido.
+                //06 - Indica protesto em dias corridos, com prazo de 6 a 29, 35 ou 40 dias Corridos.
+                //07 - Não protestar.
+                foreach (var inst in list.Where(x => x.Codigo < 100))
                 {
-                    case 1:
-                        vInstrucao1 = boleto.Instrucoes[0].Codigo > 100 ? boleto.Instrucoes[0].Codigo.ToString() : "0";
-                        vInstrucao2 = "0";
-
-                        if (boleto.Instrucoes[0].Codigo == 998)
-                            juros = boleto.ValorBoleto * boleto.Instrucoes[0].Valor;
-
-                        if (boleto.Instrucoes[0].Codigo == 9)
+                    //Instrução Nº1
+                    switch (inst.Codigo)
+                    {
+                        case 3:
+                            vInstrucao1 = "03";
+                            diasProtesto = "03";
+                            break;
+                        case 4:
+                            vInstrucao1 = "04";
+                            diasProtesto = "04";
+                            break;
+                        case 5:
+                            vInstrucao1 = "05";
+                            diasProtesto = "05";
+                            break;
+                        case 6:
+                            vInstrucao1 = "06";
                             diasProtesto = boleto.Instrucoes[0].Dias.ToString().PadLeft(2, '0');
-                        break;
-
-                    case 2:
-                    case 3:
-                    case 4:
-                        vInstrucao1 = boleto.Instrucoes[0].Codigo > 100 ? boleto.Instrucoes[0].Codigo.ToString() : "0";
-                        vInstrucao2 = boleto.Instrucoes[1].Codigo > 100 ? boleto.Instrucoes[0].Codigo.ToString() : "0";
-
-                        if (boleto.Instrucoes[0].Codigo == 998)
-                            juros = boleto.ValorBoleto * boleto.Instrucoes[0].Valor;
-
-                        if (boleto.Instrucoes[1].Codigo == 998)
-                            juros = boleto.ValorBoleto * boleto.Instrucoes[0].Valor;
-
-                        if (boleto.Instrucoes[0].Codigo == 9)
-                            diasProtesto = boleto.Instrucoes[0].Dias.ToString().PadLeft(2, '0');
-
-                        if (boleto.Instrucoes[1].Codigo == 9)
-                            diasProtesto = boleto.Instrucoes[1].Dias.ToString().PadLeft(2, '0');
-                        break;
+                            break;
+                        case 7:
+                            vInstrucao1 = "07";
+                            diasProtesto = "";
+                            break;
+                    }
                 }
 
                 #endregion
@@ -2364,6 +2411,21 @@ namespace BoletoNet
             }
         }
 
+        public string GerarRegistroDetalhe5(Boleto boleto, int numeroRegistro)
+        {
+            var detalhe = new StringBuilder();
+            detalhe.Append("5");                                  // 001
+            detalhe.Append("99");                                 // 002-003
+            detalhe.Append("2");                                  // 004 (Percentual)
+            detalhe.Append(boleto.DataMulta.ToString("ddMMyy"));  // 005-010
+            detalhe.Append(Utils.FitStringLength(Convert.ToInt32(boleto.PercMulta * 100).ToString(), 12, 12, '0', 1, true, true, true)); // 011-022
+            detalhe.Append(new string(' ', 372));                 // 023 a 394
+            detalhe.Append(Utils.FitStringLength(numeroRegistro.ToString(), 6, 6, '0', 0, true, true, true)); // 395 a 400
+
+            //Retorno
+            return Utils.SubstituiCaracteresEspeciais(detalhe.ToString());
+        }
+
         public string GerarTrailerRemessa400(int numeroRegistro, decimal vltitulostotal)
         {
             try
@@ -2408,13 +2470,13 @@ namespace BoletoNet
                 //detalhe. = reg.NumeroControleParticipante;
                 //
                 detalhe.NossoNumeroComDV = reg.NossoNumero;
-                detalhe.NossoNumero = reg.NossoNumero.Substring(0, reg.NossoNumero.Length - 1); //Nosso Número sem o DV!
-                detalhe.DACNossoNumero = reg.NossoNumero.Substring(reg.NossoNumero.Length - 1); //DV
+                detalhe.NossoNumero = reg.NossoNumero;//.Substring(0, reg.NossoNumero.Length - 1); //Nosso Número sem o DV!
+                detalhe.DACNossoNumero = ""; //reg.NossoNumero.Substring(reg.NossoNumero.Length - 1); //DV
                 //
                 //detalhe. = reg.TipoCobranca;
                 //detalhe. = reg.TipoCobrancaEspecifico;
                 //detalhe. = reg.DiasCalculo;
-                //detalhe. = reg.NaturezaRecebimento;
+                detalhe.MotivoCodigoOcorrencia = reg.NaturezaRecebimento;
                 //detalhe. = reg.PrefixoTitulo;
                 //detalhe. = reg.VariacaoCarteira;
                 //detalhe. = reg.ContaCaucao;
@@ -2467,12 +2529,14 @@ namespace BoletoNet
                 //detalhe. = reg.Brancos5;
                 //detalhe. = reg.CanalPagamento;
                 //detalhe. = reg.NumeroSequenciaRegistro;
+
                 #region NAO RETORNADOS PELO BANCO
-                detalhe.MotivoCodigoOcorrencia = string.Empty;
+
                 detalhe.MotivosRejeicao = string.Empty;
                 detalhe.NumeroCartorio = 0;
                 detalhe.NumeroProtocolo = string.Empty;
                 detalhe.NomeSacado = string.Empty;
+
                 #endregion
 
                 return detalhe;

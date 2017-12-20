@@ -803,7 +803,7 @@ namespace BoletoNet
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0075, 002, 0, 0, '0'));                                            //075-076
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0077, 002, 0, 0, '0'));                                            //077-078
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0079, 004, 0, string.Empty, ' '));                                 //079-082
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0083, 010, 2, boleto.ValorDesconto, '0'));                         //083-092
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0083, 010, 2, 0, '0'));                                            //083-092 Valor por dia de antecipação.
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0093, 004, 2, boleto.PercMulta, '0'));                             //093-096
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0097, 012, 0, string.Empty, ' '));                                 //097-108
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0109, 002, 0, boleto.Remessa.CodigoOcorrencia, ' '));              //109-110 01 - Cadastro de título, etc;
@@ -835,8 +835,8 @@ namespace BoletoNet
                     }
                 }
 
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0157, 002, 0, vInstrucao1, '0'));                               //157-158
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0159, 002, 0, vInstrucao2, '0'));                               //159-160
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0157, 002, 0, vInstrucao1, '0'));                          //157-158
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0159, 002, 0, vInstrucao2, '0'));                          //159-160
                 
                 #endregion
 

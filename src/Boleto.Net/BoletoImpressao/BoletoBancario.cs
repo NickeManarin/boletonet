@@ -765,15 +765,15 @@ namespace BoletoNet
 
             var arquivoCss = usaCssPdf ? "BoletoNet.BoletoImpressao.BoletoNetPDF.css" : "BoletoNet.BoletoImpressao.BoletoNet.css";
 
-            var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(arquivoCss);
-
-            using (var sr = new StreamReader(stream))
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(arquivoCss))
             {
-                html.Append("<style>\n");
-                html.Append(sr.ReadToEnd());
-                html.Append("</style>\n");
-                sr.Close();
-                sr.Dispose();
+                if (stream != null)
+                    using (var sr = new StreamReader(stream))
+                    {
+                        html.Append("<style>\n");
+                        html.Append(sr.ReadToEnd());
+                        html.Append("</style>\n");
+                    }
             }
 
             #endregion Css
@@ -947,11 +947,10 @@ namespace BoletoNet
 
             if (!File.Exists(fnLogo))
             {
-                var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("BoletoNet.Imagens." + Utils.FormatCode(_ibanco.Codigo.ToString(), 3) + ".jpg");
-
-                using (Stream file = File.Create(fnLogo))
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("BoletoNet.Imagens." + Utils.FormatCode(_ibanco.Codigo.ToString(), 3) + ".jpg"))
                 {
-                    CopiarStream(stream, file);
+                    using (Stream file = File.Create(fnLogo))
+                        CopiarStream(stream, file);
                 }
             }
 
@@ -961,13 +960,14 @@ namespace BoletoNet
             {
                 var imgConverter = new ImageConverter();
                 var imgBuffer = (byte[])imgConverter.ConvertTo(Html.barra, typeof(byte[]));
-                var ms = new MemoryStream(imgBuffer);
 
-                using (Stream stream = File.Create(fnBarra))
+                using (var ms = new MemoryStream(imgBuffer))
                 {
-                    CopiarStream(ms, stream);
-                    ms.Flush();
-                    ms.Dispose();
+                    using (Stream stream = File.Create(fnBarra))
+                    {
+                        CopiarStream(ms, stream);
+                        ms.Flush();
+                    }
                 }
             }
 
@@ -1042,10 +1042,11 @@ namespace BoletoNet
             //Salvo a imagem apenas 1 vez com o código do banco
             if (!File.Exists(fnLogo))
             {
-                var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("BoletoNet.Imagens." + Utils.FormatCode(_ibanco.Codigo.ToString(), 3) + ".jpg");
-
-                using (Stream file = File.Create(fnLogo))
-                    CopiarStream(stream, file);
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("BoletoNet.Imagens." + Utils.FormatCode(_ibanco.Codigo.ToString(), 3) + ".jpg"))
+                {
+                    using (Stream file = File.Create(fnLogo))
+                        CopiarStream(stream, file);
+                }
             }
 
             //Prepara o arquivo da barra para ser salvo
@@ -1058,13 +1059,15 @@ namespace BoletoNet
             {
                 var imgConverter = new ImageConverter();
                 var imgBuffer = (byte[])imgConverter.ConvertTo(Html.barra, typeof(byte[]));
-                var ms = new MemoryStream(imgBuffer);
 
-                using (Stream stream = File.Create(fnBarra))
+                using (var ms = new MemoryStream(imgBuffer))
                 {
-                    CopiarStream(ms, stream);
-                    ms.Flush();
-                    ms.Dispose();
+                    using (Stream stream = File.Create(fnBarra))
+                    {
+                        CopiarStream(ms, stream);
+                        ms.Flush();
+                        ms.Dispose();
+                    }
                 }
             }
 
@@ -1101,8 +1104,10 @@ namespace BoletoNet
             var base64Logo = Convert.ToBase64String(ObterLogoDoBanco(CodigoBanco));
             var fnLogo = string.Format("data:image/gif;base64,{0}", base64Logo);
 
-            var streamBarra = assembly.GetManifestResourceStream("BoletoNet.Imagens.barra.gif");
-            var base64Barra = Convert.ToBase64String(new BinaryReader(streamBarra).ReadBytes((int)streamBarra.Length));
+            string base64Barra;
+            using (var streamBarra = assembly.GetManifestResourceStream("BoletoNet.Imagens.barra.gif"))
+                base64Barra = Convert.ToBase64String(new BinaryReader(streamBarra).ReadBytes((int) streamBarra.Length));
+
             var fnBarra = string.Format("data:image/gif;base64,{0}", base64Barra);
 
             var cb = new C2of5i(Boleto.CodigoBarra.Codigo, 1, 50, Boleto.CodigoBarra.Codigo.Length);
@@ -1113,8 +1118,9 @@ namespace BoletoNet
             {
                 var linhaDigitavel = Boleto.CodigoBarra.LinhaDigitavel.Replace("  ", " ").Trim();
 
-                var imagemLinha = Utils.DrawText(linhaDigitavel, new Font("Arial", 30, FontStyle.Bold), Color.Black, Color.White);
-                var base64Linha = Convert.ToBase64String(Utils.ConvertImageToByte(imagemLinha));
+                string base64Linha;
+                using (var imagemLinha = Utils.DrawText(linhaDigitavel, new Font("Arial", 30, FontStyle.Bold), Color.Black, Color.White))
+                    base64Linha = Convert.ToBase64String(Utils.ConvertImageToByte(imagemLinha));
 
                 var fnLinha = string.Format("data:image/gif;base64,{0}", base64Linha);
 
@@ -1199,7 +1205,7 @@ namespace BoletoNet
 
             if (!string.IsNullOrEmpty(TempFilesPath))
                 converter.TempFilesPath = TempFilesPath;
-
+            
             return converter.GeneratePdf(htmlBoletos.ToString());
         }
 

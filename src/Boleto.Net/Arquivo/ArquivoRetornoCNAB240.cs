@@ -70,7 +70,6 @@ namespace BoletoNet
                 {
                     if (!string.IsNullOrEmpty(linha))
                     {
-
                         var detalheRetorno = new DetalheRetornoCNAB240();
 
                         switch (linha.Substring(7, 1))

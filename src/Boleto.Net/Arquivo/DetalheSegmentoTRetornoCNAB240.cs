@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace BoletoNet
 {
     public class DetalheSegmentoTRetornoCNAB240
     {
-
         #region Variáveis
 
         private int _codigoBanco;
@@ -38,8 +36,7 @@ namespace BoletoNet
         #region Construtores
 
         public DetalheSegmentoTRetornoCNAB240()
-		{
-        }
+		{}
 
         public DetalheSegmentoTRetornoCNAB240(string registro)
         {

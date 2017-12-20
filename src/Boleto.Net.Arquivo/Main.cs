@@ -184,59 +184,63 @@ namespace BoletoNet.Arquivo
 
         public void GeraDadosBancoDoBrasil()
         {
-            var conta = new ContaBancaria();
-            conta.Agencia = "2768";
-            conta.DigitoAgencia = "5";
-            conta.Conta = "51249369";
-            conta.DigitoConta = "3";
-
-            var c = new Cedente();
-            c.ContaBancaria = conta;
-            c.CpfCnpj = "12.345.678/0001-11";
-            c.Nome = "Empresa de Atacado";
-            c.Codigo = "51249369";
-            c.DigitoCedente = 3;
-            c.Convenio = 2650829;
-            
-            var b = new Boleto();
-            b.Cedente = c;
-            b.ContaBancaria = conta;
-            b.DataProcessamento = DateTime.Now;
-            b.DataVencimento = DateTime.Now.AddDays(15);
-            b.ValorBoleto = Convert.ToDecimal(2469.69);
-            b.Carteira = "17";
-            b.VariacaoCarteira = "019";
-            b.NossoNumero = "92082835";
-            b.NumeroDocumento = "1008073";
-
-            b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
-            b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
-            b.Sacado.Endereco.Bairro = "Testando";
-            b.Sacado.Endereco.Cidade = "Testelândia";
-            b.Sacado.Endereco.Cep = "70000000";
-            b.Sacado.Endereco.Uf = "RS";
-
-            var item = new Instrucao_BancoBrasil(82, null, 10, 3.1m);
-            b.Instrucoes.Add(item);
-
-            b.Banco = new Banco(001);
-
-            #region Dados para Remessa:
-
-            b.EspecieDocumento = new EspecieDocumento(1, "01");
-            b.Remessa = new Remessa
-            {
-                CodigoOcorrencia = "01",
-                TipoDocumento = b.NossoNumero
-            };
-
-            #endregion
-
             var boletos = new Boletos();
-            boletos.Add(b);
-            b.Valida();
 
-            GeraArquivoCNAB400(b.Banco, c, boletos);
+            for (int i = 0; i < 2; i++)
+            {
+                var conta = new ContaBancaria();
+                conta.Agencia = "2768";
+                conta.DigitoAgencia = "5";
+                conta.Conta = "51249369";
+                conta.DigitoConta = "3";
+
+                var c = new Cedente();
+                c.ContaBancaria = conta;
+                c.CpfCnpj = "12.345.678/0001-11";
+                c.Nome = "Empresa de Atacado";
+                c.Codigo = "51249369";
+                c.DigitoCedente = 3;
+                c.Convenio = 2650829;
+
+                var b = new Boleto();
+                b.Cedente = c;
+                b.ContaBancaria = conta;
+                b.DataProcessamento = DateTime.Now;
+                b.DataVencimento = DateTime.Now.AddDays(15);
+                b.ValorBoleto = Convert.ToDecimal(2469.69);
+                b.Carteira = "17";
+                b.VariacaoCarteira = "019";
+                b.NossoNumero = "92082835";
+                b.NumeroDocumento = "1008073";
+
+                b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
+                b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
+                b.Sacado.Endereco.Bairro = "Testando";
+                b.Sacado.Endereco.Cidade = "Testelândia";
+                b.Sacado.Endereco.Cep = "70000000";
+                b.Sacado.Endereco.Uf = "RS";
+
+                b.Instrucoes.Add(new Instrucao_BancoBrasil(82, null, 10, 3.1m));
+                b.Instrucoes.Add(new Instrucao_BancoBrasil(82, null, 10, 3.1m));
+
+                b.Banco = new Banco(001);
+
+                #region Dados para Remessa:
+
+                b.EspecieDocumento = new EspecieDocumento(1, "01");
+                b.Remessa = new Remessa
+                {
+                    CodigoOcorrencia = "01",
+                    TipoDocumento = b.NossoNumero
+                };
+
+                #endregion
+                
+                boletos.Add(b);
+                b.Valida();
+            }
+            
+            GeraArquivoCNAB400(boletos[0].Banco, boletos[0].Cedente, boletos);
         }
 
         public void GeraDadosSicredi()
