@@ -807,7 +807,7 @@ namespace BoletoNet
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0093, 004, 2, boleto.PercMulta, '0'));                             //093-096
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0097, 012, 0, string.Empty, ' '));                                 //097-108
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0109, 002, 0, boleto.Remessa.CodigoOcorrencia, ' '));              //109-110 01 - Cadastro de título, etc;
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0111, 010, 0, boleto.NumeroDocumento, ' '));                       //111-120
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0111, 010, 0, boleto.NumeroDocumento, ' '));                       //111-120 - Seu Número, não pode repetir.
                 reg.CamposEdi.Add(new CampoEdi(Dado.DataDDMMAA___________, 0121, 006, 0, boleto.DataVencimento, ' '));                        //121-126
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0127, 013, 2, boleto.ValorBoleto, '0'));                           //127-139
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0140, 009, 0, string.Empty, ' '));                                 //140-148

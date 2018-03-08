@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace BoletoNet
 {
@@ -109,7 +110,7 @@ namespace BoletoNet
                     Descricao = "  - CONCEDER DESCONTO DE R$ " + valor;
                     break;
                 case EnumInstrucoes_Sicredi.AlteracaoOutrosDados_DescontoAntecipacao:
-                    Descricao = "  - CONCEDER DESCONTO DE R$ " + valor + "POR DIA DE ANTECIPAÇÃO";
+                    Descricao = "  - CONCEDER DESCONTO DE R$ " + string.Format(new CultureInfo("pt-BR"), "{0:###,###.00}", valor) + "POR DIA DE ANTECIPAÇÃO";
                     break;
                 case EnumInstrucoes_Sicredi.AlteracaoOutrosDados_JuroDia:
                     Descricao = "  - APÓS VENCIMENTO COBRAR JURO DE " + valor + "% POR DIA DE ATRASO";

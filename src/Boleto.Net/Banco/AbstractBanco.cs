@@ -457,7 +457,7 @@ namespace BoletoNet
         /// <remarks>
         ///     Wellington(wcarvalho@novatela.com.br) 
         ///     Com base na proposta feita pela CENEGESC de acordo com o comunicado FEBRABAN de n° 082/2012 de 14/06/2012 segue regra para implantação.
-        ///     No dia 21/02/20025 o fator vencimento chegará em 9999 assim atigindo o tempo de utilização, para contornar esse problema foi definido com uma nova regra
+        ///     No dia 21/02/2025 o fator vencimento chegará em 9999 assim atigindo o tempo de utilização, para contornar esse problema foi definido com uma nova regra
         ///     de utilizaçao criando um range de uso o range funcionara controlando a emissão dos boletos.
         ///     Exemplo:
         ///         Data Atual: 12/03/2014 = 6000
@@ -480,7 +480,8 @@ namespace BoletoNet
             long rangeUtilizavel = Utils.DateDiff(DateInterval.Day, dataAtual, boleto.DataVencimento);
 
             if (rangeUtilizavel > 5500 || rangeUtilizavel < -3000)
-                throw new Exception("Data do vencimento fora do range de utilização proposto pela CENEGESC. Comunicado FEBRABAN de n° 082/2012 de 14/06/2012");
+                throw new Exception("Data do vencimento fora do range de utilização proposto pela CENEGESC. Comunicado FEBRABAN de n° 082/2012 de 14/06/2012.\n" +
+                                    "Data do vencimento: " + boleto.DataVencimento.ToString("d") + " - Data atual: " + dataAtual.ToString("d") + " = " + rangeUtilizavel + " dias.");
 
             while (boleto.DataVencimento > dateBase.AddDays(9999))
                 dateBase = boleto.DataVencimento.AddDays(-(((Utils.DateDiff(DateInterval.Day, dateBase, boleto.DataVencimento) - 9999) - 1) + 1000));

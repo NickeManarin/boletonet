@@ -448,7 +448,7 @@ namespace BoletoNet
                         sb.Append(c);
                 }
 
-                return Regex.Replace(sb.ToString(), @"[^0-9a-zA-Z°ºª&¹²³.,\\@\- ]+", " ")
+                return Regex.Replace(sb.ToString(), @"[^0-9a-zA-Z°ºª&¹²³.,/\\@\- ]+", " ")
                     .Replace("ª", "a")
                     .Replace("º", "o")
                     .Replace("°", "o")
