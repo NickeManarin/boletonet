@@ -4,7 +4,7 @@ namespace BoletoNet
     /// Representa o endereço do Cedente ou Sacado com todas as informações necessárias.
     /// </summary>
     public class Endereco
-    {        
+    {
         private string _cep;
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace BoletoNet
         /// Exemplo: São Paulo
         /// </remarks>
         /// </summary>
-        public string Cidade { get; set;}
+        public string Cidade { get; set; }
 
         /// <summary>
         /// Define o Estado (UF)
@@ -64,7 +64,7 @@ namespace BoletoNet
         /// *Utilizar apenas a sigla (UF)
         /// </remarks>
         /// </summary>
-        public string Uf { get; set;}
+        public string Uf { get; set; }
 
         /// <summary>
         /// Define o número do CEP
@@ -95,8 +95,10 @@ namespace BoletoNet
         /// </summary>
         public string Email { get; set; }
 
-        public string EndComNumero {
-            get {
+        public string EndComNumero
+        {
+            get
+            {
                 if (!string.IsNullOrEmpty(End) && !string.IsNullOrEmpty(Numero))
                     return string.Format("{0} {1}", End, Numero);
 

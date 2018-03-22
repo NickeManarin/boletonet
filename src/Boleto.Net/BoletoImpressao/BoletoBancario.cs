@@ -465,7 +465,8 @@ namespace BoletoNet
                             throw new ArgumentNullException("Endereço do Cedente");
 
                         var numero = !string.IsNullOrEmpty(Cedente.Endereco.Numero) ? Cedente.Endereco.Numero + ", " : "";
-                        enderecoCedente = string.Concat(Cedente.Endereco.End, " , ", numero);
+                        var comp = !string.IsNullOrEmpty(Cedente.Endereco.Complemento) ? Cedente.Endereco.Complemento + ", " : "";
+                        enderecoCedente = string.Concat(Cedente.Endereco.End, " , ", numero, comp);
 
                         if (Cedente.Endereco.Cep == string.Empty)
                         {
@@ -513,11 +514,12 @@ namespace BoletoNet
                 if (Sacado.Endereco.End != string.Empty && enderecoSacado != string.Empty)
                 {
                     var numero = !string.IsNullOrEmpty(Sacado.Endereco.Numero) ? ", " + Sacado.Endereco.Numero : "";
+                    var comp = !string.IsNullOrEmpty(Sacado.Endereco.Complemento) ? ", " + Sacado.Endereco.Complemento : "";
 
                     if (infoSacado == string.Empty)
-                        infoSacado += InfoSacado.Render(Sacado.Endereco.End + numero, enderecoSacado, false);
+                        infoSacado += InfoSacado.Render(Sacado.Endereco.End + numero + comp, enderecoSacado, false);
                     else
-                        infoSacado += InfoSacado.Render(Sacado.Endereco.End + numero, enderecoSacado, true);
+                        infoSacado += InfoSacado.Render(Sacado.Endereco.End + numero + comp, enderecoSacado, true);
                 }
 
                 //"Informações do Sacado" foi introduzido para possibilitar que o boleto nao informe somente o endereço do sacado
