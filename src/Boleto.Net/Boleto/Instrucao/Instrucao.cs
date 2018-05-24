@@ -12,16 +12,16 @@ namespace BoletoNet
 
         #region Construtores
 
-        public Instrucao(int banco, int cod = 0, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual, DateTime? data = null)
+        public Instrucao(int banco, int cod = 0, string descricao = null, int dias = 0, decimal valor = 0m, decimal valorTotal = 0m, DateTime? data = null)
         {
-            Bancos(banco, cod, descricao, dias, valor, tipo, data);         
+            Bancos(banco, cod, descricao, dias, valor, valorTotal, data);         
         }
 
         #endregion
 
         #region Métodos Privados
 
-        private void Bancos(int codigoBanco, int cod = 0, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual, DateTime? data = null)
+        private void Bancos(int codigoBanco, int cod = 0, string descricao = null, int dias = 0, decimal valor = 0m, decimal valorTotal = 0m, DateTime? data = null)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace BoletoNet
                         break;
                     //104 - Caixa
                     case 104:
-                        _interface = new Instrucao_Caixa(cod, descricao, dias, valor, tipo);
+                        _interface = new Instrucao_Caixa(cod, descricao, dias, valor, valorTotal);
                         break;
                     //341 - Itaú
                     case 341:
@@ -41,7 +41,7 @@ namespace BoletoNet
                         break;
                     //1 - Banco do Brasil
                     case 1:
-                        _interface = new Instrucao_BancoBrasil(cod, descricao, dias, valor, tipo);
+                        _interface = new Instrucao_BancoBrasil(cod, descricao, dias, valor, valorTotal);
                         break;
                     //356 - Real
                     case 356:
@@ -53,7 +53,7 @@ namespace BoletoNet
                         break;
                     //237 - Bradesco
                     case 237:
-                        _interface = new Instrucao_Bradesco(cod, descricao, dias, valor, tipo, data);
+                        _interface = new Instrucao_Bradesco(cod, descricao, dias, valor, valorTotal, data);
                         break;
                     //347 - Sudameris
                     case 347:
@@ -76,7 +76,7 @@ namespace BoletoNet
                         break;
                     //41 - Banrisul
                     case 41:
-                        _interface = new Instrucao_Banrisul(cod, descricao, dias, valor, tipo);
+                        _interface = new Instrucao_Banrisul(cod, descricao, dias, valor, valorTotal);
                         break;
                     //756 - Sicoob
                     case 756:
@@ -88,7 +88,7 @@ namespace BoletoNet
                         break;
                     //748 - Sicredi
                     case 748:
-                        _interface = new Instrucao_Sicredi(cod, descricao, dias, valor, tipo);
+                        _interface = new Instrucao_Sicredi(cod, descricao, dias, valor, valorTotal);
                         break;
                     default:
                         throw new Exception("Código do banco não implementando: " + codigoBanco);
@@ -163,9 +163,9 @@ namespace BoletoNet
             }
         }
 
-        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual, DateTime? data = null)
+        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, decimal valorTotal = 0m, DateTime? data = null)
         {
-            _interface.Carrega(cod, descricao, dias, valor, tipo);
+            _interface.Carrega(cod, descricao, dias, valor, valorTotal);
         }
 
         #endregion

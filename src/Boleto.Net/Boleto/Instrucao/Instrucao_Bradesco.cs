@@ -38,16 +38,16 @@ namespace BoletoNet
 			}
 		}
 
-        public Instrucao_Bradesco(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual, DateTime? data = null)
+        public Instrucao_Bradesco(int cod, string descricao = null, int dias = 0, decimal valor = 0m, decimal valorTotal = 0m, DateTime? data = null)
         {
-            Carrega(cod, descricao, dias, valor, tipo, data);
+            Carrega(cod, descricao, dias, valor, valorTotal, data);
         }
 
         #endregion Construtores
 
         #region Metodos Privados
 
-        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual, DateTime? data = null)
+        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, decimal valorTotal = 0m, DateTime? data = null)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace BoletoNet
                 Descricao = descricao;
                 Dias = dias;
                 Valor = valor;
-                Tipo = tipo;
+                Tipo = EnumTipoValor.Percentual;
 
                 Valida();
 
@@ -86,20 +86,14 @@ namespace BoletoNet
                         break;
                     case EnumInstrucoes_Bradesco.OutrasInstrucoes_ExibeMensagem_MoraDiaria:
                         Codigo = 0;
-                        Descricao = string.Format("Após vencimento cobrar juros de {0} {1} por dia de atraso",
-                            tipo.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2"),
-                            tipo.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
+                        Descricao = $"Após vencimento cobrar juros de R$ {decimal.Round((valor * valorTotal) / 100m, 2, MidpointRounding.ToEven):F2} ({valor:F2} %) por dia de atraso";
                         break;
                     case EnumInstrucoes_Bradesco.OutrasInstrucoes_ExibeMensagem_MultaVencimento:
                         Codigo = 0;
-                        Descricao = string.Format("Após vencimento cobrar multa de {0} {1}",
-                            tipo.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2"),
-                            tipo.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
+                        Descricao = $"Após vencimento cobrar multa de {valor:F2} %";
                         break;
                     case EnumInstrucoes_Bradesco.ComDesconto:
-                        Descricao = string.Format("Desconto de pontualidade no valor de {0} {1} se pago até " + data.Value.ToShortDateString(),
-                            tipo.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("C"),
-                            tipo.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
+                        Descricao = string.Format($"Desconto de pontualidade no valor de {valor:F2} % se pago até " + data.Value.ToShortDateString());
                         break;
                     case EnumInstrucoes_Bradesco.BoletoOriginal:
                         Descricao = "Vencimento " + data.Value.ToShortDateString() + ", no valor de " + valor.ToString("C") + "";

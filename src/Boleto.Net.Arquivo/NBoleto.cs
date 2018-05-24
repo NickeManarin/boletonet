@@ -68,8 +68,6 @@ namespace BoletoNet.Arquivo
                 };
                 var vencimento = DateTime.Now.AddDays(10);
 
-                var item1 = new Instrucao_Caixa(9, null, 5);
-                var item2 = new Instrucao_Caixa(81, null, 10);
                 var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0132", "00542");
 
                 var b = new Boleto(vencimento, 460, "SR", "00000000010001", c);
@@ -91,16 +89,15 @@ namespace BoletoNet.Arquivo
                 b.Sacado.Endereco.Cep = "70000000";
                 b.Sacado.Endereco.Uf = "DF";
 
-                b.Instrucoes.Add(item1);
-                b.Instrucoes.Add(item2);
-
-                // juros/descontos
+                //juros/descontos
                 if (b.ValorDesconto == 0)
                 {
                     var item3 = new Instrucao_Caixa(999, null, 1);
                     b.Instrucoes.Add(item3);
                 }
 
+                b.Instrucoes.Add(new Instrucao(104, 998, null, 0, 8.5m, 10));
+                
                 bb.Boleto = b;
                 bb.Boleto.Valida();
 
@@ -392,6 +389,7 @@ namespace BoletoNet.Arquivo
                 //b.Instrucoes.Add(item);
 
                 b.Instrucoes.Add(new Instrucao(b.EspecieDocumento.Banco.Codigo, 0, "Ha", 5, 1));
+                b.Instrucoes.Add(new Instrucao(b.EspecieDocumento.Banco.Codigo, 998, null, 0, 8.5m, 10));
 
                 b.NumeroDocumento = "12345678901";
 
@@ -437,6 +435,8 @@ namespace BoletoNet.Arquivo
 
                 item.Descricao += " após " + item.Dias + " dias corridos do vencimento.";
                 b.Instrucoes.Add(item); //"Não Receber após o vencimento");
+
+                b.Instrucoes.Add(new Instrucao(237, 900, null, 0, 8.5m, 10));
 
                 bb.FormatoCarne = true;
                 bb.OcultarInstrucoes = true;
@@ -503,16 +503,24 @@ namespace BoletoNet.Arquivo
 
         public void GeraBoletoSicredi(int qtde)
         {
-            // Cria o boleto, e passa os parâmetros usuais
+            //Cria o boleto, e passa os parâmetros usuais
             var boletos = new List<BoletoBancario>();
             for (var i = 0; i < qtde; i++)
             {
                 var bb = new BoletoBancario();
                 bb.CodigoBanco = _codigoBanco;
 
-                var vencimento = DateTime.Now.AddDays(10);
+                var vencimento = new DateTime(2018, 04, 22);
 
-                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "1234", "5", "12345", "7");
+                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado")
+                {
+                    ContaBancaria = new ContaBancaria
+                    {
+                        Agencia = "0156",
+                        DigitoAgencia = "10",
+                        Conta = "13550"
+                    }
+                };
                 //c.Codigo = "13000";
 
                 var end = new Endereco();
@@ -525,13 +533,17 @@ namespace BoletoNet.Arquivo
                 end.Numero = "55";
                 end.Uf = "DF";
 
-                var b = new Boleto(vencimento, 1.01m, "02", "01000000001", c);
+                var b = new Boleto(vencimento, 586.35m, "A", "01000000001", c);
                 b.NumeroDocumento = "01000000001";
 
                 b.Sacado = new Sacado("000.000.000-00", "Eduardo Frare");
                 b.Sacado.Endereco = end;
 
-                b.NossoNumero = "17200002";
+                b.Instrucoes.Add(new Instrucao(748, 900, null, 0, 8.5m, 10));
+                b.Instrucoes.Add(new Instrucao(748, 312, null, 0, 8.5m, 10));
+
+                b.NossoNumero = "18221434";
+                b.DigitoNossoNumero = "7";
 
                 bb.Boleto = b;
                 bb.Boleto.Valida();
@@ -571,9 +583,9 @@ namespace BoletoNet.Arquivo
                 b.Sacado = new Sacado("000.000.000-00", "Eduardo Frare");
                 b.Sacado.Endereco = end;
 
-                b.Instrucoes.Add(new Instrucao_Banrisul(18, null, 10, 3.1m, EnumTipoValor.Percentual)); //"Não Receber após o vencimento");
-                b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 3.1m, EnumTipoValor.Percentual));
-                b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 3.1m, EnumTipoValor.Percentual));
+                b.Instrucoes.Add(new Instrucao_Banrisul(18, null, 10, 0.2m, 10)); //"Não Receber após o vencimento");
+                b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 0.2m, 10));
+                b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 0.2m, 10));
 
                 bb.FormatoCarne = false;
                 bb.OcultarInstrucoes = true;

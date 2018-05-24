@@ -742,7 +742,7 @@ namespace BoletoNet
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 221, 14, 0, boleto.Sacado.CpfCnpj, '0'));                   //221-234 Cpf/Cnpj do pagador.
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 235, 35, 0, boleto.Sacado.Nome.ToUpper(), ' '));            //235-269 Nome do pagador.
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 270, 05, 0, string.Empty, ' '));                            //270-274 Brancos.
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 275, 40, 0, boleto.Sacado.Endereco.EndComNumero.ToUpper(), ' '));    //275-314 Endereço.
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 275, 40, 0, boleto.Sacado.Endereco.EndComTudo.ToUpper(), ' '));    //275-314 Endereço.
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 315, 07, 0, string.Empty, ' '));                            //315-321 Brancos.
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 322, 03, 1, percJurosMulta, '0'));                          //322-324 Percentual de juros após o vencimento.
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 325, 02, 0, diasJurosMulta, '0'));                          //325-326 Dias para juros.

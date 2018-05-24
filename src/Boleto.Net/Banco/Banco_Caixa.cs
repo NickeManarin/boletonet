@@ -1447,21 +1447,21 @@ namespace BoletoNet
             try
             {
                 var reg = new RegistroEdi();
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0001, 003, 0, Codigo, '0'));                                   // posição 1 até 3     (3) - código do banco na compensação        
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0001, 003, 0, Codigo, '0'));                               // posição 1 até 3     (3) - código do banco na compensação        
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0004, 004, 0, "1", '0'));                                  // posição 4 até 7     (4) - Lote de Serviço
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0008, 001, 0, "5", '0'));                                           // posição 8 até 8     (1) - Tipo de Registro
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0009, 009, 0, string.Empty, ' '));                                  // posição 9 até 17    (9) - Uso Exclusivo FEBRABAN/CNAB
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0008, 001, 0, "5", '0'));                                  // posição 8 até 8     (1) - Tipo de Registro
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0009, 009, 0, string.Empty, ' '));                         // posição 9 até 17    (9) - Uso Exclusivo FEBRABAN/CNAB
                 #region Pega o Numero de Registros - Já está sendo Adicionado pelo ArquivoRemessaCNAB240
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0018, 006, 0, numeroRegistro, '0'));                                  // posição 18 até 23   (6) - Quantidade de Registros no Lote
                 #endregion
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0024, 006, 0, "0", '0'));                                           // posição 24 até 29   (6) - Quantidade de Títulos em Cobrança
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0030, 017, 2, "0", '0'));                                           // posição 30 até 46  (15) - Valor Total dos Títulos em Carteiras
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0047, 006, 0, "0", '0'));                                           // posição 47 até 52   (6) - Quantidade de Títulos em Cobrança
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0053, 017, 2, "0", '0'));                                           // posição 53 até 69   (15) - Valor Total dos Títulos em Carteiras                
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0070, 006, 0, "0", '0'));                                           // posição 70 até 75   (6) - Quantidade de Títulos em Cobrança
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0076, 017, 2, "0", '0'));                                           // posição 76 até 92   (15)- Quantidade de Títulos em Carteiras 
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0093, 031, 0, string.Empty, ' '));                                  // posição 93 até 123  (31) - Uso Exclusivo FEBRABAN/CNAB
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0124, 117, 0, string.Empty, ' '));                                  // posição 124 até 240  (117)- Uso Exclusivo FEBRABAN/CNAB                
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0024, 006, 0, "0", '0'));                                  // posição 24 até 29   (6) - Quantidade de Títulos em Cobrança
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0030, 017, 2, "0", '0'));                                  // posição 30 até 46  (15) - Valor Total dos Títulos em Carteiras
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0047, 006, 0, "0", '0'));                                  // posição 47 até 52   (6) - Quantidade de Títulos em Cobrança
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0053, 017, 2, "0", '0'));                                  // posição 53 até 69   (15) - Valor Total dos Títulos em Carteiras                
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0070, 006, 0, "0", '0'));                                  // posição 70 até 75   (6) - Quantidade de Títulos em Cobrança
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0076, 017, 2, "0", '0'));                                  // posição 76 até 92   (15)- Quantidade de Títulos em Carteiras 
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0093, 031, 0, string.Empty, ' '));                         // posição 93 até 123  (31) - Uso Exclusivo FEBRABAN/CNAB
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0124, 117, 0, string.Empty, ' '));                         // posição 124 até 240  (117)- Uso Exclusivo FEBRABAN/CNAB                
                 reg.CodificarLinha();
                 //
                 var vLinha = reg.LinhaRegistro;

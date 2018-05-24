@@ -45,16 +45,16 @@ namespace BoletoNet
             }
         }
 
-        public Instrucao_Sicredi(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
+        public Instrucao_Sicredi(int cod, string descricao = null, int dias = 0, decimal valor = 0m, decimal valorBoleto = 0m)
         {
-            Carrega(cod, descricao, dias, valor, tipo);
+            Carrega(cod, descricao, dias, valor, valorBoleto);
         }
 
         #endregion
 
         #region Métodos
 
-        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0, EnumTipoValor tipo = EnumTipoValor.Percentual, DateTime? data = null)
+        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0, decimal valorBoleto = 0, DateTime? data = null)
         {
             Banco = new Banco_Sicredi();
 
@@ -62,7 +62,7 @@ namespace BoletoNet
             Descricao = descricao;
             Dias = dias;
             Valor = valor;
-            Tipo = tipo;
+            Tipo = EnumTipoValor.Percentual;
 
             Valida();
 
@@ -85,7 +85,7 @@ namespace BoletoNet
                     Descricao = "";
                     break;
                 case EnumInstrucoes_Sicredi.PedidoProtesto:
-                    Descricao = "  - PROTESTAR APÓS " + dias + " DIAS ÚTEIS DO VENCIMENTO";
+                    Descricao = "  - PROTESTAR APÓS " + dias + (dias > 4 ? " DIAS CORRIDOS DO VENCIMENTO" : " DIAS ÚTEIS DO VENCIMENTO");
                     break;
                 case EnumInstrucoes_Sicredi.SustarProtestoBaixarTitulo:
                     Descricao = "";
@@ -97,14 +97,10 @@ namespace BoletoNet
                     Descricao = "";
                     break;
                 case EnumInstrucoes_Sicredi.OutrasInstrucoes_ExibeMensagem_MoraDiaria:
-                    Descricao = string.Format("  - APÓS VENCIMENTO COBRAR JUROS DE {0} {1} POR DIA DE ATRASO",
-                        tipo.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2"),
-                        tipo.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
+                    Descricao = $"  - APÓS VENCIMENTO COBRAR JUROS DE R$ {decimal.Round((valor * valorBoleto) / 100m, 2, MidpointRounding.ToEven):F2} ({valor:F2} %) POR DIA DE ATRASO";
                     break;
                 case EnumInstrucoes_Sicredi.OutrasInstrucoes_ExibeMensagem_MultaVencimento:
-                    Descricao = string.Format("  - APÓS VENCIMENTO COBRAR MULTA DE {0} {1}",
-                        tipo.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2"),
-                        tipo.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
+                    Descricao = $"  - APÓS VENCIMENTO COBRAR MULTA DE {valor:F2} %";
                     break;
                 case EnumInstrucoes_Sicredi.AlteracaoOutrosDados_Desconto:
                     Descricao = "  - CONCEDER DESCONTO DE R$ " + valor;
@@ -113,7 +109,7 @@ namespace BoletoNet
                     Descricao = "  - CONCEDER DESCONTO DE R$ " + string.Format(new CultureInfo("pt-BR"), "{0:###,###.00}", valor) + "POR DIA DE ANTECIPAÇÃO";
                     break;
                 case EnumInstrucoes_Sicredi.AlteracaoOutrosDados_JuroDia:
-                    Descricao = "  - APÓS VENCIMENTO COBRAR JURO DE " + valor + "% POR DIA DE ATRASO";
+                    Descricao = $"  - APÓS VENCIMENTO COBRAR JUROS DE {valor:F2} % (R$ {decimal.Round((valor * valorBoleto) / 100m, 2, MidpointRounding.ToEven):F2}) POR DIA DE ATRASO";
                     break;
                 default:
                     Descricao = descricao;

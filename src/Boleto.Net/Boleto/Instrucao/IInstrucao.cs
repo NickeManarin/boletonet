@@ -16,6 +16,6 @@ namespace BoletoNet
         /// </summary>
         void Valida();
 
-        void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual, DateTime? data = null);
+        void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, decimal valorTotal = 0m, DateTime? data = null);
     }
 }

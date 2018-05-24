@@ -42,16 +42,16 @@ namespace BoletoNet
             }
         }
 
-        public Instrucao_BancoBrasil(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
+        public Instrucao_BancoBrasil(int cod, string descricao = null, int dias = 0, decimal valor = 0m, decimal valorBoleto = 0m)
         {
-            Carrega(cod, descricao, dias, valor, tipo);
+            Carrega(cod, descricao, dias, valor, valorBoleto);
         }
 
         #endregion
 
         #region Métodos
 
-        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual, DateTime? data = null)
+        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, decimal valorTotal = 0m, DateTime? data = null)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace BoletoNet
                 Descricao = descricao;
                 Dias = dias;
                 Valor = valor;
-                Tipo = tipo;
+                Tipo = EnumTipoValor.Percentual;
 
                 Valida();
 
@@ -83,14 +83,10 @@ namespace BoletoNet
                         Descricao = "Protestar no " + dias + "º dia corrido após vencimento";
                         break;
                     case EnumInstrucoes_BancoBrasil.JurosdeMora:
-                        Descricao = string.Format("Após vencimento cobrar juros de {0} {1} por dia de atraso",
-                            tipo.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2"),
-                            tipo.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
+                        Descricao = $"Após vencimento cobrar juros de R$ {decimal.Round((valor * valorTotal) / 100m, 2, MidpointRounding.ToEven):F2} ({valor:F2} %) por dia de atraso";
                         break;
                     case EnumInstrucoes_BancoBrasil.Multa:
-                        Descricao = string.Format("Após vencimento cobrar multa de {0} {1}",
-                            tipo.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2"),
-                            tipo.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2"));
+                        Descricao = $"Após vencimento cobrar multa de {valor:F2} %";
                         break;
 
                     //case EnumInstrucoes_BancoBrasil.Protestar:

@@ -33,16 +33,16 @@ namespace BoletoNet
             }
         }
 
-        public Instrucao_Banrisul(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual)
+        public Instrucao_Banrisul(int cod, string descricao = null, int dias = 0, decimal valor = 0m, decimal valorTotal = 0m)
         {
-            Carrega(cod, descricao, dias, valor, tipo);
+            Carrega(cod, descricao, dias, valor, valorTotal);
         }
         
         #endregion
 
         #region Métodos
 
-        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, EnumTipoValor tipo = EnumTipoValor.Percentual, DateTime? data = null)
+        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, decimal valorTotal = 0m, DateTime? data = null)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace BoletoNet
                 Descricao = descricao;
                 Dias = dias;
                 Valor = valor;
-                Tipo = tipo;
+                Tipo = EnumTipoValor.Percentual;
 
                 Valida();
 

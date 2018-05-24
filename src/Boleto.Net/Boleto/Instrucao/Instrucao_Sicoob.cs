@@ -41,7 +41,7 @@ namespace BoletoNet
 		{
 			try
 			{
-				this.Banco = new Banco(756);
+				Banco = new Banco(756);
 			}
 			catch (Exception ex)
 			{
@@ -51,22 +51,22 @@ namespace BoletoNet
 
 		public Instrucao_Sicoob(int codigo)
 		{
-			this.carregar(codigo, 0, 0);
+			carregar(codigo, 0, 0);
 		}
 
 		public Instrucao_Sicoob(int codigo, int nrDias)
 		{
-			this.carregar(codigo, nrDias, (double)0.0);
+			carregar(codigo, nrDias, (double)0.0);
 		}
 
 		public Instrucao_Sicoob(int codigo, double percentualMultaDia)
 		{
-			this.carregar(codigo, 0, percentualMultaDia);
+			carregar(codigo, 0, percentualMultaDia);
 		}
 
 		public Instrucao_Sicoob(int codigo, int nrDias, double percentualMultaDia)
 		{
-			this.carregar(codigo, nrDias, percentualMultaDia);
+			carregar(codigo, nrDias, percentualMultaDia);
 		}
 
 		#endregion
@@ -77,65 +77,65 @@ namespace BoletoNet
         {
             try
             {
-                this.Banco = new Banco_Banrisul();
-                this.Valida();
+                Banco = new Banco_Banrisul();
+                Valida();
 
                 switch ((EnumInstrucoes_Sicoob)idInstrucao)
                 {
                     case EnumInstrucoes_Sicoob.AusenciaDeInstrucoes:
                         break;
                     case EnumInstrucoes_Sicoob.CobrarJuros:
-                        this.Codigo = (int)EnumInstrucoes_Sicoob.CobrarJuros;
-                        this.Descricao = "Cobrar Juros";
+                        Codigo = (int)EnumInstrucoes_Sicoob.CobrarJuros;
+                        Descricao = "Cobrar Juros";
                         break;
                     case EnumInstrucoes_Sicoob.Protestar3DiasUteis:
-                        this.Codigo = (int)EnumInstrucoes_Sicoob.Protestar3DiasUteis;
-                        this.Descricao = "Protestar 3 dias úteis após vencimento";
+                        Codigo = (int)EnumInstrucoes_Sicoob.Protestar3DiasUteis;
+                        Descricao = "Protestar 3 dias úteis após vencimento";
                         break;
                     case EnumInstrucoes_Sicoob.Protestar4DiasUteis:
-                        this.Codigo = (int)EnumInstrucoes_Sicoob.Protestar4DiasUteis;
-                        this.Descricao = "Protestar 4 dias úteis após vencimento";
+                        Codigo = (int)EnumInstrucoes_Sicoob.Protestar4DiasUteis;
+                        Descricao = "Protestar 4 dias úteis após vencimento";
                         break;
                     case EnumInstrucoes_Sicoob.Protestar5DiasUteis:
-                        this.Codigo = (int)EnumInstrucoes_Sicoob.Protestar5DiasUteis;
-                        this.Descricao = "Protestar 5 dias úteis após vencimento";
+                        Codigo = (int)EnumInstrucoes_Sicoob.Protestar5DiasUteis;
+                        Descricao = "Protestar 5 dias úteis após vencimento";
                         break;
                     case EnumInstrucoes_Sicoob.NaoProtestar:
-                        this.Codigo = (int)EnumInstrucoes_Sicoob.NaoProtestar;
-                        this.Descricao = "Não protestar";
+                        Codigo = (int)EnumInstrucoes_Sicoob.NaoProtestar;
+                        Descricao = "Não protestar";
                         break;
                     case EnumInstrucoes_Sicoob.Protestar10DiasUteis:
-                        this.Codigo = (int)EnumInstrucoes_Sicoob.Protestar10DiasUteis;
-                        this.Descricao = "Protestar 10 dias úteis após vencimento";
+                        Codigo = (int)EnumInstrucoes_Sicoob.Protestar10DiasUteis;
+                        Descricao = "Protestar 10 dias úteis após vencimento";
                         break;
                     case EnumInstrucoes_Sicoob.Protestar15DiasUteis:
-                        this.Codigo = (int)EnumInstrucoes_Sicoob.Protestar15DiasUteis;
-                        this.Descricao = "Protestar 15 dias úteis após vencimento";
+                        Codigo = (int)EnumInstrucoes_Sicoob.Protestar15DiasUteis;
+                        Descricao = "Protestar 15 dias úteis após vencimento";
                         break;
                     case EnumInstrucoes_Sicoob.Protestar20DiasUteis:
-                        this.Codigo = (int)EnumInstrucoes_Sicoob.Protestar20DiasUteis;
-                        this.Descricao = "Protestar 20 dias úteis após vencimento";
+                        Codigo = (int)EnumInstrucoes_Sicoob.Protestar20DiasUteis;
+                        Descricao = "Protestar 20 dias úteis após vencimento";
                         break;
                     case EnumInstrucoes_Sicoob.ConcederDescontoApenasAteDataEstipulada:
-                        this.Codigo = (int)EnumInstrucoes_Sicoob.ConcederDescontoApenasAteDataEstipulada;
-                        this.Descricao = "Conceder desconto só até a data estipulada";
+                        Codigo = (int)EnumInstrucoes_Sicoob.ConcederDescontoApenasAteDataEstipulada;
+                        Descricao = "Conceder desconto só até a data estipulada";
                         break;
                     case EnumInstrucoes_Sicoob.DevolverApos15DiasVencido:
-                        this.Codigo = (int)EnumInstrucoes_Sicoob.DevolverApos15DiasVencido;
-                        this.Descricao = "Devolver após 15 dias vencido";
+                        Codigo = (int)EnumInstrucoes_Sicoob.DevolverApos15DiasVencido;
+                        Descricao = "Devolver após 15 dias vencido";
                         break;
                     case EnumInstrucoes_Sicoob.DevolverApos30DiasVencido:
-                        this.Codigo = (int)EnumInstrucoes_Sicoob.DevolverApos30DiasVencido;
-                        this.Descricao = "Devolver após 30 dias vencido";
+                        Codigo = (int)EnumInstrucoes_Sicoob.DevolverApos30DiasVencido;
+                        Descricao = "Devolver após 30 dias vencido";
                         break;
                     default:
-                        this.Codigo = 0;
-                        this.Descricao = " (Selecione) ";
+                        Codigo = 0;
+                        Descricao = " (Selecione) ";
                         break;
 
                 }
 
-				this.Dias = nrDias;
+				Dias = nrDias;
 			}
 			catch (Exception ex)
 			{
