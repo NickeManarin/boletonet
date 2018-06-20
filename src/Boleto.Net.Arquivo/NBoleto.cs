@@ -16,8 +16,8 @@ namespace BoletoNet.Arquivo
 
         public short CodigoBanco
         {
-            get { return _codigoBanco; }
-            set { _codigoBanco = value; }
+            get => _codigoBanco;
+            set => _codigoBanco = value;
         }
 
         public NBoleto()
@@ -55,9 +55,9 @@ namespace BoletoNet.Arquivo
 
         private void GeraBoletoCaixa(int qtde)
         {
-            // Cria o boleto, e passa os parâmetros usuais
-
+            //Cria o boleto, e passa os parâmetros usuais
             var boletos = new List<BoletoBancario>();
+
             for (var i = 0; i < qtde; i++)
             {
 
@@ -97,7 +97,7 @@ namespace BoletoNet.Arquivo
                 }
 
                 b.Instrucoes.Add(new Instrucao(104, 998, null, 0, 8.5m, 10));
-                
+
                 bb.Boleto = b;
                 bb.Boleto.Valida();
 
@@ -558,6 +558,7 @@ namespace BoletoNet.Arquivo
         {
             //Cria o boleto, e passa os parâmetros usuais.
             var boletos = new List<BoletoBancario>();
+
             for (var i = 0; i < qtde; i++)
             {
                 var bb = new BoletoBancario();
@@ -587,6 +588,106 @@ namespace BoletoNet.Arquivo
                 b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 0.2m, 10));
                 b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 0.2m, 10));
 
+                bb.FormatoCarne = false;
+                bb.OcultarInstrucoes = true;
+                bb.ExibirDemonstrativo = true;
+                bb.MostrarComprovanteEntrega = true;
+                bb.Boleto = b;
+                bb.Boleto.Valida();
+
+                boletos.Add(bb);
+            }
+
+            GeraLayout(boletos);
+        }
+
+        public void GeraBoletoSicoob(int quant)
+        {
+            var boletos = new List<BoletoBancario>();
+
+            for (var i = 0; i < quant; i++)
+            {
+                var conta = new ContaBancaria
+                {
+                    Agencia = "3066",
+                    DigitoAgencia = "0",
+                    Conta = "12345678",
+                    DigitoConta = "2"
+                };
+
+                var b = new Boleto
+                {
+                    DataProcessamento = DateTime.Now,
+                    DataDocumento = DateTime.Now,
+                    DataVencimento = new DateTime(2018, 10, 15),
+                    ValorBoleto = 192.09m,
+                    Aceite = "N",
+                    NossoNumero = "1234567",
+                    DigitoNossoNumero = "3",
+                    NumeroDocumento = "1234567/01",
+                    Postagem = false,
+                    PercJurosMora = 0.2m,
+                    PercMulta = 2m,
+                    Carteira = "1", //TODO
+                    Parcela = 1, //TODO
+
+                    //O credor, a empresa que está emitindo este boleto, quem vai receber os valores quando pago.
+                    Cedente = new Cedente
+                    {
+                        ContaBancaria = conta,
+                        CpfCnpj = "94.212.349/0001-30",
+                        Nome = "Empresa do Seu Juca",
+                        Codigo = "1234567", //Em alguns bancos, isso é diferente, no Sicoob esse número deve ser preenchido.
+                        //Convenio = Convert.ToInt32("0" + movBoleto.MovCpr.Banco.CodConvenio), //Alguns bancos não tem isso.
+                        MostrarCnpjNoBoleto = true,
+
+                        Endereco = new Endereco
+                        {
+                            End = "Av. Independência",
+                            Numero = "108",
+                            Complemento = "Casa 7",
+                            Bairro = "Universitário",
+                            Cidade = "Santa Cruz do Sul",
+                            Cep = "96815326",
+                            Uf = "RS"
+                        }
+                    },
+
+                    //Cliente.
+                    Sacado = new Sacado
+                    {
+                        CpfCnpj = "",
+                        Nome = "Julia Silveira",
+
+                        Endereco = new Endereco
+                        {
+                            End = "Av. Thomas Flores",
+                            Numero = "1580",
+                            Complemento = "Casa 20",
+                            Bairro = "Avenida",
+                            Cidade = "Santa Cruz do Sul",
+                            Cep = "96815326",
+                            Uf = "RS"
+                        }
+                    }
+                };
+
+                b.Banco = new Banco(756);
+                b.EspecieDocumento = new EspecieDocumento(756, "01");
+                b.Remessa = new Remessa
+                {
+                    CodigoOcorrencia = "01", //Ação da remessa, geralmente '01'.
+                    Ambiente = Remessa.TipoAmbiente.Producao
+                };
+
+                b.DataDesconto = b.DataVencimento.AddDays(5 * -1); //5 dias atrás, ermite desconto.
+                b.ValorDesconto = Math.Round(b.ValorBoleto * (2m / 100), 2); //2% de desconto.
+
+                b.Instrucoes.Add(new Instrucao_Sicoob(1));
+                b.Instrucoes.Add(new Instrucao_Sicoob(99, null, 20));
+                
+                var bb = new BoletoBancario();
+                bb.CodigoBanco = _codigoBanco;
                 bb.FormatoCarne = false;
                 bb.OcultarInstrucoes = true;
                 bb.ExibirDemonstrativo = true;
@@ -643,6 +744,7 @@ namespace BoletoNet.Arquivo
                 case 104: // Caixa
                     GeraBoletoCaixa((int)numericUpDown.Value);
                     break;
+
                 case 4: //BNB
                     GeraBoletoBnb((int)numericUpDown.Value);
                     break;
@@ -650,8 +752,11 @@ namespace BoletoNet.Arquivo
                 case 748: //Sicredi.
                     GeraBoletoSicredi((int)numericUpDown.Value);
                     break;
-            }
 
+                case 756: //Sicoob.
+                    GeraBoletoSicoob((int)numericUpDown.Value);
+                    break;
+            }
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -661,7 +766,6 @@ namespace BoletoNet.Arquivo
             // Cria um formulário com um componente WebBrowser dentro
             _impressaoBoleto.webBrowser.Navigate(_arquivo);
             _impressaoBoleto.ShowDialog();
-
         }
 
         private void button2_Click(object sender, EventArgs e)

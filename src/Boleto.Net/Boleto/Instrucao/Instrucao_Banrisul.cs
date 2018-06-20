@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 
 namespace BoletoNet
 {
@@ -13,6 +14,9 @@ namespace BoletoNet
         CobrarMultaAposNDias = 18,           //18 - Após NN dias do vencimento, cobrar xx,x% de multa. 
         CobrarMultaOuFracaoAposNDias = 20,   //20 - Após NN dias do vencimento, cobrar xx,x% de multa ao mês ou fração. 
         NaoProtestar = 23,                   //23 - Não protestar.
+
+        JurosMoraDia = 998,                  //998 - Juros de mora (Valor ao dia).
+        JurosMoraMes = 999,                  //999 - Juros de mora (Taxa mensal).
     }
 
     #endregion
@@ -71,13 +75,20 @@ namespace BoletoNet
                         Descricao = "Devolver se não pago após " + dias + " dias do vencimento"; //15
                         break;
                     case EnumInstrucoes_Banrisul.CobrarMultaAposNDias:
-                        Descricao = "Após " + dias + " dias do vencimento, cobrar " + valor + "% de multa"; //18
+                        Descricao = $"Após {(dias > 0 ? $"{dias} dias d" : "")}o vencimento, cobrar {valor.ToString("F2", new CultureInfo("pt-BR"))} % de multa."; //18
                         break;
                     case EnumInstrucoes_Banrisul.CobrarMultaOuFracaoAposNDias:
-                        Descricao = "Após " + dias + " dias do vencimento, cobrar " + valor + "% de multa ao mês ou fração"; //20
+                        Descricao = $"Após {(dias > 0 ? $"{dias} dias d" : "")}o vencimento, cobrar {valor.ToString("F2", new CultureInfo("pt-BR"))} % de multa ao mês ou fração."; //20
+                        //Descricao = "Após " + dias + " dias do vencimento, cobrar " + valor + "% de multa ao mês ou fração"; //20
                         break;
                     case EnumInstrucoes_Banrisul.NaoProtestar:
                         Descricao = "Não protestar"; //23
+                        break;
+                    case EnumInstrucoes_Banrisul.JurosMoraDia:
+                        Descricao = $"Após o vencimento, cobrar {Math.Round(valorTotal * valor/100m, 2, MidpointRounding.ToEven).ToString("C2", new CultureInfo("pt-BR"))} de juros ao dia."; //998
+                        break;
+                    case EnumInstrucoes_Banrisul.JurosMoraMes:
+                        Descricao = $"Após o vencimento, cobrar {valor.ToString("F2", new CultureInfo("pt-BR"))} % de juros ao mês."; //998
                         break;
                     default:
                         Descricao = descricao;

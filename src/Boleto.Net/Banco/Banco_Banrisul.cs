@@ -31,8 +31,20 @@ namespace BoletoNet
             if (boleto.Cedente.ContaBancaria.Conta.Length != 7)
                 boleto.Cedente.ContaBancaria.Conta = Utils.FormatCode(boleto.Cedente.ContaBancaria.Conta, 7);
 
-            if (boleto.Instrucoes.Count(x => x.Codigo != 0) > 2)
-                throw new Exception("Máximo de duas instruções permitidas por boleto.");
+            if (boleto.Instrucoes.Count(x => x.Codigo != 0 && x.Codigo < 100) > 2)
+                throw new Exception("Máximo de duas instruções (entre as instruções de código 1 e 23) permitidas por boleto.");
+
+            if (boleto.Instrucoes.Count(x => x.Codigo == 998) > 0 && boleto.Instrucoes.Count(x => x.Codigo == 999) > 0)
+                throw new Exception("As instruções 998 e 999 não podem ser utilizadas ao mesmo tempo.");
+
+            if (string.IsNullOrWhiteSpace(boleto.CodJurosMora) || (boleto.CodJurosMora != "0" && boleto.CodJurosMora != "1"))
+                throw new Exception("O tipo de juros de mora correto não foi informado (0:Valor diário ou 1:Taxa mensal).");
+
+            if (boleto.Instrucoes.Count(x => x.Codigo == 998) > 0 && boleto.CodJurosMora == "1")
+                throw new Exception("A instrução 998 só pode ser utilizada com o tipo de juros de mora 0:Valor ao dia.");
+
+            if (boleto.Instrucoes.Count(x => x.Codigo == 999) > 0 && boleto.CodJurosMora == "0")
+                throw new Exception("A instrução 999 só pode ser utilizada com o tipo de juros de mora 1:Taxa mensal.");
 
             //Formata o tamanho do número de nosso número.
             if (boleto.NossoNumero.Length < 8)
@@ -442,6 +454,34 @@ namespace BoletoNet
             }
         }
 
+        public override string GerarMensagemVariavelRemessa(Boleto boleto, ref int numeroRegistro, TipoArquivo tipoArquivo)
+        {
+            try
+            {
+                var detalhe = " ";
+
+                base.GerarMensagemVariavelRemessa(boleto, ref numeroRegistro, tipoArquivo);
+
+                switch (tipoArquivo)
+                {
+                    case TipoArquivo.Cnab240:
+                        //detalhe = GerarDetalheRemessaCNAB240();
+                        break;
+                    case TipoArquivo.Cnab400:
+                        detalhe = GerarMensagemRemessaCnab400(boleto, numeroRegistro);
+                        break;
+                    case TipoArquivo.Outro:
+                        throw new Exception("Tipo de arquivo inexistente.");
+                }
+
+                return detalhe;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro durante a geração da Mensagem do arquivo de REMESSA.", ex);
+            }
+        }
+
         /// <summary>
         /// TRAILER do arquivo CNAB
         /// Gera o TRAILER do arquivo remessa de acordo com o lay-out informado
@@ -574,15 +614,39 @@ namespace BoletoNet
                     #endregion
                 }
 
-                if (boleto.Instrucoes.Count(x => x.Codigo != 0) > 2)
+                if (boleto.Instrucoes.Count(x => x.Codigo != 0 && x.Codigo < 100) > 2)
                 {
                     vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: Apenas 2 instruções são permitidas no boleto!", Environment.NewLine);
                     vRetorno = false;
                 }
 
+                if (boleto.Instrucoes.Count(x => x.Codigo == 998) > 0 && boleto.Instrucoes.Count(x => x.Codigo == 999) > 0)
+                {
+                    vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: A instrução 998 e 999 não podem ser utilizadas ao mesmo tempo.", Environment.NewLine);
+                    vRetorno = false;
+                }
+
+                if (string.IsNullOrWhiteSpace(boleto.CodJurosMora) || (boleto.CodJurosMora != "0" && boleto.CodJurosMora != "1"))
+                {
+                    vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: O tipo de juros de mora correto não foi informado (0:Valor diário ou 1:Taxa mensal).", Environment.NewLine);
+                    vRetorno = false;
+                }
+
+                if (boleto.Instrucoes.Count(x => x.Codigo == 998) > 0 && boleto.CodJurosMora == "1")
+                {
+                    vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: A instrução 998 só pode ser utilizada com o tipo de juros de mora 0:Valor ao dia.", Environment.NewLine);
+                    vRetorno = false;
+                }
+
+                if (boleto.Instrucoes.Count(x => x.Codigo == 999) > 0 && boleto.CodJurosMora == "0")
+                {
+                    vMsg += string.Concat("Boleto: ", boleto.NumeroDocumento, "; Remessa: A instrução 999 só pode ser utilizada com o tipo de juros de mora 1:Taxa mensal.", Environment.NewLine);
+                    vRetorno = false;
+                }
+
                 #endregion
             }
-            
+
             mensagem = vMsg;
             return vRetorno;
         }
@@ -650,13 +714,13 @@ namespace BoletoNet
                 #region Instruções
 
                 var diasProtestoDevolução = 0;
-                var diasJurosMulta = 0;
-                var percJurosMulta = 0m;
+                var diasTaxaMulta = 0;
+                var percTaxaMulta = 0m;
 
                 var vInstrucao1 = "";
                 var vInstrucao2 = "";
 
-                var instList = boleto.Instrucoes.Where(x => x.Codigo != 0).ToList();
+                var instList = boleto.Instrucoes.Where(x => x.Codigo != 0 && x.Codigo < 100).ToList();
 
                 if (instList.Any())
                 {
@@ -667,8 +731,8 @@ namespace BoletoNet
 
                     if (instList[0].Codigo == 18 || instList[0].Codigo == 20)
                     {
-                        diasJurosMulta = instList[0].Dias;
-                        percJurosMulta = instList[0].Valor;
+                        diasTaxaMulta = instList[0].Dias;
+                        percTaxaMulta = instList[0].Valor;
                     }
 
                     if (instList.Count > 1)
@@ -680,40 +744,18 @@ namespace BoletoNet
 
                         if (instList[1].Codigo == 18 || instList[1].Codigo == 20)
                         {
-                            diasJurosMulta = instList[1].Dias;
-                            percJurosMulta = instList[1].Valor;
+                            diasTaxaMulta = instList[1].Dias;
+                            percTaxaMulta = instList[1].Valor;
                         }
                     }
                 }
-
-                //switch (boleto.Instrucoes.Count)
-                //{
-                //    case 1:
-                //        vInstrucao1 = boleto.Instrucoes[0].Codigo.ToString().PadLeft(2, '0');
-                //        vInstrucao2 = string.Empty;
-
-                //        if (boleto.Instrucoes[0].Codigo == 9 || boleto.Instrucoes[0].Codigo == 15)
-                //            diasProtestoDevolução = boleto.Instrucoes[0].Dias;               
-                //        break;
-                //    case 2:
-                //        vInstrucao1 += boleto.Instrucoes[0].Codigo.ToString().PadLeft(2, '0');
-                        
-                //        if (boleto.Instrucoes[0].Codigo == 9 || boleto.Instrucoes[0].Codigo == 15)
-                //            diasProtestoDevolução = boleto.Instrucoes[0].Dias;
-                        
-                //        vInstrucao2 += boleto.Instrucoes[1].Codigo.ToString().PadLeft(2, '0');
-                        
-                //        if (boleto.Instrucoes[1].Codigo == 9 || boleto.Instrucoes[1].Codigo == 15)
-                //            diasProtestoDevolução = boleto.Instrucoes[1].Dias;                    
-                //        break;
-                //}
                 
                 #endregion
-                
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 157, 02, 0, vInstrucao1, ' '));       //157-158 Instrução 1.
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 159, 02, 0, vInstrucao2, ' '));       //159-160 Instrução 2.
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 161, 01, 0, "0", ' '));               //161-161 Código de mora. (0: Diário, 1:Mensal)
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 162, 12, 2, boleto.JurosMora, '0'));  //162-173 Juros de mora.
+
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 157, 02, 0, vInstrucao1, ' '));         //157-158 Instrução 1.
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 159, 02, 0, vInstrucao2, ' '));         //159-160 Instrução 2.
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 161, 01, 0, boleto.CodJurosMora, ' ')); //161-161 Código de mora. (0: Diário, 1:Mensal)
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 162, 12, 2, boleto.JurosMora, '0'));    //162-173 Juros de mora.
                                                                                                                      
                 #region Data Desconto
 
@@ -742,22 +784,76 @@ namespace BoletoNet
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 221, 14, 0, boleto.Sacado.CpfCnpj, '0'));                   //221-234 Cpf/Cnpj do pagador.
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 235, 35, 0, boleto.Sacado.Nome.ToUpper(), ' '));            //235-269 Nome do pagador.
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 270, 05, 0, string.Empty, ' '));                            //270-274 Brancos.
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 275, 40, 0, boleto.Sacado.Endereco.EndComTudo.ToUpper(), ' '));    //275-314 Endereço.
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 275, 40, 0, boleto.Sacado.Endereco.EndComTudo.ToUpper(), ' ')); //275-314 Endereço.
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 315, 07, 0, string.Empty, ' '));                            //315-321 Brancos.
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 322, 03, 1, percJurosMulta, '0'));                          //322-324 Percentual de juros após o vencimento.
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 325, 02, 0, diasJurosMulta, '0'));                          //325-326 Dias para juros.
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 322, 03, 1, percTaxaMulta, '0'));                           //322-324 Percentual de multa após o vencimento.
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 325, 02, 0, diasTaxaMulta, '0'));                           //325-326 Dias para multa.
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 327, 08, 0, boleto.Sacado.Endereco.Cep, '0'));              //327-334 Cep.
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 335, 15, 0, boleto.Sacado.Endereco.Cidade.ToUpper(), ' ')); //335-349 Cidade.
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 350, 02, 0, boleto.Sacado.Endereco.Uf.ToUpper(), ' '));     //350-351 Uf.
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 352, 04, 1, 0, '0'));                                       //352-355 Taxa de desconto ao dia de antecipação.
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 356, 01, 0, string.Empty, ' '));                            //356-356 Brancos.
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 357, 13, 2, 0, '0'));                                       //357-369 Valor para cálculo do desconto.
+
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 352, 18, 0, string.Empty, ' '));                            //352-369 Brancos.
+                //reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 352, 04, 1, 0, '0'));                                     //352-355 Taxa de desconto ao dia de antecipação.
+                //reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 356, 01, 0, string.Empty, ' '));                          //356-356 Brancos.
+                //reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 357, 13, 2, 0, '0'));                                     //357-369 Valor para cálculo do desconto.
+
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 370, 02, 0, diasProtestoDevolução, '0'));                   //370-371 Números de dia para protesto ou devolução automática.
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 372, 23, 0, string.Empty, ' '));                            //372-394 Brancos.
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 395, 06, 0, numeroRegistro, '0'));                          //395-400 Número do registro.
 
                 reg.CodificarLinha();
                 
+                return Utils.SubstituiCaracteresEspeciais(reg.LinhaRegistro);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao gerar DETALHE do arquivo CNAB400.", ex);
+            }
+        }
+
+        public string GerarMensagemRemessaCnab400(Boleto boleto, int numeroRegistro)
+        {
+            try
+            {
+                var list = boleto.Instrucoes.Where(w => w.Codigo == 0).ToList();
+
+                if (!list.Any())
+                    return "";
+
+                var vCpfCnpj = "99";
+                if (boleto.Cedente.CpfCnpj.Length.Equals(11))
+                    vCpfCnpj = "01"; //Cpf é sempre 11;
+                else if (boleto.Cedente.CpfCnpj.Length.Equals(14))
+                    vCpfCnpj = "02"; //Cnpj é sempre 14;
+
+                var reg = new RegistroEdi();
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 001, 01, 0, "1", ' '));                       //001-001 Literal '1'
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 002, 02, 0, vCpfCnpj, '0'));                  //002-003 '01' - Cpf ou '02' - Cnpj
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 004, 14, 0, boleto.Cedente.CpfCnpj, '0'));    //004-017 Cpf/Cnpj do pagador.
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 018, 13, 0, boleto.Cedente.ContaBancaria.Agencia.PadLeft(4, '0') +
+                    boleto.Cedente.Codigo.PadLeft(7, '0') + boleto.ContaBancaria.DigitoConta.PadLeft(2, '0'), ' ')); //018-030 Agência + Código do Cedente.
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 031, 07, 0, string.Empty, ' '));                     //031-037 Brancos
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 038, 25, 0, boleto.NumeroDocumento, ' '));           //038-062 Identificação de Título (Alfanumérico opcional)
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 063, 10, 0, boleto.NossoNumero + boleto.DigitoNossoNumero, '0')); //063-072 Nosso Número (2 dígitos verificadores);
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 073, 32, 0, string.Empty, ' '));                     //073-104 Brancos
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 105, 03, 0, string.Empty, ' '));                     //105-107 Brancos
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 108, 01, 0, boleto.Carteira, ' '));                  //108-108 Tipo de carteira
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 109, 02, 0, 98, ' '));                               //109-110 Código da ocorrência, 98: Mensagens.
+
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 111, 1, 0, "1", ' '));                                      //111-111 Número de controle. 1: Primeira linha. 
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 112, 90, 0, list.Count > 0 ? list[0].Descricao : "", ' ')); //112-201 Instrução 1.
+
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 202, 1, 0, " ", ' '));                                      //202-202 Número de controle. ' ': não pular linha.
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 203, 90, 0, list.Count > 1 ? list[1].Descricao : "", ' ')); //203-292 Instrução 2.
+
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 293, 1, 0, " ", ' '));                                      //293-293 Número de controle. ' ': não pular linha.
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 294, 90, 0, list.Count > 2 ? list[2].Descricao : "", ' ')); //294-383 Instrução 3.
+
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 384, 11, 0, string.Empty, ' '));                            //372-394 Brancos.
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 395, 06, 0, numeroRegistro, '0'));                          //395-400 Número do registro.
+
+                reg.CodificarLinha();
+
                 return Utils.SubstituiCaracteresEspeciais(reg.LinhaRegistro);
             }
             catch (Exception ex)
@@ -819,8 +915,8 @@ namespace BoletoNet
                 detalhe.DataOcorrencia = Utils.ToDateTime(dataOcorrencia.ToString("##-##-##"));
                 detalhe.NumeroDocumento = reg.SeuNumero;
                 detalhe.NossoNumeroComDV = reg.NossoNumero;
-                detalhe.NossoNumero = reg.NossoNumero.Substring(0, reg.NossoNumero.Length - 1); //Nosso Número sem o DV!
-                detalhe.DACNossoNumero = reg.NossoNumero.Substring(reg.NossoNumero.Length - 1); //DV
+                detalhe.NossoNumero = reg.NossoNumero.Substring(0, reg.NossoNumero.Length - 2); //Nosso Número sem o DV!
+                detalhe.DACNossoNumero = reg.NossoNumero.Substring(reg.NossoNumero.Length - 2); //DV
                 
                 var dataVencimento = Utils.ToInt32(reg.DataVencimentoTitulo);
                 detalhe.DataVencimento = Utils.ToDateTime(dataVencimento.ToString("##-##-##"));

@@ -741,26 +741,21 @@ namespace BoletoNet
         }
 
         /// <summary>
-        /// Encontra multiplo de 10 igual ou superior a soma e subtrai multiplo da soma devolvendo o resultado
+        /// Encontra multiplo de 10 igual ou superior a soma e subtrai o multiplo da soma, devolvendo o resultado.
         /// </summary>
-        /// <param name="soma"></param>
-        /// <returns></returns>
         protected static int Multiplo10(int soma)
         {
-            //Variaveis
-            int result = 0;
-            //Encontrando multiplo de 10
+            var result = 0;
+            
+            //Encontrando multiplo de 10.
             while (result < soma)
-            {
                 result = result + 10;
-            }
-            //Subtraindo
+
             result = result - soma;
-            //Retornando
             return result;
         }
 
-        #endregion Mod
+        #endregion
 
         /// <summary>
         /// Obtém nosso número sem DV e sem código do Convênio.
