@@ -80,7 +80,7 @@ namespace BoletoNet
                         break;
                     //756 - Sicoob
                     case 756:
-                        _interface = new Instrucao_Sicoob();
+                        _interface = new Instrucao_Sicoob(cod, descricao, dias, valor, valorTotal);
                         break;
                     //85 - CECRED
                     case 85:

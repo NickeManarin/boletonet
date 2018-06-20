@@ -48,6 +48,7 @@ namespace BoletoNet.Arquivo
             this.gerarToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.impressãoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxBancos = new System.Windows.Forms.GroupBox();
+            this.RbSicoob = new System.Windows.Forms.RadioButton();
             this.radioButtonBNB = new System.Windows.Forms.RadioButton();
             this.radioButtonBanrisul = new System.Windows.Forms.RadioButton();
             this.radioButtonSicredi = new System.Windows.Forms.RadioButton();
@@ -179,7 +180,7 @@ namespace BoletoNet.Arquivo
             // cNABToolStripMenuItem
             // 
             this.cNABToolStripMenuItem.Name = "cNABToolStripMenuItem";
-            this.cNABToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.cNABToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.cNABToolStripMenuItem.Text = "&Remessa";
             this.cNABToolStripMenuItem.Click += new System.EventHandler(this.cNABToolStripMenuItem_Click);
             // 
@@ -189,7 +190,7 @@ namespace BoletoNet.Arquivo
             this.lerToolStripMenuItem1,
             this.gerarToolStripMenuItem1});
             this.retornoToolStripMenuItem1.Name = "retornoToolStripMenuItem1";
-            this.retornoToolStripMenuItem1.Size = new System.Drawing.Size(120, 22);
+            this.retornoToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.retornoToolStripMenuItem1.Text = "R&etorno";
             // 
             // lerToolStripMenuItem1
@@ -217,6 +218,7 @@ namespace BoletoNet.Arquivo
             // 
             this.groupBoxBancos.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxBancos.Controls.Add(this.RbSicoob);
             this.groupBoxBancos.Controls.Add(this.radioButtonBNB);
             this.groupBoxBancos.Controls.Add(this.radioButtonBanrisul);
             this.groupBoxBancos.Controls.Add(this.radioButtonSicredi);
@@ -230,18 +232,29 @@ namespace BoletoNet.Arquivo
             this.groupBoxBancos.Controls.Add(this.radioButtonHsbc);
             this.groupBoxBancos.Controls.Add(this.radioButtonSafra);
             this.groupBoxBancos.Controls.Add(this.radioButtonItau);
-            this.groupBoxBancos.Location = new System.Drawing.Point(12, 110);
+            this.groupBoxBancos.Location = new System.Drawing.Point(12, 83);
             this.groupBoxBancos.Name = "groupBoxBancos";
             this.groupBoxBancos.Padding = new System.Windows.Forms.Padding(10, 5, 10, 10);
-            this.groupBoxBancos.Size = new System.Drawing.Size(147, 324);
+            this.groupBoxBancos.Size = new System.Drawing.Size(147, 351);
             this.groupBoxBancos.TabIndex = 5;
             this.groupBoxBancos.TabStop = false;
             this.groupBoxBancos.Text = "Bancos";
             // 
+            // RbSicoob
+            // 
+            this.RbSicoob.AutoSize = true;
+            this.RbSicoob.Location = new System.Drawing.Point(13, 275);
+            this.RbSicoob.Name = "RbSicoob";
+            this.RbSicoob.Size = new System.Drawing.Size(58, 17);
+            this.RbSicoob.TabIndex = 32;
+            this.RbSicoob.Tag = "756";
+            this.RbSicoob.Text = "Sicoob";
+            this.RbSicoob.UseVisualStyleBackColor = true;
+            // 
             // radioButtonBNB
             // 
             this.radioButtonBNB.AutoSize = true;
-            this.radioButtonBNB.Location = new System.Drawing.Point(13, 296);
+            this.radioButtonBNB.Location = new System.Drawing.Point(13, 321);
             this.radioButtonBNB.Name = "radioButtonBNB";
             this.radioButtonBNB.Size = new System.Drawing.Size(68, 17);
             this.radioButtonBNB.TabIndex = 31;
@@ -252,7 +265,7 @@ namespace BoletoNet.Arquivo
             // radioButtonBanrisul
             // 
             this.radioButtonBanrisul.AutoSize = true;
-            this.radioButtonBanrisul.Location = new System.Drawing.Point(13, 274);
+            this.radioButtonBanrisul.Location = new System.Drawing.Point(13, 298);
             this.radioButtonBanrisul.Name = "radioButtonBanrisul";
             this.radioButtonBanrisul.Size = new System.Drawing.Size(62, 17);
             this.radioButtonBanrisul.TabIndex = 30;
@@ -393,7 +406,7 @@ namespace BoletoNet.Arquivo
             this.groupBox1.Controls.Add(this.radioButtonCNAB400);
             this.groupBox1.Location = new System.Drawing.Point(12, 32);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(147, 72);
+            this.groupBox1.Size = new System.Drawing.Size(147, 45);
             this.groupBox1.TabIndex = 28;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Padrão";
@@ -401,13 +414,13 @@ namespace BoletoNet.Arquivo
             // radioButtonCNAB240
             // 
             this.radioButtonCNAB240.AutoSize = true;
-            this.radioButtonCNAB240.Location = new System.Drawing.Point(12, 42);
+            this.radioButtonCNAB240.Location = new System.Drawing.Point(94, 19);
             this.radioButtonCNAB240.Name = "radioButtonCNAB240";
-            this.radioButtonCNAB240.Size = new System.Drawing.Size(75, 17);
+            this.radioButtonCNAB240.Size = new System.Drawing.Size(43, 17);
             this.radioButtonCNAB240.TabIndex = 29;
             this.radioButtonCNAB240.TabStop = true;
             this.radioButtonCNAB240.Tag = "409";
-            this.radioButtonCNAB240.Text = "CNAB 240";
+            this.radioButtonCNAB240.Text = "240";
             this.radioButtonCNAB240.UseVisualStyleBackColor = true;
             // 
             // radioButtonCNAB400
@@ -487,6 +500,7 @@ namespace BoletoNet.Arquivo
         private System.Windows.Forms.RadioButton radioButtonBanrisul;
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.RadioButton radioButtonBNB;
+        private System.Windows.Forms.RadioButton RbSicoob;
     }
 }
 

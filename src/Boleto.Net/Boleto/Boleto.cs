@@ -444,6 +444,7 @@ namespace BoletoNet
 
         /// <summary> 
 		/// Código de Juros de mora (1 = ao dia, 2 = ao mes)
+		/// Banrisul: Código de Juros de mora (0 = Valor ao dia, 1 = Taxa mensal)
 		/// </summary>  
         public string CodJurosMora
         {

@@ -55,7 +55,8 @@ namespace BoletoNet
                 string strline;
                 var incluiLinha = new StreamWriter(arquivo);
 
-                if (banco.Codigo == 104)//quando é caixa verifica o modelo de leiatue que é está em boletos.remssa.tipodocumento
+                //Quando é caixa verifica o modelo de leiatue que é está em boletos.remssa.tipodocumento.
+                if (banco.Codigo == 104)
                     strline = banco.GerarHeaderRemessa(numeroConvenio, cedente, TipoArquivo.Cnab240, numeroArquivoRemessa, boletos[0]);
                 else
                     strline = banco.GerarHeaderRemessa(numeroConvenio, cedente, TipoArquivo.Cnab240, numeroArquivoRemessa);
@@ -233,8 +234,10 @@ namespace BoletoNet
 
                     #endregion
                 }
-                else if (banco.Codigo == 237) // bradesco
+                else if (banco.Codigo == 237)
                 {
+                    #region Bradesco
+
                     decimal totalTitulos = 0;
                     foreach (var boleto in boletos)
                     {
@@ -261,10 +264,12 @@ namespace BoletoNet
                     OnLinhaGerada(null, strline, EnumTipodeLinha.TraillerDeArquivo);
 
                     incluiLinha.Close();
+
+                    #endregion
                 }
-                else //para qualquer outro banco, gera CNAB240 com segmentos abaixo
+                else //Para qualquer outro banco, gera CNAB240 com segmentos abaixo
                 {
-                    #region outros bancos
+                    #region Outros bancos
 
                     foreach (var boleto in boletos)
                     {
@@ -307,7 +312,6 @@ namespace BoletoNet
 
                     #endregion
                 }
-
             }
             catch (Exception ex)
             {

@@ -143,10 +143,10 @@ namespace BoletoNet
                         _IEspecieDocumento = new EspecieDocumento_Nordeste(codigoEspecie);
                         break;
                     case 707:
-                        this._IEspecieDocumento = new EspecieDocumento_Daycoval(codigoEspecie);
+                        _IEspecieDocumento = new EspecieDocumento_Daycoval(codigoEspecie);
                         break;
                     case 637:
-                        this._IEspecieDocumento = new EspecieDocumento_Sofisa(codigoEspecie);
+                        _IEspecieDocumento = new EspecieDocumento_Sofisa(codigoEspecie);
                         break;
                     default:
                         throw new Exception("Código do banco não implementando: " + codigoBanco);

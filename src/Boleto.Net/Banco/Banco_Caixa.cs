@@ -80,6 +80,7 @@ namespace BoletoNet
 
                     campoLivre = string.Format("{0}{1}{2}{3}{4}", contaCedente, agenciaCedente, codigoCarteira, constante, nossoNumero);
                 }
+
                 //17 POSIÇÕES
                 if (boleto.NossoNumero.Length == 17)
                 {
@@ -177,7 +178,6 @@ namespace BoletoNet
 
                 campoLivre = string.Format("{0}{1}", ccc, dvCampoLivre);
             }
-
 
             var xxxx = string.Format("{0}{1}{2}{3}{4}", banco, moeda, fatorVencimento, valorDocumento, campoLivre);
 
@@ -328,7 +328,7 @@ namespace BoletoNet
                 }
             }
 
-            boleto.NossoNumero = string.Format("{0}-{1}", boleto.NossoNumero, Mod11Base9(boleto.NossoNumero)); //
+            //boleto.NossoNumero = string.Format("{0}-{1}", boleto.NossoNumero, Mod11Base9(boleto.NossoNumero)); //
             //boleto.NossoNumero = string.Format("{0}{1}/{2}-{3}", boleto.Carteira, EMISSAO_CEDENTE, boleto.NossoNumero, Mod11Base9(boleto.Carteira + EMISSAO_CEDENTE + boleto.NossoNumero));
         }
 
@@ -363,8 +363,7 @@ namespace BoletoNet
                     boleto.NossoNumero = Utils.FormatCode(boleto.NossoNumero, 10);
 
                 if (boleto.NossoNumero.Length != 10)
-                    throw new Exception(
-                        "Nosso Número inválido, Para Caixa Econômica carteira indefinida, o Nosso Número deve conter 10 caracteres.");
+                    throw new Exception("Nosso Número inválido, Para Caixa Econômica carteira indefinida, o Nosso Número deve conter 10 caracteres.");
 
                 if (!boleto.Cedente.Codigo.Equals(0))
                 {
@@ -1679,7 +1678,7 @@ namespace BoletoNet
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0030, 002, 0, "00", ' '));                                      //030-031
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0032, 025, 0, boleto.NumeroDocumento, '0'));                    //032-056
                 //reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0057, 002, 0, boleto.Carteira, '0'));                         //057-058
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0059, 015, 0, boleto.NossoNumero, '0'));                        //059-073
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0059, 017, 0, boleto.NossoNumero, '0'));                        //059-073
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0074, 003, 0, string.Empty, ' '));                              //074-076
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0077, 030, 0, string.Empty, ' '));                              //077-106
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 0107, 002, 0, "01", '0'));                                      //107-108
