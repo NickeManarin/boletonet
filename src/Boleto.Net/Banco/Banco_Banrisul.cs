@@ -817,6 +817,9 @@ namespace BoletoNet
             {
                 var list = boleto.Instrucoes.Where(w => w.Codigo == 0).ToList();
 
+                if (!list.Any())
+                    return "";
+
                 var vCpfCnpj = "99";
                 if (boleto.Cedente.CpfCnpj.Length.Equals(11))
                     vCpfCnpj = "01"; //Cpf é sempre 11;
