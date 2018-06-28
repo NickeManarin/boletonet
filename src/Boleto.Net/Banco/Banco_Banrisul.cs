@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Web.UI;
 using BoletoNet.Util;
@@ -60,8 +61,10 @@ namespace BoletoNet
                 boleto.Aceite = "A";
 
             //Atribui o nome do banco ao local de pagamento
-            if (boleto.LocalPagamento == "Até o vencimento, preferencialmente no ")
-                boleto.LocalPagamento += Nome;
+            //if (boleto.LocalPagamento == "Até o vencimento, preferencialmente no ")
+            //    boleto.LocalPagamento += Nome;
+
+            boleto.LocalPagamento = "PAGUE PREFERENCIALMENTE NA REDE INTEGRADA BANRISUL";
 
             //Verifica se data do processamento é valida
             if (boleto.DataProcessamento == DateTime.MinValue) // diegomodolo (diego.ribeiro@nectarnet.com.br)
@@ -145,7 +148,7 @@ namespace BoletoNet
             #region Campo 5 - FFFF9999999999
 
             var fatorVenc = FatorVencimento(boleto).ToString("0000");
-            var valor = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "").PadLeft(10, '0');
+            var valor = boleto.ValorBoleto.ToString("F2", new CultureInfo("pt-BR")).Replace(",", "").Replace(".", "").PadLeft(10, '0');
 
             var campo5 = fatorVenc + valor;
 
@@ -159,7 +162,7 @@ namespace BoletoNet
             var campo1 = "041" + boleto.Moeda;
 
             var fatorVenc = FatorVencimento(boleto).ToString("0000");
-            var valor = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "").PadLeft(10, '0');
+            var valor = boleto.ValorBoleto.ToString("F2", new CultureInfo("pt-BR")).Replace(",", "").Replace(".", "").PadLeft(10, '0');
             var campo2 = fatorVenc + valor;
 
             var nossoNumero = boleto.NossoNumero.Replace(".", "").Replace("-", "").Substring(0, 8);
@@ -694,7 +697,7 @@ namespace BoletoNet
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 001, 01, 0, "1", ' '));                              //001-001 Literal '1'
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 002, 16, 0, string.Empty, ' '));                     //002-017 Brancos
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 018, 13, 0, boleto.Cedente.ContaBancaria.Agencia.PadLeft(4, '0') + 
-                    boleto.Cedente.Codigo.PadLeft(7, '0') + boleto.ContaBancaria.DigitoConta.PadLeft(2, '0'), ' ')); //018-030 Agência + Código do Cedente.
+                    boleto.Cedente.Codigo.PadLeft(7, '0') + boleto.ContaBancaria.DigitoConta.PadLeft(2, '0'), ' '));            //018-030 Agência + Código do Cedente.
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 031, 07, 0, string.Empty, ' '));                     //031-037 Brancos
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 038, 25, 0, boleto.NumeroDocumento, ' '));           //038-062 Identificação de Título (Alfanumérico opcional)
                 reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 063, 10, 0, boleto.NossoNumero + boleto.DigitoNossoNumero, '0')); //063-072 Nosso Número (2 dígitos verificadores);

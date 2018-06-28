@@ -366,7 +366,7 @@ namespace BoletoNet.Arquivo
 
                 c.Convenio = 2650829;
                 c.Codigo = "512493695";
-                var b = new Boleto(vencimento, 45.50m, "17", "1234567890", c) { VariacaoCarteira = "019" };
+                var b = new Boleto(vencimento, 1960.50m, "17", "1234567890", c) { VariacaoCarteira = "019" };
 
                 b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
                 b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
@@ -390,7 +390,7 @@ namespace BoletoNet.Arquivo
 
                 b.Instrucoes.Add(new Instrucao(b.EspecieDocumento.Banco.Codigo, 0, "Ha", 5, 1));
                 b.Instrucoes.Add(new Instrucao(b.EspecieDocumento.Banco.Codigo, 998, null, 0, 8.5m, 10));
-
+                
                 b.NumeroDocumento = "12345678901";
 
                 bb.Boleto = b;
@@ -567,31 +567,52 @@ namespace BoletoNet.Arquivo
                 var c = new Cedente("11.111.111/1111-11", "Empresa de Atacado", "1102", "48", "9000150", "46");
                 c.Codigo = "9000150";
                 c.MostrarCnpjNoBoleto = true;
+                c.Endereco = new Endereco
+                {
+                    End = "Av. Independencia",
+                    Complemento = "Casa 4",
+                    Bairro = "Centro",
+                    Cidade = "Torres",
+                    Uf = "RS",
+                    Cep = "96815-236"
+                };
 
-                var end = new Endereco();
-                end.Bairro = "Lago Sul";
-                end.Cep = "71666660";
-                end.Cidade = "Brasília- DF";
-                end.Complemento = "Quadra XX Conjunto XX Casa XX";
-                end.End = "Condominio de Brasilia - Quadra XX Conjunto XX Casa XX";
-                end.Logradouro = "Cond. Brasilia";
-                end.Numero = "55";
-                end.Uf = "DF";
-
-                var b = new Boleto(new DateTime(2010, 07, 04), 550m, "01", "22832563", c);
+                var b = new Boleto(new DateTime(2010, 07, 04), 1980.89m, "01", "22832563", c);
                 b.DigitoNossoNumero = "51";
 
+                b.CodJurosMora = "0";
                 b.Sacado = new Sacado("000.000.000-00", "Eduardo Frare");
-                b.Sacado.Endereco = end;
+                b.Sacado.Endereco = new Endereco
+                {
+                    Bairro = "Lago Sul",
+                    Cep = "71666660",
+                    Cidade = "Brasília- DF",
+                    Complemento = "Quadra XX Conjunto XX Casa XX",
+                    End = "Condominio de Brasilia - Quadra XX Conjunto XX Casa XX",
+                    Logradouro = "Cond. Brasilia",
+                    Numero = "55",
+                    Uf = "DF"
+                }; ;
 
                 b.Instrucoes.Add(new Instrucao_Banrisul(18, null, 10, 0.2m, 10)); //"Não Receber após o vencimento");
-                b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 0.2m, 10));
-                b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 0.2m, 10));
+                b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 0.2m, 10));
+                b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 0.2m, 10));
 
-                bb.FormatoCarne = false;
-                bb.OcultarInstrucoes = true;
-                bb.ExibirDemonstrativo = true;
-                bb.MostrarComprovanteEntrega = true;
+                //bb.FormatoCarne = false;
+                //bb.OcultarInstrucoes = true;
+                //bb.ExibirDemonstrativo = true;
+                //bb.MostrarComprovanteEntrega = true;
+                //bb.MostrarEnderecoCedente = true;
+                //bb.OcultarEnderecoSacado = false;
+                //bb.OcultarReciboSacado = false;
+
+                bb.MostrarEnderecoCedente = true;
+                bb.OcultarEnderecoSacado = false;
+                bb.MostrarComprovanteEntregaLivre = true;
+                bb.MostrarComprovanteEntrega = false;
+                bb.OcultarReciboSacado = false;
+                bb.OcultarInstrucoes = false;
+
                 bb.Boleto = b;
                 bb.Boleto.Valida();
 

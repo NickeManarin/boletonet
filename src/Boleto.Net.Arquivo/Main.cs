@@ -54,7 +54,7 @@ namespace BoletoNet.Arquivo
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 var arquivo = new ArquivoRemessa(TipoArquivo.Cnab240);
-                arquivo.GerarArquivoRemessa("1200303001417053", banco, cedente, boletos, saveFileDialog.OpenFile(), 1);
+                arquivo.GerarArquivoRemessa("12345678", banco, cedente, boletos, saveFileDialog.OpenFile(), 1);
 
                 MessageBox.Show("Arquivo gerado com sucesso!", "Teste", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -122,14 +122,11 @@ namespace BoletoNet.Arquivo
                     break;
                 case TipoArquivo.Cnab400:
                     GeraArquivoCNAB400(b2.Banco, c, boletos);
-                    break;             
-                default:
                     break;
-            }            
-                
+            }          
         }
 
-        public void GeraDadosBanrisul()
+        public void GeraDadosBanrisul(TipoArquivo tipoArquivo = TipoArquivo.Cnab400)
         {
             var conta = new ContaBancaria();
             conta.Agencia = "0510";
@@ -184,7 +181,15 @@ namespace BoletoNet.Arquivo
             var boletos = new Boletos();
             boletos.Add(b);
 
-            GeraArquivoCNAB400(b.Banco, c, boletos);
+            switch (tipoArquivo)
+            {
+                case TipoArquivo.Cnab240:
+                    GeraArquivoCNAB240(b.Banco, c, boletos);
+                    break;
+                case TipoArquivo.Cnab400:
+                    GeraArquivoCNAB400(b.Banco, c, boletos);
+                    break;
+            }
         }
 
         public void GeraDadosBancoDoBrasil()
@@ -442,12 +447,12 @@ namespace BoletoNet.Arquivo
             GeraArquivoCNAB400(b.Banco, c, boletos);
         }
 
-        public void GeraBoletoSicoob()
+        public void GeraBoletoSicoob(TipoArquivo tipoArquivo = TipoArquivo.Cnab400)
         {
             var conta = new ContaBancaria
             {
                 Agencia = "3066",
-                DigitoAgencia = "1",
+                DigitoAgencia = "0",
                 Conta = "12345678",
                 DigitoConta = "2"
             };
@@ -459,13 +464,14 @@ namespace BoletoNet.Arquivo
                 DataVencimento = new DateTime(2018, 10, 15),
                 ValorBoleto = 192.09m,
                 Aceite = "N",
-                NossoNumero = "12345678901",
+                NossoNumero = "1234567",
                 DigitoNossoNumero = "3",
                 NumeroDocumento = "1234567/01",
                 Postagem = false,
                 PercJurosMora = 0.2m,
                 PercMulta = 2m,
                 Carteira = "1", //TODO
+                Parcela = 1, //TODO
 
                 //O credor, a empresa que está emitindo este boleto, quem vai receber os valores quando pago.
                 Cedente = new Cedente
@@ -473,8 +479,8 @@ namespace BoletoNet.Arquivo
                     ContaBancaria = conta,
                     CpfCnpj = "94.212.349/0001-30",
                     Nome = "Empresa do Seu Juca",
-                    //Codigo = , //Em alguns bancos, isso é diferente, verificar.
-                    //Convenio = Convert.ToInt32("0" + movBoleto.MovCpr.Banco.CodConvenio), //Alguns bancos não tem isso.
+                    Codigo = "1234567", //Em alguns bancos, isso é diferente, no Sicoob esse número deve ser preenchido.
+                                        //Convenio = Convert.ToInt32("0" + movBoleto.MovCpr.Banco.CodConvenio), //Alguns bancos não tem isso.
                     MostrarCnpjNoBoleto = true,
 
                     Endereco = new Endereco
@@ -507,7 +513,7 @@ namespace BoletoNet.Arquivo
                     }
                 }
             };
-
+            
             b.Banco = new Banco(756);
             b.EspecieDocumento = new EspecieDocumento(756, "01");
             b.Remessa = new Remessa
@@ -519,9 +525,8 @@ namespace BoletoNet.Arquivo
             b.DataDesconto = b.DataVencimento.AddDays(5 * -1); //5 dias atrás, ermite desconto.
             b.ValorDesconto = Math.Round(b.ValorBoleto * (2m / 100), 2); //2% de desconto.
 
-            b.Instrucoes.Add(new Instrucao_Sicoob(15, null, 10, 0.2m, 10)); //"Não Receber após o vencimento");
-            //b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 0.2m, 10));
-            //b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222123456789121222222222222222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 0.2m, 10));
+            b.Instrucoes.Add(new Instrucao_Sicoob(1));
+            b.Instrucoes.Add(new Instrucao_Sicoob(99, null, 20));
 
             var bb = new BoletoBancario();
             bb.CodigoBanco = 756;
@@ -535,7 +540,15 @@ namespace BoletoNet.Arquivo
             var boletos = new Boletos();
             boletos.Add(b);
 
-            GeraArquivoCNAB400(b.Banco, b.Cedente, boletos);
+            switch (tipoArquivo)
+            {
+                case TipoArquivo.Cnab240:
+                    GeraArquivoCNAB240(b.Banco, b.Cedente, boletos);
+                    break;
+                case TipoArquivo.Cnab400:
+                    GeraArquivoCNAB400(b.Banco, b.Cedente, boletos);
+                    break;
+            }
         }
 
         #endregion
@@ -787,6 +800,8 @@ namespace BoletoNet.Arquivo
                     MessageBox.Show("Não Implementado!");
                 else if (radioButtonCaixa.Checked)
                     GeraDadosCaixa();
+                else if (RbSicoob.Checked)
+                    GeraBoletoSicoob(TipoArquivo.Cnab240);
             }
         }
 

@@ -53,6 +53,16 @@ namespace BoletoNet.Util
         }
 
         /// <summary>
+        /// Retorna o valor atual removendo a vírgula e o ponto. Com duas casas decimais.
+        /// </summary>
+        /// <param name="valor"></param>
+        /// <returns></returns>
+        public static string SemVirgulaPonto(this decimal valor)
+        {
+            return valor.ToString("F2", CultureInfo.GetCultureInfo("pt-BR")).Replace(",", "").Replace(".", "");
+        }
+
+        /// <summary>
         /// Retorna o valor atual removendo a vírgula
         /// </summary>
         /// <param name="valor"></param>

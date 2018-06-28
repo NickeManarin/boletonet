@@ -380,7 +380,7 @@ namespace BoletoNet
                     var aux = ChunksUpto(piece, 100);
 
                     foreach (var aux1 in aux)
-                        _instrucoesHtml += string.Format("{0}<br />", aux1);
+                        _instrucoesHtml += $"{aux1}<br />";
                 }
 
                 //Adiciona a instrução as instruções disponíveis no Boleto
@@ -464,20 +464,14 @@ namespace BoletoNet
                         if (Cedente.Endereco == null)
                             throw new ArgumentNullException("Endereço do Cedente");
 
-                        var numero = !string.IsNullOrEmpty(Cedente.Endereco.Numero) ? Cedente.Endereco.Numero + ", " : "";
+                        var numero = !string.IsNullOrEmpty(Cedente.Endereco.Numero) ? Cedente.Endereco.Numero + ", " : "SN, ";
                         var comp = !string.IsNullOrEmpty(Cedente.Endereco.Complemento) ? Cedente.Endereco.Complemento + ", " : "";
                         enderecoCedente = string.Concat(Cedente.Endereco.End, " , ", numero, comp);
 
                         if (Cedente.Endereco.Cep == string.Empty)
-                        {
-                            enderecoCedente += string.Format("{0} - {1}/{2}", Cedente.Endereco.Bairro, Cedente.Endereco.Cidade, Cedente.Endereco.Uf);
-                        }
+                            enderecoCedente += $"{Cedente.Endereco.Bairro} - {Cedente.Endereco.Cidade}/{Cedente.Endereco.Uf}";
                         else
-                        {
-                            enderecoCedente += string.Format("{0} - {1}/{2} - CEP: {3}", Cedente.Endereco.Bairro, Cedente.Endereco.Cidade, 
-                                Cedente.Endereco.Uf, Utils.FormataCep(Cedente.Endereco.Cep));
-                        }
-
+                            enderecoCedente += $"{Cedente.Endereco.Bairro} - {Cedente.Endereco.Cidade}/{Cedente.Endereco.Uf} - CEP: {Utils.FormataCep(Cedente.Endereco.Cep)}";
                     }
                 }
             }
@@ -487,33 +481,30 @@ namespace BoletoNet
             //Flavio(fhlviana@hotmail.com) - adicionei a possibilidade de o boleto não ter, necessáriamente, que informar o CPF ou CNPJ do sacado.
             //Formata o CPF/CNPJ(se houver) e o Nome do Sacado para apresentação
             if (Sacado.CpfCnpj == string.Empty)
-            {
                 sacado = Sacado.Nome;
-            }
             else
             {
                 if (Sacado.CpfCnpj.Length <= 11)
-                    sacado = string.Format("{0}<br/>CPF: {1}", Sacado.Nome, Utils.FormataCpf(Sacado.CpfCnpj));
+                    sacado = $"{Sacado.Nome}<br/>CPF: {Utils.FormataCpf(Sacado.CpfCnpj)}";
                 else
-                    sacado = string.Format("{0}<br/>CNPJ: {1}", Sacado.Nome, Utils.FormataCnpj(Sacado.CpfCnpj));
+                    sacado = $"{Sacado.Nome}<br/>CNPJ: {Utils.FormataCnpj(Sacado.CpfCnpj)}";
             }
 
             var infoSacado = Sacado.InformacoesSacado.GeraHtml(false);
 
-            //Caso não oculte o Endereço do Sacado,
+            //Caso não oculte o Endereço do Sacado.
             if (!OcultarEnderecoSacado)
             {
                 string enderecoSacado;
 
                 if (Sacado.Endereco.Cep == string.Empty)
-                    enderecoSacado = string.Format("{0} - {1}/{2}", Sacado.Endereco.Bairro, Sacado.Endereco.Cidade, Sacado.Endereco.Uf);
+                    enderecoSacado = $"{Sacado.Endereco.Bairro} - {Sacado.Endereco.Cidade}/{Sacado.Endereco.Uf}";
                 else
-                    enderecoSacado = string.Format("{0} - {1}/{2} - CEP: {3}", Sacado.Endereco.Bairro,
-                    Sacado.Endereco.Cidade, Sacado.Endereco.Uf, Utils.FormataCep(Sacado.Endereco.Cep));
+                    enderecoSacado = $"{Sacado.Endereco.Bairro} - {Sacado.Endereco.Cidade}/{Sacado.Endereco.Uf} - CEP: {Utils.FormataCep(Sacado.Endereco.Cep)}";
 
                 if (Sacado.Endereco.End != string.Empty && enderecoSacado != string.Empty)
                 {
-                    var numero = !string.IsNullOrEmpty(Sacado.Endereco.Numero) ? ", " + Sacado.Endereco.Numero : "";
+                    var numero = !string.IsNullOrEmpty(Sacado.Endereco.Numero) ? ", " + Sacado.Endereco.Numero : ", SN";
                     var comp = !string.IsNullOrEmpty(Sacado.Endereco.Complemento) ? ", " + Sacado.Endereco.Complemento : "";
 
                     if (infoSacado == string.Empty)
@@ -545,21 +536,21 @@ namespace BoletoNet
             if (!Cedente.DigitoCedente.Equals(-1))
             {
                 if (!string.IsNullOrEmpty(Cedente.ContaBancaria.OperacaConta))
-                    agenciaCodigoCedente = string.Format("{0}/{1}.{2}-{3}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.OperacaConta, Utils.FormatCode(Cedente.Codigo, 6), Cedente.DigitoCedente);
+                    agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}/{Cedente.ContaBancaria.OperacaConta}.{Utils.FormatCode(Cedente.Codigo, 6)}-{Cedente.DigitoCedente}";
 
                 switch (Boleto.Banco.Codigo)
                 {
                     case 748:
-                        agenciaCodigoCedente = string.Format("{0}.{1}.{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Utils.FormatCode(Cedente.ContaBancaria.Conta, 5));
+                        agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}.{Cedente.ContaBancaria.DigitoAgencia}.{Utils.FormatCode(Cedente.ContaBancaria.Conta, 5)}";
                         break;
                     case 1:
-                        agenciaCodigoCedente = string.Format("{0}-{1}/{2}-{3}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Utils.FormatCode(Cedente.ContaBancaria.Conta, 6), Cedente.ContaBancaria.DigitoConta);
+                        agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}-{Cedente.ContaBancaria.DigitoAgencia}/{Utils.FormatCode(Cedente.ContaBancaria.Conta, 6)}-{Cedente.ContaBancaria.DigitoConta}";
                         break;
                     case 399:
-                        agenciaCodigoCedente = string.Format("{0}/{1}", Cedente.ContaBancaria.Agencia, Utils.FormatCode(Cedente.Codigo + Cedente.DigitoCedente, 7));
+                        agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}/{Utils.FormatCode(Cedente.Codigo + Cedente.DigitoCedente, 7)}";
                         break;
                     default:
-                        agenciaCodigoCedente = string.Format("{0}/{1}-{2}", Cedente.ContaBancaria.Agencia, Utils.FormatCode(Cedente.Codigo, 6), Cedente.DigitoCedente);
+                        agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}/{Utils.FormatCode(Cedente.Codigo, 6)}-{Cedente.DigitoCedente}";
                         break;
                 }
             }
@@ -568,22 +559,20 @@ namespace BoletoNet
                 switch (Boleto.Banco.Codigo)
                 {
                     case 33:
-                        agenciaCodigoCedente = string.Format("{0}-{1}/{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia,
-                            Utils.FormatCode(Cedente.Codigo, 6));
+                        agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}-{Cedente.ContaBancaria.DigitoAgencia}/{Utils.FormatCode(Cedente.Codigo, 6)}";
 
                         if (string.IsNullOrEmpty(Cedente.ContaBancaria.DigitoAgencia))
-                            agenciaCodigoCedente = string.Format("{0}/{1}", Cedente.ContaBancaria.Agencia, Utils.FormatCode(Cedente.Codigo, 6));
+                            agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}/{Utils.FormatCode(Cedente.Codigo, 6)}";
                         break;
-                    case 41:
-                        agenciaCodigoCedente = string.Format("{0}.{1}/{2}.{3}.{4}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia,
-                            Cedente.ContaBancaria.Conta.Substring(0, 6), Cedente.ContaBancaria.Conta.Substring(6, 1), Cedente.ContaBancaria.DigitoConta);
+                    case 41: //Banrisul.
+                        //Removido o dígito verificador do Banrisul. .{Cedente.ContaBancaria.DigitoAgencia}
+                        agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}/{Cedente.ContaBancaria.Conta.Substring(0, 6)}.{Cedente.ContaBancaria.Conta.Substring(6, 1)}.{Cedente.ContaBancaria.DigitoConta}";
                         break;
                     case 399:
-                        agenciaCodigoCedente = string.Format("{0}/{1}", Cedente.ContaBancaria.Agencia, Utils.FormatCode(Cedente.Codigo, 7));
+                        agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}/{Utils.FormatCode(Cedente.Codigo, 7)}";
                         break;
                     case 748:
-                        agenciaCodigoCedente = string.Format("{0}.{1}.{2}", Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia,
-                            Utils.FormatCode(Cedente.ContaBancaria.Conta, 5));
+                        agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}.{Cedente.ContaBancaria.DigitoAgencia}.{Utils.FormatCode(Cedente.ContaBancaria.Conta, 5)}";
                         break;
                     default:
                         agenciaCodigoCedente = agenciaConta;
@@ -638,7 +627,7 @@ namespace BoletoNet
                 .Replace("@LINHADIGITAVEL", Boleto.CodigoBarra.LinhaDigitavel)
                 .Replace("@LOCALPAGAMENTO", Boleto.LocalPagamento)
                 .Replace("@DATAVENCIMENTO", dataVencimento)
-                .Replace("@CEDENTE_BOLETO", !Cedente.MostrarCnpjNoBoleto ? Cedente.Nome : string.Format("{0}&nbsp;&nbsp;&nbsp;CNPJ: {1}", Cedente.Nome, Cedente.CpfCnpjComMascara))
+                .Replace("@CEDENTE_BOLETO", !Cedente.MostrarCnpjNoBoleto ? Cedente.Nome : $"{Cedente.Nome}&nbsp;&nbsp;&nbsp;CNPJ: {Cedente.CpfCnpjComMascara}")
                 .Replace("@CEDENTE", Cedente.Nome)
                 .Replace("@DATADOCUMENTO", Boleto.DataDocumento.ToString("dd/MM/yyyy"))
                 .Replace("@NUMERODOCUMENTO", Boleto.NumeroDocumentoImpressao)
@@ -653,7 +642,7 @@ namespace BoletoNet
 
                 .Replace("@NOSSONUMERO", string.IsNullOrWhiteSpace(Boleto.DigitoNossoNumero) ? Boleto.NossoNumero : (Boleto.NossoNumero + "-" + Boleto.DigitoNossoNumero))
                 .Replace("@CARTEIRA", FormataDescricaoCarteira())
-                .Replace("@PARCELAS", Boleto.TotalParcelas <= 1 ? "ÚNICA" : string.Format("{0} de {1}", Boleto.Parcela, Boleto.TotalParcelas))
+                .Replace("@PARCELAS", Boleto.TotalParcelas <= 1 ? "ÚNICA" : $"{Boleto.Parcela} de {Boleto.TotalParcelas}")
                 .Replace("@ESPECIE", Boleto.Especie)
                 .Replace("@QUANTIDADE", Boleto.QuantidadeMoeda == 0 ? "" : Boleto.QuantidadeMoeda.ToString())
                 .Replace("@VALORDOCUMENTO", Boleto.ValorMoeda)
@@ -705,14 +694,14 @@ namespace BoletoNet
                     break;
 
                 default:
-                    throw new Exception(string.Format("A descrição para o banco {0} não foi implementada.", Boleto.Banco));
+                    throw new Exception($"A descrição para o banco {Boleto.Banco} não foi implementada.");
                     //throw new Exception(string.Format("A descrição da carteira {0} / banco {1} não foi implementada (marque false na propriedade MostrarCodigoCarteira)", carteira, Banco.Codigo));
             }
 
             if (string.IsNullOrEmpty(descricaoCarteira))
                 throw new Exception("O código da carteira não foi implementado.");
 
-            return string.Format("{0} - {1}", Boleto.Carteira, descricaoCarteira);
+            return $"{Boleto.Carteira} - {descricaoCarteira}";
         }
 
         private static IEnumerable<string> ChunksUpto(string str, int maxChunkSize)
@@ -1022,7 +1011,7 @@ namespace BoletoNet
                 if (url.Substring(0, 1) != "/")
                     url = url + "/";
                 //Mapeia o caminho físico dos arquivos
-                pathServer = MapPathSecure(string.Format("~{0}", url));
+                pathServer = MapPathSecure($"~{url}");
             }
 
             //Verifica se o caminho existe

@@ -55,6 +55,8 @@ namespace BoletoNet
                 string strline;
                 var incluiLinha = new StreamWriter(arquivo);
 
+                #region Header do arquivo
+
                 //Quando é caixa verifica o modelo de leiatue que é está em boletos.remssa.tipodocumento.
                 if (banco.Codigo == 104)
                     strline = banco.GerarHeaderRemessa(numeroConvenio, cedente, TipoArquivo.Cnab240, numeroArquivoRemessa, boletos[0]);
@@ -66,7 +68,12 @@ namespace BoletoNet
                 incluiLinha.WriteLine(strline);
                 OnLinhaGerada(null, strline, EnumTipodeLinha.HeaderDeArquivo);
 
-                if (banco.Codigo == 104)//quando é caixa verifica o modelo de leiatue que é está em boletos.remssa.tipodocumento
+                #endregion
+
+                #region Header do lote
+
+                //Quando é caixa verifica o modelo de leiatue que é está em boletos.Remessa.TipoDocumento.
+                if (banco.Codigo == 104)
                     strline = banco.GerarHeaderLoteRemessa(numeroConvenio, cedente, numeroArquivoRemessa, TipoArquivo.Cnab240, boletos[0]);
                 else
                     strline = banco.GerarHeaderLoteRemessa(numeroConvenio, cedente, numeroArquivoRemessa, TipoArquivo.Cnab240);
@@ -77,7 +84,9 @@ namespace BoletoNet
                     OnLinhaGerada(null, strline, EnumTipodeLinha.HeaderDeLote);
                     numeroRegistro++;
                 }
-                
+
+                #endregion
+
                 if (banco.Codigo == 341)
                 {
                     #region se Banco Itau - 341
@@ -263,6 +272,38 @@ namespace BoletoNet
                     incluiLinha.WriteLine(strline);
                     OnLinhaGerada(null, strline, EnumTipodeLinha.TraillerDeArquivo);
 
+                    incluiLinha.Close();
+
+                    #endregion
+                }
+                else if (banco.Codigo == 756)
+                {
+                    #region Sicoob
+
+                    foreach (var boleto in boletos)
+                    {
+                        boleto.Banco = banco;
+
+                        incluiLinha.WriteLine(boleto.Banco.GerarDetalheSegmentoPRemessa(boleto, numeroRegistroDetalhe, numeroConvenio));
+                        numeroRegistro++;
+                        numeroRegistroDetalhe++;
+
+                        incluiLinha.WriteLine(boleto.Banco.GerarDetalheSegmentoQRemessa(boleto, numeroRegistroDetalhe, TipoArquivo.Cnab240));
+                        numeroRegistro++;
+                        numeroRegistroDetalhe++;
+
+                        if (boleto.PercMulta > 0 || boleto.ValorMulta > 0)
+                        {
+                            incluiLinha.WriteLine(boleto.Banco.GerarDetalheSegmentoRRemessa(boleto, numeroRegistroDetalhe, TipoArquivo.Cnab240));
+                            numeroRegistro++;
+                            numeroRegistroDetalhe++;
+                        }
+                    }
+
+                    incluiLinha.WriteLine(banco.GerarTrailerLoteRemessa(numeroRegistroDetalhe));
+                    numeroRegistro++;
+                    
+                    incluiLinha.WriteLine(banco.GerarTrailerArquivoRemessa(numeroRegistro));
                     incluiLinha.Close();
 
                     #endregion

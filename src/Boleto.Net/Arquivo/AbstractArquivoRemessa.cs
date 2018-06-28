@@ -149,7 +149,7 @@ namespace BoletoNet
             Boletos = boletos;
             NumeroConvenio = numeroConvenio;
             NumeroArquivoRemessa = numeroArquivoRemessa;
-            _arquivoRemessa.GerarArquivoRemessa(numeroConvenio, banco, cedente, boletos, arquivo, numeroArquivoRemessa);
+            _arquivoRemessa.GerarArquivoRemessa(boletos[0].ContaBancaria.Conta, banco, cedente, boletos, arquivo, numeroArquivoRemessa);
         }
 
         #endregion
@@ -166,8 +166,7 @@ namespace BoletoNet
         {
             try
             {
-                if (LinhaDeArquivoGerada != null)
-                    LinhaDeArquivoGerada(this, new LinhaDeArquivoGeradaArgs(boleto, linha, tipoLinha));
+                LinhaDeArquivoGerada?.Invoke(this, new LinhaDeArquivoGeradaArgs(boleto, linha, tipoLinha));
             }
             catch (Exception ex)
             {
