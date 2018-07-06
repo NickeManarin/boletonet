@@ -574,7 +574,7 @@ namespace BoletoNet.Arquivo
                         if (openFileDialog.CheckFileExists)
                         {
                             cnab400 = new ArquivoRetornoCNAB400();
-                            cnab400.LinhaDeArquivoLida += cnab400_LinhaDeArquivoLida;
+                            //cnab400.LinhaDeArquivoLida += cnab400_LinhaDeArquivoLida;
                             cnab400.LerArquivoRetorno(bco, openFileDialog.OpenFile());
                         }
 
@@ -611,7 +611,7 @@ namespace BoletoNet.Arquivo
                         if (openFileDialog.CheckFileExists)
                         {
                             cnab240 = new ArquivoRetornoCNAB240();
-                            cnab240.LinhaDeArquivoLida += cnab240_LinhaDeArquivoLida;
+                            //cnab240.LinhaDeArquivoLida += cnab240_LinhaDeArquivoLida;
                             cnab240.LerArquivoRetorno(bco, openFileDialog.OpenFile());
                         }
 
@@ -827,6 +827,8 @@ namespace BoletoNet.Arquivo
                 LerRetorno(4);
             else if (radioButtonBancoBrasil.Checked)
                 LerRetorno(1);
+            else if (RbSicoob.Checked)
+                LerRetorno(756);
         }
 
         private void gerarToolStripMenuItem1_Click(object sender, EventArgs e)

@@ -15,7 +15,9 @@ namespace BoletoNet
         private long _conta;
         private string _digitoConta;
         private int _dacAgConta;
-        private string _nossoNumero; //identificação do título no banco
+        private string _nossoNumeroComDv; //identificação do título no banco
+        private string _nossoNumero; //identificação do título no banco, sem o DV
+        private string _digNossoNumero; //identificação do título no banco, sem o DV
         private int _codigoCarteira;
         private string _numeroDocumento; //número utilizado pelo cliente para a identificação do título
         private DateTime _dataVencimento;
@@ -108,10 +110,22 @@ namespace BoletoNet
             set { _dacAgConta = value; }
         }
 
+        public string NossoNumeroComDv
+        {
+            get { return _nossoNumeroComDv; }
+            set { _nossoNumeroComDv = value; }
+        }
+
         public string NossoNumero
         {
             get { return _nossoNumero; }
             set { _nossoNumero = value; }
+        }
+
+        public string DigNossoNumero
+        {
+            get { return _digNossoNumero; }
+            set { _digNossoNumero = value; }
         }
 
         public int CodigoCarteira

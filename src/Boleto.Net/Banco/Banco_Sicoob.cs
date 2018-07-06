@@ -655,7 +655,7 @@ namespace BoletoNet
                 d += " ";                                                            //060        Tipo de Documento: Brancos.
                 d += bol.Postagem ? "1" : "2";                                       //061        Identificação da Emissão do Boleto: 1=Sicoob Emite 2=Beneficiário Emite.
                 d += bol.Postagem ? "1" : "2";                                       //062        Identificação da distribuição do Boleto: 1=Sicoob Emite 2=Beneficiário Emite.
-                d += Utils.FormatCode(bol.NumeroDocumento.Truncate(15), 15);         //063 a 077  Número do documento de cobrança.
+                d += Utils.FormatCode(bol.NumeroDocumento.Truncate(15), " ", 15);    //063 a 077  Número do documento de cobrança.
                 d += Utils.FormatCode(bol.DataVencimento.ToString("ddMMyyyy"), 8);   //078 a 085  Data do vencimento.
                 var valorBoleto = bol.ValorBoleto.SemVirgulaPonto();
                 d += valorBoleto.PadLeft(15, '0');                                   //086 a 100  Valor Nominal do Título.
@@ -685,7 +685,7 @@ namespace BoletoNet
 
                 d += Utils.FormatCode(bol.Iof.SemVirgulaPonto(), "0", 15, true);        //166 a 180  Valor do IOF a ser Recolhido.
                 d += Utils.FormatCode(bol.Abatimento.SemVirgulaPonto(), "0", 15, true); //181 a 195  Valor do Abatimento.
-                d += Utils.FormatCode(bol.NumeroDocumento.Truncate(25), 25);            //196 a 220  Identificação do título.
+                d += Utils.FormatCode(bol.NumeroDocumento.Truncate(25), " ", 25);       //196 a 220  Identificação do título.
 
                 #region Instruções
 
@@ -1033,20 +1033,23 @@ namespace BoletoNet
                 detalhe.DigitoAgencia = registro.Substring(22, 1);
                 detalhe.Conta = Convert.ToInt32(registro.Substring(23, 12));
                 detalhe.DigitoConta = registro.Substring(35, 1);
-                detalhe.NossoNumero = registro.Substring(37, 20);
+
+                detalhe.NossoNumeroComDv = registro.Substring(37, 10).TrimStart('0').PadLeft(8, '0');
+                detalhe.NossoNumero = detalhe.NossoNumeroComDv.Substring(0, 7);
+                detalhe.DigNossoNumero = detalhe.NossoNumeroComDv.Substring(7, 1);
+                
                 detalhe.CodigoCarteira = Convert.ToInt32(registro.Substring(57, 1));
-                detalhe.NumeroDocumento = registro.Substring(58, 15);
-                var dataVencimento = Convert.ToInt32(registro.Substring(73, 8));
-                detalhe.DataVencimento = Convert.ToDateTime(dataVencimento.ToString("##-##-####"));
-                decimal valorTitulo = Convert.ToInt64(registro.Substring(81, 15));
-                detalhe.ValorTitulo = valorTitulo / 100;
+                detalhe.NumeroDocumento = registro.Substring(58, 15).Trim();
+
+                detalhe.DataVencimento = DateTime.ParseExact(registro.Substring(73, 8), "ddMMyyyy", new CultureInfo("pt-BR"));
+
+                detalhe.ValorTitulo = Convert.ToInt64(registro.Substring(81, 15)) / 100m;
                 detalhe.IdentificacaoTituloEmpresa = registro.Substring(105, 25);
                 detalhe.TipoInscricao = Convert.ToInt32(registro.Substring(132, 1));
                 detalhe.NumeroInscricao = registro.Substring(133, 15);
-                detalhe.NomeSacado = registro.Substring(148, 40);
-                decimal valorTarifas = Convert.ToUInt64(registro.Substring(198, 15));
-                detalhe.ValorTarifas = valorTarifas / 100;
-
+                detalhe.NomeSacado = registro.Substring(148, 40).Trim();
+                detalhe.ValorTarifas = Convert.ToUInt64(registro.Substring(198, 15)) / 100m;
+                detalhe.CodigoRejeicao = registro.Substring(213, 10).Trim();
                 return detalhe;
             }
             catch (Exception ex)
@@ -1065,34 +1068,24 @@ namespace BoletoNet
                     throw new Exception("Registro inválido. O detalhe não possuí as características do segmento U.");
 
                 detalhe.CodigoOcorrenciaSacado = registro.Substring(15, 2);
-                var DataCredito = Convert.ToInt32(registro.Substring(145, 8));
-                detalhe.DataCredito = Convert.ToDateTime(DataCredito.ToString("##-##-####"));
-                var DataOcorrencia = Convert.ToInt32(registro.Substring(137, 8));
-                detalhe.DataOcorrencia = Convert.ToDateTime(DataOcorrencia.ToString("##-##-####"));
-                var DataOcorrenciaSacado = Convert.ToInt32(registro.Substring(157, 8));
+                detalhe.JurosMultaEncargos = Convert.ToUInt64(registro.Substring(17, 15)) / 100m; //18-32, 15 chars. Acréscimos.
+                detalhe.ValorDescontoConcedido = Convert.ToUInt64(registro.Substring(32, 15)) / 100m; //33-47, 15 chars. Descontos.
+                detalhe.ValorAbatimentoConcedido = Convert.ToUInt64(registro.Substring(47, 15)) / 100m; //48-62, 15 chars. Abatimentos.
+                detalhe.ValorIOFRecolhido = Convert.ToUInt64(registro.Substring(62, 15)) / 100m; //63-77, 15 chars. IOF.
+                detalhe.ValorPagoPeloSacado = Convert.ToUInt64(registro.Substring(77, 15)) / 100m; //78-92, 15 chars. Valor pago.
+                detalhe.ValorLiquidoASerCreditado = Convert.ToUInt64(registro.Substring(92, 15)) / 100m; //93-107, 15 chars. Valor líquido a ser creditado.
+                detalhe.ValorOutrasDespesas = Convert.ToUInt64(registro.Substring(107, 15)) / 100m; //108-122, 15 chars. Outras despesas.
+                detalhe.ValorOutrosCreditos = Convert.ToUInt64(registro.Substring(122, 15)) / 100m; //123-137, 15 chars, Outros créditos.
 
-                if (DataOcorrenciaSacado > 0)
-                    detalhe.DataOcorrenciaSacado = Convert.ToDateTime(DataOcorrenciaSacado.ToString("##-##-####"));
-                else
-                    detalhe.DataOcorrenciaSacado = DateTime.Now;
+                DateTime date;
+                DateTime.TryParseExact(registro.Substring(137, 8), "ddMMyyyy", new CultureInfo("pt-BR"), DateTimeStyles.None, out date);
+                detalhe.DataOcorrencia = date;
 
-                decimal JurosMultaEncargos = Convert.ToUInt64(registro.Substring(17, 15));
-                detalhe.JurosMultaEncargos = JurosMultaEncargos / 100;
-                decimal ValorDescontoConcedido = Convert.ToUInt64(registro.Substring(32, 15));
-                detalhe.ValorDescontoConcedido = ValorDescontoConcedido / 100;
-                decimal ValorAbatimentoConcedido = Convert.ToUInt64(registro.Substring(47, 15));
-                detalhe.ValorAbatimentoConcedido = ValorAbatimentoConcedido / 100;
-                decimal ValorIOFRecolhido = Convert.ToUInt64(registro.Substring(62, 15));
-                detalhe.ValorIOFRecolhido = ValorIOFRecolhido / 100;
-                decimal ValorPagoPeloSacado = Convert.ToUInt64(registro.Substring(77, 15));
-                detalhe.ValorPagoPeloSacado = ValorPagoPeloSacado / 100;
-                decimal ValorLiquidoASerCreditado = Convert.ToUInt64(registro.Substring(92, 15));
-                detalhe.ValorLiquidoASerCreditado = ValorLiquidoASerCreditado / 100;
-                decimal ValorOutrasDespesas = Convert.ToUInt64(registro.Substring(107, 15));
-                detalhe.ValorOutrasDespesas = ValorOutrasDespesas / 100;
+                DateTime.TryParseExact(registro.Substring(145, 8), "ddMMyyyy", new CultureInfo("pt-BR"), DateTimeStyles.None, out date);
+                detalhe.DataCredito = date;
 
-                decimal ValorOutrosCreditos = Convert.ToUInt64(registro.Substring(122, 15));
-                detalhe.ValorOutrosCreditos = ValorOutrosCreditos / 100;
+                DateTime.TryParseExact(registro.Substring(157, 8), "ddMMyyyy", new CultureInfo("pt-BR"), DateTimeStyles.None, out date);
+                detalhe.DataOcorrenciaSacado = date > DateTime.MinValue ? date : DateTime.Now;
 
                 return detalhe;
             }
