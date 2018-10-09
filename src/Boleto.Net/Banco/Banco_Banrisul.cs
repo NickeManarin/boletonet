@@ -762,16 +762,16 @@ namespace BoletoNet
                                                                                                                      
                 #region Data Desconto
 
-                var vDataDesconto = "000000";
+                var vDataDesconto = ""; //"000000";
                 if (!boleto.DataDesconto.Equals(DateTime.MinValue))
                     vDataDesconto = boleto.DataDesconto.ToString("ddMMyy");
                 
                 #endregion                                                                                          
                                                                                                                      
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 174, 06, 0, vDataDesconto, '0'));         //174-179 Data para concessão do desconto.
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 180, 13, 2, boleto.ValorDesconto, '0'));  //180-192 Valor do desconto.
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 193, 13, 2, boleto.Iof, '0'));            //193-205 Valor do Iof.
-                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 206, 13, 2, boleto.Abatimento, '0'));     //206-218 Valor do abatimento.
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 174, 06, 0, vDataDesconto, ' '));         //174-179 Data para concessão do desconto.
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 180, 13, 2, boleto.ValorDesconto > 0 || vDataDesconto.Length > 0 ? (decimal?)boleto.ValorDesconto : null, boleto.ValorDesconto > 0 ? '0' : ' ')); //180-192 Valor do desconto.
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 193, 13, 2, boleto.Iof > 0 ? (decimal?)boleto.Iof : null, ' '));                     //193-205 Valor do Iof.
+                reg.CamposEdi.Add(new CampoEdi(Dado.NumericoSemSeparador_, 206, 13, 2, boleto.Abatimento > 0 ? (decimal?)boleto.Abatimento : null, ' '));       //206-218 Valor do abatimento.
                 
                 #region Regra Tipo de Inscrição Sacado
 
@@ -917,10 +917,19 @@ namespace BoletoNet
                 var dataOcorrencia = Utils.ToInt32(reg.DataOcorrenciaBanco);
                 detalhe.DataOcorrencia = Utils.ToDateTime(dataOcorrencia.ToString("##-##-##"));
                 detalhe.NumeroDocumento = reg.SeuNumero;
-                detalhe.NossoNumeroComDV = reg.NossoNumero;
-                detalhe.NossoNumero = reg.NossoNumero.Substring(0, reg.NossoNumero.Length - 2); //Nosso Número sem o DV!
-                detalhe.DACNossoNumero = reg.NossoNumero.Substring(reg.NossoNumero.Length - 2); //DV
-                
+                detalhe.NossoNumeroComDV = reg.NossoNumero ?? "";
+
+                if (reg.NossoNumero != null)
+                {
+                    detalhe.NossoNumero = reg.NossoNumero.Substring(0, reg.NossoNumero.Length - 2); //Nosso Número sem o DV!
+                    detalhe.DACNossoNumero = reg.NossoNumero.Substring(reg.NossoNumero.Length - 2); //DV
+                }
+                else
+                {
+                    detalhe.NossoNumero = "";
+                    detalhe.DACNossoNumero = "";
+                }
+
                 var dataVencimento = Utils.ToInt32(reg.DataVencimentoTitulo);
                 detalhe.DataVencimento = Utils.ToDateTime(dataVencimento.ToString("##-##-##"));
                 

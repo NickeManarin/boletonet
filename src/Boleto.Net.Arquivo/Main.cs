@@ -13,7 +13,7 @@ namespace BoletoNet.Arquivo
 
         #region Remessa
 
-        public void GeraArquivoCNAB400(IBanco banco, Cedente cedente, Boletos boletos)
+        private void GeraArquivoCnab400(IBanco banco, Cedente cedente, Boletos boletos)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace BoletoNet.Arquivo
             }
         }
 
-        public void GeraArquivoCNAB240(IBanco banco, Cedente cedente, Boletos boletos)
+        private void GeraArquivoCnab240(IBanco banco, Cedente cedente, Boletos boletos)
         {
             saveFileDialog.Filter = "Arquivos de Retorno (*.rem)|*.rem|Todos Arquivos (*.*)|*.*";
 
@@ -59,8 +59,9 @@ namespace BoletoNet.Arquivo
                 MessageBox.Show("Arquivo gerado com sucesso!", "Teste", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
-        
-        public void GeraDadosItau(TipoArquivo tipoArquivo)
+
+
+        private void GeraDadosItau(TipoArquivo tipoArquivo)
         {
             var vencimento = new DateTime(2007, 9, 10);
 
@@ -118,29 +119,29 @@ namespace BoletoNet.Arquivo
             switch (tipoArquivo)
             {
                 case TipoArquivo.Cnab240:
-                    GeraArquivoCNAB240(b2.Banco, c, boletos);
+                    GeraArquivoCnab240(b2.Banco, c, boletos);
                     break;
                 case TipoArquivo.Cnab400:
-                    GeraArquivoCNAB400(b2.Banco, c, boletos);
+                    GeraArquivoCnab400(b2.Banco, c, boletos);
                     break;
-            }          
+            }
         }
 
-        public void GeraDadosBanrisul(TipoArquivo tipoArquivo = TipoArquivo.Cnab400)
+        private void GeraDadosBanrisul(TipoArquivo tipoArquivo = TipoArquivo.Cnab400)
         {
             var conta = new ContaBancaria();
             conta.Agencia = "0510";
             conta.DigitoAgencia = "02";
             conta.Conta = "0013000";
             conta.DigitoConta = "30";
-            
+
             var c = new Cedente();
             c.ContaBancaria = conta;
             c.CpfCnpj = "12.345.678/0001-11";
             c.Nome = "Empresa de Atacado";
             c.Codigo = "3560029";
             c.Convenio = 124522;
-            
+
             var b = new Boleto();
             b.Cedente = c;
             b.ContaBancaria = conta;
@@ -153,6 +154,9 @@ namespace BoletoNet.Arquivo
             b.CodJurosMora = "1"; //"0 = Valor diário, 1 = Taxa mensal"
             b.JurosMora = 5;
 
+            b.DataDesconto = DateTime.Today;
+            b.ValorDesconto = 10m;
+
             b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
             b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
             b.Sacado.Endereco.Bairro = "Testando";
@@ -162,9 +166,9 @@ namespace BoletoNet.Arquivo
 
             var item = new Instrucao_Banrisul(18, null, 10, 3.1m);
             b.Instrucoes.Add(item);
-            b.Instrucoes.Add(new Instrucao_Banrisul(999, null, 10, 3.1m));
-            b.Instrucoes.Add(new Instrucao_Banrisul(998, null, 0, 4.16m));
-            b.Instrucoes.Add(new Instrucao_Banrisul(0,"Exemplo de mensagem", 0, 0m));
+            //b.Instrucoes.Add(new Instrucao_Banrisul(999, null, 10, 3.1m));
+            //b.Instrucoes.Add(new Instrucao_Banrisul(998, null, 0, 4.16m));
+            b.Instrucoes.Add(new Instrucao_Banrisul(0, "Exemplo de mensagem", 0, 0m));
 
             b.Banco = new Banco(041);
 
@@ -184,15 +188,15 @@ namespace BoletoNet.Arquivo
             switch (tipoArquivo)
             {
                 case TipoArquivo.Cnab240:
-                    GeraArquivoCNAB240(b.Banco, c, boletos);
+                    GeraArquivoCnab240(b.Banco, c, boletos);
                     break;
                 case TipoArquivo.Cnab400:
-                    GeraArquivoCNAB400(b.Banco, c, boletos);
+                    GeraArquivoCnab400(b.Banco, c, boletos);
                     break;
             }
         }
 
-        public void GeraDadosBancoDoBrasil()
+        private void GeraDadosBancoDoBrasil()
         {
             var boletos = new Boletos();
 
@@ -245,22 +249,93 @@ namespace BoletoNet.Arquivo
                 };
 
                 #endregion
-                
+
                 boletos.Add(b);
                 b.Valida();
             }
-            
-            GeraArquivoCNAB400(boletos[0].Banco, boletos[0].Cedente, boletos);
+
+            GeraArquivoCnab400(boletos[0].Banco, boletos[0].Cedente, boletos);
         }
 
-        public void GeraDadosSicredi()
+        private void GeraDadosBradesco()
+        {
+            var boletos = new Boletos();
+
+            for (int i = 0; i < 2; i++)
+            {
+                var conta = new ContaBancaria
+                {
+                    Agencia = "2166",
+                    Conta = "16648",
+                    DigitoConta = "0"
+                };
+
+                var c = new Cedente
+                {
+                    ContaBancaria = conta,
+                    Codigo = "5054314",
+                    CpfCnpj = "22734178000280",
+                    Nome = "Comercial Botanic Home e Garden Móveis e Decorações Eireli - EPP"
+                };
+
+                var b = new Boleto
+                {
+                    Banco = new Banco(237),
+                    Cedente = c,
+                    ContaBancaria = conta,
+                    DataProcessamento = DateTime.Now,
+                    DataVencimento = DateTime.Now.AddDays(15),
+                    ValorBoleto = Convert.ToDecimal(2471.69),
+                    Carteira = "09",
+                    NossoNumero = "00000000001",
+                    DigitoNossoNumero = "P",
+                    NumeroDocumento = "0000000001",
+
+                    Sacado = new Sacado
+                    {
+                        CpfCnpj = "01484092023",
+                        Nome = "Fulano de Silva",
+                        Endereco =
+                        {
+                            End = "Av. Independência, 1809",
+                            Bairro = "Centro",
+                            Cidade = "Santa cruz do sul",
+                            Cep = "12345678",
+                            Uf = "RS"
+                        }
+                    }
+                };
+                
+                b.Instrucoes.Add(new Instrucao_Bradesco(9, null, 10));
+                b.Instrucoes.Add(new Instrucao_Bradesco(82, null, 10, 3.1m));
+                b.Instrucoes.Add(new Instrucao_Bradesco(901, null, 10, 3.1m));
+
+                #region Dados para Remessa:
+
+                b.EspecieDocumento = new EspecieDocumento(237, "01");
+                b.Remessa = new Remessa
+                {
+                    CodigoOcorrencia = "01",
+                    TipoDocumento = b.NossoNumero
+                };
+
+                #endregion
+
+                boletos.Add(b);
+                b.Valida();
+            }
+
+            GeraArquivoCnab400(boletos[0].Banco, boletos[0].Cedente, boletos);
+        }
+
+        private void GeraDadosSicredi()
         {
             var conta = new ContaBancaria();
             conta.Agencia = "051";
             conta.DigitoAgencia = "2";
             conta.Conta = "13000";
             conta.DigitoConta = "3";
-            
+
             var c = new Cedente();
             c.ContaBancaria = conta;
             c.CpfCnpj = "00000000000000";
@@ -268,10 +343,10 @@ namespace BoletoNet.Arquivo
             //Na carteira 198 o código do Cedente é a conta bancária
             c.Codigo = "12345";//No Banrisul, esse código está no manual como 12 caracteres, por eu(sidneiklein) isso tive que alterar o tipo de int para string;
             c.Convenio = 124522;
-            
+
             var b = new Boleto();
             b.Cedente = c;
-            
+
             b.DataProcessamento = DateTime.Now;
             b.DataVencimento = DateTime.Now.AddDays(15);
             b.ValorBoleto = Convert.ToDecimal(2469.69);
@@ -279,7 +354,7 @@ namespace BoletoNet.Arquivo
             b.VariacaoCarteira = "02";
             b.NossoNumero = string.Empty; //"92082835"; //** Para o "Remessa.TipoDocumento = "06", não poderá ter NossoNúmero Gerado!
             b.NumeroDocumento = "1008073";
-            
+
             b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
             b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
             b.Sacado.Endereco.Bairro = "Testando";
@@ -294,7 +369,7 @@ namespace BoletoNet.Arquivo
 
             var especiedocumento = new EspecieDocumento(748, "A");//(341, 1);
             b.EspecieDocumento = especiedocumento;
-            
+
             #region Dados para Remessa:
             b.Remessa = new Remessa();
             b.Remessa.TipoDocumento = "A"; //A = 'A' - SICREDI com Registro
@@ -303,10 +378,10 @@ namespace BoletoNet.Arquivo
             var boletos = new Boletos();
             boletos.Add(b);
 
-            GeraArquivoCNAB400(b.Banco, c, boletos);
+            GeraArquivoCnab400(b.Banco, c, boletos);
         }
 
-        public void GeraDadosSantander()
+        private void GeraDadosSantander()
         {
             var boletos = new Boletos();
 
@@ -342,10 +417,10 @@ namespace BoletoNet.Arquivo
 
             boletos.Add(b);
 
-            GeraArquivoCNAB240(new Banco(33), c, boletos);
+            GeraArquivoCnab240(new Banco(33), c, boletos);
         }
 
-        public void GeraDadosCaixa()
+        private void GeraDadosCaixa()
         {
             var conta = new ContaBancaria();
             conta.OperacaConta = "OPE";
@@ -397,10 +472,10 @@ namespace BoletoNet.Arquivo
             var boletos = new Boletos();
             boletos.Add(b);
 
-            GeraArquivoCNAB240(b.Banco, c, boletos);
+            GeraArquivoCnab240(b.Banco, c, boletos);
         }
 
-        public void GeraDadosBancoDoNordeste()
+        private void GeraDadosBancoDoNordeste()
         {
             var conta = new ContaBancaria();
             conta.Agencia = "21";
@@ -444,10 +519,10 @@ namespace BoletoNet.Arquivo
             var boletos = new Boletos();
             boletos.Add(b);
 
-            GeraArquivoCNAB400(b.Banco, c, boletos);
+            GeraArquivoCnab400(b.Banco, c, boletos);
         }
 
-        public void GeraBoletoSicoob(TipoArquivo tipoArquivo = TipoArquivo.Cnab400)
+        private void GeraBoletoSicoob(TipoArquivo tipoArquivo = TipoArquivo.Cnab400)
         {
             var conta = new ContaBancaria
             {
@@ -513,7 +588,7 @@ namespace BoletoNet.Arquivo
                     }
                 }
             };
-            
+
             b.Banco = new Banco(756);
             b.EspecieDocumento = new EspecieDocumento(756, "01");
             b.Remessa = new Remessa
@@ -543,10 +618,10 @@ namespace BoletoNet.Arquivo
             switch (tipoArquivo)
             {
                 case TipoArquivo.Cnab240:
-                    GeraArquivoCNAB240(b.Banco, b.Cedente, boletos);
+                    GeraArquivoCnab240(b.Banco, b.Cedente, boletos);
                     break;
                 case TipoArquivo.Cnab400:
-                    GeraArquivoCNAB400(b.Banco, b.Cedente, boletos);
+                    GeraArquivoCnab400(b.Banco, b.Cedente, boletos);
                     break;
             }
         }
@@ -620,7 +695,7 @@ namespace BoletoNet.Arquivo
                             MessageBox.Show("Arquivo não processado!");
                             return;
                         }
-                        
+
                         lstReturnFields.Items.Clear();
 
                         foreach (var detalhe in cnab240.ListaDetalhes)
@@ -648,21 +723,7 @@ namespace BoletoNet.Arquivo
             }
         }
 
-        void cnab240_LinhaDeArquivoLida(object sender, LinhaDeArquivoLidaArgs e)
-        {
-            MessageBox.Show(e.Linha);
-        }
-
-        void cnab400_LinhaDeArquivoLida(object sender, LinhaDeArquivoLidaArgs e)
-        {
-            MessageBox.Show(e.Linha);
-        }
-
-        #endregion Retorno
-
-        #region Exemplos de arquivos de retorno
-
-        public void GeraArquivoCNAB400Itau(Stream arquivo)
+        private void GeraArquivoCnab400Itau(Stream arquivo)
         {
             try
             {
@@ -720,7 +781,6 @@ namespace BoletoNet.Arquivo
 
                 var trailer = "9201341          0000000300000000060000                  0000000000000000000000        ";
                 trailer += n090 + "0000000000000000000000        000010000000300000000060000" + n160 + "000005";
-                ;
 
                 gravaLinha.WriteLine(trailer);
 
@@ -735,9 +795,11 @@ namespace BoletoNet.Arquivo
             }
         }
 
-        #endregion Exemplos de arquivos de retorno
+        #endregion Retorno
 
-        private void impressãoToolStripMenuItem_Click(object sender, EventArgs e)
+        #region Eventos
+
+        private void ImpressãoMenuItem_Click(object sender, EventArgs e)
         {
             var form = new NBoleto();
 
@@ -771,7 +833,7 @@ namespace BoletoNet.Arquivo
             form.ShowDialog();
         }
 
-        private void cNABToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RemessaMenuItem_Click(object sender, EventArgs e)
         {
             if (radioButtonCNAB400.Checked)
             {
@@ -779,6 +841,8 @@ namespace BoletoNet.Arquivo
                     GeraDadosItau(TipoArquivo.Cnab400);
                 else if (radioButtonBancoBrasil.Checked)
                     GeraDadosBancoDoBrasil();
+                else if (radioButtonBradesco.Checked)
+                    GeraDadosBradesco();
                 else if (radioButtonBanrisul.Checked)
                     GeraDadosBanrisul();
                 else if (radioButtonCaixa.Checked)
@@ -805,7 +869,7 @@ namespace BoletoNet.Arquivo
             }
         }
 
-        private void lerToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void RetornoMenuItem_Click(object sender, EventArgs e)
         {
             if (radioButtonItau.Checked)
                 LerRetorno(341);
@@ -831,7 +895,7 @@ namespace BoletoNet.Arquivo
                 LerRetorno(756);
         }
 
-        private void gerarToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void GeraRetornoMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog.Filter = "Arquivos de Retorno (*.ret)|*.ret|Todos Arquivos (*.*)|*.*";
 
@@ -841,7 +905,7 @@ namespace BoletoNet.Arquivo
             if (radioButtonCNAB400.Checked)
             {
                 if (radioButtonItau.Checked)
-                    GeraArquivoCNAB400Itau(saveFileDialog.OpenFile());
+                    GeraArquivoCnab400Itau(saveFileDialog.OpenFile());
             }
             else
             {
@@ -852,5 +916,7 @@ namespace BoletoNet.Arquivo
 
             MessageBox.Show("Arquivo gerado com sucesso!", "Teste", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+
+        #endregion
     }
 }

@@ -126,9 +126,9 @@
             #region TODOS os Campos
 
             CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0001, 001, 0, string.Empty, ' ')); //001-001
-            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0002, 001, 0, string.Empty, ' ')); //002-003
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0002, 002, 0, string.Empty, ' ')); //002-003
             CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0004, 014, 0, string.Empty, ' ')); //004-017
-            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0018, 013, 0, string.Empty, ' ')); //018-030
+            CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0018, 013, 0, string.Empty, ' ')); //018-030 É 12 caracteres ou 13? Parece um erro do banco.
             CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0031, 006, 0, string.Empty, ' ')); //031-036
             CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0037, 001, 0, string.Empty, ' ')); //037-037
             CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0038, 025, 0, string.Empty, ' ')); //038-062

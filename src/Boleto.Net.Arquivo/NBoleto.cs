@@ -390,7 +390,7 @@ namespace BoletoNet.Arquivo
 
                 b.Instrucoes.Add(new Instrucao(b.EspecieDocumento.Banco.Codigo, 0, "Ha", 5, 1));
                 b.Instrucoes.Add(new Instrucao(b.EspecieDocumento.Banco.Codigo, 998, null, 0, 8.5m, 10));
-                
+
                 b.NumeroDocumento = "12345678901";
 
                 bb.Boleto = b;
@@ -408,39 +408,70 @@ namespace BoletoNet.Arquivo
             var boletos = new List<BoletoBancario>();
             for (var i = 0; i < qtde; i++)
             {
-                var bb = new BoletoBancario();
-                bb.CodigoBanco = _codigoBanco;
+                var conta = new ContaBancaria
+                {
+                    Agencia = "2166",
+                    Conta = "16648",
+                    DigitoConta = "0"
+                };
 
-                var vencimento = DateTime.Now.AddDays(10);
-                var item = new Instrucao_Bradesco(9, null, 5);
+                var c = new Cedente
+                {
+                    ContaBancaria = conta,
+                    Codigo = "5054314",
+                    CpfCnpj = "22734178000280",
+                    Nome = "Comercial Botanic Home e Garden Móveis e Decorações Eireli - EPP"
+                };
 
-                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "1234", "5", "123456", "7");
-                c.Codigo = "13000";
+                var b = new Boleto
+                {
+                    Banco = new Banco(237),
+                    Cedente = c,
+                    ContaBancaria = conta,
+                    DataProcessamento = DateTime.Now,
+                    DataVencimento = DateTime.Now.AddDays(15),
+                    ValorBoleto = Convert.ToDecimal(2471.69),
+                    Carteira = "09",
+                    NossoNumero = "00000000001",
+                    DigitoNossoNumero = "P",
+                    NumeroDocumento = "0000000010",
 
-                var end = new Endereco();
-                end.Bairro = "Lago Sul";
-                end.Cep = "71666660";
-                end.Cidade = "Brasília- DF";
-                end.Complemento = "Quadra XX Conjunto XX Casa XX";
-                end.End = "Condominio de Brasilia - Quadra XX Conjunto XX Casa XX";
-                end.Logradouro = "Cond. Brasilia";
-                end.Numero = "55";
-                end.Uf = "DF";
+                    Sacado = new Sacado
+                    {
+                        CpfCnpj = "01484092023",
+                        Nome = "Fulano de Silva",
+                        Endereco =
+                        {
+                            End = "Av. Independência, 1809",
+                            Bairro = "Centro",
+                            Cidade = "Santa cruz do sul",
+                            Cep = "12345678",
+                            Uf = "RS"
+                        }
+                    }
+                };
 
-                var b = new Boleto(vencimento, 1.01m, "02", "01000000001", c);
-                b.NumeroDocumento = "01000000001";
+                b.Instrucoes.Add(new Instrucao_Bradesco(82, null, 10, 3.1m));
+                b.Instrucoes.Add(new Instrucao_Bradesco(901, null, 10, 3.1m));
 
-                b.Sacado = new Sacado("000.000.000-00", "Eduardo Frare");
-                b.Sacado.Endereco = end;
+                #region Dados para Remessa:
 
-                item.Descricao += " após " + item.Dias + " dias corridos do vencimento.";
-                b.Instrucoes.Add(item); //"Não Receber após o vencimento");
+                b.EspecieDocumento = new EspecieDocumento(237, "01");
+                b.Remessa = new Remessa
+                {
+                    CodigoOcorrencia = "01",
+                    TipoDocumento = b.NossoNumero
+                };
 
-                b.Instrucoes.Add(new Instrucao(237, 900, null, 0, 8.5m, 10));
+                #endregion
 
-                bb.FormatoCarne = true;
-                bb.OcultarInstrucoes = true;
-                bb.Boleto = b;
+                var bb = new BoletoBancario
+                {
+                    CodigoBanco = _codigoBanco,
+                    FormatoCarne = true,
+                    OcultarInstrucoes = true,
+                    Boleto = b
+                };
                 bb.Boleto.Valida();
 
                 boletos.Add(bb);
@@ -577,7 +608,7 @@ namespace BoletoNet.Arquivo
                     Cep = "96815-236"
                 };
 
-                var b = new Boleto(new DateTime(2010, 07, 04), 1980.89m, "01", "22832563", c);
+                var b = new Boleto(DateTime.Now, 1980.89m, "01", "22832563", c);
                 b.DigitoNossoNumero = "51";
 
                 b.CodJurosMora = "0";
@@ -594,9 +625,9 @@ namespace BoletoNet.Arquivo
                     Uf = "DF"
                 }; ;
 
-                b.Instrucoes.Add(new Instrucao_Banrisul(18, null, 10, 0.2m, 10)); //"Não Receber após o vencimento");
-                b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 0.2m, 10));
-                b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 0.2m, 10));
+                //b.Instrucoes.Add(new Instrucao_Banrisul(18, null, 10, 0.2m, 10)); //"Não Receber após o vencimento");
+                //b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 0.2m, 10));
+                //b.Instrucoes.Add(new Instrucao_Banrisul(0, "123456789121222222222222222222222222222222222222222222222222222222222222222222222222222", 10, 0.2m, 10));
 
                 //bb.FormatoCarne = false;
                 //bb.OcultarInstrucoes = true;
@@ -706,7 +737,7 @@ namespace BoletoNet.Arquivo
 
                 b.Instrucoes.Add(new Instrucao_Sicoob(1));
                 b.Instrucoes.Add(new Instrucao_Sicoob(99, null, 20));
-                
+
                 var bb = new BoletoBancario();
                 bb.CodigoBanco = _codigoBanco;
                 bb.FormatoCarne = false;

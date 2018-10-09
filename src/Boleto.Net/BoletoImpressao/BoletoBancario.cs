@@ -373,7 +373,7 @@ namespace BoletoNet
             //_instrucoesHtml = string.Empty;
             foreach (var instrucao in instrucoes)
             {
-                var pieces = (instrucao.Descricao ?? "").Split(new []{';'}, StringSplitOptions.RemoveEmptyEntries);
+                var pieces = (instrucao.Descricao ?? "").Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 
                 foreach (var piece in pieces)
                 {
@@ -519,7 +519,7 @@ namespace BoletoNet
                 //de acordo com a flag "OcultarEnderecoSacado"
             }
 
-            var agenciaConta = Utils.FormataAgenciaConta(Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Cedente.ContaBancaria.Conta, 
+            var agenciaConta = Utils.FormataAgenciaConta(Cedente.ContaBancaria.Agencia, Cedente.ContaBancaria.DigitoAgencia, Cedente.ContaBancaria.Conta,
                 Cedente.ContaBancaria.DigitoConta);
 
             // Trecho adicionado por Fabrício Nogueira de Almeida :fna - fnalmeida@gmail.com - 09/12/2008
@@ -583,7 +583,7 @@ namespace BoletoNet
             }
 
             html.Append(!FormatoCarne ? GeraHtmlReciboCedente() : GeraHtmlCarne("", GeraHtmlReciboCedente()));
-            
+
             //Para carteiras "17-019" e "18-019" do Banco do Brasil, a ficha de compensação não possui código da carteira na formatação do campo.
             if (Boleto.Banco.Codigo == 1)
             {
@@ -601,10 +601,9 @@ namespace BoletoNet
             else
             {
                 //Para SANTANDER, a ficha de compensação não possui código da carteira - por jsoda em 08/12/2012
-                if (Boleto.Banco.Codigo == 33)
+                if (Boleto.Banco.Codigo == 33 || Boleto.Banco.Codigo == 41 || Boleto.Banco.Codigo == 237)
                     html.Replace("Carteira /", "");
             }
-
 
             var dataVencimento = Boleto.DataVencimento.ToString("dd/MM/yyyy");
 
@@ -635,7 +634,7 @@ namespace BoletoNet
                 .Replace("@DATAPROCESSAMENTO", Boleto.DataProcessamento.ToString("dd/MM/yyyy"))
 
             #region Implementação para o Banco do Brasil
-               
+
                 .Replace("@NOSSONUMEROBB", Boleto.Carteira + "/" + Boleto.NossoNumero)
 
             #endregion
@@ -666,6 +665,7 @@ namespace BoletoNet
                 .Replace("@AVALISTA", string.Format("{0} - {1}", Boleto.Avalista != null ? "/ Sacador Avalista: " + Boleto.Avalista.Nome : "", Boleto.Avalista != null ? Boleto.Avalista.CpfCnpj : ""))
                 .Replace("Ar\">R$", RemoveSimboloMoedaValorDocumento ? "Ar\">" : "Ar\">R$")
                 .Replace("@SACBANRISUL", Boleto.Banco.Codigo == 41 ? "</br>SAC 0800 646 1515 / OUVIDORIA BANRISUL 0800 644 2200" : "");
+            //.Replace("@TITULONOSSONUMERO", Boleto.Banco.Codigo == 41 ? "Nosso Número" : "Carteira / Nosso Número");
         }
 
         private string FormataDescricaoCarteira()
@@ -1097,7 +1097,7 @@ namespace BoletoNet
 
             string base64Barra;
             using (var streamBarra = assembly.GetManifestResourceStream("BoletoNet.Imagens.barra.gif"))
-                base64Barra = Convert.ToBase64String(new BinaryReader(streamBarra).ReadBytes((int) streamBarra.Length));
+                base64Barra = Convert.ToBase64String(new BinaryReader(streamBarra).ReadBytes((int)streamBarra.Length));
 
             var fnBarra = string.Format("data:image/gif;base64,{0}", base64Barra);
 
@@ -1196,7 +1196,7 @@ namespace BoletoNet
 
             if (!string.IsNullOrEmpty(TempFilesPath))
                 converter.TempFilesPath = TempFilesPath;
-            
+
             return converter.GeneratePdf(htmlBoletos.ToString());
         }
 

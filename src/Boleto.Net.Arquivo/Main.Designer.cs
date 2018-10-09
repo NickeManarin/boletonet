@@ -182,7 +182,7 @@ namespace BoletoNet.Arquivo
             this.cNABToolStripMenuItem.Name = "cNABToolStripMenuItem";
             this.cNABToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.cNABToolStripMenuItem.Text = "&Remessa";
-            this.cNABToolStripMenuItem.Click += new System.EventHandler(this.cNABToolStripMenuItem_Click);
+            this.cNABToolStripMenuItem.Click += new System.EventHandler(this.RemessaMenuItem_Click);
             // 
             // retornoToolStripMenuItem1
             // 
@@ -198,21 +198,21 @@ namespace BoletoNet.Arquivo
             this.lerToolStripMenuItem1.Name = "lerToolStripMenuItem1";
             this.lerToolStripMenuItem1.Size = new System.Drawing.Size(102, 22);
             this.lerToolStripMenuItem1.Text = "&Ler";
-            this.lerToolStripMenuItem1.Click += new System.EventHandler(this.lerToolStripMenuItem1_Click);
+            this.lerToolStripMenuItem1.Click += new System.EventHandler(this.RetornoMenuItem_Click);
             // 
             // gerarToolStripMenuItem1
             // 
             this.gerarToolStripMenuItem1.Name = "gerarToolStripMenuItem1";
             this.gerarToolStripMenuItem1.Size = new System.Drawing.Size(102, 22);
             this.gerarToolStripMenuItem1.Text = "&Gerar";
-            this.gerarToolStripMenuItem1.Click += new System.EventHandler(this.gerarToolStripMenuItem1_Click);
+            this.gerarToolStripMenuItem1.Click += new System.EventHandler(this.GeraRetornoMenuItem_Click);
             // 
             // impressãoToolStripMenuItem
             // 
             this.impressãoToolStripMenuItem.Name = "impressãoToolStripMenuItem";
             this.impressãoToolStripMenuItem.Size = new System.Drawing.Size(73, 20);
             this.impressãoToolStripMenuItem.Text = "&Impressão";
-            this.impressãoToolStripMenuItem.Click += new System.EventHandler(this.impressãoToolStripMenuItem_Click);
+            this.impressãoToolStripMenuItem.Click += new System.EventHandler(this.ImpressãoMenuItem_Click);
             // 
             // groupBoxBancos
             // 

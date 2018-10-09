@@ -43,7 +43,7 @@ namespace BoletoNet
             Carrega(cod, descricao, dias, valor, valorTotal, data);
         }
 
-        #endregion Construtores
+        #endregion
 
         #region Metodos Privados
 
@@ -64,7 +64,7 @@ namespace BoletoNet
                 switch ((EnumInstrucoes_Bradesco)cod)
                 {
                     case EnumInstrucoes_Bradesco.Protestar:
-                        Descricao = "Protestar";
+                        Descricao = "Protestar após " + dias + " dias do vencimento";
                         break;
                     case EnumInstrucoes_Bradesco.NaoProtestar:
                         Descricao = "Não protestar";
