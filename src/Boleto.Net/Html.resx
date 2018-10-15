@@ -151,7 +151,7 @@
         &lt;td class="w106"&gt;Nº do Documento&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr class="cp h12 rBb"&gt;
-        &lt;td&gt;@CEDENTE_BOLETO&lt;/td&gt;
+        &lt;td&gt;@CEDENTE&lt;/td&gt;
         &lt;td&gt;@AGENCIACODIGOCEDENTE&lt;/td&gt;
         &lt;td&gt;@DATAVENCIMENTO&lt;/td&gt;
         &lt;td class="Ar"&gt;@NUMERODOCUMENTO&lt;/td&gt;
@@ -805,7 +805,7 @@
   <data name="ReciboSacadoParte10" xml:space="preserve">
     <value>&lt;table class="w666"&gt;
     &lt;tr class="ct h13"&gt;
-        &lt;td class="w659"&gt;Beneficiário Endereço @AVALISTA&lt;/td&gt;
+        &lt;td class="w659"&gt;Endereço do Beneficiário&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr class="cp h12 rBb"&gt;
         &lt;td class="At"&gt;@ENDERECOCEDENTE&lt;/td&gt;

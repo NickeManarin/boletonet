@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BoletoNet
 {
@@ -26,21 +24,13 @@ namespace BoletoNet
         #region Construtores
 
         public EspecieDocumento_Bradesco()
-        {
-            try
-            {
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Erro ao carregar objeto", ex);
-            }
-        }
+        {}
 
         public EspecieDocumento_Bradesco(string codigo)
         {
             try
             {
-                this.carregar(codigo);
+                Carregar(codigo);
             }
             catch (Exception ex)
             {
@@ -52,7 +42,7 @@ namespace BoletoNet
 
         #region Metodos Privados
 
-        public string getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco especie)
+        private string GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco especie)
         {
             switch (especie)
             {
@@ -66,13 +56,12 @@ namespace BoletoNet
                 case EnumEspecieDocumento_Bradesco.DuplicataServico: return "12";
                 case EnumEspecieDocumento_Bradesco.Outros: return "99";
                 default: return "99";
-
             }
         }
 
-        public EnumEspecieDocumento_Bradesco getEnumEspecieByCodigo(string codigo)
+        private EnumEspecieDocumento_Bradesco GetEnumEspecieByCodigo(string codigo)
         {
-            switch (codigo)
+            switch (codigo.TrimStart('0'))
             {
                 case "1": return EnumEspecieDocumento_Bradesco.DuplicataMercantil;
                 case "2": return EnumEspecieDocumento_Bradesco.NotaPromissoria;
@@ -87,62 +76,63 @@ namespace BoletoNet
             }
         }
 
-        private void carregar(string idCodigo)
+        private void Carregar(string idCodigo)
         {
             try
             {
-                this.Banco = new Banco_Bradesco();
+                Banco = new Banco_Bradesco();
 
-                switch (getEnumEspecieByCodigo(idCodigo))
+                switch (GetEnumEspecieByCodigo(idCodigo))
                 {
                     case EnumEspecieDocumento_Bradesco.DuplicataMercantil:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.DuplicataMercantil);
-                        this.Especie = "Duplicata mercantil";
-                        this.Sigla = "DM";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.DuplicataMercantil);
+                        Especie = "Duplicata mercantil";
+                        Sigla = "DM";
                         break;
                     case EnumEspecieDocumento_Bradesco.NotaPromissoria:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.NotaPromissoria);
-                        this.Especie = "Nota promissória";
-                        this.Sigla = "NP";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.NotaPromissoria);
+                        Especie = "Nota promissória";
+                        Sigla = "NP";
                         break;
                     case EnumEspecieDocumento_Bradesco.NotaSeguro:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.NotaSeguro);
-                        this.Especie = "Nota de seguro";
-                        this.Sigla = "NS";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.NotaSeguro);
+                        Especie = "Nota de seguro";
+                        Sigla = "NS";
                         break;
                     case EnumEspecieDocumento_Bradesco.CobrancaSeriada:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.CobrancaSeriada);
-                        this.Especie = "Cobrança seriada";
-                        this.Sigla = "CS";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.CobrancaSeriada);
+                        Especie = "Cobrança seriada";
+                        Sigla = "CS";
                         break;
                     case EnumEspecieDocumento_Bradesco.Recibo:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.Recibo);
-                        this.Especie = "Recibo";
-                        this.Sigla = "RC";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.Recibo);
+                        Especie = "Recibo";
+                        Sigla = "RC";
                         break;
                     case EnumEspecieDocumento_Bradesco.LetraCambio:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.LetraCambio);
-                        this.Sigla = "LC";
-                        this.Especie = "Letra de câmbio";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.LetraCambio);
+                        Sigla = "LC";
+                        Especie = "Letra de câmbio";
                         break;
                     case EnumEspecieDocumento_Bradesco.NotaDebito:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.NotaDebito);
-                        this.Sigla = "ND";
-                        this.Especie = "Nota de débito";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.NotaDebito);
+                        Sigla = "ND";
+                        Especie = "Nota de débito";
                         break;
                     case EnumEspecieDocumento_Bradesco.DuplicataServico:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.DuplicataServico);
-                        this.Sigla = "DS";
-                        this.Especie = "Duplicata de serviço";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.DuplicataServico);
+                        Sigla = "DS";
+                        Especie = "Duplicata de serviço";
                         break;
                     case EnumEspecieDocumento_Bradesco.Outros:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.Outros);
-                        this.Especie = "Outros";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.Outros);
+                        Especie = "Outros";
+                        Sigla = "OU";
                         break;
                     default:
-                        this.Codigo = "0";
-                        this.Especie = "( Selecione )";
-                        this.Sigla = "";
+                        Codigo = "0";
+                        Especie = "( Selecione )";
+                        Sigla = "";
                         break;
                 }
             }
@@ -156,39 +146,37 @@ namespace BoletoNet
         {
             try
             {
-                EspeciesDocumento alEspeciesDocumento = new EspeciesDocumento();
+                var alEspeciesDocumento = new EspeciesDocumento();
+                var obj = new EspecieDocumento_Bradesco();
 
-                EspecieDocumento_Bradesco obj = new EspecieDocumento_Bradesco();
-
-                obj = new EspecieDocumento_Bradesco(obj.getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.DuplicataMercantil));
+                obj = new EspecieDocumento_Bradesco(obj.GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.DuplicataMercantil));
                 alEspeciesDocumento.Add(obj);
 
-                obj = new EspecieDocumento_Bradesco(obj.getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.NotaPromissoria));
+                obj = new EspecieDocumento_Bradesco(obj.GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.NotaPromissoria));
                 alEspeciesDocumento.Add(obj);
 
-                obj = new EspecieDocumento_Bradesco(obj.getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.NotaSeguro));
+                obj = new EspecieDocumento_Bradesco(obj.GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.NotaSeguro));
                 alEspeciesDocumento.Add(obj);
 
-                obj = new EspecieDocumento_Bradesco(obj.getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.CobrancaSeriada));
+                obj = new EspecieDocumento_Bradesco(obj.GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.CobrancaSeriada));
                 alEspeciesDocumento.Add(obj);
 
-                obj = new EspecieDocumento_Bradesco(obj.getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.Recibo));
+                obj = new EspecieDocumento_Bradesco(obj.GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.Recibo));
                 alEspeciesDocumento.Add(obj);
 
-                obj = new EspecieDocumento_Bradesco(obj.getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.LetraCambio));
+                obj = new EspecieDocumento_Bradesco(obj.GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.LetraCambio));
                 alEspeciesDocumento.Add(obj);
 
-                obj = new EspecieDocumento_Bradesco(obj.getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.NotaDebito));
+                obj = new EspecieDocumento_Bradesco(obj.GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.NotaDebito));
                 alEspeciesDocumento.Add(obj);
 
-                obj = new EspecieDocumento_Bradesco(obj.getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.DuplicataServico));
+                obj = new EspecieDocumento_Bradesco(obj.GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.DuplicataServico));
                 alEspeciesDocumento.Add(obj);
 
-                obj = new EspecieDocumento_Bradesco(obj.getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.Outros));
+                obj = new EspecieDocumento_Bradesco(obj.GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.Outros));
                 alEspeciesDocumento.Add(obj);
 
                 return alEspeciesDocumento;
-
             }
             catch (Exception ex)
             {
@@ -198,7 +186,7 @@ namespace BoletoNet
 
         public override IEspecieDocumento DuplicataMercantil()
         {
-            return new EspecieDocumento_Bradesco(getCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.DuplicataMercantil));
+            return new EspecieDocumento_Bradesco(GetCodigoEspecieByEnum(EnumEspecieDocumento_Bradesco.DuplicataMercantil));
         }
 
         #endregion

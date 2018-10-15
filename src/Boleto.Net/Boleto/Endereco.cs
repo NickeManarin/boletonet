@@ -146,5 +146,30 @@ namespace BoletoNet
                 return text;
             }
         }
+
+        public string EndComTudoMesmo
+        {
+            get
+            {
+                var text = End;
+
+                if (!string.IsNullOrEmpty(Numero))
+                    text += " " + Numero;
+
+                if (!string.IsNullOrEmpty(Complemento))
+                    text += ", " + Complemento;
+
+                if (!string.IsNullOrEmpty(Bairro))
+                    text += ", " + Bairro;
+
+                if (!string.IsNullOrEmpty(Cidade))
+                    text += ", " + Cidade;
+
+                if (!string.IsNullOrEmpty(Uf))
+                    text += " - " + Uf;
+
+                return text;
+            }
+        }
     }
 }

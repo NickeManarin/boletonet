@@ -19,7 +19,7 @@ namespace BoletoNet {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Html {
@@ -174,7 +174,7 @@ namespace BoletoNet {
         ///        &lt;td class=&quot;w106&quot;&gt;Nº do Documento&lt;/td&gt;
         ///    &lt;/tr&gt;
         ///    &lt;tr class=&quot;cp h12 rBb&quot;&gt;
-        ///        &lt;td&gt;@CEDENTE_BOLETO&lt;/td&gt;
+        ///        &lt;td&gt;@CEDENTE&lt;/td&gt;
         ///        &lt;td&gt;@AGENCIACODIGOCEDENTE&lt;/td&gt;
         ///        &lt;td&gt;@DATAVENCIMENTO&lt;/td&gt;
         ///        &lt;td class=&quot;Ar&quot;&gt;@NUMERODOCUMENTO&lt;/td&gt;
@@ -619,7 +619,7 @@ namespace BoletoNet {
         /// <summary>
         ///   Looks up a localized string similar to &lt;table class=&quot;w666&quot;&gt;
         ///    &lt;tr class=&quot;ct h13&quot;&gt;
-        ///        &lt;td class=&quot;w659&quot;&gt;Beneficiário Endereço @AVALISTA&lt;/td&gt;
+        ///        &lt;td class=&quot;w659&quot;&gt;Endereço do Beneficiário&lt;/td&gt;
         ///    &lt;/tr&gt;
         ///    &lt;tr class=&quot;cp h12 rBb&quot;&gt;
         ///        &lt;td class=&quot;At&quot;&gt;@ENDERECOCEDENTE&lt;/td&gt;

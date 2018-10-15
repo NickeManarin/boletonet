@@ -420,7 +420,17 @@ namespace BoletoNet.Arquivo
                     ContaBancaria = conta,
                     Codigo = "5054314",
                     CpfCnpj = "22734178000280",
-                    Nome = "Comercial Botanic Home e Garden Móveis e Decorações Eireli - EPP"
+                    Nome = "Comercial Botanic Home e Garden Móveis e Decorações Eireli - EPP",
+                    Endereco = new Endereco
+                    {
+                        End = "Av. Oscar Jost",
+                        Numero = "2500",
+                        Bairro = "Verena",
+                        Complemento = "Casa 10",
+                        Cidade = "Santa cruz do sul",
+                        Cep = "12345678",
+                        Uf = "RS"
+                    }
                 };
 
                 var b = new Boleto
@@ -456,7 +466,7 @@ namespace BoletoNet.Arquivo
 
                 #region Dados para Remessa:
 
-                b.EspecieDocumento = new EspecieDocumento(237, "01");
+                b.EspecieDocumento = new EspecieDocumento(237, "2");
                 b.Remessa = new Remessa
                 {
                     CodigoOcorrencia = "01",
@@ -468,8 +478,12 @@ namespace BoletoNet.Arquivo
                 var bb = new BoletoBancario
                 {
                     CodigoBanco = _codigoBanco,
-                    FormatoCarne = true,
+                    FormatoCarne = false,
                     OcultarInstrucoes = true,
+                    OcultarReciboSacado = false,
+                    OcultarEnderecoSacado = false,
+                    MostrarComprovanteEntrega = true,
+                    MostrarEnderecoCedente = true,
                     Boleto = b
                 };
                 bb.Boleto.Valida();

@@ -125,6 +125,7 @@
     <Compile Include="Boleto\EspecieDocumento\EspecieDocumento_Cecred.cs" />
     <Compile Include="Boleto\EspecieDocumento\EspecieDocumento_Daycoval.cs" />
     <Compile Include="Boleto\EspecieDocumento\EspecieDocumento_Nordeste.cs" />
+    <Compile Include="Boleto\EspecieDocumento\EspecieDocumento_Sicoob240.cs" />
     <Compile Include="Boleto\EspecieDocumento\EspecieDocumento_Sicoob.cs" />
     <Compile Include="Boleto\EspecieDocumento\EspecieDocumento_Sofisa.cs" />
     <Compile Include="Boleto\Instrucao\Instrucao_BancoNordeste.cs" />

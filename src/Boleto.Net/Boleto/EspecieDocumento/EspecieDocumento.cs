@@ -17,11 +17,11 @@ namespace BoletoNet
         internal EspecieDocumento()
         {}
 
-        public EspecieDocumento(int codigoBanco)
+        public EspecieDocumento(int codigoBanco, bool cnab240 = false)
         {
             try
             {
-                InstanciaEspecieDocumento(codigoBanco, "0");
+                InstanciaEspecieDocumento(codigoBanco, "0", cnab240);
             }
             catch (Exception ex)
             {
@@ -29,11 +29,11 @@ namespace BoletoNet
             }
         }
 
-        public EspecieDocumento(int CodigoBanco, string codigoEspecie)
+        public EspecieDocumento(int CodigoBanco, string codigoEspecie, bool cnab240 = false)
         {
             try
             {
-                InstanciaEspecieDocumento(CodigoBanco, codigoEspecie);
+                InstanciaEspecieDocumento(CodigoBanco, codigoEspecie, cnab240);
             }
             catch (Exception ex)
             {
@@ -82,7 +82,7 @@ namespace BoletoNet
 
         #region Métodos Privados
 
-        private void InstanciaEspecieDocumento(int codigoBanco, string codigoEspecie)
+        private void InstanciaEspecieDocumento(int codigoBanco, string codigoEspecie, bool cnab240)
         {
             try
             {
@@ -136,7 +136,12 @@ namespace BoletoNet
                         break;
                     //756 - Sicoob
                     case 756:
-                        _IEspecieDocumento = new EspecieDocumento_Sicoob(codigoEspecie);
+
+                        if (cnab240)
+                            _IEspecieDocumento = new EspecieDocumento_Sicoob240(codigoEspecie);
+                        else
+                            _IEspecieDocumento = new EspecieDocumento_Sicoob(codigoEspecie);
+
                         break;
                     //004 Banco do Nordeste
                     case 4:

@@ -26,8 +26,7 @@ namespace BoletoNet
 		private int _numeroParcela;
 		private decimal _valorBoleto;
 		private decimal _valorCobrado;
-		private string _localPagamento = "Até o vencimento, preferencialmente no ";
-		private int _quantidadeMoeda = 1;
+        private int _quantidadeMoeda = 1;
 		private string _valorMoeda = string.Empty;
 		private IList<IInstrucao> _instrucoes = new List<IInstrucao>();
         private IEspecieDocumento _especieDocumento;
@@ -218,19 +217,15 @@ namespace BoletoNet
 			set { _instrucoes = value; }
 		}
 
-		/// <summary> 
-		/// Retorna o local de pagamento.
-		/// </summary>
-		public string LocalPagamento
-		{
-			get { return _localPagamento; }
-			set { _localPagamento = value; }
-		}
+        /// <summary> 
+        /// Retorna o local de pagamento.
+        /// </summary>
+        public string LocalPagamento { get; set; } = "Até o vencimento, preferencialmente no ";
 
-		/// <summary> 
-		/// Retorna a quantidade da moeda.
-		/// </summary>
-		public int QuantidadeMoeda
+        /// <summary> 
+        /// Retorna a quantidade da moeda.
+        /// </summary>
+        public int QuantidadeMoeda
 		{
 			get { return _quantidadeMoeda; }
 			set { _quantidadeMoeda = value; }

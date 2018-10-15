@@ -27,26 +27,19 @@ namespace BoletoNet
 
     #endregion
 
+    //Vale para CNAB400 apenas. CNAB240 tem outros códigos.
     public class EspecieDocumento_Sicoob : AbstractEspecieDocumento, IEspecieDocumento
     {
         #region Construtores
 
         public EspecieDocumento_Sicoob()
-        {
-            try
-            {
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Erro ao carregar objeto", ex);
-            }
-        }
+        {}
 
         public EspecieDocumento_Sicoob(string codigo)
         {
             try
             {
-                this.carregar(codigo);
+                Carregar(codigo);
             }
             catch (Exception ex)
             {
@@ -58,113 +51,113 @@ namespace BoletoNet
 
         #region Metodos Privados
 
-        public string getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob especie)
+        private string GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob especie)
         {
             return Convert.ToInt32(especie).ToString("00");
         }
 
-        public EnumEspecieDocumento_Sicoob getEnumEspecieByCodigo(string codigo)
+        private EnumEspecieDocumento_Sicoob GetEnumEspecieByCodigo(string codigo)
         {
             return (EnumEspecieDocumento_Sicoob) Convert.ToInt32(codigo);
         }
 
-        private void carregar(string idCodigo)
+        private void Carregar(string idCodigo)
         {
             try
             {
-                this.Banco = new Banco_Sicoob();
+                Banco = new Banco_Sicoob();
 
-                switch (getEnumEspecieByCodigo(idCodigo))
+                switch (GetEnumEspecieByCodigo(idCodigo))
                 {
                     case EnumEspecieDocumento_Sicoob.DuplicataMercantil:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.DuplicataMercantil);
-                        this.Especie = "Duplicata mercantil";
-                        this.Sigla = "DM";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.DuplicataMercantil);
+                        Especie = "Duplicata mercantil";
+                        Sigla = "DM";
                         break;
                     case EnumEspecieDocumento_Sicoob.NotaPromissoria:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.NotaPromissoria);
-                        this.Especie = "Nota promissória";
-                        this.Sigla = "NP";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.NotaPromissoria);
+                        Especie = "Nota promissória";
+                        Sigla = "NP";
                         break;
                     case EnumEspecieDocumento_Sicoob.NotaSeguro:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.NotaSeguro);
-                        this.Especie = "Nota de seguro";
-                        this.Sigla = "NS";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.NotaSeguro);
+                        Especie = "Nota de seguro";
+                        Sigla = "NS";
                         break;
                     case EnumEspecieDocumento_Sicoob.Recibo:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.Recibo);
-                        this.Especie = "Recibo";
-                        this.Sigla = "RC";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.Recibo);
+                        Especie = "Recibo";
+                        Sigla = "RC";
                         break;
                     case EnumEspecieDocumento_Sicoob.DuplicataRural:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.DuplicataRural);
-                        this.Especie = "Duplicata Rural";
-                        this.Sigla = "DR";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.DuplicataRural);
+                        Especie = "Duplicata Rural";
+                        Sigla = "DR";
                         break;
                     case EnumEspecieDocumento_Sicoob.LetraCambio:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.LetraCambio);
-                        this.Sigla = "LC";
-                        this.Especie = "Letra de Câmbio";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.LetraCambio);
+                        Sigla = "LC";
+                        Especie = "Letra de Câmbio";
                         break;
                     case EnumEspecieDocumento_Sicoob.Warrant:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.Warrant);
-                        this.Sigla = "WR";
-                        this.Especie = "Warrant";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.Warrant);
+                        Sigla = "WR";
+                        Especie = "Warrant";
                         break;
                     case EnumEspecieDocumento_Sicoob.Cheque:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.Cheque);
-                        this.Sigla = "CH";
-                        this.Especie = "Cheque";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.Cheque);
+                        Sigla = "CH";
+                        Especie = "Cheque";
                         break;
                     case EnumEspecieDocumento_Sicoob.DuplicataServico:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.DuplicataServico);
-                        this.Sigla = "DS";
-                        this.Especie = "Duplicata de serviço";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.DuplicataServico);
+                        Sigla = "DS";
+                        Especie = "Duplicata de serviço";
                         break;
                     case EnumEspecieDocumento_Sicoob.NotaDebito:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.NotaDebito);
-                        this.Sigla = "ND";
-                        this.Especie = "Nota de débito";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.NotaDebito);
+                        Sigla = "ND";
+                        Especie = "Nota de débito";
                         break;
                     case EnumEspecieDocumento_Sicoob.TriplicataMercantil:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.TriplicataMercantil);
-                        this.Sigla = "TP";
-                        this.Especie = "Triplicata Mercantil";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.TriplicataMercantil);
+                        Sigla = "TP";
+                        Especie = "Triplicata Mercantil";
                         break;
                     case EnumEspecieDocumento_Sicoob.TriplicataServico:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.TriplicataServico);
-                        this.Sigla = "TS";
-                        this.Especie = "Triplicata de Serviço";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.TriplicataServico);
+                        Sigla = "TS";
+                        Especie = "Triplicata de Serviço";
                         break;
                     case EnumEspecieDocumento_Sicoob.Fatura:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.Fatura);
-                        this.Sigla = "FT";
-                        this.Especie = "Fatura";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.Fatura);
+                        Sigla = "FT";
+                        Especie = "Fatura";
                         break;
                     case EnumEspecieDocumento_Sicoob.ApoliceSeguro:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.ApoliceSeguro);
-                        this.Sigla = "AP";
-                        this.Especie = "Apólice de Seguro";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.ApoliceSeguro);
+                        Sigla = "AP";
+                        Especie = "Apólice de Seguro";
                         break;
                     case EnumEspecieDocumento_Sicoob.MensalidadeEscolar:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.MensalidadeEscolar);
-                        this.Sigla = "ME";
-                        this.Especie = "Mensalidade Escolar";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.MensalidadeEscolar);
+                        Sigla = "ME";
+                        Especie = "Mensalidade Escolar";
                         break;
                     case EnumEspecieDocumento_Sicoob.ParcelaConsorcio:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.ParcelaConsorcio);
-                        this.Sigla = "PC";
-                        this.Especie = "Parcela de Consórcio";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.ParcelaConsorcio);
+                        Sigla = "PC";
+                        Especie = "Parcela de Consórcio";
                         break;
                     case EnumEspecieDocumento_Sicoob.Outros:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.Outros);
-                        this.Especie = "Outros";
-                        this.Sigla = "OU";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.Outros);
+                        Especie = "Outros";
+                        Sigla = "OU";
                         break;
                     default:
-                        this.Codigo = "0";
-                        this.Especie = "( Selecione )";
-                        this.Sigla = "";
+                        Codigo = "0";
+                        Especie = "( Selecione )";
+                        Sigla = "";
                         break;
                 }
             }
@@ -184,7 +177,7 @@ namespace BoletoNet
 
                 foreach (var item in Enum.GetValues(typeof (EnumEspecieDocumento_Sicoob)))
                 {
-                    obj = new EspecieDocumento_Sicoob(obj.getCodigoEspecieByEnum((EnumEspecieDocumento_Sicoob)item));
+                    obj = new EspecieDocumento_Sicoob(obj.GetCodigoEspecieByEnum((EnumEspecieDocumento_Sicoob)item));
                     alEspeciesDocumento.Add(obj);
                 }
 
@@ -199,7 +192,7 @@ namespace BoletoNet
 
         public override IEspecieDocumento DuplicataMercantil()
         {
-            return new EspecieDocumento_Sicoob(getCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.DuplicataMercantil));
+            return new EspecieDocumento_Sicoob(GetCodigoEspecieByEnum(EnumEspecieDocumento_Sicoob.DuplicataMercantil));
         }
 
         #endregion

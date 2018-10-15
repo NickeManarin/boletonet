@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BoletoNet
 {
@@ -40,21 +38,13 @@ namespace BoletoNet
         #region Construtores
 
         public EspecieDocumento_Banrisul()
-        {
-            try
-            {
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Erro ao carregar objeto", ex);
-            }
-        }
+        {}
 
         public EspecieDocumento_Banrisul(string codigo)
         {
             try
             {
-                this.carregar(codigo);
+                Carregar(codigo);
             }
             catch (Exception ex)
             {
@@ -66,7 +56,7 @@ namespace BoletoNet
 
         #region Metodos Privados
 
-        public string getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul especie)
+        private string GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul especie)
         {
             switch (especie)
             {
@@ -94,11 +84,10 @@ namespace BoletoNet
                 case EnumEspecieDocumento_Banrisul.ParcelaConsorcio: return "22";
                 case EnumEspecieDocumento_Banrisul.Outros: return "23";
                 default: return "23";
-
             }
         }
 
-        public EnumEspecieDocumento_Banrisul getEnumEspecieByCodigo(string codigo)
+        private EnumEspecieDocumento_Banrisul GetEnumEspecieByCodigo(string codigo)
         {
             switch (codigo)
             {
@@ -125,136 +114,139 @@ namespace BoletoNet
                 case "21": return EnumEspecieDocumento_Banrisul.MensalidadeEscolar;
                 case "22": return EnumEspecieDocumento_Banrisul.ParcelaConsorcio;
                 case "23": return EnumEspecieDocumento_Banrisul.Outros;
-                default: return EnumEspecieDocumento_Banrisul.DuplicataMercantil;
+
+                case "01":
+                default:
+                    return EnumEspecieDocumento_Banrisul.DuplicataMercantil;
             }
         }
 
-        private void carregar(string idCodigo)
+        private void Carregar(string idCodigo)
         {
             try
             {
-                this.Banco = new Banco_Banrisul();
+                Banco = new Banco_Banrisul();
 
-                switch (getEnumEspecieByCodigo(idCodigo))
+                switch (GetEnumEspecieByCodigo(idCodigo))
                 {
                     case EnumEspecieDocumento_Banrisul.Cheque:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.Cheque);
-                        this.Especie = "CHEQUE";
-                        this.Sigla = "CH";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.Cheque);
+                        Especie = "CHEQUE";
+                        Sigla = "CH";
                         break;
                     case EnumEspecieDocumento_Banrisul.DuplicataMercantil:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.DuplicataMercantil);
-                        this.Especie = "DUPLICATA MERCANTIL";
-                        this.Sigla = "DM";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.DuplicataMercantil);
+                        Especie = "DUPLICATA MERCANTIL";
+                        Sigla = "DM";
                         break;
                     case EnumEspecieDocumento_Banrisul.DuplicataMercantilIndicacao:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.DuplicataMercantilIndicacao);
-                        this.Especie = "DUPLICATA MERCANTIL P/ INDICAÇÃO";
-                        this.Sigla = "DMI";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.DuplicataMercantilIndicacao);
+                        Especie = "DUPLICATA MERCANTIL P/ INDICAÇÃO";
+                        Sigla = "DMI";
                         break;
                     case EnumEspecieDocumento_Banrisul.DuplicataServico:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.DuplicataServico);
-                        this.Especie = "DUPLICATA DE SERVIÇO";
-                        this.Sigla = "DS";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.DuplicataServico);
+                        Especie = "DUPLICATA DE SERVIÇO";
+                        Sigla = "DS";
                         break;
                     case EnumEspecieDocumento_Banrisul.DuplicataServicoIndicacao:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.DuplicataServicoIndicacao);
-                        this.Especie = "DUPLICATA DE SERVIÇO P/ INDICAÇÃO";
-                        this.Sigla = "DSI";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.DuplicataServicoIndicacao);
+                        Especie = "DUPLICATA DE SERVIÇO P/ INDICAÇÃO";
+                        Sigla = "DSI";
                         break;
                     case EnumEspecieDocumento_Banrisul.DuplicataRural:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.DuplicataRural);
-                        this.Especie = "DUPLICATA RURAL";
-                        this.Sigla = "DR";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.DuplicataRural);
+                        Especie = "DUPLICATA RURAL";
+                        Sigla = "DR";
                         break;
                     case EnumEspecieDocumento_Banrisul.LetraCambio:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.LetraCambio);
-                        this.Especie = "LETRA DE CAMBIO";
-                        this.Sigla = "LC";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.LetraCambio);
+                        Especie = "LETRA DE CAMBIO";
+                        Sigla = "LC";
                         break;
                     case EnumEspecieDocumento_Banrisul.NotaCreditoComercial:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.NotaCreditoComercial);
-                        this.Especie = "NOTA DE CRÉDITO COMERCIAL";
-                        this.Sigla = "NCC";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.NotaCreditoComercial);
+                        Especie = "NOTA DE CRÉDITO COMERCIAL";
+                        Sigla = "NCC";
                         break;
                     case EnumEspecieDocumento_Banrisul.NotaCreditoExportacao:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.NotaCreditoExportacao);
-                        this.Especie = "NOTA DE CRÉDITO A EXPORTAÇÃO";
-                        this.Sigla = "NCE";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.NotaCreditoExportacao);
+                        Especie = "NOTA DE CRÉDITO A EXPORTAÇÃO";
+                        Sigla = "NCE";
                         break;
                     case EnumEspecieDocumento_Banrisul.NotaCreditoIndustrial:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.NotaCreditoIndustrial);
-                        this.Especie = "NOTA DE CRÉDITO INDUSTRIAL";
-                        this.Sigla = "NCI";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.NotaCreditoIndustrial);
+                        Especie = "NOTA DE CRÉDITO INDUSTRIAL";
+                        Sigla = "NCI";
                         break;
                     case EnumEspecieDocumento_Banrisul.NotaCreditoRural:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.NotaCreditoRural);
-                        this.Especie = "NOTA DE CRÉDITO RURAL";
-                        this.Sigla = "NCR";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.NotaCreditoRural);
+                        Especie = "NOTA DE CRÉDITO RURAL";
+                        Sigla = "NCR";
                         break;
                     case EnumEspecieDocumento_Banrisul.NotaPromissoria:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.NotaPromissoria);
-                        this.Especie = "NOTA PROMISSÓRIA";
-                        this.Sigla = "NP";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.NotaPromissoria);
+                        Especie = "NOTA PROMISSÓRIA";
+                        Sigla = "NP";
                         break;
                     case EnumEspecieDocumento_Banrisul.NotaPromissoriaRural:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.NotaPromissoriaRural);
-                        this.Especie = "NOTA PROMISSÓRIA RURAL";
-                        this.Sigla = "NPR";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.NotaPromissoriaRural);
+                        Especie = "NOTA PROMISSÓRIA RURAL";
+                        Sigla = "NPR";
                         break;
                     case EnumEspecieDocumento_Banrisul.TriplicataMercantil:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.TriplicataMercantil);
-                        this.Especie = "TRIPLICATA MERCANTIL";
-                        this.Sigla = "TM";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.TriplicataMercantil);
+                        Especie = "TRIPLICATA MERCANTIL";
+                        Sigla = "TM";
                         break;
                     case EnumEspecieDocumento_Banrisul.TriplicataServico:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.TriplicataServico);
-                        this.Especie = "TRIPLICATA DE SERVIÇO";
-                        this.Sigla = "TS";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.TriplicataServico);
+                        Especie = "TRIPLICATA DE SERVIÇO";
+                        Sigla = "TS";
                         break;
                     case EnumEspecieDocumento_Banrisul.NotaSeguro:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.NotaSeguro);
-                        this.Especie = "NOTA DE SEGURO";
-                        this.Sigla = "NS";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.NotaSeguro);
+                        Especie = "NOTA DE SEGURO";
+                        Sigla = "NS";
                         break;
                     case EnumEspecieDocumento_Banrisul.Recibo:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.Recibo);
-                        this.Especie = "RECIBO";
-                        this.Sigla = "RC";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.Recibo);
+                        Especie = "RECIBO";
+                        Sigla = "RC";
                         break;
                     case EnumEspecieDocumento_Banrisul.Fatura:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.Fatura);
-                        this.Especie = "FATURA";
-                        this.Sigla = "FAT";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.Fatura);
+                        Especie = "FATURA";
+                        Sigla = "FAT";
                         break;
                     case EnumEspecieDocumento_Banrisul.NotaDebito:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.NotaDebito);
-                        this.Especie = "NOTA DE DÉBITO";
-                        this.Sigla = "ND";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.NotaDebito);
+                        Especie = "NOTA DE DÉBITO";
+                        Sigla = "ND";
                         break;
                     case EnumEspecieDocumento_Banrisul.ApoliceSeguro:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.ApoliceSeguro);
-                        this.Especie = "APÓLICE DE SEGURO";
-                        this.Sigla = "AP";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.ApoliceSeguro);
+                        Especie = "APÓLICE DE SEGURO";
+                        Sigla = "AP";
                         break;
                     case EnumEspecieDocumento_Banrisul.MensalidadeEscolar:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.MensalidadeEscolar);
-                        this.Especie = "MENSALIDADE ESCOLAR";
-                        this.Sigla = "ME";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.MensalidadeEscolar);
+                        Especie = "MENSALIDADE ESCOLAR";
+                        Sigla = "ME";
                         break;
                     case EnumEspecieDocumento_Banrisul.ParcelaConsorcio:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.ParcelaConsorcio);
-                        this.Especie = "PARCELA DE CONSÓRCIO";
-                        this.Sigla = "PC";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.ParcelaConsorcio);
+                        Especie = "PARCELA DE CONSÓRCIO";
+                        Sigla = "PC";
                         break;
                     case EnumEspecieDocumento_Banrisul.Outros:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.Outros);
-                        this.Especie = "OUTROS";
-                        this.Sigla = "OUTROS";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.Outros);
+                        Especie = "OUTROS";
+                        Sigla = "OUTROS";
                         break;
                     default:
-                        this.Codigo = "0";
-                        this.Especie = "( Selecione )";
+                        Codigo = "0";
+                        Especie = "( Selecione )";
                         break;
                 }
             }
@@ -266,18 +258,18 @@ namespace BoletoNet
 
         public static EspeciesDocumento CarregaTodas()
         {
-            EspeciesDocumento especiesDocumento = new EspeciesDocumento();
-            EspecieDocumento_Banrisul ed = new EspecieDocumento_Banrisul();
+            var especiesDocumento = new EspeciesDocumento();
+            var ed = new EspecieDocumento_Banrisul();
 
             foreach (EnumEspecieDocumento_Banrisul item in Enum.GetValues(typeof(EnumEspecieDocumento_Banrisul)))
-                especiesDocumento.Add(new EspecieDocumento_Banrisul(ed.getCodigoEspecieByEnum(item)));
+                especiesDocumento.Add(new EspecieDocumento_Banrisul(ed.GetCodigoEspecieByEnum(item)));
 
             return especiesDocumento;
         }
 
         public override IEspecieDocumento DuplicataMercantil()
         {
-            return new EspecieDocumento_Banrisul(getCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.DuplicataMercantil));
+            return new EspecieDocumento_Banrisul(GetCodigoEspecieByEnum(EnumEspecieDocumento_Banrisul.DuplicataMercantil));
         }
 
         #endregion

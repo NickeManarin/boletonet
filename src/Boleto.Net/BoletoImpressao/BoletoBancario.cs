@@ -601,9 +601,30 @@ namespace BoletoNet
             else
             {
                 //Para SANTANDER, a ficha de compensação não possui código da carteira - por jsoda em 08/12/2012
-                if (Boleto.Banco.Codigo == 33 || Boleto.Banco.Codigo == 41 || Boleto.Banco.Codigo == 237)
+                if (Boleto.Banco.Codigo == 33 || Boleto.Banco.Codigo == 41)
                     html.Replace("Carteira /", "");
             }
+
+            #region Nosso número
+
+            var nossoNumero = string.IsNullOrWhiteSpace(Boleto.DigitoNossoNumero) ? Boleto.NossoNumero : (Boleto.NossoNumero + "-" + Boleto.DigitoNossoNumero);
+
+            if (Boleto.Banco.Codigo == 237)
+                nossoNumero = Boleto.Carteira.PadLeft(2, '0') + "/" + Boleto.NossoNumero + "-" + Boleto.DigitoNossoNumero;
+
+            #endregion
+
+            #region Cedente - mais informações
+
+            var cedenteBoleto = !Cedente.MostrarCnpjNoBoleto ? Cedente.Nome : $"{Cedente.Nome}&nbsp;&nbsp;&nbsp;CNPJ: {Cedente.CpfCnpjComMascara}";
+
+            if (Cedente.Endereco != null)
+            {
+                if (Boleto.Banco.Codigo == 237)
+                    cedenteBoleto += " - " + Cedente.Endereco.EndComTudoMesmo;
+            }
+
+            #endregion
 
             var dataVencimento = Boleto.DataVencimento.ToString("dd/MM/yyyy");
 
@@ -624,22 +645,17 @@ namespace BoletoNet
                 .Replace("@URLIMGCEDENTE", Logo)
                 .Replace("@URLIMAGEMBARRA", urlImagemBarra)
                 .Replace("@LINHADIGITAVEL", Boleto.CodigoBarra.LinhaDigitavel)
-                .Replace("@LOCALPAGAMENTO", Boleto.LocalPagamento)
+                .Replace("@LOCALPAGAMENTO", Boleto.LocalPagamento ?? "Até o vencimento, preferencialmente no banco de origem deste boleto.")
                 .Replace("@DATAVENCIMENTO", dataVencimento)
-                .Replace("@CEDENTE_BOLETO", !Cedente.MostrarCnpjNoBoleto ? Cedente.Nome : $"{Cedente.Nome}&nbsp;&nbsp;&nbsp;CNPJ: {Cedente.CpfCnpjComMascara}")
+                .Replace("@CEDENTE_BOLETO", cedenteBoleto)
                 .Replace("@CEDENTE", Cedente.Nome)
                 .Replace("@DATADOCUMENTO", Boleto.DataDocumento.ToString("dd/MM/yyyy"))
                 .Replace("@NUMERODOCUMENTO", Boleto.NumeroDocumentoImpressao)
                 .Replace("@ESPECIEDOCUMENTO", EspecieDocumento.ValidaSigla(Boleto.EspecieDocumento))
                 .Replace("@DATAPROCESSAMENTO", Boleto.DataProcessamento.ToString("dd/MM/yyyy"))
 
-            #region Implementação para o Banco do Brasil
-
                 .Replace("@NOSSONUMEROBB", Boleto.Carteira + "/" + Boleto.NossoNumero)
-
-            #endregion
-
-                .Replace("@NOSSONUMERO", string.IsNullOrWhiteSpace(Boleto.DigitoNossoNumero) ? Boleto.NossoNumero : (Boleto.NossoNumero + "-" + Boleto.DigitoNossoNumero))
+                .Replace("@NOSSONUMERO", nossoNumero)
                 .Replace("@CARTEIRA", FormataDescricaoCarteira())
                 .Replace("@PARCELAS", Boleto.TotalParcelas <= 1 ? "ÚNICA" : $"{Boleto.Parcela} de {Boleto.TotalParcelas}")
                 .Replace("@ESPECIE", Boleto.Especie)

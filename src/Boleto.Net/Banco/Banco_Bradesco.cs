@@ -232,8 +232,8 @@ namespace BoletoNet
             boleto.QuantidadeMoeda = 0;
 
             // Atribui o nome do banco ao local de pagamento
-            if (string.IsNullOrEmpty(boleto.LocalPagamento))
-                boleto.LocalPagamento = "PAGÁVEL PREFERENCIALMENTE NAS AGÊNCIAS DO BRADESCO";
+            //if (string.IsNullOrEmpty(boleto.LocalPagamento))
+            boleto.LocalPagamento = "Pagável preferencialmente na Rede Bradesco ou Bradesco Expresso.";
 
             // Calcula o DAC do Nosso Número
             _dacNossoNumero = CalcularDigitoNossoNumero(boleto);

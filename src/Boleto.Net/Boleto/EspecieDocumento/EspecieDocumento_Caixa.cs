@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BoletoNet
 {
@@ -37,7 +35,7 @@ namespace BoletoNet
         {
             try
             {
-                this.carregar(codigo);
+                Carregar(codigo);
             }
             catch (Exception ex)
             {
@@ -49,7 +47,7 @@ namespace BoletoNet
 
         #region Metodos Privados
 
-        public string getCodigoEspecieByEnum(EnumEspecieDocumento_Caixa especie)
+        private string GetCodigoEspecieByEnum(EnumEspecieDocumento_Caixa especie)
         {
             switch (especie)
             {
@@ -63,9 +61,9 @@ namespace BoletoNet
             }
         }
 
-        public EnumEspecieDocumento_Caixa getEnumEspecieByCodigo(string codigo)
+        private EnumEspecieDocumento_Caixa GetEnumEspecieByCodigo(string codigo)
         {
-            switch (codigo)
+            switch (codigo.TrimStart('0'))
             {
                 case "1": return EnumEspecieDocumento_Caixa.DuplicataMercantil;
                 case "2": return EnumEspecieDocumento_Caixa.NotaPromissoria;
@@ -77,47 +75,47 @@ namespace BoletoNet
             }
         }
 
-        private void carregar(string idCodigo)
+        private void Carregar(string idCodigo)
         {
             try
             {
-                this.Banco = new Banco_Caixa();
+                Banco = new Banco_Caixa();
 
-                switch (getEnumEspecieByCodigo(idCodigo))
+                switch (GetEnumEspecieByCodigo(idCodigo))
                 {
                     case EnumEspecieDocumento_Caixa.DuplicataMercantil:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Caixa.DuplicataMercantil);
-                        this.Especie = "DUPLICATA MERCANTIL";
-                        this.Sigla = "DM";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Caixa.DuplicataMercantil);
+                        Especie = "DUPLICATA MERCANTIL";
+                        Sigla = "DM";
                         break;
                     case EnumEspecieDocumento_Caixa.NotaPromissoria:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Caixa.NotaPromissoria);
-                        this.Especie = "NOTA PROMISSORIA";
-                        this.Sigla = "NP";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Caixa.NotaPromissoria);
+                        Especie = "NOTA PROMISSORIA";
+                        Sigla = "NP";
                         break;
                     case EnumEspecieDocumento_Caixa.DuplicataServico:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Caixa.DuplicataServico);
-                        this.Especie = "DUPLICATA DE PRESTACAO DE SERVICOS";
-                        this.Sigla = "DS";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Caixa.DuplicataServico);
+                        Especie = "DUPLICATA DE PRESTACAO DE SERVICOS";
+                        Sigla = "DS";
                         break;
                     case EnumEspecieDocumento_Caixa.NotaSeguro:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Caixa.NotaSeguro);
-                        this.Especie = "NOTA DE SEGURO";
-                        this.Sigla = "NS";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Caixa.NotaSeguro);
+                        Especie = "NOTA DE SEGURO";
+                        Sigla = "NS";
                         break;
                     case EnumEspecieDocumento_Caixa.LetraCambio:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Caixa.LetraCambio);
-                        this.Especie = "LETRA DE CAMBIO";
-                        this.Sigla = "LC";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Caixa.LetraCambio);
+                        Especie = "LETRA DE CAMBIO";
+                        Sigla = "LC";
                         break;
                     case EnumEspecieDocumento_Caixa.Outros:
-                        this.Codigo = getCodigoEspecieByEnum(EnumEspecieDocumento_Caixa.Outros);
-                        this.Especie = "OUTROS";
-                        this.Sigla = "OU";
+                        Codigo = GetCodigoEspecieByEnum(EnumEspecieDocumento_Caixa.Outros);
+                        Especie = "OUTROS";
+                        Sigla = "OU";
                         break;
                     default:
-                        this.Codigo = "0";
-                        this.Especie = "( Selecione )";
+                        Codigo = "0";
+                        Especie = "( Selecione )";
                         break;
                 }
             }
@@ -129,18 +127,18 @@ namespace BoletoNet
 
         public static EspeciesDocumento CarregaTodas()
         {
-            EspeciesDocumento especiesDocumento = new EspeciesDocumento();
-            EspecieDocumento_Caixa ed = new EspecieDocumento_Caixa();
+            var especiesDocumento = new EspeciesDocumento();
+            var ed = new EspecieDocumento_Caixa();
 
             foreach (EnumEspecieDocumento_Caixa item in Enum.GetValues(typeof(EnumEspecieDocumento_Caixa)))
-                especiesDocumento.Add(new EspecieDocumento_Caixa(ed.getCodigoEspecieByEnum(item)));
+                especiesDocumento.Add(new EspecieDocumento_Caixa(ed.GetCodigoEspecieByEnum(item)));
 
             return especiesDocumento;
         }
 
         public override IEspecieDocumento DuplicataMercantil()
         {
-            return new EspecieDocumento_Caixa(getCodigoEspecieByEnum(EnumEspecieDocumento_Caixa.DuplicataMercantil));
+            return new EspecieDocumento_Caixa(GetCodigoEspecieByEnum(EnumEspecieDocumento_Caixa.DuplicataMercantil));
         }
 
         #endregion
