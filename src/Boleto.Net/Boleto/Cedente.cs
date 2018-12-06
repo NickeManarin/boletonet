@@ -85,17 +85,18 @@ namespace BoletoNet
 
         /// <summary>
         /// Código do Cedente
+        /// Santander: Conta movimento.
         /// </summary>
         public string Codigo
         {
-            get { return _codigo; }
-            set { _codigo = value; }
+            get => _codigo;
+            set => _codigo = value;
         }
 
         public int DigitoCedente
         {
-            get { return _digitoCedente; }
-            set { _digitoCedente = value; }
+            get => _digitoCedente;
+            set => _digitoCedente = value;
         }
 
         /// <summary>
@@ -103,10 +104,7 @@ namespace BoletoNet
         /// </summary>
         public string CpfCnpj
         {
-            get
-            {
-                return _cpfcnpj.Replace(".", "").Replace("-", "").Replace("/", "");
-            }
+            get => _cpfcnpj.Replace(".", "").Replace("-", "").Replace("/", "");
             set
             {
                 var o = value.Replace(".", "").Replace("-", "").Replace("/", "");
@@ -167,8 +165,8 @@ namespace BoletoNet
         /// </summary>
         public string CodigoTransmissao
         {
-            get { return _codigoTransmissao; }
-            set { _codigoTransmissao = value; }
+            get => _codigoTransmissao;
+            set => _codigoTransmissao = value;
         }
 
         /// <summary>
@@ -185,8 +183,8 @@ namespace BoletoNet
         /// </summary>
         public string Carteira
         {
-            get { return _carteira; }
-            set { _carteira = value; }
+            get => _carteira;
+            set => _carteira = value;
         }
 
         public Endereco Endereco

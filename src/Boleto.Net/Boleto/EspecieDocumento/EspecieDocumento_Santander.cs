@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BoletoNet
 {
@@ -51,7 +49,7 @@ namespace BoletoNet
         {
             try
             {
-                this.carregar(codigo);
+                carregar(codigo);
             }
             catch (Exception ex)
             {

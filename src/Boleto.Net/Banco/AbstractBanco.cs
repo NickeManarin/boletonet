@@ -502,11 +502,11 @@ namespace BoletoNet
              * r - Resto
              */
 
-            int d, s = 0, p = 2, r;
+            int s = 0, p = 2;
 
             for (int i = seq.Length; i > 0; i--)
             {
-                r = (Convert.ToInt32(seq.Mid(i, 1)) * p);
+                var r = Convert.ToInt32(seq.Mid(i, 1)) * p;
 
                 if (r > 9)
                     r = (r / 10) + (r % 10);
@@ -518,8 +518,8 @@ namespace BoletoNet
                 else
                     p = p + 1;
             }
-            d = ((10 - (s % 10)) % 10);
-            return d;
+            
+            return ((10 - (s % 10)) % 10);
         }
 
         protected static int Mod11(string seq)
@@ -545,8 +545,10 @@ namespace BoletoNet
             }
 
             d = 11 - (s % 11);
+
             if (d > 9)
                 d = 0;
+
             return d;
         }
 

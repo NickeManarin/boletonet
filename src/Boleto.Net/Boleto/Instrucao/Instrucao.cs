@@ -63,8 +63,7 @@ namespace BoletoNet
                     case 353:
                     case 33:
                     case 8:
-                        //case 8:
-                        _interface = new Instrucao_Santander();
+                        _interface = new Instrucao_Santander(cod, descricao, dias, valor, valorTotal);
                         break;
                     //070 - BRB
                     case 70:

@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace BoletoNet
 {
     #region Enumerado
@@ -27,14 +24,13 @@ namespace BoletoNet
 
     public class Carteira_Santander: AbstractCarteira, ICarteira
     {
-
         #region Construtores 
 
 		public Carteira_Santander()
 		{
 			try
 			{
-                this.Banco = new Banco(33);
+                Banco = new Banco(33);
 			}
 			catch (Exception ex)
 			{
@@ -46,7 +42,7 @@ namespace BoletoNet
         {
             try
             {
-                this.carregar(carteira);
+                carregar(carteira);
             }
             catch (Exception ex)
             {
@@ -62,33 +58,33 @@ namespace BoletoNet
         {
             try
             {
-                this.Banco = new Banco_Santander();
+                Banco = new Banco_Santander();
 
                 switch ((EnumCarteiras_Santander)carteira)
                 {
                     case EnumCarteiras_Santander.CobrancaSimplesComRegistro:
-                        this.NumeroCarteira = (int)EnumCarteiras_Santander.CobrancaSimplesComRegistro;
-                        this.Codigo = "ECR";
-                        this.Tipo = "";
-                        this.Descricao = "Cobrança Simples Com Registro";
+                        NumeroCarteira = (int)EnumCarteiras_Santander.CobrancaSimplesComRegistro;
+                        Codigo = "ECR";
+                        Tipo = "";
+                        Descricao = "Cobrança Simples Com Registro";
                         break;
                     case EnumCarteiras_Santander.CobrancaSimplesSemRegistro:
-                        this.NumeroCarteira = (int)EnumCarteiras_Santander.CobrancaSimplesSemRegistro;
-                        this.Codigo = "CSR";
-                        this.Tipo = "";
-                        this.Descricao = "Cobrança Simples Sem Registro";
+                        NumeroCarteira = (int)EnumCarteiras_Santander.CobrancaSimplesSemRegistro;
+                        Codigo = "CSR";
+                        Tipo = "";
+                        Descricao = "Cobrança Simples Sem Registro";
                         break;
                     case EnumCarteiras_Santander.PenhorRapida:
-                        this.NumeroCarteira = (int)EnumCarteiras_Santander.PenhorRapida;
-                        this.Codigo = "CSR";
-                        this.Tipo = "";
-                        this.Descricao = "Penhor Rápida com Registro";
+                        NumeroCarteira = (int)EnumCarteiras_Santander.PenhorRapida;
+                        Codigo = "CSR";
+                        Tipo = "";
+                        Descricao = "Penhor Rápida com Registro";
                         break;
                     default:
-                        this.NumeroCarteira = 0;
-                        this.Codigo = " ";
-                        this.Tipo = " ";
-                        this.Descricao = "";
+                        NumeroCarteira = 0;
+                        Codigo = " ";
+                        Tipo = " ";
+                        Descricao = "";
                         break;
                 }
             }
@@ -102,7 +98,7 @@ namespace BoletoNet
         {
             try
             {
-                Carteiras alCarteiras = new Carteiras();
+                var alCarteiras = new Carteiras();
 
                 Carteira_Santander obj;
 
@@ -125,6 +121,5 @@ namespace BoletoNet
         }
 
         #endregion
-
     }
 }

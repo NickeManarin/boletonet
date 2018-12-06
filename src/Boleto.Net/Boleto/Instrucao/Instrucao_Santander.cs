@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Text;
 
 namespace BoletoNet
 {
@@ -20,15 +18,15 @@ namespace BoletoNet
 
     #endregion
 
-    public class Instrucao_Santander : AbstractInstrucao, IInstrucao
+    public sealed class Instrucao_Santander : AbstractInstrucao, IInstrucao
     {
-
         #region Construtores
+
         public Instrucao_Santander()
         {
             try
             {
-                this.Banco = new Banco(33);
+                Banco = new Banco(33);
             }
             catch (Exception ex)
             {
@@ -36,73 +34,63 @@ namespace BoletoNet
             }
         }
 
-        public Instrucao_Santander(int codigo)
+        public Instrucao_Santander(int cod, string descricao = null, int dias = 0, decimal valor = 0m, decimal valorBoleto = 0m)
         {
-            this.carregar(codigo, 0);
-        }
-
-        public Instrucao_Santander(int codigo, int nrDias)
-        {
-            this.carregar(codigo, nrDias);
-        }
-
-        public Instrucao_Santander(int codigo, double valor, EnumTipoValor tipoValor)
-        {
-            this.carregar(codigo, 0, valor, tipoValor);
+            Carrega(cod, descricao, dias, valor, valorBoleto);
         }
 
         #endregion
 
         #region Metodos Privados
 
-        private void carregar(int idInstrucao, int nrDias, double valor = 0, EnumTipoValor tipoValor = EnumTipoValor.Percentual)
+        public override void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0, decimal valorBoleto = 0, DateTime? data = null)
         {
             try
             {
-                this.Banco = new Banco_Santander();
+                Codigo = cod;
+                Descricao = descricao;
+                Dias = dias;
+                Valor = valor;
+                Tipo = EnumTipoValor.Percentual;
+                Banco = new Banco_Santander();
 
-                switch ((EnumInstrucoes_Santander)idInstrucao)
+                switch ((EnumInstrucoes_Santander)cod)
                 {
                     case EnumInstrucoes_Santander.BaixarApos15Dias:
-                        this.Codigo = (int)EnumInstrucoes_Santander.BaixarApos15Dias;
-                        this.Descricao = "Baixar após quinze dias do vencimento";
+                        Descricao = "Baixar após quinze dias do vencimento";
                         break;
                     case EnumInstrucoes_Santander.BaixarApos30Dias:
-                        this.Codigo = (int)EnumInstrucoes_Santander.BaixarApos30Dias;
-                        this.Descricao = "Baixar após 30 dias do vencimento";
+                        Descricao = "Baixar após 30 dias do vencimento";
                         break;
                     case EnumInstrucoes_Santander.NaoBaixar:
-                        this.Codigo = (int)EnumInstrucoes_Santander.NaoBaixar;
-                        this.Descricao = "Não baixar";
+                        Descricao = "Não baixar";
                         break;
                     case EnumInstrucoes_Santander.Protestar:
-                        this.Codigo = (int)EnumInstrucoes_Santander.Protestar;
-                        this.Descricao = "Protestar após "+nrDias+" do vencimento";
-                        this.Dias = nrDias;
+                        Descricao = $"Protestar após {cod} dias do vencimento";
+                        Dias = dias;
                         break;
                     case EnumInstrucoes_Santander.NaoProtestar:
-                        this.Codigo = (int)EnumInstrucoes_Santander.NaoProtestar;
-                        this.Descricao = "Não protestar";
+                        Descricao = "Não protestar";
                         break;
                     case EnumInstrucoes_Santander.NaoCobrarJurosDeMora:
-                        this.Codigo = (int)EnumInstrucoes_Santander.NaoCobrarJurosDeMora;
-                        this.Descricao = "Não cobrar juros de mora";
+                        Descricao = "Não cobrar juros de mora";
                         break;
                     case EnumInstrucoes_Santander.JurosAoDia:
-                        this.Codigo = 0;
-                        this.Descricao = String.Format("Após vencimento cobrar juros de {0} {1} por dia de atraso",
-                            (tipoValor.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2")),
-                            (tipoValor.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2")));
+                        Descricao = $"Após vencimento cobrar juros de R$ {decimal.Round((valor * valorBoleto) / 100m, 2, MidpointRounding.ToEven):F2} ({valor:F2} %) por dia de atraso";
+
+                        //Descricao = string.Format("Após vencimento cobrar juros de {0} {1} por dia de atraso",
+                        //    (tipoValor.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2")),
+                        //    (tipoValor.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2")));
                         break;
                     case EnumInstrucoes_Santander.MultaVencimento:
-                        this.Codigo = 0;
-                        this.Descricao = String.Format("Após vencimento cobrar multa de {0} {1}",
-                            (tipoValor.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2")),
-                            (tipoValor.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2")));
+                        Descricao = $"Após vencimento cobrar multa de {valor:F2} %";
+
+                        //Descricao = String.Format("Após vencimento cobrar multa de {0} {1}",
+                        //    (tipoValor.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2")),
+                        //    (tipoValor.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2")));
                         break;
                     default:
-                        this.Codigo = 0;
-                        this.Descricao = "";
+                        Codigo = 0;
                         break;
                 }
             }
@@ -113,6 +101,5 @@ namespace BoletoNet
         }
 
         #endregion
-
     }
 }

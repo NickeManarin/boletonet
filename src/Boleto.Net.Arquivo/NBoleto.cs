@@ -667,6 +667,66 @@ namespace BoletoNet.Arquivo
             GeraLayout(boletos);
         }
 
+        public void GeraBoletoSantander(int qtde)
+        {
+            //Cria o boleto, e passa os parâmetros usuais.
+            var boletos = new List<BoletoBancario>();
+
+            for (var i = 0; i < qtde; i++)
+            {
+                var bb = new BoletoBancario();
+                bb.CodigoBanco = _codigoBanco;
+
+                var c = new Cedente("11.111.111/1111-11", "Empresa de Atacado", "1163", "0", "013002219", "9");
+                c.Codigo = "0067675";
+                c.DigitoCedente = 6;
+                c.MostrarCnpjNoBoleto = true;
+                c.Endereco = new Endereco
+                {
+                    End = "Av. Independencia",
+                    Complemento = "Casa 4",
+                    Bairro = "Centro",
+                    Cidade = "Torres",
+                    Uf = "RS",
+                    Cep = "96815-236"
+                };
+
+                var b = new Boleto(new DateTime(2019, 01, 2), 12.57m, "101", "000000000001", "9", c);
+
+                b.Sacado = new Sacado("000.000.000-00", "Eduardo Frare");
+                b.Sacado.Endereco = new Endereco
+                {
+                    Bairro = "Lago Sul",
+                    Cep = "71666660",
+                    Cidade = "Brasília- DF",
+                    Complemento = "Quadra XX Conjunto XX Casa XX",
+                    End = "Condominio de Brasilia - Quadra XX Conjunto XX Casa XX",
+                    Logradouro = "Cond. Brasilia",
+                    Numero = "55",
+                    Uf = "DF"
+                };
+
+                bb.Instrucoes.Add(new Instrucao(33, 6, null, 10)); //Protestar
+                bb.Instrucoes.Add(new Instrucao(33, 2)); //Baixar após 15
+                bb.Instrucoes.Add(new Instrucao(33, 98)); //Juros
+                bb.Instrucoes.Add(new Instrucao(33, 99)); //Mora
+
+                bb.MostrarEnderecoCedente = true;
+                bb.OcultarEnderecoSacado = false;
+                bb.MostrarComprovanteEntregaLivre = true;
+                bb.MostrarComprovanteEntrega = false;
+                bb.OcultarReciboSacado = false;
+                bb.OcultarInstrucoes = false;
+
+                bb.Boleto = b;
+                bb.Boleto.Valida();
+
+                boletos.Add(bb);
+            }
+
+            GeraLayout(boletos);
+        }
+
         public void GeraBoletoSicoob(int quant)
         {
             var boletos = new List<BoletoBancario>();
@@ -767,12 +827,17 @@ namespace BoletoNet.Arquivo
             GeraLayout(boletos);
         }
 
+
         private void BackgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             switch (CodigoBanco)
             {
                 case 1: // Banco do Brasil
                     GeraBoletoBancoBrasil((int)numericUpDown.Value);
+                    break;
+
+                case 033: // Santander
+                    GeraBoletoSantander((int)numericUpDown.Value);
                     break;
 
                 case 041: // Banrisul
@@ -825,7 +890,7 @@ namespace BoletoNet.Arquivo
             }
         }
 
-        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             _progresso.Close();
 
@@ -834,20 +899,21 @@ namespace BoletoNet.Arquivo
             _impressaoBoleto.ShowDialog();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void BtFechar_Click(object sender, EventArgs e)
         {
             Close();
             Dispose();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void BtEnviar_Click(object sender, EventArgs e)
         {
             if ((int)numericUpDown.Value > 1)
-                MessageBox.Show("O exemplo de envio do boleto bancário como imagem só está implementado para somente um boleto por vez.", "Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(@"O exemplo de envio do boleto bancário como imagem só está implementado para somente um boleto por vez.", 
+                    @"Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             var backgroundWorker = new BackgroundWorker();
             backgroundWorker.DoWork += BackgroundWorker_DoWork;
-            backgroundWorker.RunWorkerCompleted += backgroundWorker_RunWorkerCompleted;
+            backgroundWorker.RunWorkerCompleted += BackgroundWorker_RunWorkerCompleted;
             backgroundWorker.RunWorkerAsync();
             _progresso = new Progresso();
             _progresso.ShowDialog();

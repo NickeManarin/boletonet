@@ -540,6 +540,10 @@ namespace BoletoNet
 
                 switch (Boleto.Banco.Codigo)
                 {
+                    case 33:
+                        var codigoCedente = Cedente.Codigo.PadLeft(7, '0').Substring(1) + Utils.FormatCode(Cedente.DigitoCedente.ToString(), 1);
+                        agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}/{codigoCedente}";
+                        break;
                     case 748:
                         agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}.{Cedente.ContaBancaria.DigitoAgencia}.{Utils.FormatCode(Cedente.ContaBancaria.Conta, 5)}";
                         break;
@@ -550,7 +554,7 @@ namespace BoletoNet
                         agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}/{Utils.FormatCode(Cedente.Codigo + Cedente.DigitoCedente, 7)}";
                         break;
                     default:
-                        agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}/{Utils.FormatCode(Cedente.Codigo, 6)}-{Cedente.DigitoCedente}";
+                        agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}-{Cedente.ContaBancaria.DigitoAgencia}/{Utils.FormatCode(Cedente.Codigo, 6)}-{Cedente.DigitoCedente}";
                         break;
                 }
             }
@@ -611,6 +615,8 @@ namespace BoletoNet
 
             if (Boleto.Banco.Codigo == 237)
                 nossoNumero = Boleto.Carteira.PadLeft(2, '0') + "/" + Boleto.NossoNumero + "-" + Boleto.DigitoNossoNumero;
+            else if (Boleto.Banco.Codigo == 33)
+                nossoNumero = Boleto.NossoNumero.PadLeft(12, '0') + "-" + Boleto.DigitoNossoNumero;
 
             #endregion
 
@@ -687,7 +693,12 @@ namespace BoletoNet
         private string FormataDescricaoCarteira()
         {
             if (!MostrarCodigoCarteira)
+            {
+                if (Boleto.Banco.Codigo == 33 && Boleto.Carteira == "101")
+                    return "RCR";
+
                 return Boleto.Carteira;
+            }
 
             string descricaoCarteira;
             var carteira = Utils.ToInt32(Boleto.Carteira);

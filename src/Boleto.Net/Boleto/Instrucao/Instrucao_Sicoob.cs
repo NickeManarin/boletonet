@@ -18,6 +18,9 @@ namespace BoletoNet
         Protestar10DiasUteis = 10,
         Protestar15DiasUteis = 15,
         Protestar20DiasUteis = 20,
+
+        Mensagem_MoraDiaria = 900,
+        Mensagem_MultaVencimento = 901
     }
     
     public sealed class Instrucao_Sicoob : AbstractInstrucao
@@ -59,7 +62,7 @@ namespace BoletoNet
 
 	        switch ((EnumInstrucoes_Sicoob) cod)
 	        {
-	            case EnumInstrucoes_Sicoob.CobrarJuros:
+                case EnumInstrucoes_Sicoob.CobrarJuros:
 	                Codigo = (int)EnumInstrucoes_Sicoob.CobrarJuros;
 	                Descricao = "Cobrar Juros.";
 	                break;
@@ -82,6 +85,12 @@ namespace BoletoNet
 	            case EnumInstrucoes_Sicoob.Protestar:
 	                Codigo = (int)EnumInstrucoes_Sicoob.Protestar;
 	                Descricao = $"Protestar em {dias} dias úteis após o vencimento.";
+	                break;
+	            case EnumInstrucoes_Sicoob.Mensagem_MoraDiaria:
+	                Descricao = $"Após vencimento cobrar juros de R$ {decimal.Round((valor * valorBoleto) / 100m, 2, MidpointRounding.ToEven):F2} ({valor:F2} %) por dia de atraso";
+	                break;
+	            case EnumInstrucoes_Sicoob.Mensagem_MultaVencimento:
+	                Descricao = $"Após vencimento cobrar multa de {valor:F2} %";
 	                break;
             }
         }

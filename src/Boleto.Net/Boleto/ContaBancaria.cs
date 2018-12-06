@@ -56,7 +56,7 @@ namespace BoletoNet
             OperacaConta = operacaoConta;
         }
 
-        #endregion Constructors
+        #endregion
 
         #region Properties
 
@@ -75,6 +75,7 @@ namespace BoletoNet
 
         /// <summary>
         /// Número da Conta Corrente
+        /// Santander: Conta cobrança.
         /// </summary>
         public string Conta {get; set;}
 

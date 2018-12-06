@@ -49,19 +49,19 @@ namespace BoletoNet.Arquivo
             this.impressãoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxBancos = new System.Windows.Forms.GroupBox();
             this.RbSicoob = new System.Windows.Forms.RadioButton();
-            this.radioButtonBNB = new System.Windows.Forms.RadioButton();
-            this.radioButtonBanrisul = new System.Windows.Forms.RadioButton();
-            this.radioButtonSicredi = new System.Windows.Forms.RadioButton();
-            this.radioButtonCaixa = new System.Windows.Forms.RadioButton();
-            this.radioButtonSantander = new System.Windows.Forms.RadioButton();
-            this.radioButtonUnibanco = new System.Windows.Forms.RadioButton();
-            this.radioButtonSudameris = new System.Windows.Forms.RadioButton();
-            this.radioButtonBancoBrasil = new System.Windows.Forms.RadioButton();
-            this.radioButtonReal = new System.Windows.Forms.RadioButton();
-            this.radioButtonBradesco = new System.Windows.Forms.RadioButton();
-            this.radioButtonHsbc = new System.Windows.Forms.RadioButton();
-            this.radioButtonSafra = new System.Windows.Forms.RadioButton();
-            this.radioButtonItau = new System.Windows.Forms.RadioButton();
+            this.RbBNB = new System.Windows.Forms.RadioButton();
+            this.RbBanrisul = new System.Windows.Forms.RadioButton();
+            this.RbSicredi = new System.Windows.Forms.RadioButton();
+            this.RbCaixa = new System.Windows.Forms.RadioButton();
+            this.RbSantander = new System.Windows.Forms.RadioButton();
+            this.RbUnibanco = new System.Windows.Forms.RadioButton();
+            this.RbSudameris = new System.Windows.Forms.RadioButton();
+            this.RbBancoBrasil = new System.Windows.Forms.RadioButton();
+            this.RbReal = new System.Windows.Forms.RadioButton();
+            this.RbBradesco = new System.Windows.Forms.RadioButton();
+            this.RbHsbc = new System.Windows.Forms.RadioButton();
+            this.RbSafra = new System.Windows.Forms.RadioButton();
+            this.RbItau = new System.Windows.Forms.RadioButton();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radioButtonCNAB240 = new System.Windows.Forms.RadioButton();
@@ -219,19 +219,19 @@ namespace BoletoNet.Arquivo
             this.groupBoxBancos.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBoxBancos.Controls.Add(this.RbSicoob);
-            this.groupBoxBancos.Controls.Add(this.radioButtonBNB);
-            this.groupBoxBancos.Controls.Add(this.radioButtonBanrisul);
-            this.groupBoxBancos.Controls.Add(this.radioButtonSicredi);
-            this.groupBoxBancos.Controls.Add(this.radioButtonCaixa);
-            this.groupBoxBancos.Controls.Add(this.radioButtonSantander);
-            this.groupBoxBancos.Controls.Add(this.radioButtonUnibanco);
-            this.groupBoxBancos.Controls.Add(this.radioButtonSudameris);
-            this.groupBoxBancos.Controls.Add(this.radioButtonBancoBrasil);
-            this.groupBoxBancos.Controls.Add(this.radioButtonReal);
-            this.groupBoxBancos.Controls.Add(this.radioButtonBradesco);
-            this.groupBoxBancos.Controls.Add(this.radioButtonHsbc);
-            this.groupBoxBancos.Controls.Add(this.radioButtonSafra);
-            this.groupBoxBancos.Controls.Add(this.radioButtonItau);
+            this.groupBoxBancos.Controls.Add(this.RbBNB);
+            this.groupBoxBancos.Controls.Add(this.RbBanrisul);
+            this.groupBoxBancos.Controls.Add(this.RbSicredi);
+            this.groupBoxBancos.Controls.Add(this.RbCaixa);
+            this.groupBoxBancos.Controls.Add(this.RbSantander);
+            this.groupBoxBancos.Controls.Add(this.RbUnibanco);
+            this.groupBoxBancos.Controls.Add(this.RbSudameris);
+            this.groupBoxBancos.Controls.Add(this.RbBancoBrasil);
+            this.groupBoxBancos.Controls.Add(this.RbReal);
+            this.groupBoxBancos.Controls.Add(this.RbBradesco);
+            this.groupBoxBancos.Controls.Add(this.RbHsbc);
+            this.groupBoxBancos.Controls.Add(this.RbSafra);
+            this.groupBoxBancos.Controls.Add(this.RbItau);
             this.groupBoxBancos.Location = new System.Drawing.Point(12, 83);
             this.groupBoxBancos.Name = "groupBoxBancos";
             this.groupBoxBancos.Padding = new System.Windows.Forms.Padding(10, 5, 10, 10);
@@ -253,148 +253,148 @@ namespace BoletoNet.Arquivo
             // 
             // radioButtonBNB
             // 
-            this.radioButtonBNB.AutoSize = true;
-            this.radioButtonBNB.Location = new System.Drawing.Point(13, 321);
-            this.radioButtonBNB.Name = "radioButtonBNB";
-            this.radioButtonBNB.Size = new System.Drawing.Size(68, 17);
-            this.radioButtonBNB.TabIndex = 31;
-            this.radioButtonBNB.Tag = "4";
-            this.radioButtonBNB.Text = "Nordeste";
-            this.radioButtonBNB.UseVisualStyleBackColor = true;
+            this.RbBNB.AutoSize = true;
+            this.RbBNB.Location = new System.Drawing.Point(13, 321);
+            this.RbBNB.Name = "RbBNB";
+            this.RbBNB.Size = new System.Drawing.Size(68, 17);
+            this.RbBNB.TabIndex = 31;
+            this.RbBNB.Tag = "4";
+            this.RbBNB.Text = "Nordeste";
+            this.RbBNB.UseVisualStyleBackColor = true;
             // 
             // radioButtonBanrisul
             // 
-            this.radioButtonBanrisul.AutoSize = true;
-            this.radioButtonBanrisul.Location = new System.Drawing.Point(13, 298);
-            this.radioButtonBanrisul.Name = "radioButtonBanrisul";
-            this.radioButtonBanrisul.Size = new System.Drawing.Size(62, 17);
-            this.radioButtonBanrisul.TabIndex = 30;
-            this.radioButtonBanrisul.Tag = "041";
-            this.radioButtonBanrisul.Text = "Banrisul";
-            this.radioButtonBanrisul.UseVisualStyleBackColor = true;
+            this.RbBanrisul.AutoSize = true;
+            this.RbBanrisul.Location = new System.Drawing.Point(13, 298);
+            this.RbBanrisul.Name = "RbBanrisul";
+            this.RbBanrisul.Size = new System.Drawing.Size(62, 17);
+            this.RbBanrisul.TabIndex = 30;
+            this.RbBanrisul.Tag = "041";
+            this.RbBanrisul.Text = "Banrisul";
+            this.RbBanrisul.UseVisualStyleBackColor = true;
             // 
             // radioButtonSicredi
             // 
-            this.radioButtonSicredi.AutoSize = true;
-            this.radioButtonSicredi.Location = new System.Drawing.Point(13, 251);
-            this.radioButtonSicredi.Name = "radioButtonSicredi";
-            this.radioButtonSicredi.Size = new System.Drawing.Size(57, 17);
-            this.radioButtonSicredi.TabIndex = 29;
-            this.radioButtonSicredi.Tag = "748";
-            this.radioButtonSicredi.Text = "Sicredi";
-            this.radioButtonSicredi.UseVisualStyleBackColor = true;
+            this.RbSicredi.AutoSize = true;
+            this.RbSicredi.Location = new System.Drawing.Point(13, 251);
+            this.RbSicredi.Name = "RbSicredi";
+            this.RbSicredi.Size = new System.Drawing.Size(57, 17);
+            this.RbSicredi.TabIndex = 29;
+            this.RbSicredi.Tag = "748";
+            this.RbSicredi.Text = "Sicredi";
+            this.RbSicredi.UseVisualStyleBackColor = true;
             // 
             // radioButtonCaixa
             // 
-            this.radioButtonCaixa.AutoSize = true;
-            this.radioButtonCaixa.Location = new System.Drawing.Point(13, 228);
-            this.radioButtonCaixa.Name = "radioButtonCaixa";
-            this.radioButtonCaixa.Size = new System.Drawing.Size(51, 17);
-            this.radioButtonCaixa.TabIndex = 28;
-            this.radioButtonCaixa.Tag = "104";
-            this.radioButtonCaixa.Text = "Caixa";
-            this.radioButtonCaixa.UseVisualStyleBackColor = true;
+            this.RbCaixa.AutoSize = true;
+            this.RbCaixa.Location = new System.Drawing.Point(13, 228);
+            this.RbCaixa.Name = "RbCaixa";
+            this.RbCaixa.Size = new System.Drawing.Size(51, 17);
+            this.RbCaixa.TabIndex = 28;
+            this.RbCaixa.Tag = "104";
+            this.RbCaixa.Text = "Caixa";
+            this.RbCaixa.UseVisualStyleBackColor = true;
             // 
             // radioButtonSantander
             // 
-            this.radioButtonSantander.AutoSize = true;
-            this.radioButtonSantander.Location = new System.Drawing.Point(13, 205);
-            this.radioButtonSantander.Name = "radioButtonSantander";
-            this.radioButtonSantander.Size = new System.Drawing.Size(74, 17);
-            this.radioButtonSantander.TabIndex = 27;
-            this.radioButtonSantander.Tag = "409";
-            this.radioButtonSantander.Text = "Santander";
-            this.radioButtonSantander.UseVisualStyleBackColor = true;
+            this.RbSantander.AutoSize = true;
+            this.RbSantander.Location = new System.Drawing.Point(13, 205);
+            this.RbSantander.Name = "RbSantander";
+            this.RbSantander.Size = new System.Drawing.Size(74, 17);
+            this.RbSantander.TabIndex = 27;
+            this.RbSantander.Tag = "409";
+            this.RbSantander.Text = "Santander";
+            this.RbSantander.UseVisualStyleBackColor = true;
             // 
             // radioButtonUnibanco
             // 
-            this.radioButtonUnibanco.AutoSize = true;
-            this.radioButtonUnibanco.Location = new System.Drawing.Point(13, 182);
-            this.radioButtonUnibanco.Name = "radioButtonUnibanco";
-            this.radioButtonUnibanco.Size = new System.Drawing.Size(71, 17);
-            this.radioButtonUnibanco.TabIndex = 21;
-            this.radioButtonUnibanco.Tag = "409";
-            this.radioButtonUnibanco.Text = "Unibanco";
-            this.radioButtonUnibanco.UseVisualStyleBackColor = true;
+            this.RbUnibanco.AutoSize = true;
+            this.RbUnibanco.Location = new System.Drawing.Point(13, 182);
+            this.RbUnibanco.Name = "RbUnibanco";
+            this.RbUnibanco.Size = new System.Drawing.Size(71, 17);
+            this.RbUnibanco.TabIndex = 21;
+            this.RbUnibanco.Tag = "409";
+            this.RbUnibanco.Text = "Unibanco";
+            this.RbUnibanco.UseVisualStyleBackColor = true;
             // 
             // radioButtonSudameris
             // 
-            this.radioButtonSudameris.AutoSize = true;
-            this.radioButtonSudameris.Location = new System.Drawing.Point(13, 159);
-            this.radioButtonSudameris.Name = "radioButtonSudameris";
-            this.radioButtonSudameris.Size = new System.Drawing.Size(74, 17);
-            this.radioButtonSudameris.TabIndex = 22;
-            this.radioButtonSudameris.Tag = "347";
-            this.radioButtonSudameris.Text = "Sudameris";
-            this.radioButtonSudameris.UseVisualStyleBackColor = true;
+            this.RbSudameris.AutoSize = true;
+            this.RbSudameris.Location = new System.Drawing.Point(13, 159);
+            this.RbSudameris.Name = "RbSudameris";
+            this.RbSudameris.Size = new System.Drawing.Size(74, 17);
+            this.RbSudameris.TabIndex = 22;
+            this.RbSudameris.Tag = "347";
+            this.RbSudameris.Text = "Sudameris";
+            this.RbSudameris.UseVisualStyleBackColor = true;
             // 
             // radioButtonBancoBrasil
             // 
-            this.radioButtonBancoBrasil.AutoSize = true;
-            this.radioButtonBancoBrasil.Location = new System.Drawing.Point(13, 44);
-            this.radioButtonBancoBrasil.Name = "radioButtonBancoBrasil";
-            this.radioButtonBancoBrasil.Size = new System.Drawing.Size(99, 17);
-            this.radioButtonBancoBrasil.TabIndex = 25;
-            this.radioButtonBancoBrasil.Tag = "1";
-            this.radioButtonBancoBrasil.Text = "Banco do Brasil";
-            this.radioButtonBancoBrasil.UseVisualStyleBackColor = true;
+            this.RbBancoBrasil.AutoSize = true;
+            this.RbBancoBrasil.Location = new System.Drawing.Point(13, 44);
+            this.RbBancoBrasil.Name = "RbBancoBrasil";
+            this.RbBancoBrasil.Size = new System.Drawing.Size(99, 17);
+            this.RbBancoBrasil.TabIndex = 25;
+            this.RbBancoBrasil.Tag = "1";
+            this.RbBancoBrasil.Text = "Banco do Brasil";
+            this.RbBancoBrasil.UseVisualStyleBackColor = true;
             // 
             // radioButtonReal
             // 
-            this.radioButtonReal.AutoSize = true;
-            this.radioButtonReal.Location = new System.Drawing.Point(13, 113);
-            this.radioButtonReal.Name = "radioButtonReal";
-            this.radioButtonReal.Size = new System.Drawing.Size(47, 17);
-            this.radioButtonReal.TabIndex = 23;
-            this.radioButtonReal.Tag = "356";
-            this.radioButtonReal.Text = "Real";
-            this.radioButtonReal.UseVisualStyleBackColor = true;
+            this.RbReal.AutoSize = true;
+            this.RbReal.Location = new System.Drawing.Point(13, 113);
+            this.RbReal.Name = "RbReal";
+            this.RbReal.Size = new System.Drawing.Size(47, 17);
+            this.RbReal.TabIndex = 23;
+            this.RbReal.Tag = "356";
+            this.RbReal.Text = "Real";
+            this.RbReal.UseVisualStyleBackColor = true;
             // 
             // radioButtonBradesco
             // 
-            this.radioButtonBradesco.AutoSize = true;
-            this.radioButtonBradesco.Location = new System.Drawing.Point(13, 67);
-            this.radioButtonBradesco.Name = "radioButtonBradesco";
-            this.radioButtonBradesco.Size = new System.Drawing.Size(70, 17);
-            this.radioButtonBradesco.TabIndex = 26;
-            this.radioButtonBradesco.Tag = "237";
-            this.radioButtonBradesco.Text = "Bradesco";
-            this.radioButtonBradesco.UseVisualStyleBackColor = true;
+            this.RbBradesco.AutoSize = true;
+            this.RbBradesco.Location = new System.Drawing.Point(13, 67);
+            this.RbBradesco.Name = "RbBradesco";
+            this.RbBradesco.Size = new System.Drawing.Size(70, 17);
+            this.RbBradesco.TabIndex = 26;
+            this.RbBradesco.Tag = "237";
+            this.RbBradesco.Text = "Bradesco";
+            this.RbBradesco.UseVisualStyleBackColor = true;
             // 
             // radioButtonHsbc
             // 
-            this.radioButtonHsbc.AutoSize = true;
-            this.radioButtonHsbc.Location = new System.Drawing.Point(13, 90);
-            this.radioButtonHsbc.Name = "radioButtonHsbc";
-            this.radioButtonHsbc.Size = new System.Drawing.Size(54, 17);
-            this.radioButtonHsbc.TabIndex = 24;
-            this.radioButtonHsbc.Tag = "399";
-            this.radioButtonHsbc.Text = "HSBC";
-            this.radioButtonHsbc.UseVisualStyleBackColor = true;
+            this.RbHsbc.AutoSize = true;
+            this.RbHsbc.Location = new System.Drawing.Point(13, 90);
+            this.RbHsbc.Name = "RbHsbc";
+            this.RbHsbc.Size = new System.Drawing.Size(54, 17);
+            this.RbHsbc.TabIndex = 24;
+            this.RbHsbc.Tag = "399";
+            this.RbHsbc.Text = "HSBC";
+            this.RbHsbc.UseVisualStyleBackColor = true;
             // 
             // radioButtonSafra
             // 
-            this.radioButtonSafra.AutoSize = true;
-            this.radioButtonSafra.Location = new System.Drawing.Point(13, 136);
-            this.radioButtonSafra.Name = "radioButtonSafra";
-            this.radioButtonSafra.Size = new System.Drawing.Size(50, 17);
-            this.radioButtonSafra.TabIndex = 20;
-            this.radioButtonSafra.Tag = "422";
-            this.radioButtonSafra.Text = "Safra";
-            this.radioButtonSafra.UseVisualStyleBackColor = true;
+            this.RbSafra.AutoSize = true;
+            this.RbSafra.Location = new System.Drawing.Point(13, 136);
+            this.RbSafra.Name = "RbSafra";
+            this.RbSafra.Size = new System.Drawing.Size(50, 17);
+            this.RbSafra.TabIndex = 20;
+            this.RbSafra.Tag = "422";
+            this.RbSafra.Text = "Safra";
+            this.RbSafra.UseVisualStyleBackColor = true;
             // 
             // radioButtonItau
             // 
-            this.radioButtonItau.AutoSize = true;
-            this.radioButtonItau.Checked = true;
-            this.radioButtonItau.Location = new System.Drawing.Point(13, 21);
-            this.radioButtonItau.Name = "radioButtonItau";
-            this.radioButtonItau.Size = new System.Drawing.Size(43, 17);
-            this.radioButtonItau.TabIndex = 0;
-            this.radioButtonItau.TabStop = true;
-            this.radioButtonItau.Tag = "341";
-            this.radioButtonItau.Text = "Itaú";
-            this.radioButtonItau.UseVisualStyleBackColor = true;
+            this.RbItau.AutoSize = true;
+            this.RbItau.Checked = true;
+            this.RbItau.Location = new System.Drawing.Point(13, 21);
+            this.RbItau.Name = "RbItau";
+            this.RbItau.Size = new System.Drawing.Size(43, 17);
+            this.RbItau.TabIndex = 0;
+            this.RbItau.TabStop = true;
+            this.RbItau.Tag = "341";
+            this.RbItau.Text = "Itaú";
+            this.RbItau.UseVisualStyleBackColor = true;
             // 
             // backgroundWorker
             // 
@@ -476,17 +476,17 @@ namespace BoletoNet.Arquivo
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem arquivoToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBoxBancos;
-        private System.Windows.Forms.RadioButton radioButtonItau;
+        private System.Windows.Forms.RadioButton RbItau;
         private System.Windows.Forms.ToolStripMenuItem impressãoToolStripMenuItem;
         private System.ComponentModel.BackgroundWorker backgroundWorker;
-        private System.Windows.Forms.RadioButton radioButtonUnibanco;
-        private System.Windows.Forms.RadioButton radioButtonSudameris;
-        private System.Windows.Forms.RadioButton radioButtonBancoBrasil;
-        private System.Windows.Forms.RadioButton radioButtonReal;
-        private System.Windows.Forms.RadioButton radioButtonBradesco;
-        private System.Windows.Forms.RadioButton radioButtonHsbc;
-        private System.Windows.Forms.RadioButton radioButtonSafra;
-        private System.Windows.Forms.RadioButton radioButtonSantander;
+        private System.Windows.Forms.RadioButton RbUnibanco;
+        private System.Windows.Forms.RadioButton RbSudameris;
+        private System.Windows.Forms.RadioButton RbBancoBrasil;
+        private System.Windows.Forms.RadioButton RbReal;
+        private System.Windows.Forms.RadioButton RbBradesco;
+        private System.Windows.Forms.RadioButton RbHsbc;
+        private System.Windows.Forms.RadioButton RbSafra;
+        private System.Windows.Forms.RadioButton RbSantander;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton radioButtonCNAB240;
         private System.Windows.Forms.RadioButton radioButtonCNAB400;
@@ -494,12 +494,12 @@ namespace BoletoNet.Arquivo
         private System.Windows.Forms.ToolStripMenuItem retornoToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem lerToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem gerarToolStripMenuItem1;
-        private System.Windows.Forms.RadioButton radioButtonCaixa;
+        private System.Windows.Forms.RadioButton RbCaixa;
         private System.Windows.Forms.ColumnHeader columnHeader8;
-        private System.Windows.Forms.RadioButton radioButtonSicredi;
-        private System.Windows.Forms.RadioButton radioButtonBanrisul;
+        private System.Windows.Forms.RadioButton RbSicredi;
+        private System.Windows.Forms.RadioButton RbBanrisul;
         private System.Windows.Forms.ColumnHeader columnHeader9;
-        private System.Windows.Forms.RadioButton radioButtonBNB;
+        private System.Windows.Forms.RadioButton RbBNB;
         private System.Windows.Forms.RadioButton RbSicoob;
     }
 }

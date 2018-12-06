@@ -261,7 +261,7 @@ namespace BoletoNet
 
         public override void ValidaBoleto(Boleto boleto)
         {
-            if (boleto.Instrucoes.Count(w => w.Codigo > 0) > 2)
+            if (boleto.Instrucoes.Count(w => w.Codigo > 0 && w.Codigo < 500) > 2)
                 throw new Exception("Para o Sicoob, só é permitido selecionar 2 instruções.");
 
             //Atribui o nome do banco ao local de pagamento.
@@ -488,7 +488,7 @@ namespace BoletoNet
                 var inst1 = "00";
                 var inst2 = "00";
 
-                foreach (var inst in boleto.Instrucoes.Where(w => w.Codigo > 0))
+                foreach (var inst in boleto.Instrucoes.Where(w => w.Codigo > 0 && w.Codigo < 500))
                 {
                     //99 = Protesto.
                     var aux = inst.Codigo == 99 ? inst.Dias : inst.Codigo;
@@ -576,7 +576,7 @@ namespace BoletoNet
                 h += Utils.FormatCode(cedente.ContaBancaria.DigitoAgencia, "0", 1);    //058 a 058  Digito Agência
                 h += Utils.FormatCode(cedente.ContaBancaria.Conta, "0", 12, true);     //059 a 070
                 h += cedente.ContaBancaria.DigitoConta;                                //071 a 071
-                h += new string(' ', 1);                                               //072 a 072  Dígito Verificador da Ag/Conta: Brancos
+                h += new string('0', 1);                                               //072 a 072  Dígito Verificador da Ag/Conta: Zero. Nos outros campos iguais a esse, é branco.
                 h += Utils.FormatCode(cedente.Nome, " ", 30);                          //073 a 102  Nome da Empresa.
                 h += Utils.FormatCode("SICOOB", " ", 30);                              //103 a 132  Nome do Banco: SICOOB.
                 h += Utils.FormatCode("", " ", 10);                                    //133 a 142  Uso Exclusivo FEBRABAN / CNAB: Brancos.
@@ -708,7 +708,7 @@ namespace BoletoNet
                 d += codigoProtesto;                                        //221        Código do protesto.
                 d += Utils.FormatCode(prazoProtesto, 2);                    //222 a 223  Prazo do protesto, em dias.
                 d += Utils.FormatCode("0", 1);                              //224        Código para Baixa/Devolução: "0"
-                d += Utils.FormatCode("0", 3);                              //225 A 227  Número de Dias para Baixa/Devolução: Brancos
+                d += Utils.FormatCode("", " ", 3);                          //225 A 227  Número de Dias para Baixa/Devolução: Brancos
                 d += Utils.FormatCode(bol.Moeda.ToString(), "0", 2, true);  //228 A 229  Código da Moeda
                 d += Utils.FormatCode("", "0", 10, true);                   //230 A 239  Nº do Contrato da Operação de Créd.: "0000000000"
                 d += " ";
@@ -798,11 +798,11 @@ namespace BoletoNet
                     d += Utils.FormatCode(0m.SemVirgulaPonto(), "0", 15, true);   //075 a 089  Valor da multa.
                 }
 
-                d += Utils.FormatCode(" ", 10);             //090 a 099  Informação ao Pagador: Brancos.
+                d += "".PadLeft(10);                        //090 a 099  Informação ao Pagador: Brancos.
                 d += Utils.FormatCode(" ", 40);             //100 a 139  Informação 3.
                 d += Utils.FormatCode(" ", 40);             //140 a 179  Informação 4.
 
-                d += Utils.FormatCode(" ", 20);             //180 a 199  Uso Exclusivo FEBRABAN/CNAB: Brancos.
+                d += Utils.FormatCode("", " ", 20);         //180 a 199  Uso Exclusivo FEBRABAN/CNAB: Brancos.
                 d += Utils.FormatCode("", "0", 8, true);    //200 a 207  Cód. Ocor. do Pagador: "00000000".
                 d += Utils.FormatCode("", "0", 3, true);    //208 a 210  Cód. do Banco na Conta do Débito: "000".
                 d += Utils.FormatCode("", "0", 5, true);    //211 a 215  Código da Agência do Débito: "00000".
@@ -811,7 +811,7 @@ namespace BoletoNet
                 d += " ";                                   //229        Verificador da Conta: Brancos.
                 d += " ";                                   //230        Verificador Ag/Conta: Brancos.
                 d += "0";                                   //231        Aviso para Débito Automático: "0".
-                d += Utils.FormatCode("", 9);               //232 a 240  Uso Exclusivo FEBRABAN/CNAB: Brancos
+                d += Utils.FormatCode("", " ", 9);          //232 a 240  Uso Exclusivo FEBRABAN/CNAB: Brancos
                 return Utils.SubstituiCaracteresEspeciais(d);
             }
             catch (Exception e)
@@ -837,7 +837,7 @@ namespace BoletoNet
                 t += Utils.FormatCode("", "0", 17, true);                         //076 a 092  Valor total de registros em cobrança caucionada.
                 t += Utils.FormatCode("", "0", 6, true);                          //093 a 098  Quantidade de registros em cobrança descontada.
                 t += Utils.FormatCode("", "0", 17, true);                         //099 a 115  Valor total de registros em cobrança descontada.
-                t += Utils.FormatCode("", "0", 8, true);                          //116 a 123  Número de aviso de lançamento: brancos.
+                t += Utils.FormatCode("", " ", 8, true);                          //116 a 123  Número de aviso de lançamento: brancos.
                 t += Utils.FormatCode("", " ", 117);                              //124 a 240  Uso exclusivo. Brancos.
                 return Utils.SubstituiCaracteresEspeciais(t);
             }

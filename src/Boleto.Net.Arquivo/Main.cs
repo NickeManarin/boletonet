@@ -17,28 +17,24 @@ namespace BoletoNet.Arquivo
         {
             try
             {
-                saveFileDialog.Filter = "Arquivos de Retorno (*.rem)|*.rem|Todos Arquivos (*.*)|*.*";
+                saveFileDialog.Filter = @"Arquivos de Retorno (*.rem)|*.rem|Todos Arquivos (*.*)|*.*";
 
                 if (saveFileDialog.ShowDialog() != DialogResult.OK)
                     return;
 
                 var arquivo = new ArquivoRemessa(TipoArquivo.Cnab400);
-
-                //Valida a Remessa Correspondentes antes de Gerar a mesma...
-                string vMsgRetorno;
-                var sit = arquivo.ValidarArquivoRemessa(cedente.Convenio.ToString(), banco, cedente, boletos, 1, out vMsgRetorno);
+                var sit = arquivo.ValidarArquivoRemessa(cedente.Convenio.ToString(), banco, cedente, boletos, 1, out var vMsgRetorno);
 
                 if (!sit)
                 {
                     MessageBox.Show(String.Concat("Foram localizados inconsistências na validação da remessa!", Environment.NewLine, vMsgRetorno),
-                        "Teste", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        @"Teste", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
                     arquivo.GerarArquivoRemessa("0", banco, cedente, boletos, saveFileDialog.OpenFile(), 1);
 
-                    MessageBox.Show("Arquivo gerado com sucesso!", "Teste",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(@"Arquivo gerado com sucesso!", @"Teste", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
@@ -305,7 +301,7 @@ namespace BoletoNet.Arquivo
                         }
                     }
                 };
-                
+
                 b.Instrucoes.Add(new Instrucao_Bradesco(9, null, 10));
                 b.Instrucoes.Add(new Instrucao_Bradesco(82, null, 10, 3.1m));
                 b.Instrucoes.Add(new Instrucao_Bradesco(901, null, 10, 3.1m));
@@ -385,20 +381,37 @@ namespace BoletoNet.Arquivo
         {
             var boletos = new Boletos();
 
-            var vencimento = new DateTime(2003, 5, 15);
+            var vencimento = new DateTime(2018, 11, 29);
 
-            var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "2269", "130000946");
-            c.Codigo = "1795082";
+            var c = new Cedente
+            {
+                CpfCnpj = "36.348.313/0001-82",
+                Nome = "Eu mesmo",
+                CodigoTransmissao = "1163006767560130022199",
+                MostrarCnpjNoBoleto = true,
 
-            var b = new Boleto(vencimento, 0.20m, "101", "566612457800", c);
+                ContaBancaria = new ContaBancaria
+                {
+                    Agencia = "1163",
+                    DigitoAgencia = "0",
+                    Conta = "013002219",
+                    DigitoConta = "9"
+                },
+                Codigo = "0067675",
+                DigitoCedente = 6,
+                Endereco = new Endereco
+                {
+                    End = "Av. Independencia",
+                    Complemento = "Casa 4",
+                    Bairro = "Centro",
+                    Cidade = "Torres",
+                    Uf = "RS",
+                    Cep = "96815-236"
+                }
+            };
 
-            //NOSSO NÚMERO
-            //############################################################################################################################
-            //Número adotado e controlado pelo Cliente, para identificar o título de cobrança.
-            //Informação utilizada pelos Bancos para referenciar a identificação do documento objeto de cobrança.
-            //Poderá conter número da duplicata, no caso de cobrança de duplicatas, número de apólice, no caso de cobrança de seguros, etc.
-            //Esse campo é devolvido no arquivo retorno.
-            b.NumeroDocumento = "0282033";
+            var b = new Boleto(vencimento, 0.20m, "101", "000000000001", "9", c);
+            b.NumeroDocumento = "64";
 
             b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
             b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
@@ -407,17 +420,23 @@ namespace BoletoNet.Arquivo
             b.Sacado.Endereco.Cep = "70000000";
             b.Sacado.Endereco.Uf = "DF";
 
-            //b.Instrucoes.Add("Não Receber após o vencimento");
-            //b.Instrucoes.Add("Após o Vencimento pague somente no Bradesco");
-            //b.Instrucoes.Add("Instrução 2");
-            //b.Instrucoes.Add("Instrução 3");
+            b.Instrucoes.Add(new Instrucao(33, 6, null, 10)); //Protestar
+            b.Instrucoes.Add(new Instrucao(33, 2)); //Baixar após 15
+            b.Instrucoes.Add(new Instrucao(33, 98)); //Juros
+            b.Instrucoes.Add(new Instrucao(33, 99)); //Mora
 
-            //Espécie Documento - [R] Recibo
-            b.EspecieDocumento = new EspecieDocumento_Santander("17");
+            //Espécie Documento - Duplicata.
+            b.EspecieDocumento = new EspecieDocumento_Santander("01");
+            b.Banco = new Banco(33);
+
+            b.Remessa = new Remessa
+            {
+                CodigoOcorrencia = "01"
+            };
 
             boletos.Add(b);
 
-            GeraArquivoCnab240(new Banco(33), c, boletos);
+            GeraArquivoCnab400(new Banco(33), c, boletos);
         }
 
         private void GeraDadosCaixa()
@@ -803,32 +822,47 @@ namespace BoletoNet.Arquivo
         {
             var form = new NBoleto();
 
-            if (radioButtonItau.Checked)
-                form.CodigoBanco = Convert.ToInt16(radioButtonItau.Tag);
-            else if (radioButtonUnibanco.Checked)
-                form.CodigoBanco = Convert.ToInt16(radioButtonUnibanco.Tag);
-            else if (radioButtonSudameris.Checked)
-                form.CodigoBanco = Convert.ToInt16(radioButtonSudameris.Tag);
-            else if (radioButtonSafra.Checked)
-                form.CodigoBanco = Convert.ToInt16(radioButtonSafra.Tag);
-            else if (radioButtonReal.Checked)
-                form.CodigoBanco = Convert.ToInt16(radioButtonReal.Tag);
-            else if (radioButtonHsbc.Checked)
-                form.CodigoBanco = Convert.ToInt16(radioButtonHsbc.Tag);
-            else if (radioButtonBancoBrasil.Checked)
-                form.CodigoBanco = Convert.ToInt16(radioButtonBancoBrasil.Tag);
-            else if (radioButtonBradesco.Checked)
-                form.CodigoBanco = Convert.ToInt16(radioButtonBradesco.Tag);
-            else if (radioButtonCaixa.Checked)
-                form.CodigoBanco = Convert.ToInt16(radioButtonCaixa.Tag);
-            else if (radioButtonBNB.Checked)
-                form.CodigoBanco = Convert.ToInt16(radioButtonBNB.Tag);
-            else if (radioButtonSicredi.Checked)
-                form.CodigoBanco = Convert.ToInt16(radioButtonSicredi.Tag);
+            if (RbItau.Checked)
+                form.CodigoBanco = Convert.ToInt16(RbItau.Tag);
+
+            else if (RbUnibanco.Checked)
+                form.CodigoBanco = Convert.ToInt16(RbUnibanco.Tag);
+
+            else if (RbSudameris.Checked)
+                form.CodigoBanco = Convert.ToInt16(RbSudameris.Tag);
+
+            else if (RbSafra.Checked)
+                form.CodigoBanco = Convert.ToInt16(RbSafra.Tag);
+
+            else if (RbReal.Checked)
+                form.CodigoBanco = Convert.ToInt16(RbReal.Tag);
+
+            else if (RbHsbc.Checked)
+                form.CodigoBanco = Convert.ToInt16(RbHsbc.Tag);
+
+            else if (RbBancoBrasil.Checked)
+                form.CodigoBanco = Convert.ToInt16(RbBancoBrasil.Tag);
+
+            else if (RbBradesco.Checked)
+                form.CodigoBanco = Convert.ToInt16(RbBradesco.Tag);
+
+            else if (RbCaixa.Checked)
+                form.CodigoBanco = Convert.ToInt16(RbCaixa.Tag);
+
+            else if (RbSantander.Checked)
+                form.CodigoBanco = 33;
+
+            else if (RbBNB.Checked)
+                form.CodigoBanco = Convert.ToInt16(RbBNB.Tag);
+
+            else if (RbSicredi.Checked)
+                form.CodigoBanco = Convert.ToInt16(RbSicredi.Tag);
+
             else if (RbSicoob.Checked)
                 form.CodigoBanco = 756;
-            else if (radioButtonBanrisul.Checked)
-                form.CodigoBanco = Convert.ToInt16(radioButtonBanrisul.Tag);
+
+            else if (RbBanrisul.Checked)
+                form.CodigoBanco = Convert.ToInt16(RbBanrisul.Tag);
 
             form.ShowDialog();
         }
@@ -837,32 +871,34 @@ namespace BoletoNet.Arquivo
         {
             if (radioButtonCNAB400.Checked)
             {
-                if (radioButtonItau.Checked)
+                if (RbItau.Checked)
                     GeraDadosItau(TipoArquivo.Cnab400);
-                else if (radioButtonBancoBrasil.Checked)
+                else if (RbBancoBrasil.Checked)
                     GeraDadosBancoDoBrasil();
-                else if (radioButtonBradesco.Checked)
+                else if (RbBradesco.Checked)
                     GeraDadosBradesco();
-                else if (radioButtonBanrisul.Checked)
+                else if (RbBanrisul.Checked)
                     GeraDadosBanrisul();
-                else if (radioButtonCaixa.Checked)
+                else if (RbSantander.Checked)
+                    GeraDadosSantander();
+                else if (RbCaixa.Checked)
                     GeraDadosCaixa();
-                else if (radioButtonSicredi.Checked)
+                else if (RbSicredi.Checked)
                     GeraDadosSicredi();
-                else if (radioButtonBNB.Checked)
+                else if (RbBNB.Checked)
                     GeraDadosBancoDoNordeste();
                 else if (RbSicoob.Checked)
                     GeraBoletoSicoob();
             }
             else if (radioButtonCNAB240.Checked)
             {
-                if (radioButtonItau.Checked)
+                if (RbItau.Checked)
                     GeraDadosItau(TipoArquivo.Cnab240);
-                else if (radioButtonSantander.Checked)
+                else if (RbSantander.Checked)
                     GeraDadosSantander();
-                else if (radioButtonBanrisul.Checked)
+                else if (RbBanrisul.Checked)
                     MessageBox.Show("Não Implementado!");
-                else if (radioButtonCaixa.Checked)
+                else if (RbCaixa.Checked)
                     GeraDadosCaixa();
                 else if (RbSicoob.Checked)
                     GeraBoletoSicoob(TipoArquivo.Cnab240);
@@ -871,25 +907,25 @@ namespace BoletoNet.Arquivo
 
         private void RetornoMenuItem_Click(object sender, EventArgs e)
         {
-            if (radioButtonItau.Checked)
+            if (RbItau.Checked)
                 LerRetorno(341);
-            else if (radioButtonSudameris.Checked)
+            else if (RbSudameris.Checked)
                 LerRetorno(347);
-            else if (radioButtonSantander.Checked)
+            else if (RbSantander.Checked)
                 LerRetorno(33);
-            else if (radioButtonReal.Checked)
+            else if (RbReal.Checked)
                 LerRetorno(356);
-            else if (radioButtonCaixa.Checked)
+            else if (RbCaixa.Checked)
                 LerRetorno(104);
-            else if (radioButtonBradesco.Checked)
+            else if (RbBradesco.Checked)
                 LerRetorno(237);
-            else if (radioButtonSicredi.Checked)
+            else if (RbSicredi.Checked)
                 LerRetorno(748);
-            else if (radioButtonBanrisul.Checked)
+            else if (RbBanrisul.Checked)
                 LerRetorno(041);
-            else if (radioButtonBNB.Checked)
+            else if (RbBNB.Checked)
                 LerRetorno(4);
-            else if (radioButtonBancoBrasil.Checked)
+            else if (RbBancoBrasil.Checked)
                 LerRetorno(1);
             else if (RbSicoob.Checked)
                 LerRetorno(756);
@@ -904,7 +940,7 @@ namespace BoletoNet.Arquivo
 
             if (radioButtonCNAB400.Checked)
             {
-                if (radioButtonItau.Checked)
+                if (RbItau.Checked)
                     GeraArquivoCnab400Itau(saveFileDialog.OpenFile());
             }
             else
