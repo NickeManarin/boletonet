@@ -1637,73 +1637,58 @@ namespace BoletoNet
             {
                 var detalhe = new DetalheRetorno(registro);
 
-                //Tipo de Inscrição Empresa
-                detalhe.CodigoInscricao = Utils.ToInt32(registro.Substring(1, 2));
-                //Nº Inscrição da Empresa
-                detalhe.NumeroInscricao = registro.Substring(3, 14);
-
-                //Identificação da Empresa Cedente no Banco
-                detalhe.Agencia = Utils.ToInt32(registro.Substring(17, 4));
-                detalhe.Conta = Utils.ToInt32(registro.Substring(21, 8));
-
-                //Nº Controle do Participante
-                detalhe.NumeroControle = registro.Substring(37, 25);
-                //Identificação do Título no Banco
-                detalhe.NossoNumeroComDV = registro.Substring(62, 8);
-                detalhe.NossoNumero = registro.Substring(62, 7);
-                //detalhe.DACNossoNumero = registro.Substring(69, 1);
-                //Identificação de Ocorrência
-                detalhe.CodigoOcorrencia = Utils.ToInt32(registro.Substring(108, 2));
-
-                //Descrição da ocorrência
-                detalhe.DescricaoOcorrencia = Ocorrencia(registro.Substring(108, 2));
-
-                //Número do Documento
-                detalhe.NumeroDocumento = registro.Substring(116, 10);
-                //Identificação do Título no Banco
-                detalhe.IdentificacaoTitulo = registro.Substring(126, 8);
-
-                //Valor do Título
-                decimal valorTitulo = Convert.ToInt64(registro.Substring(152, 13));
-                detalhe.ValorTitulo = valorTitulo / 100;
-                //Banco Cobrador
-                detalhe.CodigoBanco = Utils.ToInt32(registro.Substring(165, 3));
-                //Agência Cobradora
-                detalhe.AgenciaCobradora = Utils.ToInt32(registro.Substring(168, 5));
-                //Espécie do Título
-                detalhe.Especie = Utils.ToInt32(registro.Substring(173, 2));
-                // IOF
-                decimal iof = Convert.ToUInt64(registro.Substring(214, 13));
-                detalhe.IOF = iof / 100;
-                //Abatimento Concedido sobre o Título (Valor Abatimento Concedido)
-                decimal valorAbatimento = Convert.ToUInt64(registro.Substring(227, 13));
-                detalhe.ValorAbatimento = valorAbatimento / 100;
-                //Desconto Concedido (Valor Desconto Concedido)
-                decimal valorDesconto = Convert.ToUInt64(registro.Substring(240, 13));
-                detalhe.Descontos = valorDesconto / 100;
-                //Valor Pago
-                decimal valorPago = Convert.ToUInt64(registro.Substring(253, 13));
-                detalhe.ValorPago = valorPago / 100;
-                //Juros Mora
-                decimal jurosMora = Convert.ToUInt64(registro.Substring(266, 13));
-                detalhe.JurosMora = jurosMora / 100;
-                //Outros Créditos
-                decimal outrosCreditos = Convert.ToUInt64(registro.Substring(279, 13));
-                detalhe.OutrosCreditos = outrosCreditos / 100;
-                //Data Ocorrência no Banco
-                var dataOcorrencia = Utils.ToInt32(registro.Substring(110, 6));
-                detalhe.DataOcorrencia = Utils.ToDateTime(dataOcorrencia.ToString("##-##-##"));
-                //Data Vencimento do Título
-                var dataVencimento = Utils.ToInt32(registro.Substring(146, 6));
-                detalhe.DataVencimento = Utils.ToDateTime(dataVencimento.ToString("##-##-##"));
-                // Data do Crédito
-                var dataCredito = Utils.ToInt32(registro.Substring(295, 6));
-                detalhe.DataCredito = Utils.ToDateTime(dataCredito.ToString("##-##-##"));
-                //Nome do Sacado
-                detalhe.NomeSacado = registro.Substring(301, 36);
-
-                detalhe.NumeroSequencial = Utils.ToInt32(registro.Substring(394, 6));
-
+                //001 -> 001, Código do registro.
+                detalhe.CodigoInscricao = Utils.ToInt32(registro.Substring(1, 2));  //002 -> 003, Tipo de Inscrição Empresa.
+                detalhe.NumeroInscricao = registro.Substring(3, 14);                //004 -> 017, Nº Inscrição da Empresa.
+                detalhe.Agencia = Utils.ToInt32(registro.Substring(17, 4));         //018 -> 021, Identificação da Empresa Cedente no Banco.
+                detalhe.Conta = Utils.ToInt32(registro.Substring(21, 8));           //022 -> 029, Conta movimento Beneficiário.
+                //030 -> 037, Conta cobrança Beneficiário.
+                detalhe.NumeroControle = registro.Substring(37, 25);    //038 -> 062, Número de controle.
+                detalhe.NossoNumeroComDV = registro.Substring(62, 8).PadLeft(13, '0');   //063 -> 070, Nosso número.
+                detalhe.NossoNumero = registro.Substring(62, 7).PadLeft(12, '0');        //063 -> 069, Nosso número (Sem DV).
+                detalhe.DACNossoNumero = registro.Substring(69, 1);     //070 -> 070, DV do nosso número.
+                //071 -> 107, Brancos.
+                //108 -> 108, Código da carteira.
+                detalhe.CodigoOcorrencia = Utils.ToInt32(registro.Substring(108, 2));   //109 -> 110, Código de ocorrência.
+                detalhe.DescricaoOcorrencia = Ocorrencia(registro.Substring(108, 2));   //109 -> 110, Descrição da ocorrência.
+                detalhe.DataOcorrencia = DateTime.ParseExact(registro.Substring(110, 6), "ddMMyy", new CultureInfo("pt-BR"));   //111 -> 116, Data da ocorrência.
+                detalhe.NumeroDocumento = registro.Substring(116, 10);          //117 -> 126, Seu número.
+                detalhe.IdentificacaoTitulo = registro.Substring(126, 8);       //127 -> 134, Nosso número.
+                //135 -> 136, Código Original da Remessa.
+                detalhe.MotivoCodigoOcorrencia = registro.Substring(136, 9);    //137 -> 145, Códigos dos erros.
+                //146 -> 146, Brancos.
+                detalhe.DataVencimento = DateTime.ParseExact(registro.Substring(146, 6), "ddMMyy", new CultureInfo("pt-BR"));   //147 -> 152, Data de vencimento.
+                detalhe.ValorTitulo = Convert.ToInt64(registro.Substring(152, 13)) / 100m;  //153 -> 165, Valor do título.
+                detalhe.CodigoBanco = Utils.ToInt32(registro.Substring(165, 3));            //166 -> 168, Número do Banco cobrador.
+                detalhe.AgenciaCobradora = Utils.ToInt32(registro.Substring(168, 5));       //169 -> 173, Código da agência recebedora do título.
+                detalhe.Especie = Utils.ToInt32(registro.Substring(173, 2));                //174 -> 175, Espécie de documento.
+                //176 -> 188, Valor da tarifa cobrada.
+                detalhe.OutrasDespesas = Convert.ToUInt64(registro.Substring(188, 13)) / 100m;  //189 -> 201, Valor de outras despesas.
+                //202 -> 214, Valor dos juros de atraso.
+                detalhe.IOF = Convert.ToUInt64(registro.Substring(214, 13)) / 100m;                 //215 -> 227, Valor do IOF devido.
+                detalhe.ValorAbatimento = Convert.ToUInt64(registro.Substring(227, 13)) / 100m;     //228 -> 240, Valor do abatimento concedido.
+                detalhe.Descontos = Convert.ToUInt64(registro.Substring(240, 13)) / 100m;           //241 -> 253, Valor do desconto concedido.
+                detalhe.ValorPago = Convert.ToUInt64(registro.Substring(253, 13)) / 100m;           //254 -> 266, Valor total recebido.
+                detalhe.JurosMora = Convert.ToUInt64(registro.Substring(266, 13)) / 100m;           //267 -> 279, Valor dos juros de mora.
+                detalhe.OutrosCreditos = Convert.ToUInt64(registro.Substring(279, 13)) / 100m;      //280 -> 292, Valor de outros créditos.
+                //293 -> 293, Branco.
+                //294 -> 294, Código de aceite = N.
+                //295 -> 295, Branco.
+                detalhe.DataCredito = DateTime.ParseExact(registro.Substring(295, 6), "ddMMyy", new CultureInfo("pt-BR"));  //296 -> 301, Data do crédito.
+                detalhe.NomeSacado = registro.Substring(301, 36).TrimEnd();   //302 -> 337, Nome do pagador.
+                //338 -> 338, Identificador do complemento.
+                //339 -> 340, Unidade de valor moeda corrente = 00.
+                //341 -> 353, Valor do título em outra unidade de valor [v9(8) ou v9(5)].
+                //354 -> 366, Valor do IOF em outra unidade de valor [v9(8) ou v9(5)].
+                //367 -> 379, Valor do débito ou crédito.
+                //380 -> 380, Débito ou crédito (D ou C).
+                //381 -> 383, Brancos.
+                //384 -> 385, Complemento.
+                //386 -> 389, Sigla da empresa no sistema.
+                //390 -> 391, Brancos.
+                //392 -> 394, Número da versão.
+                detalhe.NumeroSequencial = Utils.ToInt32(registro.Substring(394, 6));   //395 -> 400, Número sequencial do registro no arquivo.
+                                
                 return detalhe;
             }
             catch (Exception ex)
