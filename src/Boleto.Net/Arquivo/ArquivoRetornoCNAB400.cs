@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using BoletoNet.Util;
 
 namespace BoletoNet
 {
@@ -41,11 +42,13 @@ namespace BoletoNet
                 // Identificação do registro detalhe
                 var IdsRegistroDetalhe = new List<string>();
 
-                // Lendo o arquivo
+                //Lendo o arquivo
                 linha = stream.ReadLine();
+
+                Header:
                 HeaderRetorno = banco.LerHeaderRetornoCNAB400(linha);
 
-                // Próxima linha (DETALHE)
+                //Próxima linha (DETALHE)
                 linha = stream.ReadLine();
 
                 // 85 - CECRED - Código de registro detalhe 7 para CECRED
@@ -69,7 +72,17 @@ namespace BoletoNet
                     var detalhe = banco.LerDetalheRetornoCNAB400(linha);
                     ListaDetalhe.Add(detalhe);
                     OnLinhaLida(detalhe, linha);
+
                     linha = stream.ReadLine();
+                }
+
+                //Se for Banrisul, é possível que o arquivo seja om concatenado de vários arquivos de retorno.
+                if (linha.Truncate(1) == "9" && banco.Codigo == 41)
+                {
+                    linha = CanReadLine(stream);
+
+                    if (!string.IsNullOrEmpty(linha))
+                        goto Header;
                 }
 
                 stream.Close();
@@ -77,6 +90,18 @@ namespace BoletoNet
             catch (Exception ex)
             {
                 throw new Exception("Erro ao ler arquivo.", ex);
+            }
+        }
+
+        private string CanReadLine(StreamReader reader)
+        {
+            try
+            {
+                return reader.ReadLine();
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
 
