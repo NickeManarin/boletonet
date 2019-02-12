@@ -88,10 +88,10 @@ namespace BoletoNet
                                 incluiLinha.WriteLine(line);
                                 numeroRegistro++;
                             }
-                            else if (banco.Codigo == 341) //Banco Itau
+                            else if (banco.Codigo == 341) //Banco Itaú.
                             {
                                 var bancoAux = new Banco_Itau();
-                                strline = bancoAux.GerarRegistroDetalhe5(boleto, numeroRegistro);
+                                strline = bancoAux.GerarRegistroDetalhe2(boleto, numeroRegistro);
                                 incluiLinha.WriteLine(strline);
                                 numeroRegistro++;
                             }

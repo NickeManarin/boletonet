@@ -535,8 +535,8 @@ namespace BoletoNet
 
             if (!Cedente.DigitoCedente.Equals(-1))
             {
-                if (!string.IsNullOrEmpty(Cedente.ContaBancaria.OperacaConta))
-                    agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}/{Cedente.ContaBancaria.OperacaConta}.{Utils.FormatCode(Cedente.Codigo, 6)}-{Cedente.DigitoCedente}";
+                //if (!string.IsNullOrEmpty(Cedente.ContaBancaria.OperacaConta))
+                //    agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}/{Cedente.ContaBancaria.OperacaConta}.{Utils.FormatCode(Cedente.Codigo, 6)}-{Cedente.DigitoCedente}";
 
                 switch (Boleto.Banco.Codigo)
                 {
@@ -552,6 +552,10 @@ namespace BoletoNet
                         break;
                     case 399:
                         agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}/{Utils.FormatCode(Cedente.Codigo + Cedente.DigitoCedente, 7)}";
+                        break;
+                    case 41: //Banrisul.
+                        //Removido o dígito verificador do Banrisul. .{Cedente.ContaBancaria.DigitoAgencia}
+                        agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}/{Cedente.Codigo}.{Cedente.DigitoCedente}";
                         break;
                     default:
                         agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}-{Cedente.ContaBancaria.DigitoAgencia}/{Utils.FormatCode(Cedente.Codigo, 6)}-{Cedente.DigitoCedente}";
