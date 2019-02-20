@@ -6,17 +6,17 @@ namespace BoletoNet
 
     public enum EnumInstrucoes_Caixa
     {
+        Multa = 8,
         Protestar = 9,                      // Emite aviso ao sacado após N dias do vencto, e envia ao cartório após 5 dias úteis
-        NaoProtestar = 10,                  // Inibe protesto, quando houver instrução permanente na conta corrente
-        ImportanciaporDiaDesconto = 30,
-        ProtestoFinsFalimentares = 42,
-        ProtestarAposNDiasCorridos = 81,
-        ProtestarAposNDiasUteis = 82,
-        NaoReceberAposNDias = 91,
+        //NaoProtestar = 10,                  // Inibe protesto, quando houver instrução permanente na conta corrente
+        //ImportanciaporDiaDesconto = 30,
+        //ProtestoFinsFalimentares = 42,
+        //ProtestarAposNDiasCorridos = 81,
+        //ProtestarAposNDiasUteis = 82,
+        //NaoReceberAposNDias = 91,
         DevolverAposNDias = 92,
         JurosdeMora = 998,
         DescontoporDia = 999,
-        Multa = 8
     }
 
     #endregion
@@ -63,26 +63,27 @@ namespace BoletoNet
                 switch ((EnumInstrucoes_Caixa)cod)
                 {
                     case EnumInstrucoes_Caixa.Protestar:
-                        Descricao = "Protestar após " + dias + " dias úteis.";
+                        //De 02 a 05 = dias úteis, Acima de 05 = dias corridos
+                        Descricao = $"Protestar após {dias} dias {(dias > 5 ? "corridos" : "úteis")}.";
                         break;
-                    case EnumInstrucoes_Caixa.NaoProtestar:
-                        Descricao = "Não protestar";
-                        break;
-                    case EnumInstrucoes_Caixa.ImportanciaporDiaDesconto:
-                        Descricao = "Importância por dia de desconto.";
-                        break;
-                    case EnumInstrucoes_Caixa.ProtestoFinsFalimentares:
-                        Descricao = "Protesto para fins falimentares";
-                        break;
-                    case EnumInstrucoes_Caixa.ProtestarAposNDiasCorridos:
-                        Descricao = "Protestar após " + dias + " dias corridos do vencimento";
-                        break;
-                    case EnumInstrucoes_Caixa.ProtestarAposNDiasUteis:
-                        Descricao = "Protestar após " + dias + " dias úteis do vencimento";
-                        break;
-                    case EnumInstrucoes_Caixa.NaoReceberAposNDias:
-                        Descricao = "Não receber após " + dias + " dias do vencimento";
-                        break;
+                    //case EnumInstrucoes_Caixa.NaoProtestar:
+                    //    Descricao = "Não protestar";
+                    //    break;
+                    //case EnumInstrucoes_Caixa.ImportanciaporDiaDesconto:
+                    //    Descricao = "Importância por dia de desconto.";
+                    //    break;
+                    //case EnumInstrucoes_Caixa.ProtestoFinsFalimentares:
+                    //    Descricao = "Protesto para fins falimentares";
+                    //    break;
+                    //case EnumInstrucoes_Caixa.ProtestarAposNDiasCorridos:
+                    //    Descricao = "Protestar após " + dias + " dias corridos do vencimento";
+                    //    break;
+                    //case EnumInstrucoes_Caixa.ProtestarAposNDiasUteis:
+                    //    Descricao = "Protestar após " + dias + " dias úteis do vencimento";
+                    //    break;
+                    //case EnumInstrucoes_Caixa.NaoReceberAposNDias:
+                    //    Descricao = "Não receber após " + dias + " dias do vencimento";
+                    //    break;
                     case EnumInstrucoes_Caixa.DevolverAposNDias:
                         Descricao = "Devolver após " + dias + " dias do vencimento";
                         break;

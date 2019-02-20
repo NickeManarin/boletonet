@@ -621,6 +621,8 @@ namespace BoletoNet
                 nossoNumero = Boleto.Carteira.PadLeft(2, '0') + "/" + Boleto.NossoNumero + "-" + Boleto.DigitoNossoNumero;
             else if (Boleto.Banco.Codigo == 33)
                 nossoNumero = Boleto.NossoNumero.PadLeft(12, '0') + "-" + Boleto.DigitoNossoNumero;
+            else if (Boleto.Banco.Codigo == 341) //Itaú
+                nossoNumero = Boleto.Carteira + "/" + Boleto.NossoNumero + "-" + Boleto.DigitoNossoNumero;
 
             #endregion
 

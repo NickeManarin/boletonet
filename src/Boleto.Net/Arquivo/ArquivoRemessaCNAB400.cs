@@ -81,7 +81,7 @@ namespace BoletoNet
                                 incluiLinha.WriteLine(strline);
                                 numeroRegistro++;
                             }
-                            else if(banco.Codigo == 85) //CECRED
+                            else if(banco.Codigo == 85) //CECRED.
                             {
                                 var bancoAux = new Banco_Cecred();
                                 var line = bancoAux.GerarRegistroDetalhe5(boleto, numeroRegistro, TipoArquivo.Cnab400);
@@ -97,7 +97,7 @@ namespace BoletoNet
                             }
                         }
                         
-                        if ((boleto.Instrucoes != null && boleto.Instrucoes.Count > 0) || (boleto.Sacado.Instrucoes != null && boleto.Sacado.Instrucoes.Count > 0))
+                        if (boleto.Instrucoes?.Count > 0 || boleto.Sacado?.Instrucoes?.Count > 0)
                         {
                             strline = boleto.Banco.GerarMensagemVariavelRemessa(boleto, ref numeroRegistro, TipoArquivo.Cnab400);
 

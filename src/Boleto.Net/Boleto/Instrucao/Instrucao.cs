@@ -31,18 +31,19 @@ namespace BoletoNet
                     case 399:
                         _interface = new Instrucao_HSBC();
                         break;
-                    //104 - Caixa
-                    case 104:
+                    
+                    case 104: //Caixa
                         _interface = new Instrucao_Caixa(cod, descricao, dias, valor, valorTotal);
                         break;
-                    //341 - Itaú
-                    case 341:
-                        _interface = new Instrucao_Itau();
+                    
+                    case 341: //Itaú.
+                        _interface = new InstrucaoItau(cod, descricao, dias, valor, valorTotal);
                         break;
-                    //1 - Banco do Brasil
-                    case 1:
+
+                    case 1: //Banco do Brasil.
                         _interface = new Instrucao_BancoBrasil(cod, descricao, dias, valor, valorTotal);
                         break;
+
                     //356 - Real
                     case 356:
                         _interface = new Instrucao_Real();

@@ -334,7 +334,7 @@ namespace BoletoNet
 		}
 
 		/// <summary> 
-		/// Recupara o nosso número 
+		/// Recupera o nosso número 
 		/// </summary>        
 		public string NossoNumero
 		{

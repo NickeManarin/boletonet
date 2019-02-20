@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Text;
 
 namespace BoletoNet
 {
@@ -8,12 +6,12 @@ namespace BoletoNet
 
     public enum EnumInstrucoes_Itau
     {
-        Protestar = 9,                      // Emite aviso ao sacado após N dias do vencto, e envia ao cartório após 5 dias úteis
-        NaoProtestar = 10,                  // Inibe protesto, quando houver instrução permanente na conta corrente
+        Protestar = 9,                      //Emite aviso ao sacado após N dias do vencto, e envia ao cartório após 5 dias úteis.
+        NaoProtestar = 10,                  //Inibe protesto, quando houver instrução permanente na conta corrente.
         ImportanciaporDiaDesconto = 30,
         ProtestoFinsFalimentares = 42,
-        ProtestarAposNDiasCorridos = 34, //Jéferson (jefhtavares) em 09/09/14 -- Segundo o manual que eu tenho (v. de maio de 2014) não é 81 este código
-        ProtestarAposNDiasUteis = 35, //Jéferson (jefhtavares) em 09/09/14 -- Segundo o manual que eu tenho (v. de maio de 2014) não é 82 este código
+        ProtestarAposNDiasCorridos = 34,
+        ProtestarAposNDiasUteis = 35,
         NaoReceberAposNDias = 91,
         DevolverAposNDias = 92,
         MultaVencimento = 997,
@@ -23,16 +21,15 @@ namespace BoletoNet
 
     #endregion 
 
-    public class Instrucao_Itau: AbstractInstrucao, IInstrucao
+    public sealed class InstrucaoItau: AbstractInstrucao, IInstrucao
     {
-
         #region Construtores 
 
-		public Instrucao_Itau()
+		public InstrucaoItau()
 		{
 			try
 			{
-                this.Banco = new Banco(341);
+                Banco = new Banco(341);
 			}
 			catch (Exception ex)
 			{
@@ -40,80 +37,71 @@ namespace BoletoNet
 			}
 		}
 
-        public Instrucao_Itau(int codigo, int nrDias)
+        public InstrucaoItau(int cod, string descricao = null, int dias = 0, decimal valor = 0m, decimal valorBoleto = 0m)
         {
-            this.carregar(codigo, nrDias);
+            Carrega(cod, descricao, dias, valor, valorBoleto);
         }
 
-        public Instrucao_Itau(int codigo)
-        {
-            this.carregar(codigo, 0);
-        }
-        public Instrucao_Itau(int codigo, double valor)
-        {
-            this.carregar(codigo, valor);
-        }
-
-        public Instrucao_Itau(int codigo, double valor, EnumTipoValor tipoValor)
-        {
-            this.carregar(codigo, valor, tipoValor);
-        }
         #endregion
 
         #region Metodos Privados
 
-        private void carregar(int idInstrucao, int nrDias)
+        private void Carrega(int cod, string descricao = null, int dias = 0, decimal valor = 0m, decimal valorBoleto = 0m)
         {
             try
             {
-                this.Banco = new Banco_Itau();
-                this.Valida();
+                Banco = new Banco_Itau();
 
-                switch ((EnumInstrucoes_Itau)idInstrucao)
+                Codigo = cod;
+                Descricao = descricao;
+                Dias = dias;
+                Valor = valor;
+                Tipo = EnumTipoValor.Percentual;
+
+                Valida();
+
+                switch ((EnumInstrucoes_Itau)cod)
                 {
-                    case EnumInstrucoes_Itau.Protestar:
-                        this.Codigo = (int)EnumInstrucoes_Itau.Protestar;
-                        this.Descricao = "Protestar após 5 dias úteis.";
-                        break;
+                    //case EnumInstrucoes_Itau.Protestar:
+                    //    Descricao = "Protestar após 5 dias úteis.";
+                    //    break;
                     case EnumInstrucoes_Itau.NaoProtestar:
-                        this.Codigo = (int)EnumInstrucoes_Itau.NaoProtestar;
-                        this.Descricao = "Não protestar";
+                        Descricao = "Não protestar.";
                         break;
-                    case EnumInstrucoes_Itau.ImportanciaporDiaDesconto:
-                        this.Codigo = (int)EnumInstrucoes_Itau.ImportanciaporDiaDesconto;
-                        this.Descricao = "Importância por dia de desconto.";
-                        break;
-                    case EnumInstrucoes_Itau.ProtestoFinsFalimentares:
-                        this.Codigo = (int)EnumInstrucoes_Itau.ProtestoFinsFalimentares;
-                        this.Descricao = "Protesto para fins falimentares";
-                        break;
+                    //case EnumInstrucoes_Itau.ImportanciaporDiaDesconto:
+                    //    Descricao = "Importância por dia de desconto.";
+                    //    break;
+                    //case EnumInstrucoes_Itau.ProtestoFinsFalimentares:
+                    //    Descricao = "Protesto para fins falimentares.";
+                    //    break;
                     case EnumInstrucoes_Itau.ProtestarAposNDiasCorridos:
-                        this.Codigo = (int)EnumInstrucoes_Itau.ProtestarAposNDiasCorridos;
-                        this.Descricao = "Protestar após " + nrDias + " dias corridos do vencimento";
+                        Descricao = $"Protestar após {dias} dias corridos do vencimento.";
                         break;
                     case EnumInstrucoes_Itau.ProtestarAposNDiasUteis:
-                        this.Codigo = (int)EnumInstrucoes_Itau.ProtestarAposNDiasUteis;
-                        this.Descricao = "Protestar após " + nrDias + " dias úteis do vencimento";
+                        Descricao = $"Protestar após {dias} dias úteis do vencimento.";
                         break;
-                    case EnumInstrucoes_Itau.NaoReceberAposNDias:
-                        this.Codigo = (int)EnumInstrucoes_Itau.NaoReceberAposNDias;
-                        this.Descricao = "Não receber após N dias do vencimento";
+                    //case EnumInstrucoes_Itau.NaoReceberAposNDias:
+                    //    Descricao = "Não receber após N dias do vencimento.";
+                    //    break;
+                    //case EnumInstrucoes_Itau.DevolverAposNDias:
+                    //    Descricao = "Devolver após N dias do vencimento.";
+                    //    break;                  
+                    //case EnumInstrucoes_Itau.DescontoporDia:
+                    //    Descricao = "Conceder desconto de R$ "; //por dia de antecipação
+                    //    break;
+                    case EnumInstrucoes_Itau.JurosdeMora:
+                        Codigo = 0;
+                        Descricao = $"Após vencimento cobrar juros de R$ {decimal.Round((valor * valorBoleto) / 100m, 2, MidpointRounding.ToEven):F2} ({valor:F2} %) por dia de atraso.";
                         break;
-                    case EnumInstrucoes_Itau.DevolverAposNDias:
-                        this.Codigo = (int)EnumInstrucoes_Itau.DevolverAposNDias;
-                        this.Descricao = "Devolver após N dias do vencimento";
-                        break;                  
-                    case EnumInstrucoes_Itau.DescontoporDia:
-                        this.Codigo = (int)EnumInstrucoes_Itau.DescontoporDia;
-                        this.Descricao = "Conceder desconto de R$ "; // por dia de antecipação
+                    case EnumInstrucoes_Itau.MultaVencimento:
+                        Codigo = 0;
+                        Descricao = $"Após vencimento cobrar multa de R$ {decimal.Round((valor * valorBoleto) / 100m, 2, MidpointRounding.ToEven):F2} ({valor:F2} %).";
                         break;
                     default:
-                        this.Codigo = 0;
-                        this.Descricao = "( Selecione )";
+                        Codigo = 0;
+                        Descricao = descricao;
                         break;
                 }
-
-                this.Dias = nrDias;
             }
             catch (Exception ex)
             {
@@ -121,41 +109,6 @@ namespace BoletoNet
             }
         }
 
-        private void carregar(int idInstrucao, double valor, EnumTipoValor tipoValor = EnumTipoValor.Percentual)
-        {
-            try
-            {
-                this.Banco = new Banco_Itau();
-                this.Valida();
-
-                switch ((EnumInstrucoes_Itau)idInstrucao)
-                {
-                    case EnumInstrucoes_Itau.JurosdeMora:
-                        this.Codigo = (int)EnumInstrucoes_Itau.JurosdeMora;   
-                        this.Descricao = String.Format("Após vencimento cobrar juros de {0} {1} por dia de atraso",
-                            (tipoValor.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2")),
-                            (tipoValor.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2")));
-                        break;
-                    case EnumInstrucoes_Itau.MultaVencimento:
-                        this.Codigo = (int)EnumInstrucoes_Itau.MultaVencimento;
-                        this.Descricao = String.Format("Após vencimento cobrar multa de {0} {1}",
-                            (tipoValor.Equals(EnumTipoValor.Reais) ? "R$ " : valor.ToString("F2")),
-                            (tipoValor.Equals(EnumTipoValor.Percentual) ? "%" : valor.ToString("F2")));
-                        break;
-                }
-            }
-             catch (Exception ex)
-            {
-                throw new Exception("Erro ao carregar objeto", ex);
-            }
-        }
-
-        public override void Valida()
-        {
-            //base.Valida();
-        }
-
         #endregion
-
     }
 }

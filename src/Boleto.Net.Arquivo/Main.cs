@@ -59,58 +59,55 @@ namespace BoletoNet.Arquivo
 
         private void GeraDadosItau(TipoArquivo tipoArquivo)
         {
-            var vencimento = new DateTime(2007, 9, 10);
+            var c = new Cedente("32.694.012/0001-50", "Empresa devedora", "0057", "12345", "8");
 
-            var item1 = new Instrucao_Itau(9, 5);
-            var item2 = new Instrucao_Itau(81, 10);
-            var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0542", "13000");
-            //Na carteira 198 o código do Cedente é a conta bancária
-            c.Codigo = "13000";
-
-            var b = new Boleto(vencimento, 1642, "198", "92082835", c);
-            b.NumeroDocumento = "1008073";
-
-            b.DataVencimento = Convert.ToDateTime("12-12-12");
-
-            b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
-            b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
-            b.Sacado.Endereco.Bairro = "Testando";
-            b.Sacado.Endereco.Cidade = "Testelândia";
-            b.Sacado.Endereco.Cep = "70000000";
-            b.Sacado.Endereco.Uf = "DF";
-
-            item2.Descricao += item2.Dias + " dias corridos do vencimento.";
-            b.Instrucoes.Add(item1);
-            b.Instrucoes.Add(item2);
-            b.Cedente.ContaBancaria.DigitoAgencia = "1";
-            b.Cedente.ContaBancaria.DigitoAgencia = "2";
-
+            //Primeiro boleto.
+            var b = new Boleto(new DateTime(2019, 3, 1), 123.45m, "110", "12345678", "7", c);
+            b.Especie = "01";
+            b.NumeroDocumento = "1108954";
             b.Banco = new Banco(341);
 
-            var boletos = new Boletos();
-            boletos.Add(b);
+            b.Sacado = new Sacado("037.671.213-95", "Fernanda Freitas")
+            {
+                Endereco =
+                {
+                    End = "Av. Independência",
+                    Numero = "1052",
+                    Complemento = "Casa 3",
+                    Bairro = "Centro",
+                    Cidade = "Santa Cruz do Sul",
+                    Cep = "96815326",
+                    Uf = "RS"
+                }
+            };
 
-            var b2 = new Boleto(vencimento, 1642, "198", "92082835", c);
+            b.Instrucoes.Add(new InstrucaoItau((int)EnumInstrucoes_Itau.ProtestarAposNDiasUteis, null, 10));
+
+            //Segundo boleto.
+            var b2 = new Boleto(new DateTime(2019, 4, 1), 1642m, "198", "98712345", "1", c);
+            b2.Especie = "01";
             b2.NumeroDocumento = "1008073";
-
-            b2.DataVencimento = Convert.ToDateTime("12-12-12");
-
-            b2.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
-            b2.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
-            b2.Sacado.Endereco.Bairro = "Testando";
-            b2.Sacado.Endereco.Cidade = "Testelândia";
-            b2.Sacado.Endereco.Cep = "70000000";
-            b2.Sacado.Endereco.Uf = "DF";
-
-            item2.Descricao += item2.Dias + " dias corridos do vencimento.";
-            b2.Instrucoes.Add(item1);
-            b2.Instrucoes.Add(item2);
-            b2.Cedente.ContaBancaria.DigitoAgencia = "1";
-            b2.Cedente.ContaBancaria.DigitoAgencia = "2";
-
             b2.Banco = new Banco(341);
 
-            boletos.Add(b2);
+            b2.Sacado = new Sacado("037.671.213-95", "Fernanda Freitas")
+            {
+                Endereco =
+                {
+                    End = "Av. Independência",
+                    Numero = "1052",
+                    Complemento = "Casa 3",
+                    Bairro = "Centro",
+                    Cidade = "Santa Cruz do Sul",
+                    Cep = "96815326",
+                    Uf = "RS"
+                }
+            };
+
+            b2.Instrucoes.Add(new InstrucaoItau((int)EnumInstrucoes_Itau.JurosdeMora, null, 0, 1.35m, 30));
+            b2.Instrucoes.Add(new InstrucaoItau((int)EnumInstrucoes_Itau.MultaVencimento, null, 0, 1.57m, 30));
+            b2.Instrucoes.Add(new InstrucaoItau((int)EnumInstrucoes_Itau.ProtestarAposNDiasCorridos, null, 10));
+            
+            var boletos = new Boletos { b, b2 };
 
             switch (tipoArquivo)
             {
@@ -336,8 +333,7 @@ namespace BoletoNet.Arquivo
             c.ContaBancaria = conta;
             c.CpfCnpj = "00000000000000";
             c.Nome = "Empresa de Atacado";
-            //Na carteira 198 o código do Cedente é a conta bancária
-            c.Codigo = "12345";//No Banrisul, esse código está no manual como 12 caracteres, por eu(sidneiklein) isso tive que alterar o tipo de int para string;
+            c.Codigo = "12345";
             c.Convenio = 124522;
 
             var b = new Boleto();
@@ -367,8 +363,10 @@ namespace BoletoNet.Arquivo
             b.EspecieDocumento = especiedocumento;
 
             #region Dados para Remessa:
+
             b.Remessa = new Remessa();
             b.Remessa.TipoDocumento = "A"; //A = 'A' - SICREDI com Registro
+
             #endregion
 
             var boletos = new Boletos();
@@ -933,7 +931,7 @@ namespace BoletoNet.Arquivo
 
         private void GeraRetornoMenuItem_Click(object sender, EventArgs e)
         {
-            saveFileDialog.Filter = "Arquivos de Retorno (*.ret)|*.ret|Todos Arquivos (*.*)|*.*";
+            saveFileDialog.Filter = @"Arquivos de Retorno (*.ret)|*.ret|Todos Arquivos (*.*)|*.*";
 
             if (saveFileDialog.ShowDialog() != DialogResult.OK)
                 return;
@@ -950,7 +948,7 @@ namespace BoletoNet.Arquivo
 
             }
 
-            MessageBox.Show("Arquivo gerado com sucesso!", "Teste", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(@"Arquivo gerado com sucesso!", @"Teste", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         #endregion

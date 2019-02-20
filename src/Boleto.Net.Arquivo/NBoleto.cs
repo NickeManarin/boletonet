@@ -109,47 +109,44 @@ namespace BoletoNet.Arquivo
 
         private void GeraBoletoItau(int qtde)
         {
-            // Cria o boleto, e passa os parâmetros usuais
-
             var boletos = new List<BoletoBancario>();
             for (var i = 0; i < qtde; i++)
             {
+                var c = new Cedente("32.694.012/0001-50", "Empresa devedora", "0057", "12345", "8");
+
+                var b2 = new Boleto(new DateTime(2019, 4, 1), 1642m, "198", "98712345", "1", c);
+                b2.Especie = "01";
+                b2.NumeroDocumento = "1008073";
+                b2.Banco = new Banco(341);
+
+                b2.Sacado = new Sacado("037.671.213-95", "Fernanda Freitas")
+                {
+                    Endereco =
+                    {
+                        End = "Av. Independência",
+                        Numero = "1052",
+                        Complemento = "Casa 3",
+                        Bairro = "Centro",
+                        Cidade = "Santa Cruz do Sul",
+                        Cep = "96815326",
+                        Uf = "RS"
+                    }
+                };
+
+                b2.Instrucoes.Add(new InstrucaoItau((int)EnumInstrucoes_Itau.JurosdeMora, null, 0, 1.35m, 30));
+                b2.Instrucoes.Add(new InstrucaoItau((int)EnumInstrucoes_Itau.MultaVencimento, null, 0, 1.57m, 30));
+                b2.Instrucoes.Add(new InstrucaoItau((int)EnumInstrucoes_Itau.ProtestarAposNDiasCorridos, null, 10));
+
+                if (b2.ValorDesconto == 0)
+                {
+                    var item3 = new InstrucaoItau(999, "");
+                    item3.Descricao += ("1,00 por dia de antecipação.");
+                    b2.Instrucoes.Add(item3);
+                }
 
                 var bb = new BoletoBancario();
                 bb.CodigoBanco = _codigoBanco;
-
-                var vencimento = DateTime.Now.AddDays(10);
-
-                var item1 = new Instrucao_Itau(9, 5);
-                var item2 = new Instrucao_Itau(81, 10);
-                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0542", "13000");
-                //Na carteira 198 o código do Cedente é a conta bancária
-                c.Codigo = "13000";
-
-                var b = new Boleto(vencimento, 1642, "198", "92082835", c, new EspecieDocumento(341, "1"));
-                b.NumeroDocumento = Convert.ToString(10000 + i);
-
-                b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
-                b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23";
-                b.Sacado.Endereco.Bairro = "Testando";
-                b.Sacado.Endereco.Cidade = "Testelândia";
-                b.Sacado.Endereco.Cep = "70000000";
-                b.Sacado.Endereco.Uf = "DF";
-
-                item2.Descricao += " " + item2.Dias + " dias corridos do vencimento.";
-                b.Instrucoes.Add(item1);
-                b.Instrucoes.Add(item2);
-
-                // juros/descontos
-
-                if (b.ValorDesconto == 0)
-                {
-                    var item3 = new Instrucao_Itau(999, 1);
-                    item3.Descricao += ("1,00 por dia de antecipação.");
-                    b.Instrucoes.Add(item3);
-                }
-
-                bb.Boleto = b;
+                bb.Boleto = b2;
                 bb.Boleto.Valida();
 
                 boletos.Add(bb);
