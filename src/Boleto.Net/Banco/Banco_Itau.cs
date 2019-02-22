@@ -12,7 +12,7 @@ namespace BoletoNet
     /// <summary>
     /// Classe referente ao banco Itaú
     /// </summary>
-    internal sealed class Banco_Itau : AbstractBanco, IBanco
+    internal sealed class BancoItau : AbstractBanco, IBanco
     {
         #region Variáveis
 
@@ -22,7 +22,7 @@ namespace BoletoNet
 
         #region Construtores
 
-        internal Banco_Itau()
+        internal BancoItau()
         {
             try
             {
@@ -90,7 +90,8 @@ namespace BoletoNet
 
                 //boleto.DigitoNossoNumero = _dacNossoNumero.ToString();
 
-                boleto.LocalPagamento = "Até o vencimento em qualquer banco ou correspondente não bancário. Após o vencimento, acesse itau.com.br/boletos e pague em qualquer banco ou correspondente não bancário.";
+                boleto.LocalPagamento = "Até o vencimento em qualquer banco ou correspondente não bancário. ";
+                //"Após o vencimento, acesse itau.com.br/boletos e pague<br> em qualquer banco ou correspondente não bancário.";
 
                 //Verifica se o nosso número é válido.
                 if (Utils.ToInt64(boleto.NossoNumero) == 0)
@@ -1320,7 +1321,7 @@ namespace BoletoNet
                     case TipoArquivo.Cnab240:
                         throw new Exception("Mensagem Variavel não existe para o tipo CNAB 240.");
                     case TipoArquivo.Cnab400:
-                        detalhe = GerarMensagemVariavelRemessaCnab400(boleto, ref numeroRegistro, tipoArquivo);
+                        //detalhe = GerarMensagemVariavelRemessaCnab400(boleto, ref numeroRegistro, tipoArquivo);
                         break;
                     case TipoArquivo.Outro:
                         throw new Exception("Tipo de arquivo inexistente.");

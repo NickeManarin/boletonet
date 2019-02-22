@@ -89,7 +89,7 @@ namespace BoletoNet
         {
             try
             {
-                this.Banco = new Banco_Itau();
+                this.Banco = new BancoItau();
 
                 var movimento = (EnumCodigoMovimento_Itau)codigo;
                 Codigo = codigo;

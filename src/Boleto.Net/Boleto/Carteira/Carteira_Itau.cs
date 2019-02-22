@@ -76,7 +76,7 @@ namespace BoletoNet
         {
             try
             {
-                this.Banco = new Banco_Itau();
+                this.Banco = new BancoItau();
 
                 switch ((EnumCarteiras_Itau)carteira)
                 {

@@ -50,7 +50,7 @@ namespace BoletoNet
         {
             try
             {
-                Banco = new Banco_Itau();
+                Banco = new BancoItau();
 
                 Codigo = cod;
                 Descricao = descricao;

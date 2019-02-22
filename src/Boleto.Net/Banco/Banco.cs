@@ -63,7 +63,7 @@ namespace BoletoNet
                         break;
                     //341 - Itaú
                     case 341:
-                        _iBanco = new Banco_Itau();
+                        _iBanco = new BancoItau();
                         break;
                     //356 - Real
                     case 275:

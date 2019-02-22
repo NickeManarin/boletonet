@@ -71,15 +71,16 @@ namespace BoletoNet
         {
             switch (codigo)
             {
-                case "1":return EnumEspecieDocumento_Itau.DuplicataMercantil;
-                case "2":return EnumEspecieDocumento_Itau.NotaPromissoria;
-                case "3":return EnumEspecieDocumento_Itau.NotaSeguro;
-                case "4":return EnumEspecieDocumento_Itau.MensalidadeEscolar;
-                case "5":return EnumEspecieDocumento_Itau.Recibo;
-                case "6":return EnumEspecieDocumento_Itau.Contrato;
-                case "7":return EnumEspecieDocumento_Itau.Cosseguros;
-                case "8":return EnumEspecieDocumento_Itau.DuplicataServico;
-                case "9":return EnumEspecieDocumento_Itau.LetraCambio;
+                case "1":
+                case "01":return EnumEspecieDocumento_Itau.DuplicataMercantil;
+                case "02":return EnumEspecieDocumento_Itau.NotaPromissoria;
+                case "03":return EnumEspecieDocumento_Itau.NotaSeguro;
+                case "04":return EnumEspecieDocumento_Itau.MensalidadeEscolar;
+                case "05":return EnumEspecieDocumento_Itau.Recibo;
+                case "06":return EnumEspecieDocumento_Itau.Contrato;
+                case "07":return EnumEspecieDocumento_Itau.Cosseguros;
+                case "08":return EnumEspecieDocumento_Itau.DuplicataServico;
+                case "09":return EnumEspecieDocumento_Itau.LetraCambio;
                 case "13":return EnumEspecieDocumento_Itau.NotaDebito;
                 case "15":return EnumEspecieDocumento_Itau.DocumentoDivida;
                 case "16":return EnumEspecieDocumento_Itau.EncargosCondominais;
@@ -92,7 +93,7 @@ namespace BoletoNet
         {
             try
             {
-                Banco = new Banco_Itau();
+                Banco = new BancoItau();
                 var ed = new EspecieDocumento_Itau();
 
                 switch (GetEnumEspecieByCodigo(idCodigo))
