@@ -10,7 +10,7 @@ namespace BoletoNet
     /// <summary>
     /// Classe referente ao banco Banco_Caixa Economica Federal
     /// </summary>
-    internal sealed class Banco_Caixa : AbstractBanco, IBanco
+    internal sealed class BancoCaixa : AbstractBanco, IBanco
     {
         /* 
          * Para Cnab 240.
@@ -30,7 +30,7 @@ namespace BoletoNet
         private int _diasDevolucao;
         private int _diasDesconto;
 
-        internal Banco_Caixa()
+        internal BancoCaixa()
         {
             Codigo = 104;
             Digito = "0";
@@ -39,283 +39,63 @@ namespace BoletoNet
 
         public override void FormataCodigoBarra(Boleto boleto)
         {
-            // Posição 01-03
-            var banco = Codigo.ToString();
+            var valor = Utils.FormatCode(boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", ""), 10);
+            var vencimento = FatorVencimento(boleto);
+            var cedente = Utils.FormatCode(boleto.Cedente.Codigo, 6);
+            var dvCedente = Mod11Base9(cedente).ToString();
+            var num1 = boleto.NossoNumero.Substring(2, 3);
+            const string const1 = "1"; //1 = Registrada.
+            var num2 = boleto.NossoNumero.Substring(5, 3);
+            const string const2 = "4"; //4 = Emissão do boleto pelo cedente.
+            var num3 = boleto.NossoNumero.Substring(8, 9);
 
-            //Posição 04
-            var moeda = "9";
+            var part1 = $"1049_{vencimento}{valor}"; //Posições 01 à 19.
+            var part2 = $"{cedente}{dvCedente}{num1}{const1}{num2}{const2}{num3}"; //Posições 20 à 44.
+            part2 = $"{part2}{Mod11Base9(part2)}";
+            
+            _dacBoleto = Mod11(part1.Replace("_", "") + part2, 9).ToString(); //Não aceita zero, troca para 1.
 
-            //Posição 05 - No final ...   
-
-            // Posição 06 - 09
-            var fatorVencimento = FatorVencimento(boleto);
-
-            // Posição 10 - 19     
-            var valorDocumento = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "");
-            valorDocumento = Utils.FormatCode(valorDocumento, 10);
-
-            // Inicio Campo livre
-            var campoLivre = string.Empty;
-
-            //ESSA IMPLEMENTAÇÃO FOI FEITA PARA CARTEIAS SIGCB "SR" COM NOSSO NUMERO DE 14 e 17 POSIÇÕES
-            if (boleto.Carteira.Equals("SR") || boleto.Carteira.Equals("RG") || boleto.Carteira.Equals("1") || boleto.Carteira.Equals("01"))
-            {
-                //14 POSIÇOES
-                if (boleto.NossoNumero.Length == 14)
-                {
-                    //Posição 20 - 24
-                    var contaCedente = Utils.FormatCode(boleto.Cedente.ContaBancaria.Conta, 5);
-
-                    // Posição 25 - 28
-                    var agenciaCedente = Utils.FormatCode(boleto.Cedente.ContaBancaria.Agencia, 4);
-
-                    //Posição 29
-                    var codigoCarteira = "8";
-
-                    //Posição 30
-                    var constante = "7";
-
-                    //Posição 31 - 44
-                    var nossoNumero = boleto.NossoNumero;
-
-                    campoLivre = string.Format("{0}{1}{2}{3}{4}", contaCedente, agenciaCedente, codigoCarteira, constante, nossoNumero);
-                }
-
-                //17 POSIÇÕES
-                if (boleto.NossoNumero.Length == 17)
-                {
-                    //104 - Caixa Econômica Federal S.A. 
-                    //Carteira SR - 24 (cobrança sem registro) || Carteira RG - 14 (cobrança com registro)
-                    //Cobrança sem registro, nosso número com 17 dígitos. 
-
-                    //Posição 20 - 25
-                    var codigoCedente = Utils.FormatCode(boleto.Cedente.Codigo, 6);
-
-                    // Posição 26
-                    var dvCodigoCedente = Mod11Base9(codigoCedente).ToString();
-
-                    //Posição 27 - 29
-                    //De acordo com documentação, posição 3 a 5 do nosso numero
-                    var primeiraParteNossoNumero = boleto.NossoNumero.Substring(2, 3);
-
-                    //Posição 30
-                    string primeiraConstante;
-                    switch (boleto.Carteira)
-                    {
-                        case "SR":
-                            primeiraConstante = "2";
-                            break;
-                        case "RG":
-                            primeiraConstante = "1";
-                            break;
-                        default:
-                            primeiraConstante = boleto.Carteira;
-                            break;
-                    }
-
-                    // Posição 31 - 33
-                    //DE acordo com documentação, posição 6 a 8 do nosso numero
-                    var segundaParteNossoNumero = boleto.NossoNumero.Substring(5, 3);
-
-                    // Posição 34
-                    var segundaConstante = "4";// 4 => emissão do boleto pelo cedente
-
-                    //Posição 35 - 43
-                    //De acordo com documentaçao, posição 9 a 17 do nosso numero
-                    var terceiraParteNossoNumero = boleto.NossoNumero.Substring(8, 9);
-
-                    //Posição 44
-                    var ccc = string.Format("{0}{1}{2}{3}{4}{5}{6}",
-                                               codigoCedente,
-                                               dvCodigoCedente,
-                                               primeiraParteNossoNumero,
-                                               primeiraConstante,
-                                               segundaParteNossoNumero,
-                                               segundaConstante,
-                                               terceiraParteNossoNumero);
-                    var dvCampoLivre = Mod11Base9(ccc).ToString();
-                    campoLivre = string.Format("{0}{1}", ccc, dvCampoLivre);
-                }
-            }
-            else
-            {
-                //Posição 20 - 25
-                var codigoCedente = Utils.FormatCode(boleto.Cedente.Codigo, 6);
-
-                // Posição 26
-                var dvCodigoCedente = Mod11Base9(codigoCedente).ToString();
-
-                //Posição 27 - 29
-                var primeiraParteNossoNumero = boleto.NossoNumero.Substring(0, 3);
-
-                //104 - Caixa Econômica Federal S.A. 
-                //Carteira 01. 
-                //Cobrança rápida. 
-                //Cobrança sem registro. 
-                //Cobrança sem registro, nosso número com 16 dígitos. 
-                //Cobrança simples 
-
-                //Posição 30
-                var primeiraConstante = boleto.Carteira == "SR" ? "2" : boleto.Carteira;
-
-                // Posição 31 - 33
-                var segundaParteNossoNumero = boleto.NossoNumero.Substring(0, 3); //(3, 3);
-
-                // Posição 24
-                var segundaConstante = EmissaoCedente.ToString();
-
-                //Posição 35 - 43
-                var terceiraParteNossoNumero = boleto.NossoNumero.Substring(3, 7) + segundaConstante +
-                                                  segundaConstante; //(6, 9);
-
-                //Posição 44
-                var ccc = string.Format("{0}{1}{2}{3}{4}{5}{6}", codigoCedente, dvCodigoCedente,
-                                           primeiraParteNossoNumero,
-                                           primeiraConstante, segundaParteNossoNumero, segundaConstante,
-                                           terceiraParteNossoNumero);
-
-                var dvCampoLivre = Mod11Base9(ccc).ToString();
-
-                campoLivre = string.Format("{0}{1}", ccc, dvCampoLivre);
-            }
-
-            var xxxx = string.Format("{0}{1}{2}{3}{4}", banco, moeda, fatorVencimento, valorDocumento, campoLivre);
-
-            var dvGeral = Mod11(xxxx, 9).ToString();
-            // Posição 5
-            _dacBoleto = dvGeral;
-
-            boleto.CodigoBarra.Codigo = string.Format("{0}{1}{2}{3}{4}{5}", banco, moeda, dvGeral, fatorVencimento, valorDocumento, campoLivre);
+            boleto.CodigoBarra.Codigo = part1.Replace("_", _dacBoleto) + part2;
         }
 
         public override void FormataLinhaDigitavel(Boleto boleto)
         {
-            string grupo1;
-            string grupo2;
-            string grupo3;
-            string grupo4;
-            string grupo5;
+            #region Campo 1
 
-            if (boleto.NossoNumero.Length == 17)
-            {
-                #region Campo 1
+            var bbbm = boleto.CodigoBarra.Codigo.Substring(0, 4); //Posição 1 à 4 do código de barras.
+            var ccccc = boleto.CodigoBarra.Codigo.Substring(19, 5); //Posição 20 à 24 do código de barras.
+            var str3 = Mod10(bbbm + ccccc).ToString();
 
-                //POSIÇÃO 1 A 4 DO CODIGO DE BARRAS
-                var str1 = boleto.CodigoBarra.Codigo.Substring(0, 4);
-                //POSICAO 20 A 24 DO CODIGO DE BARRAS
-                var str2 = boleto.CodigoBarra.Codigo.Substring(19, 5);
-                //CALCULO DO DIGITO
-                var str3 = Mod10(str1 + str2).ToString();
+            var grupo1 = bbbm + ccccc + str3;
+            grupo1 = $"{grupo1.Substring(0, 5)}.{grupo1.Substring(5)} ";
 
-                grupo1 = str1 + str2 + str3;
-                grupo1 = grupo1.Substring(0, 5) + "." + grupo1.Substring(5) + " ";
+            #endregion
 
-                #endregion Campo 1
+            #region Campo 2
 
-                #region Campo 2
+            var cccccccccc = boleto.CodigoBarra.Codigo.Substring(24, 10); //Posição 25 à 34 do código de barras.
 
-                //POSIÇÃO 25 A 34 DO COD DE BARRAS
-                str1 = boleto.CodigoBarra.Codigo.Substring(24, 10);
-                //DIGITO
-                str2 = Mod10(str1).ToString();
+            var grupo2 = $"{cccccccccc.Substring(0, 5)}.{cccccccccc.Substring(5, 5)}{Mod10(cccccccccc)} ";
 
-                grupo2 = string.Format("{0}.{1}{2} ", str1.Substring(0, 5), str1.Substring(5, 5), str2);
+            #endregion
 
-                #endregion Campo 2
+            #region Campo 3
 
-                #region Campo 3
+            cccccccccc = boleto.CodigoBarra.Codigo.Substring(34, 10); //Posição 35 à 44 do código de barras.
 
-                //POSIÇÃO 35 A 44 DO CODIGO DE BARRAS
-                str1 = boleto.CodigoBarra.Codigo.Substring(34, 10);
-                //DIGITO
-                str2 = Mod10(str1).ToString();
+            var grupo3 = $"{cccccccccc.Substring(0, 5)}.{cccccccccc.Substring(5, 5)}{Mod10(cccccccccc)} ";
 
-                grupo3 = string.Format("{0}.{1}{2} ", str1.Substring(0, 5), str1.Substring(5, 5), str2);
+            #endregion
 
-                #endregion Campo 3
+            #region Campo 5
 
-                #region Campo 4
+            var ffff = boleto.CodigoBarra.Codigo.Substring(5, 4); //Posição 6 à 9 do código de barras.
+            var vvvvvvvvvv = boleto.CodigoBarra.Codigo.Substring(9, 10); //Posição 10 à 19 do código de barras.
+            var grupo5 = $"{ffff}{vvvvvvvvvv}";
 
-                var D4 = _dacBoleto;
+            #endregion
 
-                grupo4 = string.Format("{0} ", D4);
-
-                #endregion Campo 4
-
-                #region Campo 5
-
-                //POSICAO 6 A 9 DO CODIGO DE BARRAS
-                str1 = boleto.CodigoBarra.Codigo.Substring(5, 4);
-
-                //POSICAO 10 A 19 DO CODIGO DE BARRAS
-                str2 = boleto.CodigoBarra.Codigo.Substring(9, 10);
-
-                grupo5 = string.Format("{0}{1}", str1, str2);
-
-                #endregion Campo 5
-            }
-            else
-            {
-                #region Campo 1
-
-                var BBB = boleto.CodigoBarra.Codigo.Substring(0, 3);
-                var M = boleto.CodigoBarra.Codigo.Substring(3, 1);
-                var CCCCC = boleto.CodigoBarra.Codigo.Substring(19, 5);
-                var D1 = Mod10(BBB + M + CCCCC).ToString();
-
-                grupo1 = string.Format("{0}{1}{2}.{3}{4} ",
-                    BBB,
-                    M,
-                    CCCCC.Substring(0, 1),
-                    CCCCC.Substring(1, 4), D1);
-
-
-                #endregion Campo 1
-
-                #region Campo 2
-
-                var CCCCCCCCCC2 = boleto.CodigoBarra.Codigo.Substring(24, 10);
-                var D2 = Mod10(CCCCCCCCCC2).ToString();
-
-                grupo2 = string.Format("{0}.{1}{2} ", CCCCCCCCCC2.Substring(0, 5), CCCCCCCCCC2.Substring(5, 5), D2);
-
-                #endregion Campo 2
-
-                #region Campo 3
-
-                var CCCCCCCCCC3 = boleto.CodigoBarra.Codigo.Substring(34, 10);
-                var D3 = Mod10(CCCCCCCCCC3).ToString();
-
-                grupo3 = string.Format("{0}.{1}{2} ", CCCCCCCCCC3.Substring(0, 5), CCCCCCCCCC3.Substring(5, 5), D3);
-
-
-                #endregion Campo 3
-
-                #region Campo 4
-
-                var D4 = _dacBoleto;
-
-                grupo4 = string.Format(" {0} ", D4);
-
-                #endregion Campo 4
-
-                #region Campo 5
-
-                var FFFF = FatorVencimento(boleto);
-
-                var VVVVVVVVVV = boleto.ValorBoleto.ToString("f").Replace(",", "").Replace(".", "");
-                VVVVVVVVVV = Utils.FormatCode(VVVVVVVVVV, 10);
-
-                if (Utils.ToInt64(VVVVVVVVVV) == 0)
-                    VVVVVVVVVV = "000";
-
-                grupo5 = string.Format("{0}{1}", FFFF, VVVVVVVVVV);
-
-                #endregion Campo 5
-            }
-
-            //MONTA OS DADOS DA LINHA DIGITÁVEL DE ACORDO COM OS DADOS OBTIDOS ACIMA
-            boleto.CodigoBarra.LinhaDigitavel = grupo1 + grupo2 + grupo3 + grupo4 + grupo5;
+            boleto.CodigoBarra.LinhaDigitavel = $"{grupo1}{grupo2}{grupo3}{_dacBoleto} {grupo5}";
         }
 
         public override void FormataNossoNumero(Boleto boleto)
@@ -323,10 +103,11 @@ namespace BoletoNet
             if (boleto.Carteira.Equals("SR"))
             {
                 if (boleto.NossoNumero.Length == 14)
-                {
                     boleto.NossoNumero = "8" + boleto.NossoNumero;
-                }
             }
+
+            //É utilizado apenas na impressão.
+            boleto.DigitoNossoNumero = Mod11Base9(boleto.NossoNumero).ToString();
 
             //boleto.NossoNumero = string.Format("{0}-{1}", boleto.NossoNumero, Mod11Base9(boleto.NossoNumero)); //
             //boleto.NossoNumero = string.Format("{0}{1}/{2}-{3}", boleto.Carteira, EMISSAO_CEDENTE, boleto.NossoNumero, Mod11Base9(boleto.Carteira + EMISSAO_CEDENTE + boleto.NossoNumero));
@@ -337,45 +118,8 @@ namespace BoletoNet
 
         public override void ValidaBoleto(Boleto boleto)
         {
-            if (boleto.Carteira.Equals("2") || boleto.Carteira.Equals("02") || boleto.Carteira.Equals("SR"))
-            {
-                if ((boleto.NossoNumero.Length != 10) && (boleto.NossoNumero.Length != 14) && (boleto.NossoNumero.Length != 17))
-                {
-                    throw new Exception("Nosso Número inválido, Para Caixa Econômica - Carteira SR o Nosso Número deve conter 10, 14 ou 17 posições.");
-                }
-            }
-            else if (boleto.Carteira.Equals("1") || boleto.Carteira.Equals("01") || boleto.Carteira.Equals("RG"))
-            {
-                if (boleto.NossoNumero.Length != 17)
-                    throw new Exception("Nosso número inválido. Para Caixa Econômica - SIGCB carteira rápida, o nosso número deve conter 17 caracteres.");
-            }
-            else if (boleto.Carteira.Equals("CS"))
-            {
-                foreach (var ch in boleto.NossoNumero)
-                {
-                    if (!ch.Equals('0'))
-                        throw new Exception("Nosso Número inválido, Para Caixa Econômica - SIGCB carteira simples, o Nosso Número deve estar zerado.");
-                }
-            }
-            else
-            {
-                if (Convert.ToInt64(boleto.NossoNumero).ToString().Length < 10)
-                    boleto.NossoNumero = Utils.FormatCode(boleto.NossoNumero, 10);
-
-                if (boleto.NossoNumero.Length != 10)
-                    throw new Exception("Nosso Número inválido, Para Caixa Econômica carteira indefinida, o Nosso Número deve conter 10 caracteres.");
-
-                if (!boleto.Cedente.Codigo.Equals(0))
-                {
-                    var codigoCedente = Utils.FormatCode(boleto.Cedente.Codigo, 6);
-                    var dvCodigoCedente = Mod10(codigoCedente).ToString(); //Base9 
-
-                    if (boleto.Cedente.DigitoCedente.Equals(-1))
-                        boleto.Cedente.DigitoCedente = Convert.ToInt32(dvCodigoCedente);
-                }
-                else
-                    throw new Exception("Informe o código do cedente.");
-            }
+            if (boleto.NossoNumero.Length != 17)
+                throw new Exception("Nosso número inválido. Para Caixa Econômica - SIGCB carteira rápida, o nosso número deve conter 17 caracteres.");
 
             if (boleto.Cedente.DigitoCedente == -1)
                 boleto.Cedente.DigitoCedente = Mod11Base9(boleto.Cedente.Codigo);
@@ -386,7 +130,7 @@ namespace BoletoNet
             if (boleto.Cedente.Codigo.Length > 6)
                 throw new Exception("O código do cedente deve conter apenas 6 dígitos");
 
-            boleto.LocalPagamento = "Pagável em qualquer agência bancária até a data de vencimento.";
+            boleto.LocalPagamento = "PREFERENCIALMENTE NAS CASAS LOTÉRICAS ATÉ O VALOR LIMITE.";
 
             if (!boleto.Carteira.Equals("CS"))
             {
@@ -394,6 +138,10 @@ namespace BoletoNet
                 FormataLinhaDigitavel(boleto);
                 FormataNossoNumero(boleto);
             }
+
+            boleto.MensagemSac = "SAC CAIXA: 0800 726 0101 (informações, reclamações, sugestões e elogios).<br>" +
+                                 "Para pessoas com deficiência auditiva ou de fala: 0800 726 2492.<br>" +
+                                 "Ouvidoria: 0800 725 7474. caixa.gov.br.";
         }
 
         #region Métodos de geração do arquivo remessa
@@ -944,21 +692,21 @@ namespace BoletoNet
         {
             try
             {
-                var header = Utils.FormatCode(Codigo.ToString(), "0", 3, true);                      // código do banco na compensação
-                header += "0001";                                                                       // Lote de Serviço
-                header += "3";                                                                          // Tipo de Registro 
-                header += Utils.FormatCode(numeroRegistroDetalhe.ToString(), "0", 5);                   // Nº Sequencial do Registro no Lote 
-                header += "R";                                                                          // Cód. Segmento do Registro Detalhe
-                header += " ";                                                                          // Uso Exclusivo FEBRABAN/CNAB
-                header += "01";                                                                         // Código de Movimento Remessa
-                header += Utils.FormatCode("", " ", 48);                                                // Uso Exclusivo FEBRABAN/CNAB 
-                header += "1";                                          // Código da Multa '1' = Valor Fixo,'2' = Percentual,'0' = Sem Multa 
-                header += boleto.DataMulta.ToString("ddMMyyyy");                                        // Data da Multa 
-                header += Utils.FormatCode(boleto.ValorMulta.ToString().Replace(",", "").Replace(".", ""), "0", 13); // Valor/Percentual a Ser Aplicado
-                header += Utils.FormatCode("", " ", 10);                                                // Informação ao Sacado
-                header += Utils.FormatCode("", " ", 40);                                                // Mensagem 3
-                header += Utils.FormatCode("", " ", 40);                                                // Mensagem 4
-                header += Utils.FormatCode("", " ", 61);                                                // Uso Exclusivo FEBRABAN/CNAB 
+                var header = Utils.FormatCode(Codigo.ToString(), "0", 3, true);                         //Código do banco na compensação.
+                header += "0001";                                                                       //Lote de Serviço.
+                header += "3";                                                                          //Tipo de Registro.
+                header += Utils.FormatCode(numeroRegistroDetalhe.ToString(), "0", 5);                   //Nº Sequencial do Registro no Lote.
+                header += "R";                                                                          //Cód. Segmento do Registro Detalhe.
+                header += " ";                                                                          //Uso Exclusivo FEBRABAN/CNAB.
+                header += "01";                                                                         //Código de Movimento Remessa.
+                header += Utils.FormatCode("", " ", 48);                                                //Uso Exclusivo FEBRABAN/CNAB.
+                header += "1";                                                                          //Código da Multa '1' = Valor Fixo,'2' = Percentual,'0' = Sem Multa.
+                header += boleto.DataMulta.ToString("ddMMyyyy");                                        //Data da Multa.
+                header += Utils.FormatCode(boleto.ValorMulta.ToString().Replace(",", "").Replace(".", ""), "0", 13); //Valor/Percentual a Ser Aplicado.
+                header += Utils.FormatCode("", " ", 10);                                                //Informação ao Sacado.
+                header += Utils.FormatCode("", " ", 40);                                                //Mensagem 3.
+                header += Utils.FormatCode("", " ", 40);                                                //Mensagem 4.
+                header += Utils.FormatCode("", " ", 61);                                                //Uso Exclusivo FEBRABAN/CNAB.
 
                 return header;
             }
@@ -1621,7 +1369,7 @@ namespace BoletoNet
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0010, 002, 0, "01", ' '));                          //010-011
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0012, 015, 0, "COBRANCA", ' '));                    //012-026
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0027, 004, 0, cedente.ContaBancaria.Agencia, ' ')); //027-030
-                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0031, 006, 0, cedente.Codigo, ' '));                //031-036
+                reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0031, 006, 0, cedente.Codigo, ' '));                //031-036 TODO
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0037, 010, 0, string.Empty, ' '));                  //037-046
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0047, 030, 0, cedente.Nome.ToUpper(), ' '));        //047-076
                 reg.CamposEdi.Add(new CampoEdi(Dado.AlphaAliEsquerda_____, 0077, 003, 0, "104", ' '));                         //077-079

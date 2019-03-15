@@ -602,21 +602,20 @@ namespace BoletoNet
              */
 
             int d, s = 0, p = 2;
-
-
-            for (int i = seq.Length; i > 0; i--)
+            
+            for (var i = seq.Length; i > 0; i--)
             {
-                s = s + (Convert.ToInt32(seq.Mid( i, 1)) * p);
+                s = s + Convert.ToInt32(seq.Mid( i, 1)) * p;
+
                 if (p == b)
                     p = 2;
                 else
                     p = p + 1;
             }
 
-            d = 11 - (s % 11);
-
-
-            if ((d > 9) || (d == 0) || (d == 1))
+            d = 11 - s % 11;
+            
+            if (d > 9 || d == 0 || d == 1)
                 d = 1;
 
             return d;
@@ -634,12 +633,12 @@ namespace BoletoNet
              */
 
             int d, s = 0, p = 2, b = 9;
-
-
-            for (int i = seq.Length - 1; i >= 0; i--)
+            
+            for (var i = seq.Length - 1; i >= 0; i--)
             {
-                string aux = Convert.ToString(seq[i]);
-                s += (Convert.ToInt32(aux) * p);
+                var aux = Convert.ToString(seq[i]);
+                s += Convert.ToInt32(aux) * p;
+
                 if (p >= b)
                     p = 2;
                 else
@@ -651,35 +650,32 @@ namespace BoletoNet
                 d = 11 - s;
                 return d;
             }
-            else
-            {
-                d = 11 - (s % 11);
-                if ((d > 9) || (d == 0))
-                    d = 0;
 
-                return d;
-            }
+            d = 11 - s % 11;
+
+            if (d > 9 || d == 0)
+                d = 0;
+
+            return d;
         }
 
         public static int Mod11(string seq, int lim, int flag)
         {
-            int mult = 0;
-            int total = 0;
-            int pos = 1;
+            var mult = 0;
+            var total = 0;
+            var pos = 1;
             //int res = 0;
-            int ndig = 0;
-            int nresto = 0;
-            string num = string.Empty;
+            var ndig = 0;
+            var nresto = 0;
 
             mult = 1 + (seq.Length % (lim - 1));
 
             if (mult == 1)
                 mult = lim;
-
-
+            
             while (pos <= seq.Length)
             {
-                num = seq.Mid( pos, 1);
+                var num = seq.Mid( pos, 1);
                 total += Convert.ToInt32(num) * mult;
 
                 mult -= 1;
@@ -688,18 +684,17 @@ namespace BoletoNet
 
                 pos += 1;
             }
+
             nresto = (total % 11);
+
             if (flag == 1)
                 return nresto;
+            if (nresto == 0 || nresto == 1 || nresto == 10)
+                ndig = 1;
             else
-            {
-                if (nresto == 0 || nresto == 1 || nresto == 10)
-                    ndig = 1;
-                else
-                    ndig = (11 - nresto);
+                ndig = (11 - nresto);
 
-                return ndig;
-            }
+            return ndig;
         }
 
         protected static int Mult10Mod11(string seq, int lim, int flag)

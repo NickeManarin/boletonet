@@ -59,7 +59,7 @@ namespace BoletoNet
                 {
                     //104 - Caixa
                     case 104:
-                        _iBanco = new Banco_Caixa();
+                        _iBanco = new BancoCaixa();
                         break;
                     //341 - Itaú
                     case 341:

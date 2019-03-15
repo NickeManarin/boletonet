@@ -79,7 +79,7 @@ namespace BoletoNet
         {
             try
             {
-                Banco = new Banco_Caixa();
+                Banco = new BancoCaixa();
 
                 switch (GetEnumEspecieByCodigo(idCodigo))
                 {

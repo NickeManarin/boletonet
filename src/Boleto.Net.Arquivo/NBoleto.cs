@@ -60,45 +60,65 @@ namespace BoletoNet.Arquivo
 
             for (var i = 0; i < qtde; i++)
             {
+                var conta = new ContaBancaria { Agencia = "0500", DigitoAgencia = "02", Conta = "005507" };
 
-                var bb = new BoletoBancario
+                var c = new Cedente
                 {
-                    CodigoBanco = _codigoBanco,
-                    MostrarEnderecoCedente = true
+                    ContaBancaria = conta,
+                    CpfCnpj = "00.000.000/0000-00",
+                    Nome = "Empresa de Atacado",
+                    Codigo = "005507",
+                    Endereco = new Endereco
+                    {
+                        End = "Av. Independencia",
+                        Complemento = "Casa 4",
+                        Bairro = "Centro",
+                        Cidade = "Torres",
+                        Uf = "RS",
+                        Cep = "96815-236"
+                    }
                 };
-                var vencimento = DateTime.Now.AddDays(10);
 
-                var c = new Cedente("00.000.000/0000-00", "Empresa de Atacado", "0132", "00542");
+                var b = new Boleto
+                {
+                    Cedente = c,
+                    DataProcessamento = DateTime.Now,
+                    DataVencimento = DateTime.Now.AddDays(15),
+                    ValorBoleto = 2469.69m,
+                    Carteira = "01",
+                    NossoNumero = "14222333777777777", //"14000000000000001",
+                    NumeroDocumento = "1008073",
+                    EspecieDocumento = new EspecieDocumento(104),
 
-                var b = new Boleto(vencimento, 460, "SR", "00000000010001", c);
-                var endCed = new Endereco();
+                    Sacado = new Sacado("Fulano de Silva")
+                    {
+                        CpfCnpj = "000.000.000-00",
+                        Endereco =
+                        {
+                            End = "SSS 154 Bloco J Casa 23",
+                            Bairro = "Testando",
+                            Cidade = "Testelândia",
+                            Cep = "70000000",
+                            Uf = "RS"
+                        }
+                    }
+                };
 
-                endCed.End = "Rua Testando o Boleto";
-                endCed.Bairro = "BairroTest";
-                endCed.Cidade = "CidadeTes";
-                endCed.Cep = "70000000";
-                endCed.Uf = "MG";
-                b.Cedente.Endereco = endCed;
-
-                b.NumeroDocumento = Convert.ToString(1000 + i);
-
-                b.Sacado = new Sacado("000.000.000-00", "Fulano de Silva");
-                b.Sacado.Endereco.End = "SSS 154 Bloco J Casa 23ddddddddddddddddddddddddddd";
-                b.Sacado.Endereco.Bairro = "Testando";
-                b.Sacado.Endereco.Cidade = "Testelândia";
-                b.Sacado.Endereco.Cep = "70000000";
-                b.Sacado.Endereco.Uf = "DF";
-
-                //juros/descontos
+                //Juros/descontos.
                 if (b.ValorDesconto == 0)
                 {
                     var item3 = new Instrucao_Caixa(999, null, 1);
                     b.Instrucoes.Add(item3);
                 }
 
-                b.Instrucoes.Add(new Instrucao(104, 998, null, 0, 8.5m, 10));
+                b.Instrucoes.Add(new Instrucao_Caixa(998, null, 0, 8.5m, 10));
 
-                bb.Boleto = b;
+                var bb = new BoletoBancario
+                {
+                    CodigoBanco = _codigoBanco,
+                    MostrarEnderecoCedente = true,
+                    Boleto = b
+                };
                 bb.Boleto.Valida();
 
                 boletos.Add(bb);
@@ -905,7 +925,7 @@ namespace BoletoNet.Arquivo
         private void BtEnviar_Click(object sender, EventArgs e)
         {
             if ((int)numericUpDown.Value > 1)
-                MessageBox.Show(@"O exemplo de envio do boleto bancário como imagem só está implementado para somente um boleto por vez.", 
+                MessageBox.Show(@"O exemplo de envio do boleto bancário como imagem só está implementado para somente um boleto por vez.",
                     @"Informação", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             var backgroundWorker = new BackgroundWorker();

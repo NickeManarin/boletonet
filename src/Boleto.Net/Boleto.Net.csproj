@@ -133,7 +133,7 @@
     <Compile Include="Banco\Banco_Banrisul.cs" />
     <Compile Include="Banco\Banco_Basa.cs" />
     <Compile Include="Banco\Banco_BRB.cs" />
-    <Compile Include="Banco\Banco_Caixa.cs" />
+    <Compile Include="Banco\BancoCaixa.cs" />
     <Compile Include="Banco\Banco.cs" />
     <Compile Include="Banco\Banco_Brasil.cs" />
     <Compile Include="Banco\Banco_BankBoston.cs" />

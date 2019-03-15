@@ -289,10 +289,10 @@ namespace BoletoNet
                 //Limpa as intruções para o Sacado
                 _instrucoesHtml = "";
 
-                MontaInstrucoes(Boleto.Instrucoes);
+                MontaInstrucoes(Boleto.Instrucoes, Boleto.MensagemSac);
 
                 if (Boleto.Sacado.Instrucoes.Count > 0)
-                    MontaInstrucoes(Boleto.Sacado.Instrucoes);
+                    MontaInstrucoes(Boleto.Sacado.Instrucoes, null);
 
                 return html.ToString().Replace("@INSTRUCOES", _instrucoesHtml);
             }
@@ -362,7 +362,7 @@ namespace BoletoNet
             }
         }
 
-        private void MontaInstrucoes(IList<IInstrucao> instrucoes)
+        private void MontaInstrucoes(IList<IInstrucao> instrucoes, string sac = null)
         {
             if (!string.IsNullOrEmpty(_instrucoesHtml))
                 _instrucoesHtml = string.Concat(_instrucoesHtml, "<br />");
@@ -388,6 +388,9 @@ namespace BoletoNet
             }
 
             _instrucoesHtml = Strings.Left(_instrucoesHtml, _instrucoesHtml.Length - 6);
+
+            if (!string.IsNullOrWhiteSpace(sac))
+                _instrucoesHtml += "<br><br>" + sac;
         }
 
         private string MontaHtml(string urlImagemLogo, string urlImagemBarra, string imagemCodigoBarras)
@@ -556,6 +559,9 @@ namespace BoletoNet
                     case 41: //Banrisul.
                         //Removido o dígito verificador do Banrisul. .{Cedente.ContaBancaria.DigitoAgencia}
                         agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}/{Cedente.Codigo}.{Cedente.DigitoCedente}";
+                        break;
+                    case 104: //Caixa.
+                        agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}/{Utils.FormatCode(Cedente.Codigo, 6)}-{Cedente.DigitoCedente}";
                         break;
                     default:
                         agenciaCodigoCedente = $"{Cedente.ContaBancaria.Agencia}-{Cedente.ContaBancaria.DigitoAgencia}/{Utils.FormatCode(Cedente.Codigo, 6)}-{Cedente.DigitoCedente}";

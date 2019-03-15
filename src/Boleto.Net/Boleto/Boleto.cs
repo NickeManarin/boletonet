@@ -222,6 +222,11 @@ namespace BoletoNet
         /// </summary>
         public string LocalPagamento { get; set; } = "Até o vencimento, preferencialmente no ";
 
+        /// <summary>
+        /// Mensagem do SAC.
+        /// </summary>
+        public string MensagemSac { get; set; }
+
         /// <summary> 
         /// Retorna a quantidade da moeda.
         /// </summary>

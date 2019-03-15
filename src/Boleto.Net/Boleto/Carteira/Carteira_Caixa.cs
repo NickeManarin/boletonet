@@ -53,7 +53,7 @@ namespace BoletoNet
         {
             try
             {
-                this.Banco = new Banco_Caixa();
+                this.Banco = new BancoCaixa();
 
                 switch ((EnumCarteiras_Caixa)carteira)
                 {
