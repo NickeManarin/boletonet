@@ -66,6 +66,7 @@ namespace BoletoNet.Arquivo
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radioButtonCNAB240 = new System.Windows.Forms.RadioButton();
             this.radioButtonCNAB400 = new System.Windows.Forms.RadioButton();
+            this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
             this.menuStrip.SuspendLayout();
             this.groupBoxBancos.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -160,11 +161,12 @@ namespace BoletoNet.Arquivo
             // 
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.arquivoToolStripMenuItem,
-            this.impressãoToolStripMenuItem});
+            this.impressãoToolStripMenuItem,
+            this.toolStripTextBox1});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Margin = new System.Windows.Forms.Padding(0, 0, 0, 5);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(1011, 24);
+            this.menuStrip.Size = new System.Drawing.Size(1011, 27);
             this.menuStrip.TabIndex = 4;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -174,13 +176,13 @@ namespace BoletoNet.Arquivo
             this.cNABToolStripMenuItem,
             this.retornoToolStripMenuItem1});
             this.arquivoToolStripMenuItem.Name = "arquivoToolStripMenuItem";
-            this.arquivoToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.arquivoToolStripMenuItem.Size = new System.Drawing.Size(61, 23);
             this.arquivoToolStripMenuItem.Text = "&Arquivo";
             // 
             // cNABToolStripMenuItem
             // 
             this.cNABToolStripMenuItem.Name = "cNABToolStripMenuItem";
-            this.cNABToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cNABToolStripMenuItem.Size = new System.Drawing.Size(120, 22);
             this.cNABToolStripMenuItem.Text = "&Remessa";
             this.cNABToolStripMenuItem.Click += new System.EventHandler(this.RemessaMenuItem_Click);
             // 
@@ -190,7 +192,7 @@ namespace BoletoNet.Arquivo
             this.lerToolStripMenuItem1,
             this.gerarToolStripMenuItem1});
             this.retornoToolStripMenuItem1.Name = "retornoToolStripMenuItem1";
-            this.retornoToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.retornoToolStripMenuItem1.Size = new System.Drawing.Size(120, 22);
             this.retornoToolStripMenuItem1.Text = "R&etorno";
             // 
             // lerToolStripMenuItem1
@@ -210,7 +212,7 @@ namespace BoletoNet.Arquivo
             // impressãoToolStripMenuItem
             // 
             this.impressãoToolStripMenuItem.Name = "impressãoToolStripMenuItem";
-            this.impressãoToolStripMenuItem.Size = new System.Drawing.Size(73, 20);
+            this.impressãoToolStripMenuItem.Size = new System.Drawing.Size(73, 23);
             this.impressãoToolStripMenuItem.Text = "&Impressão";
             this.impressãoToolStripMenuItem.Click += new System.EventHandler(this.ImpressãoMenuItem_Click);
             // 
@@ -251,7 +253,7 @@ namespace BoletoNet.Arquivo
             this.RbSicoob.Text = "Sicoob";
             this.RbSicoob.UseVisualStyleBackColor = true;
             // 
-            // radioButtonBNB
+            // RbBNB
             // 
             this.RbBNB.AutoSize = true;
             this.RbBNB.Location = new System.Drawing.Point(13, 321);
@@ -262,7 +264,7 @@ namespace BoletoNet.Arquivo
             this.RbBNB.Text = "Nordeste";
             this.RbBNB.UseVisualStyleBackColor = true;
             // 
-            // radioButtonBanrisul
+            // RbBanrisul
             // 
             this.RbBanrisul.AutoSize = true;
             this.RbBanrisul.Location = new System.Drawing.Point(13, 298);
@@ -273,7 +275,7 @@ namespace BoletoNet.Arquivo
             this.RbBanrisul.Text = "Banrisul";
             this.RbBanrisul.UseVisualStyleBackColor = true;
             // 
-            // radioButtonSicredi
+            // RbSicredi
             // 
             this.RbSicredi.AutoSize = true;
             this.RbSicredi.Location = new System.Drawing.Point(13, 251);
@@ -284,7 +286,7 @@ namespace BoletoNet.Arquivo
             this.RbSicredi.Text = "Sicredi";
             this.RbSicredi.UseVisualStyleBackColor = true;
             // 
-            // radioButtonCaixa
+            // RbCaixa
             // 
             this.RbCaixa.AutoSize = true;
             this.RbCaixa.Location = new System.Drawing.Point(13, 228);
@@ -295,7 +297,7 @@ namespace BoletoNet.Arquivo
             this.RbCaixa.Text = "Caixa";
             this.RbCaixa.UseVisualStyleBackColor = true;
             // 
-            // radioButtonSantander
+            // RbSantander
             // 
             this.RbSantander.AutoSize = true;
             this.RbSantander.Location = new System.Drawing.Point(13, 205);
@@ -306,7 +308,7 @@ namespace BoletoNet.Arquivo
             this.RbSantander.Text = "Santander";
             this.RbSantander.UseVisualStyleBackColor = true;
             // 
-            // radioButtonUnibanco
+            // RbUnibanco
             // 
             this.RbUnibanco.AutoSize = true;
             this.RbUnibanco.Location = new System.Drawing.Point(13, 182);
@@ -317,7 +319,7 @@ namespace BoletoNet.Arquivo
             this.RbUnibanco.Text = "Unibanco";
             this.RbUnibanco.UseVisualStyleBackColor = true;
             // 
-            // radioButtonSudameris
+            // RbSudameris
             // 
             this.RbSudameris.AutoSize = true;
             this.RbSudameris.Location = new System.Drawing.Point(13, 159);
@@ -328,7 +330,7 @@ namespace BoletoNet.Arquivo
             this.RbSudameris.Text = "Sudameris";
             this.RbSudameris.UseVisualStyleBackColor = true;
             // 
-            // radioButtonBancoBrasil
+            // RbBancoBrasil
             // 
             this.RbBancoBrasil.AutoSize = true;
             this.RbBancoBrasil.Location = new System.Drawing.Point(13, 44);
@@ -339,7 +341,7 @@ namespace BoletoNet.Arquivo
             this.RbBancoBrasil.Text = "Banco do Brasil";
             this.RbBancoBrasil.UseVisualStyleBackColor = true;
             // 
-            // radioButtonReal
+            // RbReal
             // 
             this.RbReal.AutoSize = true;
             this.RbReal.Location = new System.Drawing.Point(13, 113);
@@ -350,7 +352,7 @@ namespace BoletoNet.Arquivo
             this.RbReal.Text = "Real";
             this.RbReal.UseVisualStyleBackColor = true;
             // 
-            // radioButtonBradesco
+            // RbBradesco
             // 
             this.RbBradesco.AutoSize = true;
             this.RbBradesco.Location = new System.Drawing.Point(13, 67);
@@ -361,7 +363,7 @@ namespace BoletoNet.Arquivo
             this.RbBradesco.Text = "Bradesco";
             this.RbBradesco.UseVisualStyleBackColor = true;
             // 
-            // radioButtonHsbc
+            // RbHsbc
             // 
             this.RbHsbc.AutoSize = true;
             this.RbHsbc.Location = new System.Drawing.Point(13, 90);
@@ -372,7 +374,7 @@ namespace BoletoNet.Arquivo
             this.RbHsbc.Text = "HSBC";
             this.RbHsbc.UseVisualStyleBackColor = true;
             // 
-            // radioButtonSafra
+            // RbSafra
             // 
             this.RbSafra.AutoSize = true;
             this.RbSafra.Location = new System.Drawing.Point(13, 136);
@@ -383,7 +385,7 @@ namespace BoletoNet.Arquivo
             this.RbSafra.Text = "Safra";
             this.RbSafra.UseVisualStyleBackColor = true;
             // 
-            // radioButtonItau
+            // RbItau
             // 
             this.RbItau.AutoSize = true;
             this.RbItau.Checked = true;
@@ -435,6 +437,11 @@ namespace BoletoNet.Arquivo
             this.radioButtonCNAB400.Tag = "409";
             this.radioButtonCNAB400.Text = "CNAB 400";
             this.radioButtonCNAB400.UseVisualStyleBackColor = true;
+            // 
+            // toolStripTextBox1
+            // 
+            this.toolStripTextBox1.Name = "toolStripTextBox1";
+            this.toolStripTextBox1.Size = new System.Drawing.Size(100, 23);
             // 
             // Main
             // 
@@ -501,6 +508,7 @@ namespace BoletoNet.Arquivo
         private System.Windows.Forms.ColumnHeader columnHeader9;
         private System.Windows.Forms.RadioButton RbBNB;
         private System.Windows.Forms.RadioButton RbSicoob;
+        private System.Windows.Forms.ToolStripTextBox toolStripTextBox1;
     }
 }
 

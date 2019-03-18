@@ -1391,75 +1391,80 @@ namespace BoletoNet
 
         #region Métodos de processamento do arquivo retorno CNAB400
 
-        public override DetalheRetorno LerDetalheRetornoCNAB400(string registro)
+        public override DetalheRetorno LerDetalheRetornoCNAB400(string reg)
         {
             try
             {
-                var dataOcorrencia = Utils.ToInt32(registro.Substring(110, 6));
-                var dataVencimento = Utils.ToInt32(registro.Substring(146, 6));
-                var dataCredito = Utils.ToInt32(registro.Substring(295, 6));
+                var det = new DetalheRetorno(reg);
+                //001-001: Tipo de registro, deve ser '0'.
+                det.CodigoInscricao = Utils.ToInt32(reg.Substring(1, 2)); //002-003: Tipo de inscrição (01: CPF/02: CNPJ).
+                det.NumeroInscricao = reg.Substring(3, 14).Trim();        //004-017: CPF/CNPJ
+                det.Agencia = Utils.ToInt32(reg.Substring(17, 4));  //018-021: Agência.
+                //022-023: Zeros.
+                det.Conta = Utils.ToInt32(reg.Substring(23, 5));    //024-028: Conta corrente.
+                det.DACConta = Utils.ToInt32(reg.Substring(28, 1)); //029-029: DV da conta.
+                //030-037: Brancos.
+                det.UsoEmpresa = reg.Substring(37, 25);      //038-062: Uso da empresa.
+                //063-070: Nosso número.
+                //071-082: Brancos.
+                det.Carteira = reg.Substring(82, 3);         //083-085: Carteira.
+                det.NossoNumero = reg.Substring(85, 8);      //086-093: Nosso número sem o DV.
+                det.DACNossoNumero = reg.Substring(93, 1);   //094-094: DV do nosso número.
+                det.NossoNumeroComDV = det.NossoNumero + det.DACNossoNumero;
+                //095-107: Brancos.
+                //108-108: Carteira, diferente do de cima, 109 -> I.
+                det.CodigoOcorrencia = Utils.ToInt32(reg.Substring(108, 2)); //109-110: Código de ocorência.
+                det.DescricaoOcorrencia = Ocorrencia(reg.Substring(108, 2));
 
-                var detalhe = new DetalheRetorno(registro);
+                if (DateTime.TryParseExact(reg.Substring(110, 6), "ddMMyy", new CultureInfo("pt-BR"), DateTimeStyles.AssumeLocal, out var data1))
+                    det.DataOcorrencia = data1; //111-116: Data de cocorrência.
 
-                detalhe.CodigoInscricao = Utils.ToInt32(registro.Substring(1, 2));
-                detalhe.NumeroInscricao = registro.Substring(3, 14);
-                detalhe.Agencia = Utils.ToInt32(registro.Substring(17, 4));
-                detalhe.Conta = Utils.ToInt32(registro.Substring(23, 5));
-                detalhe.DACConta = Utils.ToInt32(registro.Substring(28, 1));
-                detalhe.UsoEmpresa = registro.Substring(37, 25);
+                det.NumeroDocumento = reg.Substring(116, 10); //117-126: Número do documento.
+                //117-126: Nosso número.
+                //135-146: Brancos.
 
-                detalhe.Carteira = registro.Substring(82, 1);
-                detalhe.NossoNumeroComDV = registro.Substring(85, 9);
-                detalhe.NossoNumero = registro.Substring(85, 8); //Sem o DV
-                detalhe.DACNossoNumero = registro.Substring(93, 1); //DV
+                if (DateTime.TryParseExact(reg.Substring(146, 6), "ddMMyy", new CultureInfo("pt-BR"), DateTimeStyles.AssumeLocal, out var data2))
+                    det.DataVencimento = data2; //147-152: Data de vencimento.
 
-                detalhe.CodigoOcorrencia = Utils.ToInt32(registro.Substring(108, 2));
+                det.ValorTitulo = Convert.ToUInt64(reg.Substring(152, 13)) / 100m; //153-165: Valor do título.
+                det.CodigoBanco = Utils.ToInt32(reg.Substring(165, 3));      //166-168: Código do banco.
+                det.BancoCobrador = Utils.ToInt32(reg.Substring(165, 3));    //Mesmo do de cima;
+                det.AgenciaCobradora = Utils.ToInt32(reg.Substring(168, 4)); //169-172: Agência cobradora.
+                det.DACAgenciaCobradora = Utils.ToInt32(reg.Substring(172, 1)); //173-173: DV da agência cobradora.
+                det.Especie = Utils.ToInt32(reg.Substring(173, 2)); //174-175: Espécie.
+                det.TarifaCobranca = Convert.ToUInt64(reg.Substring(175, 13)) / 100m; //176-188: Tarifa de cobrança.
+                //189-214: Brancos.
+                det.IOF = Convert.ToUInt64(reg.Substring(214, 13)) / 100m;  //215-227: Valor do IOF.
+                det.ValorAbatimento = Convert.ToUInt64(reg.Substring(227, 13).PadLeft(1, '0')) / 100m; //228-240: Valor do abatimento.
+                det.Descontos = Convert.ToUInt64(reg.Substring(240, 13)) / 100m; //241-253: Valor dos descontos.
+                det.ValorPrincipal = Convert.ToUInt64(reg.Substring(253, 13)) / 100m; //254-266: Valor principal, lançado em conta corrente.
+                det.ValorPago = det.ValorPrincipal;
+                det.JurosMora = Convert.ToUInt64(reg.Substring(266, 13)) / 100m;    //267-279: Valor de juros e multa.
+                //280-292: Outros créditos.
+                //293-293: Boleto DDA.
+                //294-295: Brancos.
 
-                //Descrição da ocorrência
-                detalhe.DescricaoOcorrencia = Ocorrencia(registro.Substring(108, 2));
+                if (DateTime.TryParseExact(reg.Substring(295, 6), "ddMMyy", new CultureInfo("pt-BR"), DateTimeStyles.AssumeLocal, out var data3))
+                    det.DataCredito = data3; //296-301: Data de crédito.
 
-                detalhe.DataOcorrencia = Utils.ToDateTime(dataOcorrencia.ToString("##-##-##"));
-                detalhe.NumeroDocumento = registro.Substring(116, 10);
+                det.InstrucaoCancelada = Utils.ToInt32(reg.Substring(301, 4)); //302-305: Código da instrução cancelada.
+                //306-311: Brancos.
+                //312-324: Zeros.
+                det.NomeSacado = reg.Substring(324, 30); //325-354: Nome do pagador.
+                //355-377: Brancos.
+                det.Erros = reg.Substring(377, 8); //378-385: Rejeições.
+                det.MotivoCodigoOcorrencia = det.Erros;
+                //386-392: Brancos.
+                det.CodigoLiquidacao = reg.Substring(392, 2); //393: Meio pelo o qual o título foi liquidado.
+                det.NumeroSequencial = Utils.ToInt32(reg.Substring(394, 6)); //395-400: Número sequencial.
 
-                detalhe.DataVencimento = Utils.ToDateTime(dataVencimento.ToString("##-##-##"));
-                decimal valorTitulo = Convert.ToInt64(registro.Substring(152, 13));
-                detalhe.ValorTitulo = valorTitulo / 100;
-                detalhe.CodigoBanco = Utils.ToInt32(registro.Substring(165, 3));
-                detalhe.BancoCobrador = Utils.ToInt32(registro.Substring(165, 3));
-                detalhe.AgenciaCobradora = Utils.ToInt32(registro.Substring(168, 4));
-                detalhe.Especie = Utils.ToInt32(registro.Substring(173, 2));
-                decimal tarifaCobranca = Convert.ToUInt64(registro.Substring(175, 13));
-                detalhe.TarifaCobranca = tarifaCobranca / 100;
-                // 26 brancos
-                decimal iof = Convert.ToUInt64(registro.Substring(214, 13));
-                detalhe.IOF = iof / 100;
-                decimal valorAbatimento = !String.IsNullOrWhiteSpace(registro.Substring(227, 13)) ? Convert.ToUInt64(registro.Substring(227, 13)) : 0;
-                detalhe.ValorAbatimento = valorAbatimento / 100;
-
-                decimal valorDescontos = Convert.ToUInt64(registro.Substring(240, 13));
-                detalhe.Descontos = valorDescontos / 100;
-
-                decimal valorPrincipal = Convert.ToUInt64(registro.Substring(253, 13));
-                detalhe.ValorPrincipal = valorPrincipal / 100;
-
-                decimal jurosMora = Convert.ToUInt64(registro.Substring(266, 13));
-                detalhe.JurosMora = jurosMora / 100;
-                // 293 - 3 brancos
-                detalhe.DataCredito = Utils.ToDateTime(dataCredito.ToString("##-##-##"));
-                detalhe.InstrucaoCancelada = Utils.ToInt32(registro.Substring(301, 4));
-                // 306 - 6 brancos
-                // 311 - 13 zeros
-                detalhe.NomeSacado = registro.Substring(324, 30);
-                // 354 - 23 brancos
-                detalhe.Erros = registro.Substring(377, 8);
-
-                if (!string.IsNullOrWhiteSpace(detalhe.Erros))
+                if (!string.IsNullOrWhiteSpace(det.Erros))
                 {
-                    var detalheErro = detalhe.Erros;
+                    var detalheErro = det.Erros;
 
-                    var motivo1 = MotivoRejeicao(detalhe.Erros.Substring(0, 2));
-                    var motivo2 = MotivoRejeicao(detalhe.Erros.Substring(2, 2));
-                    var motivo3 = MotivoRejeicao(detalhe.Erros.Substring(4, 2));
+                    var motivo1 = MotivoRejeicao(det.Erros.Substring(0, 2));
+                    var motivo2 = MotivoRejeicao(det.Erros.Substring(2, 2));
+                    var motivo3 = MotivoRejeicao(det.Erros.Substring(4, 2));
 
                     if (!string.IsNullOrWhiteSpace(motivo1))
                         detalheErro += " - " + motivo1;
@@ -1470,16 +1475,9 @@ namespace BoletoNet
                     if (!string.IsNullOrWhiteSpace(motivo3))
                         detalheErro += " / " + motivo3;
 
-                    detalhe.Erros = detalheErro;
+                    det.Erros = detalheErro;
                 }
-
-                // 377 - Registros rejeitados ou alegação do sacado
-                // 386 - 7 brancos
-
-                detalhe.CodigoLiquidacao = registro.Substring(392, 2);
-                detalhe.NumeroSequencial = Utils.ToInt32(registro.Substring(394, 6));
-                detalhe.ValorPago = detalhe.ValorPrincipal;
-
+                
                 // A correspondência de Valor Pago no RETORNO ITAÚ é o Valor Principal (Valor lançado em Conta Corrente - Conforme Manual)
                 // A determinação se Débito ou Crédito deverá ser feita nos aplicativos por se tratar de personalização.
                 // Para isso, considerar o Código da Ocorrência e tratar de acordo com suas necessidades.
@@ -1496,7 +1494,7 @@ namespace BoletoNet
                 //// Valor Pago é a soma do Valor Principal (Valor que entra na conta) + Tarifa de Cobrança
                 //detalhe.ValorPago = detalhe.ValorPrincipal + detalhe.TarifaCobranca;
 
-                return detalhe;
+                return det;
             }
             catch (Exception ex)
             {
